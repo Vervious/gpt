@@ -20,7 +20,8 @@ class CausalSelfAttention(nn.Module):
         self.n_embd = config.n_embd
         # not really a 'bias', more of a mask, following OpenAI naming
         self.register_buffer("bias", torch.tril(
-            torch.ones(config.block_size, config.block_size)).view(1,1,config)
+            torch.ones(config.block_size, config.block_size))
+            .view(1,1,config.block_size,config.block_size)
         )
 
     def forward(self, x):
@@ -55,6 +56,12 @@ class MLP(nn.Module):
         # (should just delete dead neurons)
         self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
         self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        return x
 
 
 class Block(nn.Module):
@@ -97,6 +104,26 @@ class GPT(nn.Module):
             ln_f = nn.LayerNorm(config.n_embd),
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
+
+    def forward(self, idx):
+        # idx is token indices
+        # idx is of shape (B, T)
+        B,T = idx.size()
+        assert T <= self.config.block_size, f"cannott forward sequence of length {T}, block size is {self.config.block_size}"
+
+        # forward token and position embeddings
+        pos = torch.arange(0, T, dtype=torch.long, device=idx.device) # shape (T)
+        pos_emb = self.transformer.wpe(pos) # position embeddings shape (T, n_embd) # same for every row, then broadcast
+        tok_emb = self.transformer.wte(idx) # token embeddings shape (B, T, n_embd)
+        x = tok_emb + pos_emb # combine token and position embeddings
+
+        # now forward through transformer
+        for block in self.transformer.h:
+            x = block(x)
+        # forward final layer norm and classifier
+        x = self.transformer.ln_f(x)
+        logits = self.lm_head(x) # (B, T, vocab_size)
+        return logits
 
     @classmethod
     def from_pretrained(cls, model_type):
@@ -146,6 +173,54 @@ class GPT(nn.Module):
                     sd[k].copy_(sd_hf[k])
 
         return model
+    
+# Detect device
+device = "cpu"
+if torch.cuda.is_available():
+    device = "cuda"
+elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+    device = "mps"
+print(f"using device: {device}")
 
-model = GPT.from_pretrained('gpt2')
-print("success")
+num_return_sequences = 5
+max_length = 30
+
+# model = GPT.from_pretrained('gpt2')
+model = GPT(GPTConfig())
+print("successful download")
+model.eval()
+model.to(device)
+
+import tiktoken
+enc = tiktoken.get_encoding('gpt2')
+tokens = enc.encode("Hello, I'm a language model,")
+tokens = torch.tensor(tokens, dtype=torch.long) # (8,)
+tokens = tokens.unsqueeze(0).repeat(num_return_sequences, 1) # (5, 8)
+x = tokens.to(device)
+
+torch.manual_seed(42)
+# torch.cuda.manual_seed(42)
+while x.size(1) < max_length:
+    # forward the model to get logits
+    with torch.no_grad():
+        logits = model(x) # (B, T, vocab_size)
+        # take logits at the last location
+        logits = logits[:,-1,:] # (B, vocab_size)
+        # get the probabilities
+        probs = F.softmax(logits, dim=-1)
+        # do top-k sampling of 50 (huggingface pipeline default)
+        # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+        topk_probs, topk_indices = torch.topk(probs, 50, dim=-1)
+        # select a token from the top-k probabiliities
+        ix = torch.multinomial(topk_probs, 1) # (B, 1)
+        # gather the correspdongin indicies
+        xcol = torch.gather(topk_indices, -1, ix) # (B, 1)
+        # append to the sequence
+        x = torch.cat((x, xcol), dim=1)
+
+# print generated text
+for i in range(num_return_sequences):
+    tokens = x[i, :max_length].tolist()
+    decoded = enc.decode(tokens)
+    print(">", decoded)
+
