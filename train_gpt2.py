@@ -106,7 +106,7 @@ class GPT(nn.Module):
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
-    def forward(self, idx):
+    def forward(self, idx, targets=None):
         # idx is token indices
         # idx is of shape (B, T)
         B,T = idx.size()
@@ -124,7 +124,14 @@ class GPT(nn.Module):
         # forward final layer norm and classifier
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x) # (B, T, vocab_size)
-        return logits
+        loss = None
+        if targets is not None:
+            # shape of input to x-entropy is B*T x V, B*T x 1
+            # recall: logits are basically log counts
+            # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
+            # cross entropy loss is just -log(pr[target])
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+        return logits, loss
 
     @classmethod
     def from_pretrained(cls, model_type):
@@ -185,7 +192,7 @@ if torch.cuda.is_available():
     device = "cuda"
 elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
     device = "mps"
-device = "cpu" # override
+# device = "cpu" # override
 print(f"using device: {device}")
 
 # get a data batch
@@ -196,6 +203,7 @@ text = text[:1000]
 tokens = enc.encode(text)
 B, T = 4, 32
 buf = torch.tensor(tokens[:B*T + 1])
+buf = buf.to(device)
 x = buf[:-1].view(B, T)  # datapoint x
 y = buf[1:].view(B, T)   # datapoint targets y
 
@@ -204,8 +212,17 @@ model = GPT(GPTConfig()) # model = GPT.from_pretrained('gpt2')
 model.eval()
 model.to(device)
 
-logits = model(x)
-print(logits.shape) # (B, T, vocab_size)
+# logits, loss = model(x, y)
+# print(loss) # (B, T, vocab_size)
+
+# Learn
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
+for i in range(50):
+    optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
+    logits, loss = model(x, y)
+    loss.backward()
+    optimizer.step()
+    print(f"step {i}, loss: {loss.item()}") # .item() ships value from device back to host 
 
 
 # enc = tiktoken.get_encoding('gpt2')
