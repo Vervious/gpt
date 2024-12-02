@@ -16,6 +16,7 @@ class CausalSelfAttention(nn.Module):
         self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
         # output projection
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
+        self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
         # regularization
         self.n_head = config.n_head
         self.n_embd = config.n_embd
@@ -57,6 +58,7 @@ class MLP(nn.Module):
         # (should just delete dead neurons)
         self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
         self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+        self.c_proj.NANOGPT_SCALE_INIT = 1
     
     def forward(self, x):
         x = self.c_fc(x)
@@ -115,7 +117,11 @@ class GPT(nn.Module):
     def _init_weights(self, module):
         # No need to change default initialization of LayerNorm
         if isinstance(module, nn.Linear):
-            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            stdConfig = 0.02
+            if hasattr(module, 'NANOGPT_SCALE_INIT'):
+                # 2x because we have two linears per layer: block.attn and block.mlp
+                stdConfig *= (2 * self.config.n_layer) ** -0.5
+            torch.nn.init.normal_(module.weight, mean=0.0, std=stdConfig)
             if module.bias is not None:
                 torch.nn.init.zeros_(module.bias)
         elif isinstance(module, nn.Embedding):
@@ -237,6 +243,10 @@ elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
     device = "mps"
 # device = "cpu" # override
 print(f"using device: {device}")
+
+torch.manual_seed(1337)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed(1337)
 
 # get a data batch
 # B = Batch size, T = Time
