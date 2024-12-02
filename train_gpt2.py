@@ -251,7 +251,11 @@ if torch.cuda.is_available():
 
 # get a data batch
 # B = Batch size, T = Time
+# if it doesn't fit, GPU out of memory, reduce batch size by powers of 2
 train_loader = DataLoaderLite(B=16, T=1024)
+
+# reduce precision requirement to use TensorFloat32 datatype
+torch.set_float32_matmul_precision("high")
 
 # get logits
 model = GPT(GPTConfig()) # model = GPT.from_pretrained('gpt2')
@@ -263,7 +267,7 @@ model.to(device)
 
 # Learn
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
-for i in range(50):
+for i in range(100):
     t0 = time.time()
     # each datapoint used only once
     x, y = train_loader.next_batch()
@@ -276,7 +280,8 @@ for i in range(50):
     torch.cuda.synchronize() # for timing, wait for workload to finish
     t1 = time.time()
     dt = (t1 - t0)*1000 # time difference in milliseconds
-    print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms") # .item() ships value from device back to host 
+    tokens_per_sec = (train_loader.B * train_loader.T) / (t1 - t0)
+    print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}") # .item() ships value from device back to host 
 
 
 enc = tiktoken.get_encoding('gpt2')
