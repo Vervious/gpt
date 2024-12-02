@@ -204,6 +204,16 @@ class GPT(nn.Module):
 
         print("successful loaded gpt2 pretrained weights")
         return model
+    
+    def estimate_mfu(self, fwdbwd_per_iter, dt):
+        N = self.get_num_params()
+        cfg = self.config
+        L, H, Q, T = cfg.n_layer, cfg.n_head, cfg.n_embd // cfg.n_head, cfg.block_size
+        flops_per_token = 6*N + 12*L*H*Q*T
+        flops_per_fwdbwd = flops_per_token * T
+        flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
+        flops_achieved = flops_per_iter * (1.0/dt)
+        return flops_achieved
 
 class DataLoaderLite:
     def __init__(self, B, T):
@@ -281,7 +291,8 @@ for i in range(100):
     t1 = time.time()
     dt = (t1 - t0)*1000 # time difference in milliseconds
     tokens_per_sec = (train_loader.B * train_loader.T) / (t1 - t0)
-    print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}") # .item() ships value from device back to host 
+    flops = model.estimate_mfu(fwdbwd_per_iter=(train_loader.B * train_loader.T), dt=dt)
+    print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}") # .item() ships value from device back to host 
 
 
 enc = tiktoken.get_encoding('gpt2')
