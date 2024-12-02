@@ -39,11 +39,18 @@ class CausalSelfAttention(nn.Module):
         k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+
+        # FlashAttention: fuse kernels for attention
+        # Does more flops (tradeoff) but because of operator fusion, much faster
+        # In particular, att never gets written to global memory (T x T = 1024 * 1024)
+
         # attention
         att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
         att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf')) # only attend to historic tokens
         att = F.softmax(att, dim=-1) # normalize attention
         y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
+
+
         y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
         # output projection
         y = self.c_proj(y)
@@ -278,7 +285,7 @@ model = torch.compile(model) # use pytorch heavy lifting
 
 # Learn
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
-for i in range(50):
+for i in range(500):
     t0 = time.time()
     # each datapoint used only once
     x, y = train_loader.next_batch()
