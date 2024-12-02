@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the virtual environment directory
-VENV_DIR="venv"
+VENV_DIR=".venv"
 
 # Check if Python is installed
 if ! command -v python3 &> /dev/null; then
