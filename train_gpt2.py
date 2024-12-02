@@ -271,27 +271,32 @@ torch.set_float32_matmul_precision("high")
 model = GPT(GPTConfig()) # model = GPT.from_pretrained('gpt2')
 model.eval()
 model.to(device)
-
+print("compilation is on")
+model = torch.compile(model) # use pytorch heavy lifting
 # logits, loss = model(x, y)
 # print(loss) # (B, T, vocab_size)
 
 # Learn
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
-for i in range(100):
+for i in range(50):
     t0 = time.time()
     # each datapoint used only once
     x, y = train_loader.next_batch()
     x, y = x.to(device), y.to(device)
 
     optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
-    logits, loss = model(x, y)
+
+    with torch.autocast(device_type=device, dtype=torch.bfloat16):
+        logits, loss = model(x, y)
+        # import code; code.interact(local=locals())
     loss.backward()
     optimizer.step()
     torch.cuda.synchronize() # for timing, wait for workload to finish
     t1 = time.time()
     dt = (t1 - t0)*1000 # time difference in milliseconds
     tokens_per_sec = (train_loader.B * train_loader.T) / (t1 - t0)
-    flops = model.estimate_mfu(fwdbwd_per_iter=(train_loader.B * train_loader.T), dt=dt)
+    # flops = model.estimate_mfu(fwdbwd_per_iter=(train_loader.B * train_loader.T), dt=dt)
+    flops = 0
     print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}") # .item() ships value from device back to host 
 
 
