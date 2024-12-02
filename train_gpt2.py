@@ -109,6 +109,18 @@ class GPT(nn.Module):
         # weight sharing scheme
         self.transformer.wte.weight = self.lm_head.weight # copies the data pointer
 
+        # param initialization
+        self.apply(self._init_weights) # apply iterates all submodules
+    
+    def _init_weights(self, module):
+        # No need to change default initialization of LayerNorm
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+
     def forward(self, idx, targets=None):
         # idx is token indices
         # idx is of shape (B, T)
@@ -240,7 +252,8 @@ model.to(device)
 
 # Learn
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
-for i in range(50):
+for i in range(25):
+    # each datapoint used only once
     x, y = train_loader.next_batch()
     x, y = x.to(device), y.to(device)
 
