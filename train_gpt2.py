@@ -5,6 +5,7 @@ import torch.nn as nn
 from torch.nn import functional as F
 import math
 import tiktoken
+import time
 
 class CausalSelfAttention(nn.Module):
     """In parallel multiple heads/streams, outputs concatenated"""
@@ -250,7 +251,7 @@ if torch.cuda.is_available():
 
 # get a data batch
 # B = Batch size, T = Time
-train_loader = DataLoaderLite(B=4, T=32)
+train_loader = DataLoaderLite(B=16, T=1024)
 
 # get logits
 model = GPT(GPTConfig()) # model = GPT.from_pretrained('gpt2')
@@ -262,7 +263,8 @@ model.to(device)
 
 # Learn
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
-for i in range(25):
+for i in range(50):
+    t0 = time.time()
     # each datapoint used only once
     x, y = train_loader.next_batch()
     x, y = x.to(device), y.to(device)
@@ -271,7 +273,10 @@ for i in range(25):
     logits, loss = model(x, y)
     loss.backward()
     optimizer.step()
-    print(f"step {i}, loss: {loss.item()}") # .item() ships value from device back to host 
+    torch.cuda.synchronize() # for timing, wait for workload to finish
+    t1 = time.time()
+    dt = (t1 - t0)*1000 # time difference in milliseconds
+    print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms") # .item() ships value from device back to host 
 
 
 enc = tiktoken.get_encoding('gpt2')
