@@ -225,7 +225,7 @@ class GPT(nn.Module):
         flops_per_token = 6*N # + 12*L*H*Q*T
         flops_per_fwdbwd = flops_per_token * T
         flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
-        flops_achieved = flops_per_iter * (1.0/dt)
+        flops_achieved = flops_per_iter * (1.0/(dt*1000))
         return flops_achieved
 
     def configure_optimizers(self, weight_decay, learning_rate, device):
@@ -302,8 +302,6 @@ class DataLoaderLite:
     def num_times_latest_batch_used(self):
         return self.reuseDict[self.lastBatchPosition]
 
-num_return_sequences = 2
-max_length = 30
 
 
 # Distributed GPUs
@@ -320,6 +318,7 @@ import os
 # set up DDP (distributed data parallel).
 # torchrun command sets the env variables RANK, LOCAL_RANK, and WORLD_SIZE
 ddp = int(os.environ.get('RANK', -1)) != -1 # is this a ddp run (sketchy)
+# ddp = False # override
 if ddp:
     assert torch.cuda.is_available(), "torch.distributed only works with CUDA"
     init_process_group(backend='nccl')
@@ -351,7 +350,7 @@ if torch.cuda.is_available():
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-total_batch_size = 524288 # 2**19 ~0.5M in number of tokens
+total_batch_size = 32*1024 # 524288 # 2**19 ~0.5M in number of tokens
 B = 16 # micro batch size, will do forward backward but not do an update yet
 T = 1024 # sequence length
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
@@ -390,7 +389,7 @@ raw_model = model.module if ddp else model
 max_lr = 6e-4 # from GPT 3 paper
 min_lr = max_lr * 0.1
 warmup_steps = 10
-max_steps = 50
+max_steps = 100
 
 def get_lr(it):
     # 1) linear warmup for warmup_iters steps
@@ -461,6 +460,11 @@ if not master_process:
     if ddp:
         destroy_process_group()
     exit(0)
+
+
+print("Generating text...")
+num_return_sequences = 2
+max_length = 100
 
 enc = tiktoken.get_encoding('gpt2')
 tokens = enc.encode("Hello, I'm a language model,")
