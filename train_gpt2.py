@@ -162,6 +162,7 @@ class GPT(nn.Module):
             # recall: logits are basically log counts
             # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
             # cross entropy loss is just -log(pr[target])
+            # F.cross_entropy takes average over B*T
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
         return logits, loss
 
@@ -216,10 +217,12 @@ class GPT(nn.Module):
         return model
     
     def estimate_mfu(self, fwdbwd_per_iter, dt):
-        N = self.get_num_params()
+        N = sum(p.numel() for p in self.parameters())
+        N -= self.transformer.wpe.weight.numel() # due to parameter sharing, I think we should get rid of this?
+
         cfg = self.config
         L, H, Q, T = cfg.n_layer, cfg.n_head, cfg.n_embd // cfg.n_head, cfg.block_size
-        flops_per_token = 6*N + 12*L*H*Q*T
+        flops_per_token = 6*N # + 12*L*H*Q*T
         flops_per_fwdbwd = flops_per_token * T
         flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
         flops_achieved = flops_per_iter * (1.0/dt)
@@ -313,10 +316,20 @@ torch.manual_seed(1337)
 if torch.cuda.is_available():
     torch.cuda.manual_seed(1337)
 
+# We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
+# Since we only have small GPUs, we'll just simulate large batches using accumulation.
+total_batch_size = 524288 # 2**19 ~0.5M in number of tokens
+B = 16 # micro batch size, will do forward backward but not do an update yet
+T = 1024 # sequence length
+assert total_batch_size % (B*T) == 0, "make sure total_batch_size is divisible by B*T"
+grad_accum_steps = total_batch_size // (B*T) # 32; so each batch split into 32 mini batches
+print(f"total desired batch size: {total_batch_size}")
+print(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
+
 # get a data batch
 # B = Batch size, T = Time
 # if it doesn't fit, GPU out of memory, reduce batch size by powers of 2
-train_loader = DataLoaderLite(B=16, T=1024)
+train_loader = DataLoaderLite(B=B, T=T)
 
 # reduce precision requirement to use TensorFloat32 datatype
 torch.set_float32_matmul_precision("high")
@@ -335,7 +348,7 @@ model = torch.compile(model) # use pytorch heavy lifting
 max_lr = 6e-4 # from GPT 3 paper
 min_lr = max_lr * 0.1
 warmup_steps = 10
-max_steps = 500
+max_steps = 50
 
 def get_lr(it):
     # 1) linear warmup for warmup_iters steps
@@ -357,16 +370,20 @@ optimizer = model.configure_optimizers(weight_decay=0.1, learning_rate=6e-4, dev
 for step in range(max_steps):
     t0 = time.time()
     # each datapoint used only once
-    x, y = train_loader.next_batch()
-    timesBatchUsed = train_loader.num_times_latest_batch_used()
-    x, y = x.to(device), y.to(device)
 
     optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
-
-    with torch.autocast(device_type=device, dtype=torch.bfloat16):
-        logits, loss = model(x, y)
-        # import code; code.interact(local=locals())
-    loss.backward()
+    loss_accum = 0.0
+    for micro_step in range(grad_accum_steps):
+        x, y = train_loader.next_batch()
+        timesBatchUsed = train_loader.num_times_latest_batch_used()
+        x, y = x.to(device), y.to(device)
+        with torch.autocast(device_type=device, dtype=torch.bfloat16):
+            logits, loss = model(x, y)
+        # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
+        loss = loss / grad_accum_steps
+        loss_accum += loss.detach()
+        # .backward() will just += the gradient
+        loss.backward()
 
     # clip the global norm of the gradient at 1.0 (i.e. grad = grad / grad.norm)
     norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -383,10 +400,9 @@ for step in range(max_steps):
     torch.cuda.synchronize() # for timing, wait for workload to finish
     t1 = time.time()
     dt = (t1 - t0)*1000 # time difference in milliseconds
-    tokens_per_sec = (train_loader.B * train_loader.T) / (t1 - t0)
-    # flops = model.estimate_mfu(fwdbwd_per_iter=(train_loader.B * train_loader.T), dt=dt)
-    flops = 0
-    print(f"step {step}, loss: {loss.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
+    tokens_per_sec = (train_loader.B * train_loader.T * grad_accum_steps) / (t1 - t0)
+    flops = model.estimate_mfu(fwdbwd_per_iter=(train_loader.B * train_loader.T* grad_accum_steps), dt=dt)
+    print(f"step {step}, loss: {loss_accum.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
 
 
 enc = tiktoken.get_encoding('gpt2')
