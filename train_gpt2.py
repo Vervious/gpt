@@ -97,10 +97,10 @@ class Block(nn.Module):
 @dataclass
 class GPTConfig:
     block_size: int = 1024
-    vocab_size: int = 50257 # 50000 BPE merges + 256 bytes tokens + 1 eot token
-    n_layer: int = 12
-    n_head: int = 12
-    n_embd: int = 768
+    vocab_size: int = 50257 # number of tokens: 50000 BPE merges + 256 bytes tokens + 1 eot token
+    n_layer: int = 12 # number of layers
+    n_head: int = 12 # number of heads
+    n_embd: int = 768 # embedding dimensionality
 
 class GPT(nn.Module):
 
@@ -226,6 +226,10 @@ class GPT(nn.Module):
         return flops_achieved
 
 class DataLoaderLite:
+
+    reuseDict = {}
+    lastBatchPosition = 0
+
     def __init__(self, B, T):
         self.B = B
         self.T = T
@@ -246,12 +250,20 @@ class DataLoaderLite:
         buf = self.tokens[self.current_position:self.current_position + B*T + 1]
         x = (buf[:-1]).view(B, T) # inputs
         y = (buf[1:]).view(B, T) # targets
+
+        # notate that we've used this batch
+        self.reuseDict[self.current_position] = self.reuseDict.get(self.current_position, 0) + 1
+        self.lastBatchPosition = self.current_position
+
         # advance current position in the tensor
         self.current_position += B*T
         # if loading next batch is out of bounds, reset
         if self.current_position + B*T + 1 > len(self.tokens):
             self.current_position = 0
         return x, y
+    
+    def num_times_latest_batch_used(self):
+        return self.reuseDict[self.lastBatchPosition]
 
 num_return_sequences = 2
 max_length = 30
@@ -278,7 +290,8 @@ train_loader = DataLoaderLite(B=16, T=1024)
 torch.set_float32_matmul_precision("high")
 
 # get logits
-model = GPT(GPTConfig()) # model = GPT.from_pretrained('gpt2')
+# Override vocab size --- to be closer to a nice power of 2, because of how kerenels/GPT work.
+model = GPT(GPTConfig(vocab_size=50304)) # model = GPT.from_pretrained('gpt2')
 model.eval()
 model.to(device)
 print("compilation is on")
@@ -286,12 +299,33 @@ model = torch.compile(model) # use pytorch heavy lifting
 # logits, loss = model(x, y)
 # print(loss) # (B, T, vocab_size)
 
+# Implement cosine lr decay in the style of GPT-3
+max_lr = 6e-4 # from GPT 3 paper
+min_lr = max_lr * 0.1
+warmup_steps = 10
+max_steps = 500
+
+def get_lr(it):
+    # 1) linear warmup for warmup_iters steps
+    if it < warmup_steps:
+        # make sure not to start at 0, else useless iteration
+        return max_lr * (it+1) / warmup_steps
+    # 2) if it > lr_decay_iters, return min learning rate
+    if it > max_steps:
+        return min_lr
+    # 3) in between, use cosine decay
+    decay_ratio = (it - warmup_steps) / (max_steps - warmup_steps)
+    assert 0 <= decay_ratio <= 1 # sanity check
+    coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio)) # coeff starts at 1, goes to 0
+    return min_lr + coeff * (max_lr - min_lr)
+
 # Learn
-optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
-for i in range(500):
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, betas=(0.9, 0.95), eps=1e-8) # stealing hyperparams from gpt3
+for step in range(max_steps):
     t0 = time.time()
     # each datapoint used only once
     x, y = train_loader.next_batch()
+    timesBatchUsed = train_loader.num_times_latest_batch_used()
     x, y = x.to(device), y.to(device)
 
     optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
@@ -300,6 +334,18 @@ for i in range(500):
         logits, loss = model(x, y)
         # import code; code.interact(local=locals())
     loss.backward()
+
+    # clip the global norm of the gradient at 1.0 (i.e. grad = grad / grad.norm)
+    norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    # ^ rationale: really high loss (i.e. unlucky batch) may cause a really high gradient and shock the model out of optimal path; a little bit hacky.
+    # ^ returns norm of the gradient.
+
+    # Learning rate changes dynamically; (cosine lr decay)
+    lr = get_lr(step)
+    for param_group in optimizer.param_groups:
+        # apparently this is how you set the lr in pytorch
+        param_group['lr'] = lr
+
     optimizer.step()
     torch.cuda.synchronize() # for timing, wait for workload to finish
     t1 = time.time()
@@ -307,7 +353,7 @@ for i in range(500):
     tokens_per_sec = (train_loader.B * train_loader.T) / (t1 - t0)
     # flops = model.estimate_mfu(fwdbwd_per_iter=(train_loader.B * train_loader.T), dt=dt)
     flops = 0
-    print(f"step {i}, loss: {loss.item()}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}") # .item() ships value from device back to host 
+    print(f"step {step}, loss: {loss.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
 
 
 enc = tiktoken.get_encoding('gpt2')
