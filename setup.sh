@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# Run using ./setup.sh, not using sh
+
 # Define the virtual environment directory
 VENV_DIR=".venv"
 
-# Check if Python is installed
+Check if Python is installed
 if ! command -v python3 &> /dev/null; then
     echo "Python3 is not installed. Please install Python3 first."
     exit 1
@@ -39,7 +41,7 @@ else
     
     for package in "${packages[@]}"; do
         echo "Installing $package..."
-        pip install $package
+        pip install "$package"
     done
 fi
 

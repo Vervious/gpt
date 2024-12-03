@@ -44,11 +44,14 @@ class CausalSelfAttention(nn.Module):
         # Does more flops (tradeoff) but because of operator fusion, much faster
         # In particular, att never gets written to global memory (T x T = 1024 * 1024)
 
-        # attention
-        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
-        att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf')) # only attend to historic tokens
-        att = F.softmax(att, dim=-1) # normalize attention
-        y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
+        # # attention
+        # att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
+        # att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf')) # only attend to historic tokens
+        # att = F.softmax(att, dim=-1) # normalize attention
+        # y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
+        
+        # Just have Pytorch use FlashAttention for us.
+        y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
 
         y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
