@@ -258,29 +258,67 @@ class GPT(nn.Module):
 
         return optimizer
 
+import numpy as np
+
+
 
 class DataLoaderLite:
     """Note, we skip the ramp up in batch size from GPT-3, it might only be slightly useful. (Why might ramp up be useful? Because early first order stuff (biases, which tokens should be skipped, etc) don't need large batches to learn (todo aern't datapoints in a batch independent anyways though).)"""
 
     reuseDict = {}
     lastBatchPosition = 0
+    SHAKESPEARE = True
 
-    def __init__(self, B, T, process_rank, num_processes):
+    def load_tokens(self, filename):
+        if self.SHAKESPEARE:
+            with open(filename, 'r') as f:
+                text = f.read()
+            enc = tiktoken.get_encoding('gpt2')
+            tokens = enc.encode(text)
+            ptt = torch.tensor(tokens)
+        else:
+            # has already been tokenized for us using gpt2 tokenizer
+            npt = np.load(filename)
+            ptt = torch.tensor(npt, dtype=torch.long)
+        return ptt
+
+    def __init__(self, B, T, process_rank, num_processes, split):
         self.B = B
         self.T = T
         self.process_rank = process_rank
         self.num_processes = num_processes
+        assert split in {'train', 'val'}
 
-        with open('input.txt', 'r') as f:
-            text = f.read()
-        enc = tiktoken.get_encoding('gpt2')
-        tokens = enc.encode(text)
-        self.tokens = torch.tensor(tokens)
-        print(f"loaded {len(self.tokens)} tokens")
-        print(f"1 epoch = {len(self.tokens) // (B*T)} batches")
 
-        # state
+        if self.SHAKESPEARE:
+            # shakespeare
+            self.shards = ['shakespeare.txt']
+            self.current_shard = 0
+            self.tokens = self.load_tokens(self.shards[self.current_shard])
+
+            if master_process:
+                print(f"loaded {len(self.tokens)} tokens")
+                print(f"1 epoch = {len(self.tokens) // (B*T)} batches")
+
+        else:
+            # FineWeb
+            # get the shard filenames
+            data_root = "edu_fineweb10B"
+            shards = os.listdir(data_root)
+            shards = [s for s in shards if split in s]
+            shards = sorted(shards)
+            shards = [os.path.join(data_root, s) for s in shards]
+            self.shards = shards
+            assert len(shards) > 0, f"no shards found for split {split}"
+            if master_process:
+                print(f"found {len(shards)} shards for split {split}")
+
+            self.current_shard = 0
+            self.tokens = self.load_tokens(self.shards[self.current_shard])
+            
+        
         self.current_position = self.B * self.T * self.process_rank # allocate gpus to different starting locations of the data
+
     
     def next_batch(self):
         B, T = self.B, self.T
@@ -294,9 +332,12 @@ class DataLoaderLite:
 
         # advance current position in the tensor
         self.current_position += B*T * self.num_processes
-        # if loading next batch is out of bounds, reset
+        # if loading next batch is out of bounds, advance to beginning of next shard
+        # (if only one shard, i.e. in shakespeare, go to the beginning of that same shard)
         if self.current_position + B*T * self.num_processes + 1 > len(self.tokens):
-            self.current_position = self.B * self.T * self.process_rank
+            self.current_shard = (self.current_shard + 1) % len(self.shards)
+            self.tokens = self.load_tokens(self.shards[self.current_shard])
+            self.current_position = B * T * self.process_rank
         return x, y
     
     def num_times_latest_batch_used(self):
@@ -350,9 +391,10 @@ if torch.cuda.is_available():
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-total_batch_size = 32*1024 # 524288 # 2**19 ~0.5M in number of tokens
-B = 16 # micro batch size, will do forward backward but not do an update yet
+B = 64 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64
 T = 1024 # sequence length
+total_batch_size = B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
 if master_process:
@@ -364,7 +406,7 @@ print("I am GPU", ddp_rank, " of ", ddp_world_size)
 # get a data batch
 # B = Batch size, T = Time
 # if it doesn't fit, GPU out of memory, reduce batch size by powers of 2
-train_loader = DataLoaderLite(B=B, T=T, process_rank=ddp_rank, num_processes=ddp_world_size)
+train_loader = DataLoaderLite(B=B, T=T, process_rank=ddp_rank, num_processes=ddp_world_size, split="train")
 
 # reduce precision requirement to use TensorFloat32 datatype
 torch.set_float32_matmul_precision("high")
@@ -390,6 +432,10 @@ max_lr = 6e-4 # from GPT 3 paper
 min_lr = max_lr * 0.1
 warmup_steps = 10
 max_steps = 100
+
+# # ================ FineWeb
+# warmup_steps = 100 # 375e6 tokens (GPT3) is about 715 steps counting 2**19 tokens per step, but set to 100 since it doesn't really matter
+# max_steps = 19073 # use each token only once approximately; we do 2**19 tokens per step (total batch size) --- we want to do roughly 10B (that is number of unique tokens in dataset)... 10B / 2**19 ~ 19073
 
 def get_lr(it):
     # 1) linear warmup for warmup_iters steps
