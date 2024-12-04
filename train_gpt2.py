@@ -409,6 +409,8 @@ warmup_steps = 10
 use_compile = False # May run into bugs
 
 hello_swag_frequency = 500
+validation_frequency = 250
+checkpoint_frequency = 1500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
@@ -476,6 +478,8 @@ enc = tiktoken.get_encoding('gpt2') # for following along progress of training
 # Create log and persistence directory
 log_dir = "log"
 sample_dir = "samples"
+checkpoint_dir = "checkpoints"
+os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(log_dir, exist_ok=True)
 os.makedirs(sample_dir, exist_ok=True)
 log_file = os.path.join(log_dir, "log.txt")
@@ -490,7 +494,7 @@ for step in range(max_steps):
     t0 = time.time()
     
     # get validation loss once in a while (I think this is a bit sketchy)
-    if step > 0 and step % 250 == 50:
+    if step > 0 and step % validation_frequency == 50:
         model.eval()
         val_loader.reset()
         with torch.no_grad():
@@ -509,18 +513,12 @@ for step in range(max_steps):
             print(f"validation loss: {val_loss_accum.item():.4f}")
             with open(log_file, "a") as f:
                 f.write(f"{step} val {val_loss_accum.item():.4f}\n")
-            if step > 0 and (step % 1000 == 0 or step == max_steps - 1):
-                checkpoint_path = os.path.join(log_dir, f"model_{step:05d}.pt")
-                print(f"saving model checkpoint... {checkpoint_path}")
-                checkpoint = {
-                    'model': raw_model.state_dict(),
-                    'config': raw_model.config,
-                    'step': step,
-                    'val_loss': val_loss_accum.item()
-                }
-                # may also want to add optimizer.state_dict() and rng seeds
-                # if we want to resume optimization
-                torch.save(checkpoint, checkpoint_path)
+    
+    if (step % checkpoint_frequency == 50 or step == max_steps - 1):
+        # save model checkpoint
+        if master_process:
+            print(f"saving model checkpoint: {checkpoint_dir}/model_{step}.pt")
+            torch.save(model.state_dict(), f"{checkpoint_dir}/model_{step}.pt")
 
     if (step % hello_swag_frequency == 50 or step == max_steps - 1) and (not use_compile):
         # eval on hello swag
