@@ -411,6 +411,7 @@ use_compile = False # May run into bugs
 hello_swag_frequency = 500
 validation_frequency = 250
 checkpoint_frequency = 2000
+sample_frequency = 1000
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
@@ -553,7 +554,7 @@ for step in range(max_steps):
                 f.write(f"{step} hellaswag {acc_norm:.4f}\n")
     
     # Also generate some sample text once in a while
-    if (step > max_steps - 2 and (not use_compile)) or (step % 250 == 50 and (not use_compile)): # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
+    if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)): # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
         model.eval()
         num_return_sequences = 3
         max_length = 64
