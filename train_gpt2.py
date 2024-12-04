@@ -393,9 +393,12 @@ torch.manual_seed(1337)
 if torch.cuda.is_available():
     torch.cuda.manual_seed(1337)
 
+# ===================
+# HYPERPARAMETERS
+# ===================
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 32 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64
+B = 32 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 1024 # sequence length
 total_batch_size = B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 1000 + 1 # How many steps do we train for
