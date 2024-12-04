@@ -1,5 +1,8 @@
 # Data
 edu_fineweb10B/
+hellaswag/
+log/
+samples/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

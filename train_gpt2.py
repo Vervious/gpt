@@ -405,6 +405,8 @@ min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 
+hello_swag_frequency = 500
+
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
 if master_process:
@@ -517,7 +519,7 @@ for step in range(max_steps):
                 # if we want to resume optimization
                 torch.save(checkpoint, checkpoint_path)
 
-    if (step % 250 == 50 or step == max_steps - 1) and (not use_compile):
+    if (step % hello_swag_frequency == 50 or step == max_steps - 1) and (not use_compile):
         # eval on hello swag
         num_correct_norm = 0
         num_total = 0
