@@ -401,7 +401,7 @@ if torch.cuda.is_available():
 B = 32 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 2048 # sequence length
 total_batch_size = 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
-max_steps = 100000 + 1 # How many steps do we train for
+max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
 min_lr = max_lr * 0.1
