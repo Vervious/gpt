@@ -269,7 +269,7 @@ class DataLoaderLite:
 
     reuseDict = {}
     lastBatchPosition = 0
-    SHAKESPEARE = True
+    SHAKESPEARE = False
 
     def load_tokens(self, filename):
         if self.SHAKESPEARE:
@@ -399,9 +399,9 @@ if torch.cuda.is_available():
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 32 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 1024 # sequence length
-total_batch_size = B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
-max_steps = 1000 + 1 # How many steps do we train for
+T = 2048 # sequence length
+total_batch_size = 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+max_steps = 100000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
 min_lr = max_lr * 0.1
@@ -410,7 +410,7 @@ use_compile = False # May run into bugs
 
 hello_swag_frequency = 500
 validation_frequency = 250
-checkpoint_frequency = 1500
+checkpoint_frequency = 2000
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
@@ -610,7 +610,7 @@ for step in range(max_steps):
         loss.backward()
     
     if ddp:
-        dist.all_reduce(loss_accum, op=dist.ReduceOp.SUM)
+        dist.all_reduce(loss_accum, op=dist.ReduceOp.AVG)
 
     # clip the global norm of the gradient at 1.0 (i.e. grad = grad / grad.norm)
     norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
