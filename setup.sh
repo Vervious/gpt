@@ -57,6 +57,5 @@ echo "Setting up git parameters"
 git config --global user.email "ben@vervious.com"
 git config --global user.name "Benjamin Chan"
 
-cd gpt
 
 echo "Setup complete!"
