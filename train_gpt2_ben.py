@@ -102,9 +102,10 @@ class Block(nn.Module):
     
     def forward(self, x):
         # note residual connection x
+        out = self.ln_1(x)
         x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         x = x + self.mlp(self.ln_2(x))  # map operation (one to one)
-        return x
+        return x, out
 
 
 @dataclass
@@ -121,13 +122,20 @@ class GPT(nn.Module):
         super().__init__()
         self.config = config
 
+        # NOTE: this does not seem to degrade performance at least early in the training process
+        shared_block = Block(config)
+
+        self.softmax = nn.Softmax(dim=-1)
+
         self.transformer = nn.ModuleDict(dict(
             # weights of token embedding
             wte = nn.Embedding(config.vocab_size, config.n_embd),
             # weights of position embedding
             wpe = nn.Embedding(config.block_size, config.n_embd),
+            # TODO: have the KQV weights also be shared across layers
+            # h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
+            h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
             # weights of layer normalization
-            h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
             ln_f = nn.LayerNorm(config.n_embd),
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
@@ -164,19 +172,26 @@ class GPT(nn.Module):
         x = tok_emb + pos_emb # combine token and position embeddings
 
         # now forward through transformer
+        loss = 0.0
         for block in self.transformer.h:
-            x = block(x)
-        # forward final layer norm and classifier
+            x, _out_embedded_tokens_from_prev = block(x)
+            # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
+            # _out_embedded_tokens_from_prev should be (B, T, n_embd)
+            _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
+            _psafe = self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+            _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
+            loss += _block_loss # NOTE: just try this for now
+
+        # forward first layer norm and classifier
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x) # (B, T, vocab_size)
-        loss = None
         if targets is not None:
             # shape of input to x-entropy is B*T x V, B*T x 1
             # recall: logits are basically log counts
             # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
             # cross entropy loss is just -log(pr[target])
             # F.cross_entropy takes average over B*T
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+            loss += F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
         return logits, loss
 
     @classmethod
@@ -257,8 +272,9 @@ class GPT(nn.Module):
         ]
         num_decay_params = sum(p.numel() for p in decay_params)
         num_nodecay_params = sum(p.numel() for p in nodecay_params)
-        print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
-        print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
+        if master_process:
+            print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
+            print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
 
         # create AdamW optimizer and use the fused version if it is available
         # Fused just fuse all the kernels, so a single time, for all the parameters, call a kernel that updates them (morally)
@@ -409,9 +425,9 @@ if torch.cuda.is_available():
 # ===================
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 32 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 2048 # sequence length
-total_batch_size = 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+B = 16 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 1024 # sequence length
+total_batch_size = 2 * B * T# 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
@@ -420,9 +436,9 @@ warmup_steps = 10
 use_compile = False # May run into bugs
 
 hello_swag_frequency = 500
-validation_frequency = 250
-checkpoint_frequency = 2000
-sample_frequency = 1000
+validation_frequency = 2000
+checkpoint_frequency = 20000
+sample_frequency = 100
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
@@ -506,7 +522,7 @@ for step in range(max_steps):
     t0 = time.time()
     
     # get validation loss once in a while (I think this is a bit sketchy)
-    if step > 0 and step % validation_frequency == 50:
+    if step > 0 and step % validation_frequency == 0:
         model.eval()
         val_loader.reset()
         with torch.no_grad():
@@ -526,7 +542,7 @@ for step in range(max_steps):
             with open(log_file, "a") as f:
                 f.write(f"{step} val {val_loss_accum.item():.4f}\n")
     
-    if (step % checkpoint_frequency == 50 or step == max_steps - 1):
+    if ((step % checkpoint_frequency == 0 and step > 0) or step == max_steps - 1):
         # save model checkpoint
         if master_process:
             print(f"saving model checkpoint: {checkpoint_dir}/model_{step}.pt")
