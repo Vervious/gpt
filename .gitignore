@@ -4,6 +4,9 @@ hellaswag/
 log/
 samples/
 checkpoints/
+log-ben/
+samples-ben/
+checkpoints-ben/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
