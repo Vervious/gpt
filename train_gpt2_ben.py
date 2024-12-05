@@ -548,7 +548,7 @@ for step in range(max_steps):
             print(f"saving model checkpoint: {checkpoint_dir}/model_{step}.pt")
             torch.save(model.state_dict(), f"{checkpoint_dir}/model_{step}.pt")
 
-    if (step % hello_swag_frequency == 50 or step == max_steps - 1) and (not use_compile):
+    if ((step % hello_swag_frequency == 0 and step > 0) or step == max_steps - 1) and (not use_compile):
         # eval on hello swag
         num_correct_norm = 0
         num_total = 0
