@@ -331,9 +331,9 @@ class DataLoaderLite:
         y = (buf[1:]).view(B, T) # targets
 
         # notate that we've used this batch
-        self.reuseDict[self.current_position] = self.reuseDict.get(self.current_position, 0) + 1
         self.lastBatchPosition = (self.current_shard, self.current_position)
-
+        self.reuseDict[self.lastBatchPosition] = self.reuseDict.get(self.lastBatchPosition, 0) + 1
+        
         # advance current position in the tensor
         self.current_position += B*T * self.num_processes
         # if loading next batch is out of bounds, advance to beginning of next shard

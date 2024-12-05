@@ -49,6 +49,9 @@ class CausalSelfAttention(nn.Module):
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
+        # Note: C = n_embd
+        # head size = C // self.n_head = 64
+
         # FlashAttention: fuse kernels for attention
         # Does more flops (tradeoff) but because of operator fusion, much faster
         # In particular, att never gets written to global memory (T x T = 1024 * 1024)
@@ -64,8 +67,9 @@ class CausalSelfAttention(nn.Module):
 
 
         y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
+        # (B, T, n_embd)
         # output projection
-        y = self.c_proj(y)
+        y = self.c_proj(y) # NOTE: what is the point of this
         return y
 
 
@@ -338,8 +342,8 @@ class DataLoaderLite:
         y = (buf[1:]).view(B, T) # targets
 
         # notate that we've used this batch
-        self.reuseDict[self.current_position] = self.reuseDict.get(self.current_position, 0) + 1
         self.lastBatchPosition = (self.current_shard, self.current_position)
+        self.reuseDict[self.lastBatchPosition] = self.reuseDict.get(self.lastBatchPosition, 0) + 1
 
         # advance current position in the tensor
         self.current_position += B*T * self.num_processes
@@ -484,9 +488,9 @@ optimizer = raw_model.configure_optimizers(weight_decay=0.1, learning_rate=6e-4,
 enc = tiktoken.get_encoding('gpt2') # for following along progress of training
 
 # Create log and persistence directory
-log_dir = "log"
-sample_dir = "samples"
-checkpoint_dir = "checkpoints"
+log_dir = "log-ben"
+sample_dir = "samples-ben"
+checkpoint_dir = "checkpoints-ben"
 os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(log_dir, exist_ok=True)
 os.makedirs(sample_dir, exist_ok=True)
