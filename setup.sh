@@ -45,7 +45,7 @@ else
     done
 fi
 
-mkdir log
+mkdir -p log
 
 echo "Environment setup complete!"
 
