@@ -332,7 +332,7 @@ class DataLoaderLite:
 
         # notate that we've used this batch
         self.reuseDict[self.current_position] = self.reuseDict.get(self.current_position, 0) + 1
-        self.lastBatchPosition = self.current_position
+        self.lastBatchPosition = (self.current_shard, self.current_position)
 
         # advance current position in the tensor
         self.current_position += B*T * self.num_processes

@@ -8,6 +8,13 @@ import tiktoken
 import time
 import hellaswag
 
+# The general idea:
+# input stream is not tokens, but embedded tokens
+# evaluate a single layer
+# compute loss for the previous layer using confidence of current layer
+# have some confidence threshold for "what we consider external output"
+# if previous layer was already very confident (i.e. "output something"), then evaluate that output against the true target
+
 class CausalSelfAttention(nn.Module):
     """In parallel multiple heads/streams, outputs concatenated"""
 
@@ -100,7 +107,7 @@ class Block(nn.Module):
 class GPTConfig:
     block_size: int = 1024
     vocab_size: int = 50257 # number of tokens: 50000 BPE merges + 256 bytes tokens + 1 eot token
-    n_layer: int = 12 # number of layers
+    n_layer: int = 1 # number of layers # NOTE: layers become redundant in my architecture
     n_head: int = 12 # number of heads
     n_embd: int = 768 # embedding dimensionality
 
@@ -332,7 +339,7 @@ class DataLoaderLite:
 
         # notate that we've used this batch
         self.reuseDict[self.current_position] = self.reuseDict.get(self.current_position, 0) + 1
-        self.lastBatchPosition = self.current_position
+        self.lastBatchPosition = (self.current_shard, self.current_position)
 
         # advance current position in the tensor
         self.current_position += B*T * self.num_processes
