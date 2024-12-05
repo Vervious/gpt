@@ -45,6 +45,8 @@ else
     done
 fi
 
+mkdir log
+
 echo "Environment setup complete!"
 
 # Optional: Deactivate the virtual environment
