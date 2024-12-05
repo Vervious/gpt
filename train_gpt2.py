@@ -223,8 +223,8 @@ class GPT(nn.Module):
         N -= self.transformer.wpe.weight.numel() # due to parameter sharing, I think we should get rid of this?
 
         cfg = self.config
-        L, H, Q, T = cfg.n_layer, cfg.n_head, cfg.n_embd // cfg.n_head, cfg.block_size
-        flops_per_token = 6*N # + 12*L*H*Q*T
+        L, H, HS, T = cfg.n_layer, cfg.n_head, cfg.n_embd // cfg.n_head, cfg.block_size
+        flops_per_token = 6*N # + 12*L*H*HS*T
         flops_per_fwdbwd = flops_per_token * T
         flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
         flops_achieved = flops_per_iter * (1.0/(dt*1000))
