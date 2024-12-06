@@ -177,17 +177,16 @@ class GPT(nn.Module):
             # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
             # _out_embedded_tokens_from_prev should be (B, T, n_embd)
             _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
-            _psafe = F.log_softmax(_logits) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-            _psafe_min, _ = _psafe.min(dim=-1) # (returns values, indices)
-            _psafe_min_avg = _psafe_min.mean() # average over batch and time
-            # _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
-            # print("BLOCKLOSS, " , _block_loss.item())
-            loss += -1*_psafe_min_avg # NOTE: just try this for now
+            _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+            # (_logprobs.exp() * _logprobs).sum(dim=-1)
+            _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
+            loss += _block_loss # NOTE: just try this for now
         # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x) # (B, T, vocab_size)
+        trueLoss = None
         if targets is not None:
             # shape of input to x-entropy is B*T x V, B*T x 1
             # recall: logits are basically log counts
@@ -197,7 +196,8 @@ class GPT(nn.Module):
             xe = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
             # print("LOSS", xe.item())
             loss += xe
-        return logits, loss, xe.detach()
+            trueLoss = xe.detach()
+        return logits, loss, trueLoss
 
     @classmethod
     def from_pretrained(cls, model_type):
