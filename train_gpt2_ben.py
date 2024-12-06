@@ -134,7 +134,7 @@ class GPT(nn.Module):
             wpe = nn.Embedding(config.block_size, config.n_embd),
             # TODO: have the KQV weights also be shared across layers
             # h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
-            h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
+            h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
             # weights of layer normalization
             ln_f = nn.LayerNorm(config.n_embd),
         ))
@@ -176,14 +176,14 @@ class GPT(nn.Module):
         # print(self.transformer.h)
         for block in self.transformer.h:
             x, _out_embedded_tokens_from_prev = block(x)
-            # # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
-            # # _out_embedded_tokens_from_prev should be (B, T, n_embd)
-            # _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
-            # _psafe = self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-            # _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
-            # print("BLOCKLOSS, " , _block_loss.item())
-            # loss += _block_loss # NOTE: just try this for now
-        # print(len(self.transformer.h))
+        #     # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
+        #     # _out_embedded_tokens_from_prev should be (B, T, n_embd)
+        #     _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
+        #     _psafe = self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+        #     _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
+        #     print("BLOCKLOSS, " , _block_loss.item())
+        #     loss += _block_loss # NOTE: just try this for now
+        # # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
         x = self.transformer.ln_f(x)
