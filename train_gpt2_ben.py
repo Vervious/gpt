@@ -125,8 +125,6 @@ class GPT(nn.Module):
         # NOTE: this does not seem to degrade performance at least early in the training process
         shared_block = Block(config)
 
-        self.softmax = nn.Softmax(dim=-1)
-
         self.transformer = nn.ModuleDict(dict(
             # weights of token embedding
             wte = nn.Embedding(config.vocab_size, config.n_embd),
@@ -176,14 +174,16 @@ class GPT(nn.Module):
         # print(self.transformer.h)
         for block in self.transformer.h:
             x, _out_embedded_tokens_from_prev = block(x)
-        #     # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
-        #     # _out_embedded_tokens_from_prev should be (B, T, n_embd)
-        #     _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
-        #     _psafe = self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-        #     _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
-        #     print("BLOCKLOSS, " , _block_loss.item())
-        #     loss += _block_loss # NOTE: just try this for now
-        # # print(len(self.transformer.h))
+            # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
+            # _out_embedded_tokens_from_prev should be (B, T, n_embd)
+            _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
+            _psafe = F.log_softmax(_logits) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+            _psafe_min, _ = _psafe.min(dim=-1) # (returns values, indices)
+            _psafe_min_avg = _psafe_min.mean() # average over batch and time
+            # _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
+            # print("BLOCKLOSS, " , _block_loss.item())
+            loss += -1*_psafe_min_avg # NOTE: just try this for now
+        # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
         x = self.transformer.ln_f(x)
@@ -197,7 +197,7 @@ class GPT(nn.Module):
             xe = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
             # print("LOSS", xe.item())
             loss += xe
-        return logits, loss
+        return logits, loss, xe.detach()
 
     @classmethod
     def from_pretrained(cls, model_type):
@@ -451,9 +451,9 @@ if master_process:
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 16 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 1024 # sequence length
-total_batch_size = 2 * B * T# 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 1024 # sequence length # 1024
+total_batch_size = 2 * 16 * 1024# 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
@@ -552,7 +552,7 @@ for step in range(max_steps):
                 x, y = val_loader.next_batch()
                 x, y = x.to(device), y.to(device)  
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, loss = model(x, y)
+                    logits, _, loss = model(x, y)
                 loss = loss / val_loss_steps # average accumulated loss
                 val_loss_accum += loss.detach() # why do i need to call detach if I never call backward on it
         if ddp:
@@ -582,7 +582,7 @@ for step in range(max_steps):
             # get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, loss = model(tokens)
+                    logits, _, loss = model(tokens)
                 pred_norm = hellaswag.get_most_likely_row(tokens, mask, logits)
             num_total += 1
             num_correct_norm += int(pred_norm == label)
@@ -615,7 +615,7 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _ = model(xgen) # (B, T, vocab_size)
+                    logits, _, _ = model(xgen) # (B, T, vocab_size)
                 # take logits at the last location
                 logits = logits[:,-1,:] # (B, vocab_size)
                 # get the probabilities
@@ -649,10 +649,10 @@ for step in range(max_steps):
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            logits, loss = model(x, y)
+            logits, loss, trueloss = model(x, y)
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
-        loss_accum += loss.detach()
+        loss_accum += trueloss.detach() / grad_accum_steps
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
