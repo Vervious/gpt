@@ -112,7 +112,7 @@ class Block(nn.Module):
 class GPTConfig:
     block_size: int = 1024
     vocab_size: int = 50257 # number of tokens: 50000 BPE merges + 256 bytes tokens + 1 eot token
-    n_layer: int = 1 # number of layers # NOTE: layers become redundant in my architecture
+    n_layer: int = 12 # number of layers # NOTE: layers become redundant in my architecture
     n_head: int = 12 # number of heads
     n_embd: int = 768 # embedding dimensionality
 
@@ -134,7 +134,7 @@ class GPT(nn.Module):
             wpe = nn.Embedding(config.block_size, config.n_embd),
             # TODO: have the KQV weights also be shared across layers
             # h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
-            h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
+            h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
             # weights of layer normalization
             ln_f = nn.LayerNorm(config.n_embd),
         ))
@@ -173,14 +173,17 @@ class GPT(nn.Module):
 
         # now forward through transformer
         loss = 0.0
+        # print(self.transformer.h)
         for block in self.transformer.h:
             x, _out_embedded_tokens_from_prev = block(x)
-            # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
-            # _out_embedded_tokens_from_prev should be (B, T, n_embd)
-            _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
-            _psafe = self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-            _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
-            loss += _block_loss # NOTE: just try this for now
+            # # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
+            # # _out_embedded_tokens_from_prev should be (B, T, n_embd)
+            # _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
+            # _psafe = self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+            # _block_loss = -(_psafe * _psafe.log()).sum(dim=-1).mean() # cross entropy loss
+            # print("BLOCKLOSS, " , _block_loss.item())
+            # loss += _block_loss # NOTE: just try this for now
+        # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
         x = self.transformer.ln_f(x)
@@ -191,7 +194,9 @@ class GPT(nn.Module):
             # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
             # cross entropy loss is just -log(pr[target])
             # F.cross_entropy takes average over B*T
-            loss += F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+            xe = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+            # print("LOSS", xe.item())
+            loss += xe
         return logits, loss
 
     @classmethod
@@ -250,7 +255,7 @@ class GPT(nn.Module):
 
         cfg = self.config
         L, H, Q, T = cfg.n_layer, cfg.n_head, cfg.n_embd // cfg.n_head, cfg.block_size
-        flops_per_token = 6*N # + 12*L*H*Q*T
+        flops_per_token = 6*N + 12*L*H*Q*T
         flops_per_fwdbwd = flops_per_token * T
         flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
         flops_achieved = flops_per_iter * (1.0/(dt*1000))
@@ -275,6 +280,10 @@ class GPT(nn.Module):
         if master_process:
             print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
             print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
+            with open(log_file, "a") as f:
+                f.write(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
+                f.write(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
+    
 
         # create AdamW optimizer and use the fused version if it is available
         # Fused just fuse all the kernels, so a single time, for all the parameters, call a kernel that updates them (morally)
@@ -423,6 +432,23 @@ if torch.cuda.is_available():
 # ===================
 # HYPERPARAMETERS
 # ===================
+
+
+# Create log and persistence directory
+log_dir = "log-ben"
+sample_dir = "samples-ben"
+checkpoint_dir = "checkpoints-ben"
+os.makedirs(checkpoint_dir, exist_ok=True)
+os.makedirs(log_dir, exist_ok=True)
+os.makedirs(sample_dir, exist_ok=True)
+log_file = os.path.join(log_dir, "log.txt")
+sample_file = os.path.join(sample_dir, "main.txt")
+if master_process:
+    with open(log_file, "w") as f: # clear log file
+        pass
+    with open(sample_file, "w") as f: # clear samples file
+        pass
+
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 16 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
@@ -435,7 +461,7 @@ min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 
-hello_swag_frequency = 500
+hello_swag_frequency = 20000
 validation_frequency = 2000
 checkpoint_frequency = 20000
 sample_frequency = 100
@@ -447,6 +473,13 @@ if master_process:
     print(f"Mini-batch size: {B}*{T}")
     print(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
     print(f"Training max steps: {max_steps}")
+
+
+    with open(log_file, "a") as f:
+        f.write(f"total desired batch size: {total_batch_size}")
+        f.write(f"Mini-batch size: {B}*{T}")
+        f.write(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
+        f.write(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
 
 print("I am GPU", ddp_rank, " of ", ddp_world_size)
 
@@ -498,25 +531,12 @@ def get_lr(it):
     coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio)) # coeff starts at 1, goes to 0
     return min_lr + coeff * (max_lr - min_lr)
 
+
 # Learn
 optimizer = raw_model.configure_optimizers(weight_decay=0.1, learning_rate=6e-4, device=device) # stealing hyperparams from gpt3
 
 enc = tiktoken.get_encoding('gpt2') # for following along progress of training
 
-# Create log and persistence directory
-log_dir = "log-ben"
-sample_dir = "samples-ben"
-checkpoint_dir = "checkpoints-ben"
-os.makedirs(checkpoint_dir, exist_ok=True)
-os.makedirs(log_dir, exist_ok=True)
-os.makedirs(sample_dir, exist_ok=True)
-log_file = os.path.join(log_dir, "log.txt")
-sample_file = os.path.join(sample_dir, "main.txt")
-if master_process:
-    with open(log_file, "w") as f: # clear log file
-        pass
-    with open(sample_file, "w") as f: # clear samples file
-        pass
 
 for step in range(max_steps):
     t0 = time.time()
