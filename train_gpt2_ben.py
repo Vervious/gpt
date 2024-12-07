@@ -627,20 +627,19 @@ for step in range(max_steps):
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
                     logits, _, _ = model(xgen, all_logits=True) # (B, T, vocab_size)
                     
-                printgen.extend(leftParens)
-
                 for _logit in logits:
                     # take the last token logits
-                    _logit = _logit[:,-1,:]
-                    _probs = F.softmax(_logit, dim=-1)
-                    vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
-                    printgen.append(idxs[0,0].item())
-                    printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
-                
-                printgen.extend(rightParens)
+                    printgen.extend(leftParens)
+                    for j in range(5):
+                        _logit = _logit[:,-(j+1),:]
+                        _probs = F.softmax(_logit, dim=-1)
+                        vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
+                        printgen.append(idxs[0,0].item())
+                        printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
+                    printgen.extend(rightParens)
 
-                # take logits at the last location
                 logits = logits[-1]
+                # take logits at the last location
                 logits = logits[:,-1,:] # (B, vocab_size)
                 # get the probabilities
                 probs = F.softmax(logits, dim=-1)
