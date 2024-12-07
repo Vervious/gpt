@@ -154,7 +154,7 @@ class GPT(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None, all_logits=False):
+    def forward(self, idx, targets=None, all_logits=False, print_weights=False):
         # idx is token indices
         # idx is of shape (B, T)
         B,T = idx.size()
@@ -183,6 +183,8 @@ class GPT(nn.Module):
             loss += _block_loss # NOTE: just try this for now
             if all_logits:
                 allLogits.append(_logits)
+            if print_weights:
+                print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-10:])
         # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
@@ -625,7 +627,7 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _ = model(xgen, all_logits=True) # (B, T, vocab_size)
+                    logits, _, _ = model(xgen, all_logits=True, print_weights=True) # (B, T, vocab_size)
                     
                 for _logit in logits:
                     # take the last token logits
