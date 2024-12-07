@@ -122,9 +122,6 @@ class GPT(nn.Module):
         super().__init__()
         self.config = config
 
-        # NOTE: this does not seem to degrade performance at least early in the training process
-        shared_block = Block(config)
-
         self.transformer = nn.ModuleDict(dict(
             # weights of token embedding
             wte = nn.Embedding(config.vocab_size, config.n_embd),
@@ -132,7 +129,7 @@ class GPT(nn.Module):
             wpe = nn.Embedding(config.block_size, config.n_embd),
             # TODO: have the KQV weights also be shared across layers
             # h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
-            h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
+            sharedblock = Block(config), # NOTE: this does not seem to degrade performance at least early in the training process
             # weights of layer normalization
             ln_f = nn.LayerNorm(config.n_embd),
         ))
@@ -157,7 +154,7 @@ class GPT(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None, all_logits=False):
         # idx is token indices
         # idx is of shape (B, T)
         B,T = idx.size()
@@ -171,21 +168,28 @@ class GPT(nn.Module):
 
         # now forward through transformer
         loss = 0.0
+        allLogits = []
         # print(self.transformer.h)
-        for block in self.transformer.h:
-            x, _out_embedded_tokens_from_prev = block(x)
+        for i in range(self.config.n_layer):
+            x, _out_embedded_tokens_from_prev = self.transformer.sharedblock(x)
             # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
             # _out_embedded_tokens_from_prev should be (B, T, n_embd)
             _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
-            _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+            _targets = _logits.detach().max(dim=-1)[1]
+            # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
-            _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
+            # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
+            _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
             loss += _block_loss # NOTE: just try this for now
+            if all_logits:
+                allLogits.append(_logits)
         # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x) # (B, T, vocab_size)
+        if all_logits:
+            allLogits.append(logits)
         trueLoss = None
         if targets is not None:
             # shape of input to x-entropy is B*T x V, B*T x 1
@@ -197,7 +201,10 @@ class GPT(nn.Module):
             # print("LOSS", xe.item())
             loss += xe
             trueLoss = xe.detach()
-        return logits, loss, trueLoss
+        if all_logits:
+            return allLogits, loss, trueLoss
+        else:
+            return logits, loss, trueLoss
 
     @classmethod
     def from_pretrained(cls, model_type):
@@ -601,11 +608,14 @@ for step in range(max_steps):
                 f.write(f"{step} hellaswag {acc_norm:.4f}\n")
     
     # Also generate some sample text once in a while
-    if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)): # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
+    if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)) or step == 1: # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
         model.eval()
-        num_return_sequences = 3
-        max_length = 64
+        num_return_sequences = 1
+        max_length = 128
         tokens = enc.encode("Hello, I'm a language model,")
+        printgen = tokens
+        leftParens = enc.encode("\n\t\t(")
+        rightParens = enc.encode(")\n")
         tokens = torch.tensor(tokens, dtype=torch.long)
         tokens = tokens.unsqueeze(0).repeat(num_return_sequences, 1)
         xgen = tokens.to(device)
@@ -615,8 +625,22 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _ = model(xgen) # (B, T, vocab_size)
+                    logits, _, _ = model(xgen, all_logits=True) # (B, T, vocab_size)
+                    
+                printgen.extend(leftParens)
+
+                for _logit in logits:
+                    # take the last token logits
+                    _logit = _logit[:,-1,:]
+                    _probs = F.softmax(_logit, dim=-1)
+                    vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
+                    printgen.append(idxs[0,0].item())
+                    printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
+                
+                printgen.extend(rightParens)
+
                 # take logits at the last location
+                logits = logits[-1]
                 logits = logits[:,-1,:] # (B, vocab_size)
                 # get the probabilities
                 probs = F.softmax(logits, dim=-1)
@@ -629,9 +653,10 @@ for step in range(max_steps):
                 xcol = torch.gather(topk_indices, -1, ix) # (B, 1)
                 # append to the sequence
                 xgen = torch.cat((xgen, xcol), dim=1)
+                printgen.append(xcol[0,0].item())
         # print the generated text
         for i in range(num_return_sequences):
-            tokens = xgen[i, :max_length].tolist()
+            tokens = printgen
             decoded = enc.decode(tokens)
             print(f"rank {ddp_rank} sample {i}: {decoded}")
             with open(sample_file, "a") as f:
@@ -641,6 +666,7 @@ for step in range(max_steps):
     model.train()
     optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
     loss_accum = 0.0
+    loss_accum_all = 0.0
     for micro_step in range(grad_accum_steps):
         x, y = train_loader.next_batch()
         timesBatchUsed = train_loader.num_times_latest_batch_used()
@@ -653,6 +679,7 @@ for step in range(max_steps):
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps
+        loss_accum_all += loss.detach()
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
@@ -680,9 +707,9 @@ for step in range(max_steps):
         tokens_per_sec = tokens_processed / dt
         flops = raw_model.estimate_mfu(fwdbwd_per_iter=(tokens_processed), dt=dt)
 
-        print(f"step {step}, loss: {loss_accum.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
+        print(f"step {step}, loss: {loss_accum.item():.8f}, allloss: {loss_accum_all.item():.8f} lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
         with open(log_file, "a") as f:
-            f.write(f"{step} train {loss_accum.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
+            f.write(f"{step} train {loss_accum.item():.8f}, allloss: {loss_accum_all.item():.4f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
 
 
 if ddp:
