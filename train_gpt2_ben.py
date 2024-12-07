@@ -122,6 +122,8 @@ class GPT(nn.Module):
         super().__init__()
         self.config = config
 
+        sharedBlock = Block(config)
+
         self.transformer = nn.ModuleDict(dict(
             # weights of token embedding
             wte = nn.Embedding(config.vocab_size, config.n_embd),
@@ -129,9 +131,9 @@ class GPT(nn.Module):
             wpe = nn.Embedding(config.block_size, config.n_embd),
             # TODO: have the KQV weights also be shared across layers
             # h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
-            sharedblock = Block(config), # NOTE: this does not seem to degrade performance at least early in the training process
+            sharedblock = sharedBlock, # NOTE: this does not seem to degrade performance at least early in the training process
             # weights of layer normalization
-            ln_f = nn.LayerNorm(config.n_embd),
+            ln_f = sharedBlock.ln_1, # nn.LayerNorm(config.n_embd),
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
@@ -183,8 +185,16 @@ class GPT(nn.Module):
             loss += _block_loss # NOTE: just try this for now
             if all_logits:
                 allLogits.append(_logits)
-            if print_weights:
-                print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-10:])
+            if print_weights and (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1):
+                # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
+                # do top-k sampling of 50 (huggingface pipeline default)
+                # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+                topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+                print(f"Layer {i}\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+                # if i > 5:
+                #     break
+                # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
         # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
@@ -192,6 +202,15 @@ class GPT(nn.Module):
         logits = self.lm_head(x) # (B, T, vocab_size)
         if all_logits:
             allLogits.append(logits)
+        
+        if print_weights:
+            # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+            probs = F.softmax(logits, dim=-1) # (B, T, vocab_size?)
+            # do top-k sampling of 50 (huggingface pipeline default)
+            # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+            topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+            print(f"Layer 12\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+
         trueLoss = None
         if targets is not None:
             # shape of input to x-entropy is B*T x V, B*T x 1
@@ -462,7 +481,7 @@ if master_process:
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 1024 # sequence length # 1024
-total_batch_size = 2 * 16 * 1024# 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+total_batch_size = 2 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
@@ -613,10 +632,10 @@ for step in range(max_steps):
     if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)) or step == 1: # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
         model.eval()
         num_return_sequences = 1
-        max_length = 128
+        max_length = 9
         tokens = enc.encode("Hello, I'm a language model,")
         printgen = tokens
-        leftParens = enc.encode("\n\t\t(")
+        leftParens = enc.encode("\t\t(")
         rightParens = enc.encode(")\n")
         tokens = torch.tensor(tokens, dtype=torch.long)
         tokens = tokens.unsqueeze(0).repeat(num_return_sequences, 1)
@@ -627,13 +646,14 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _ = model(xgen, all_logits=True, print_weights=True) # (B, T, vocab_size)
-                    
-                for _logit in logits:
+                    logits, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=True) # (B, T, vocab_size)
+
+                printgen.extend(enc.encode("\n"))    
+                for l in logits:
                     # take the last token logits
                     printgen.extend(leftParens)
-                    for j in range(5):
-                        _logit = _logit[:,-(j+1),:]
+                    for j in range(7, -1, -1): # 0 to 7
+                        _logit = l[:,-(j+1),:]
                         _probs = F.softmax(_logit, dim=-1)
                         vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
                         printgen.append(idxs[0,0].item())
