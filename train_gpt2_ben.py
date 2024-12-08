@@ -182,7 +182,7 @@ class GPT(nn.Module):
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
             _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
-            loss += _block_loss # NOTE: just try this for now
+            # loss += _block_loss # NOTE: just try this for now
             if all_logits:
                 allLogits.append(_logits)
             if print_weights and (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1):
@@ -480,7 +480,7 @@ if master_process:
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 1024 # sequence length # 1024
+T = 16 # sequence length # 1024
 total_batch_size = 2 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
@@ -489,10 +489,10 @@ min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 
-hello_swag_frequency = 20000
+hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 20000
-sample_frequency = 100
+sample_frequency = 1000
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
