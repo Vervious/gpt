@@ -185,16 +185,20 @@ class GPT(nn.Module):
             # loss += _block_loss # NOTE: just try this for now
             if all_logits:
                 allLogits.append(_logits)
-            if print_weights and (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1):
-                # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
-                # do top-k sampling of 50 (huggingface pipeline default)
-                # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                print(f"Layer {i}\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
-                # if i > 5:
-                #     break
-                # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+            if print_weights:
+                early_end = 6 # only run 6 layers and see what happens
+                if (i == 0 or i == early_end - 2 or i == early_end - 1):
+                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                    probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
+                    # do top-k sampling of 50 (huggingface pipeline default)
+                    # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+                    topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+                    print(f"Layer {i}\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+                    # if i > 5:
+                    #     break
+                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                if i == early_end - 1:
+                    break
         # print(len(self.transformer.h))
 
         # forward first layer norm and classifier
@@ -209,7 +213,7 @@ class GPT(nn.Module):
             # do top-k sampling of 50 (huggingface pipeline default)
             # topk_probs here becomes (5, 50), topk_indices is (5, 50)
             topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-            print(f"Layer 12\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+            print(f"Layer 6\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
 
         trueLoss = None
         if targets is not None:
