@@ -182,7 +182,7 @@ class GPT(nn.Module):
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
             _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
-            # loss += _block_loss # NOTE: just try this for now
+            loss += _block_loss # NOTE: just try this for now
             if all_logits:
                 allLogits.append(_logits)
             if print_weights:
@@ -457,9 +457,9 @@ else:
     print(f"using device: {device}")
 
 
-torch.manual_seed(1337)
+torch.manual_seed(1234)
 if torch.cuda.is_available():
-    torch.cuda.manual_seed(1337)
+    torch.cuda.manual_seed(1234)
 
 # ===================
 # HYPERPARAMETERS
