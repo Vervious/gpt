@@ -102,10 +102,13 @@ class Block(nn.Module):
     
     def forward(self, x):
         # note residual connection x
-        out = self.ln_1(x)
-        x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
-        x = x + self.mlp(self.ln_2(x))  # map operation (one to one)
-        return x, out
+        # out = self.ln_1(x)
+        # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
+        x = x + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation
+        x = self.ln_2(x) # NOTE: again note the difference here, i do it again just to be consistent
+        x = x + self.mlp(x)  # map operation (one to one)
+        x = self.ln_1(x)
+        return x
 
 
 @dataclass
@@ -171,23 +174,22 @@ class GPT(nn.Module):
         # now forward through transformer
         loss = 0.0
         allLogits = []
+        THRESHOLD = 0.9
         # print(self.transformer.h)
+        x = self.transformer.ln_f(x) # apply the initial layer norm (this is backwards from the usual implementation, but same semantically)
+
+        _logits = None
+
         for i in range(self.config.n_layer):
-            x, _out_embedded_tokens_from_prev = self.transformer.sharedblock(x)
-            # NOTE: _out_embedded_tokens_from_prev is post layer norm, so don't have to compute layer norm again. In principle this computes loss for previous weight application, but in reality it all gets mishmashed together.
-            # _out_embedded_tokens_from_prev should be (B, T, n_embd)
-            _logits = self.lm_head(_out_embedded_tokens_from_prev) # (B, T, vocab_size)
-            _targets = _logits.detach().max(dim=-1)[1]
-            # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-            # (_logprobs.exp() * _logprobs).sum(dim=-1)
-            # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
-            _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
-            loss += _block_loss # NOTE: just try this for now
-            if all_logits:
+            x = self.transformer.sharedblock(x)
+
+            _logits = self.lm_head(x) # (B, T, vocab_size)
+            if all_logits or i == self.config.n_layer - 1:
                 allLogits.append(_logits)
+
             if print_weights:
-                early_end = 6 # only run 6 layers and see what happens
-                if (i == 0 or i == early_end - 2 or i == early_end - 1):
+                early_end = self.config.n_layer # can change to smaller number to "short circuit"
+                if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer):
                     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
                     probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
                     # do top-k sampling of 50 (huggingface pipeline default)
@@ -197,23 +199,35 @@ class GPT(nn.Module):
                     # if i > 5:
                     #     break
                     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                if i == early_end - 1:
-                    break
+                # if i == early_end - 1:
+                #     break
+            
+            if i == self.config.n_layer - 1:
+                break # TODO before or after updating loss += _block_loss?
+            
+            _targets = _logits.detach().max(dim=-1)[1]
+            # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+            # (_logprobs.exp() * _logprobs).sum(dim=-1)
+            # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
+            _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
+            loss += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
+            if -1 * _block_loss.item() > THRESHOLD: # this is average across entire T
+                break
         # print(len(self.transformer.h))
 
-        # forward first layer norm and classifier
-        x = self.transformer.ln_f(x)
-        logits = self.lm_head(x) # (B, T, vocab_size)
-        if all_logits:
-            allLogits.append(logits)
+        # forward final layer norm and classifier
+        # x = self.transformer.ln_f(x) # also share the final layer norm
+        # logits = self.lm_head(x) # (B, T, vocab_size)
+        # if all_logits:
+        #     allLogits.append(logits)
         
-        if print_weights:
-            # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-            probs = F.softmax(logits, dim=-1) # (B, T, vocab_size?)
-            # do top-k sampling of 50 (huggingface pipeline default)
-            # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-            topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-            print(f"Layer 6\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+        # if print_weights:
+        #     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+        #     probs = F.softmax(logits, dim=-1) # (B, T, vocab_size?)
+        #     # do top-k sampling of 50 (huggingface pipeline default)
+        #     # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+        #     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+        #     print(f"Layer 6\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
 
         trueLoss = None
         if targets is not None:
@@ -222,14 +236,14 @@ class GPT(nn.Module):
             # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
             # cross entropy loss is just -log(pr[target])
             # F.cross_entropy takes average over B*T
-            xe = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+            xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1))
             # print("LOSS", xe.item())
             loss += xe
             trueLoss = xe.detach()
         if all_logits:
             return allLogits, loss, trueLoss
         else:
-            return logits, loss, trueLoss
+            return _logits, loss, trueLoss
 
     @classmethod
     def from_pretrained(cls, model_type):
