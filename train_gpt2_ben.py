@@ -100,15 +100,18 @@ class Block(nn.Module):
         self.ln_2 = nn.LayerNorm(config.n_embd)
         self.mlp = MLP(config)
     
-    def forward(self, x):
-        # note residual connection x
+    def forward(self, x, res):
+        # note residual connection res
         # out = self.ln_1(x)
+        # NOTE, for some reason LN(x) + self.attn(LN(x)) doesn't work as well. 
+        # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
-        x = x + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation
-        x = self.ln_2(x) # NOTE: again note the difference here, i do it again just to be consistent
-        x = x + self.mlp(x)  # map operation (one to one)
+        x = res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation
+        # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
+        x = x + self.mlp(self.ln_2(x))  # map operation (one to one)
+        newres = x
         x = self.ln_1(x)
-        return x
+        return x, newres
 
 
 @dataclass
@@ -174,14 +177,14 @@ class GPT(nn.Module):
         # now forward through transformer
         loss = 0.0
         allLogits = []
-        THRESHOLD = 0.1 # ln(0.9), about 90% confidence
         # print(self.transformer.h)
+        res = x
         x = self.transformer.ln_f(x) # apply the initial layer norm (this is backwards from the usual implementation, but same semantically)
 
         _logits = None
 
         for i in range(self.config.n_layer):
-            x = self.transformer.sharedblock(x)
+            x, res = self.transformer.sharedblock(x, res)
 
             _logits = self.lm_head(x) # (B, T, vocab_size)
             if all_logits or i == self.config.n_layer - 1:
@@ -193,12 +196,14 @@ class GPT(nn.Module):
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
             _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
+            # TODO no grad the most recent application of attention
 
             if print_weights:
                 early_end = self.config.n_layer # can change to smaller number to "short circuit"
                 if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer) and master_process:
                     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
                     probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
+                    # print top k of the last T
                     # do top-k sampling of 50 (huggingface pipeline default)
                     # topk_probs here becomes (5, 50), topk_indices is (5, 50)
                     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
@@ -214,7 +219,8 @@ class GPT(nn.Module):
                     bprint(f"\tUtilized all layers {i}")
                 break # TODO before or after updating loss += _block_loss?
             
-            loss += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
+            if ENABLE_LAYER_LOSS:
+                loss += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
             if _block_loss.item() < THRESHOLD: # this is average across entire T
                 if master_process and print_weights:
                     bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
@@ -517,6 +523,8 @@ max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
 min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
+THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
+ENABLE_LAYER_LOSS = True
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
@@ -531,6 +539,8 @@ if master_process:
     print(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
     print(f"Training max steps: {max_steps}")
     print(f"Num GPUs: {ddp_world_size}")
+    bprint(f"Threshold: {THRESHOLD}")
+    bprint(f"Enable layer loss: {ENABLE_LAYER_LOSS}")
 
 
     with open(log_file, "a") as f:
