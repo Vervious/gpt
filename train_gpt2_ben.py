@@ -174,7 +174,7 @@ class GPT(nn.Module):
         # now forward through transformer
         loss = 0.0
         allLogits = []
-        THRESHOLD = 0.9
+        THRESHOLD = 0.1 # ln(0.9), about 90% confidence
         # print(self.transformer.h)
         x = self.transformer.ln_f(x) # apply the initial layer norm (this is backwards from the usual implementation, but same semantically)
 
@@ -187,31 +187,37 @@ class GPT(nn.Module):
             if all_logits or i == self.config.n_layer - 1:
                 allLogits.append(_logits)
 
-            if print_weights:
-                early_end = self.config.n_layer # can change to smaller number to "short circuit"
-                if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer):
-                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                    probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
-                    # do top-k sampling of 50 (huggingface pipeline default)
-                    # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                    topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                    print(f"Layer {i}\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
-                    # if i > 5:
-                    #     break
-                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                # if i == early_end - 1:
-                #     break
-            
-            if i == self.config.n_layer - 1:
-                break # TODO before or after updating loss += _block_loss?
             
             _targets = _logits.detach().max(dim=-1)[1]
             # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
             _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
+
+            if print_weights:
+                early_end = self.config.n_layer # can change to smaller number to "short circuit"
+                if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer) and master_process:
+                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                    probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
+                    # do top-k sampling of 50 (huggingface pipeline default)
+                    # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+                    topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+                    bprint(f"Layer {i} Block_loss={_block_loss.item()}\n\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+                    # if i > 5:
+                    #     break
+                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                # if i == early_end - 1:
+                #     break
+
+            if i == self.config.n_layer - 1:
+                if master_process and print_weights:
+                    bprint(f"\tUtilized all layers {i}")
+                break # TODO before or after updating loss += _block_loss?
+            
             loss += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
-            if -1 * _block_loss.item() > THRESHOLD: # this is average across entire T
+            if _block_loss.item() < THRESHOLD: # this is average across entire T
+                if master_process and print_weights:
+                    bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
                 break
         # print(len(self.transformer.h))
 
@@ -327,8 +333,8 @@ class GPT(nn.Module):
             print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
             print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
             with open(log_file, "a") as f:
-                f.write(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
-                f.write(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
+                f.write(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters\n")
+                f.write(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters\n")
     
 
         # create AdamW optimizer and use the fused version if it is available
@@ -495,10 +501,15 @@ if master_process:
     with open(sample_file, "w") as f: # clear samples file
         pass
 
+def bprint(s):
+    print(s)
+    with open(log_file, "a") as f:
+        f.write(s + "\n")
+
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 16 # sequence length # 1024
+T = 1024 # sequence length # 16
 total_batch_size = 2 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
@@ -519,13 +530,16 @@ if master_process:
     print(f"Mini-batch size: {B}*{T}")
     print(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
     print(f"Training max steps: {max_steps}")
+    print(f"Num GPUs: {ddp_world_size}")
 
 
     with open(log_file, "a") as f:
-        f.write(f"total desired batch size: {total_batch_size}")
-        f.write(f"Mini-batch size: {B}*{T}")
-        f.write(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
-        f.write(f"=> calculated gradient accumulation steps: {grad_accum_steps}")
+        f.write(f"total desired batch size: {total_batch_size}\n")
+        f.write(f"Mini-batch size: {B}*{T}\n")
+        f.write(f"=> calculated gradient accumulation steps: {grad_accum_steps}\n")
+        f.write(f"=> calculated gradient accumulation steps: {grad_accum_steps}\n")
+        f.write(f"Training max steps: {max_steps}")
+        f.write(f"Num GPUs: {ddp_world_size}")
 
 print("I am GPU", ddp_rank, " of ", ddp_world_size)
 
@@ -748,7 +762,7 @@ for step in range(max_steps):
 
         print(f"step {step}, loss: {loss_accum.item():.8f}, allloss: {loss_accum_all.item():.8f} lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
         with open(log_file, "a") as f:
-            f.write(f"{step} train {loss_accum.item():.8f}, allloss: {loss_accum_all.item():.4f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
+            f.write(f"@ {step} train {loss_accum.item():.8f} , allloss: {loss_accum_all.item():.4f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
 
 
 if ddp:
