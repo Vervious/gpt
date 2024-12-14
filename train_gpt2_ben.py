@@ -233,7 +233,7 @@ class GPT(DualModule):
             
             if ENABLE_LAYER_LOSS:
                 losses += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
-            if _block_loss.item() < THRESHOLD: # this is average across entire T
+            if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T
                 if master_process and print_weights:
                     bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
                 break
@@ -528,7 +528,7 @@ def bprint(s):
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 1024 # sequence length # 16
+T = 512 # sequence length # 16 # 1024
 total_batch_size = 2 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
@@ -537,7 +537,7 @@ min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
-ENABLE_LAYER_LOSS = True
+ENABLE_LAYER_LOSS = False
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
