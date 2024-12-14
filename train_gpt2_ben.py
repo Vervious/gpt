@@ -194,6 +194,7 @@ class GPT(DualModule):
         for i in range(self.config.n_layer):
             # This one is detached
             x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
+            
             x, res = self.transformer.sharedblock.requires_grad_(True)(x, res)
 
             _logits = self.lm_head(x_False) # (B, T, vocab_size)
@@ -540,7 +541,7 @@ ENABLE_LAYER_LOSS = True
 hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 20000
-sample_frequency = 1000
+sample_frequency = 500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
