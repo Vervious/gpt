@@ -197,7 +197,8 @@ class GPT(DualModule):
             
             x, res = self.transformer.sharedblock.requires_grad_(True)(x, res)
 
-            _logits = self.lm_head(x_False) # (B, T, vocab_size)
+            _logits = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
+            # TODO: seems not to work if I dont' call requires_grad(False) on lm_head (maybe for obvious reasons), now check if I do call it.
             if all_logits or i == self.config.n_layer - 1:
                 allLogits.append(_logits)
 
@@ -254,7 +255,7 @@ class GPT(DualModule):
 
         trueLoss = None
         if targets is not None:
-            _logits = self.lm_head(x) # (B, T, vocab_size) # NOTE: this is with gradient
+            _logits = self.lm_head.requires_grad_(True)(x) # (B, T, vocab_size) # NOTE: this is with gradient
             # shape of input to x-entropy is B*T x V, B*T x 1
             # recall: logits are basically log counts
             # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
