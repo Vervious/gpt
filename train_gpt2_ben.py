@@ -8,6 +8,14 @@ import tiktoken
 import time
 import hellaswag
 
+
+class DualModule(nn.Module):
+
+    def __init__(self):
+        super(DualModule, self).__init__()
+
+
+
 # The general idea:
 # input stream is not tokens, but embedded tokens
 # evaluate a single layer
@@ -15,7 +23,7 @@ import hellaswag
 # have some confidence threshold for "what we consider external output"
 # if previous layer was already very confident (i.e. "output something"), then evaluate that output against the true target
 
-class CausalSelfAttention(nn.Module):
+class CausalSelfAttention(DualModule):
     """In parallel multiple heads/streams, outputs concatenated"""
 
     def __init__(self, config):
@@ -73,7 +81,7 @@ class CausalSelfAttention(nn.Module):
         return y
 
 
-class MLP(nn.Module):
+class MLP(DualModule):
 
     def __init__(self, config):
         super().__init__()
@@ -91,7 +99,7 @@ class MLP(nn.Module):
         return x
 
 
-class Block(nn.Module):
+class Block(DualModule):
 
     def __init__(self, config):
         super().__init__()
@@ -122,7 +130,7 @@ class GPTConfig:
     n_head: int = 12 # number of heads
     n_embd: int = 768 # embedding dimensionality
 
-class GPT(nn.Module):
+class GPT(DualModule):
 
     def __init__(self, config):
         super().__init__()
@@ -175,7 +183,7 @@ class GPT(nn.Module):
         x = tok_emb + pos_emb # combine token and position embeddings
 
         # now forward through transformer
-        loss = 0.0
+        losses = 0.0
         allLogits = []
         # print(self.transformer.h)
         res = x
@@ -184,9 +192,11 @@ class GPT(nn.Module):
         _logits = None
 
         for i in range(self.config.n_layer):
-            x, res = self.transformer.sharedblock(x, res)
+            # This one is detached
+            x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
+            x, res = self.transformer.sharedblock.requires_grad_(True)(x, res)
 
-            _logits = self.lm_head(x) # (B, T, vocab_size)
+            _logits = self.lm_head(x_False) # (B, T, vocab_size)
             if all_logits or i == self.config.n_layer - 1:
                 allLogits.append(_logits)
 
@@ -220,7 +230,7 @@ class GPT(nn.Module):
                 break # TODO before or after updating loss += _block_loss?
             
             if ENABLE_LAYER_LOSS:
-                loss += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
+                losses += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
             if _block_loss.item() < THRESHOLD: # this is average across entire T
                 if master_process and print_weights:
                     bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
@@ -243,6 +253,7 @@ class GPT(nn.Module):
 
         trueLoss = None
         if targets is not None:
+            _logits = self.lm_head(x) # (B, T, vocab_size) # NOTE: this is with gradient
             # shape of input to x-entropy is B*T x V, B*T x 1
             # recall: logits are basically log counts
             # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
@@ -250,12 +261,12 @@ class GPT(nn.Module):
             # F.cross_entropy takes average over B*T
             xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1))
             # print("LOSS", xe.item())
-            loss += xe
+            losses += xe
             trueLoss = xe.detach()
         if all_logits:
-            return allLogits, loss, trueLoss
+            return allLogits, losses, trueLoss
         else:
-            return _logits, loss, trueLoss
+            return _logits, losses, trueLoss
 
     @classmethod
     def from_pretrained(cls, model_type):
@@ -746,6 +757,9 @@ for step in range(max_steps):
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
+        # NOTE: I want each backward call to accumulate gradient on a different layer of the network... so I can do layerwise training
+        # Each time I do a forward pass, i want it to remember the gradient for most of the backward calls, but not the very next backward call...
+        # When summing losses, maybe i should just use a detached version
     
     if ddp:
         dist.all_reduce(loss_accum, op=dist.ReduceOp.AVG)
