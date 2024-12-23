@@ -203,12 +203,14 @@ class GPT(DualModule):
                 allLogits.append(_logits)
 
             
-            _targets = _logits.detach().max(dim=-1)[1]
+            _targets = _logits.detach().max(dim=-1)[1] #(B, T) # NOTE: the [1] is to get the indices
+
             # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
-            _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
+            _block_loss = -1* F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
             # TODO no grad the most recent application of attention
+            # Times -1 to reward low confidence.
 
             if print_weights:
                 early_end = self.config.n_layer # can change to smaller number to "short circuit"
@@ -527,9 +529,9 @@ def bprint(s):
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 512 # sequence length # 16 # 1024
-total_batch_size = 2 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+B = 16 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 1024 # sequence length # 16 # 1024
+total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
