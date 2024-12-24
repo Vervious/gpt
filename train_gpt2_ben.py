@@ -208,6 +208,7 @@ class GPT(DualModule):
             # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
+            # Cross entropy returns a positive loss (i.e. - log (pr))
             _block_loss = -1* F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
             # TODO no grad the most recent application of attention
             # Times -1 to reward low confidence.
@@ -234,11 +235,15 @@ class GPT(DualModule):
                 break # TODO before or after updating loss += _block_loss?
             
             if ENABLE_LAYER_LOSS:
-                losses += _block_loss # NOTE: just try this for now # TODO before or after real loss computation?
-            if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T
-                if master_process and print_weights:
-                    bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
-                break
+                losses += _block_loss / self.config.n_layer # NOTE: just try this for now # TODO before or after real loss computation?
+                # NOTE: naive attempt at normalizing
+                # ln(0.9) = -0.1, about 90% confidence
+                # so we add -0.1. if block is 50% confident, we add -0.69, reducing the loss.
+            # NOTE: ignore thresholding for now, though eventually I do think we should add it back in
+            # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T
+            #     if master_process and print_weights:
+            #         bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
+            #     break
         # print(len(self.transformer.h))
 
         # forward final layer norm and classifier
@@ -529,7 +534,7 @@ def bprint(s):
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 16 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+B = 4 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
@@ -539,7 +544,7 @@ min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
-ENABLE_LAYER_LOSS = False
+ENABLE_LAYER_LOSS = True
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
@@ -645,7 +650,7 @@ for step in range(max_steps):
         if master_process:
             print(f"validation loss: {val_loss_accum.item():.4f}")
             with open(log_file, "a") as f:
-                f.write(f"{step} val {val_loss_accum.item():.4f}\n")
+                f.write(f"@ {step} val {val_loss_accum.item():.4f}\n")
     
     if ((step % checkpoint_frequency == 0 and step > 0) or step == max_steps - 1):
         # save model checkpoint
@@ -689,7 +694,7 @@ for step in range(max_steps):
     if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)) or step == 1: # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
         model.eval()
         num_return_sequences = 1
-        max_length = 9
+        max_length = 20 # 9
         tokens = enc.encode("Hello, I'm a language model,")
         printgen = tokens
         leftParens = enc.encode("\t\t(")
@@ -705,17 +710,19 @@ for step in range(max_steps):
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
                     logits, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=True) # (B, T, vocab_size)
 
-                printgen.extend(enc.encode("\n"))    
-                for l in logits:
-                    # take the last token logits
-                    printgen.extend(leftParens)
-                    for j in range(7, -1, -1): # 0 to 7
-                        _logit = l[:,-(j+1),:]
-                        _probs = F.softmax(_logit, dim=-1)
-                        vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
-                        printgen.append(idxs[0,0].item())
-                        printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
-                    printgen.extend(rightParens)
+                if xgen.size(1) < 9:
+
+                    printgen.extend(enc.encode("\n"))    
+                    for l in logits:
+                        # take the last token logits
+                        printgen.extend(leftParens)
+                        for j in range(7, -1, -1): # 0 to 7
+                            _logit = l[:,-(j+1),:]
+                            _probs = F.softmax(_logit, dim=-1)
+                            vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
+                            printgen.append(idxs[0,0].item())
+                            printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
+                        printgen.extend(rightParens)
 
                 logits = logits[-1]
                 # take logits at the last location
