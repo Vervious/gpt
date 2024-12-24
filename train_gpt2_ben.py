@@ -209,7 +209,8 @@ class GPT(DualModule):
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
             # Cross entropy returns a positive loss (i.e. - log (pr))
-            _block_loss = F.cross_entropy((_logits * -1).view(-1, _logits.size(-1)), _targets.view(-1))
+            _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
+            _block_loss = -1*torch.log(1 - torch.exp(-1*_block_loss)) # NOTE: confidence calculation, see readme
             # TODO no grad the most recent application of attention
             # Times -1 to reward low confidence.
 
