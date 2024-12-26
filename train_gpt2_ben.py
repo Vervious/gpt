@@ -193,6 +193,9 @@ class GPT(DualModule):
         _mask_BT = torch.ones(B,T,1, device=idx.device) # (B, T, 1) 
         trueLoss = None
 
+        savedConf = []
+        savedXeFactor = []
+
         for i in range(self.config.n_layer):
             # This one is detached
             x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
@@ -206,11 +209,6 @@ class GPT(DualModule):
 
             
             _, _targets = _logits.detach().max(dim=-1) #(B, T) # NOTE: the [1] is to get the indices
-            _sample_rand = torch.rand(B, T, 1, device=idx.device).log() * -1
-            # NOTE: we want to perform the usual computations perhaps, but just stop propagating the gradient? on masked values / short circuited batches / Ts.
-            # I.e. for B,T where softmax(_logits).max() < _sample_rand, do an early stopping, and stop accumulating loss (where loss = -log(pr[target]) * confidence) thereafter
-            # Final loss (for each B,T) is -logli under those final logits
-
 
             # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
@@ -221,6 +219,11 @@ class GPT(DualModule):
             _nll_max = _nll_max.view(B,T, 1) # (B, T) = -log(pr[target])
 
             # print("NLLMAXSHAPE ", _nll_max.shape)
+
+            _sample_rand = torch.rand(B, T, 1, device=idx.device).log() * -1
+            # NOTE: we want to perform the usual computations perhaps, but just stop propagating the gradient? on masked values / short circuited batches / Ts.
+            # I.e. for B,T where softmax(_logits).max() < _sample_rand, do an early stopping, and stop accumulating loss (where loss = -log(pr[target]) * confidence) thereafter
+            # Final loss (for each B,T) is -logli under those final logits
 
             # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
             # TODO: tbd shoudl just max the loss
@@ -287,7 +290,10 @@ class GPT(DualModule):
                     # NOTE: if _just_triggered = 1, then xe is multiplied in; else, if _just_triggered = 0, then factor = 1
                     # xe_factor = torch.pow(xe, _just_triggered)
                     xe_factor = ((xe - 1) * _just_triggered + 1)
-                    losses += (xe_factor * _confidence * _mask_BT).mean() #(B,T,1)
+                    loss_ = (xe_factor * _confidence * _mask_BT).mean()
+                    savedConf.append(_confidence.mean())
+                    savedXeFactor.append((xe_factor * _confidence).mean())
+                    losses += loss_ 
                     # If mask is 0, then it has already "triggered", so no loss
                     # Loss is confidence unless at point of triggering
                 
@@ -298,9 +304,15 @@ class GPT(DualModule):
                     # if not ENABLE_LAYER_LOSS:
                     losses += (xe * _mask_BT).mean() #NOTE for now, always penalize last layer since we have finite number of layers
             else:
-                # NOTE this code path should be unused
-                losses += _confidence / self.config.n_layer
-            
+                # NOTE this code path should be unused except during inference
+                pass
+                # losses += _confidence / self.config.n_layer
+        
+        # print("total loss ", losses)
+        if losses < 0.05 and targets is not None:
+            print("oh no")
+            print("SAVED CONF ", savedConf)
+            print("SAVED XE FACTOR ", savedXeFactor)
         if all_logits:
             return allLogits, losses, trueLoss
         else:
