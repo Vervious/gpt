@@ -190,6 +190,8 @@ class GPT(DualModule):
         x = self.transformer.ln_f(x) # apply the initial layer norm (this is backwards from the usual implementation, but same semantically)
 
         _logits = None
+        _mask_BT = None
+        trueLoss = None
 
         for i in range(self.config.n_layer):
             # This one is detached
@@ -203,14 +205,37 @@ class GPT(DualModule):
                 allLogits.append(_logits)
 
             
-            _targets = _logits.detach().max(dim=-1)[1] #(B, T) # NOTE: the [1] is to get the indices
+            _, _targets = _logits.detach().max(dim=-1) #(B, T) # NOTE: the [1] is to get the indices
+            _sample_rand = torch.rand(B, T, 1, device=idx.device).log() * -1
+            # NOTE: we want to perform the usual computations perhaps, but just stop propagating the gradient? on masked values / short circuited batches / Ts.
+            # I.e. for B,T where softmax(_logits).max() < _sample_rand, do an early stopping, and stop accumulating loss (where loss = -log(pr[target]) * confidence) thereafter
+            # Final loss (for each B,T) is -logli under those final logits
+
 
             # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
             # (_logprobs.exp() * _logprobs).sum(dim=-1)
             # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
             # Cross entropy returns a positive loss (i.e. - log (pr))
-            _block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))
-            _block_loss = torch.log(1 - torch.exp(-1*_block_loss)) # NOTE: confidence calculation, makes loss better, see readme
+            _nll_max = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1), reduction='none') # (B*T)
+
+            _nll_max = _nll_max.view(B,T, 1) # (B, T) = -log(pr[target])
+
+            # print("NLLMAXSHAPE ", _nll_max.shape)
+
+            # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
+            # TODO: tbd shoudl just max the loss
+            mask = _sample_rand < _nll_max # True/1 if loss should be counted, False/0 otherwise # (B, T, 1)
+            if _mask_BT is not None:
+                # if previously 0, stay 0
+                _mask_BT = mask * _mask_BT
+            else:
+                _mask_BT = mask
+            # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
+            
+
+            _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
+            # The higher the max, the higher the confidence (to inf)
+            # max = low, low confidence (to 0)
             # TODO no grad the most recent application of attention
             # Times -1 to reward low confidence.
 
@@ -223,25 +248,52 @@ class GPT(DualModule):
                     # do top-k sampling of 50 (huggingface pipeline default)
                     # topk_probs here becomes (5, 50), topk_indices is (5, 50)
                     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                    bprint(f"Layer {i} Block_loss={_block_loss.item()}\n\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
+                    fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
+                    bprint(f"Layer {i} B=0,T=-1 Confidence={_confidence[0,-1].item():.5f}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
                     # if i > 5:
                     #     break
                     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
                 # if i == early_end - 1:
                 #     break
 
-            if i == self.config.n_layer - 1:
+            if _mask_BT[0,-1,0] == 0:
                 if master_process and print_weights:
-                    bprint(f"\tUtilized all layers {i}")
-                break # TODO before or after updating loss += _block_loss?
+                    bprint(f"\tB=0 T=-1 skipped layer {i}")
             
-            if ENABLE_LAYER_LOSS:
-                losses += _block_loss / self.config.n_layer # NOTE: just try this for now # TODO before or after real loss computation?
-                # NOTE: naive attempt at normalizing
-                # ln(0.9) = -0.1, about 90% confidence
-                # so we add -0.1. if block is 50% confident, we add -0.69, reducing the loss.
-            # NOTE: ignore thresholding for now, though eventually I do think we should add it back in
-            # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T
+            
+            # losses += _block_loss / self.config.n_layer # NOTE: just try this for now # TODO before or after real loss computation?
+            # NOTE: naive attempt at normalizing
+            # ln(0.9) = -0.1, about 90% confidence
+            # so we add -0.1. if block is 50% confident, we add -0.69, reducing the loss.
+
+            if targets is not None:
+                _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
+                xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), reduction='none') #(B*T)
+                xe = xe.view(B, T, 1)
+                # We want _block_loss to be high when confidence is high, and low when confidence is low... but then won't the network just output low confidence?
+                # print("XE SHAPE ", xe.shape)
+                # print("MASK SHAPE ", _mask_BT.shape)
+                # print("CONFIDENCE SHAPE ", _confidence.shape)
+
+                if ENABLE_LAYER_LOSS:
+                    losses += (xe * _confidence * _mask_BT).mean() #(B,T,1)
+                
+                # print("LOSS SHAPE", losses.shape)
+
+                if i == self.config.n_layer - 1:
+                    _xe_mean = xe.mean()
+                    trueLoss = _xe_mean.detach()
+                    # if not ENABLE_LAYER_LOSS:
+                    losses += _xe_mean #NOTE for now, always penalize last layer since we have finite number of layers
+            else:
+                # NOTE this code path should be unused
+                losses += _confidence / self.config.n_layer
+            
+        if all_logits:
+            return allLogits, losses, trueLoss
+        else:
+            return _logits, losses, trueLoss    
+            # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T and B
             #     if master_process and print_weights:
             #         bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
             #     break
@@ -261,22 +313,18 @@ class GPT(DualModule):
         #     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
         #     print(f"Layer 6\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
 
-        trueLoss = None
-        if targets is not None:
-            _logits = self.lm_head.requires_grad_(True)(x) # (B, T, vocab_size) # NOTE: this is with gradient
-            # shape of input to x-entropy is B*T x V, B*T x 1
-            # recall: logits are basically log counts
-            # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
-            # cross entropy loss is just -log(pr[target])
-            # F.cross_entropy takes average over B*T
-            xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1))
-            # print("LOSS", xe.item())
-            losses += xe
-            trueLoss = xe.detach()
-        if all_logits:
-            return allLogits, losses, trueLoss
-        else:
-            return _logits, losses, trueLoss
+        # trueLoss = None
+        # if targets is not None:
+        #     _logits = self.lm_head.requires_grad_(True)(x) # (B, T, vocab_size) # NOTE: this is with gradient
+        #     # shape of input to x-entropy is B*T x V, B*T x 1
+        #     # recall: logits are basically log counts
+        #     # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
+        #     # cross entropy loss is just -log(pr[target])
+        #     # F.cross_entropy takes average over B*T
+        #     xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1))
+        #     # print("LOSS", xe.item())
+        #     losses += xe
+        #     trueLoss = xe.detach()
 
     @classmethod
     def from_pretrained(cls, model_type):
@@ -706,10 +754,14 @@ for step in range(max_steps):
         sample_rng = torch.Generator(device=device)
         sample_rng.manual_seed(42 + ddp_rank) # different seed for each GPU
         while xgen.size(1) < max_length:
+            if xgen.size(1) < 9:
+                _print_weights_val = True
+            else:
+                _print_weights_val = False
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=True) # (B, T, vocab_size)
+                    logits, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
 
                 if xgen.size(1) < 9:
 
@@ -718,21 +770,29 @@ for step in range(max_steps):
                         # take the last token logits
                         printgen.extend(leftParens)
                         for j in range(7, -1, -1): # 0 to 7
-                            _logit = l[:,-(j+1),:]
-                            _probs = F.softmax(_logit, dim=-1)
+                            _logit = l[:,-(j+1),:] #(B, vocab_size?)
+                            _probs = F.softmax(_logit, dim=-1) #(B, vocab_size?)
                             vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
                             printgen.append(idxs[0,0].item())
                             printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
                         printgen.extend(rightParens)
 
-                logits = logits[-1]
+                logits = logits[-1] # (1, 8, 50304)
                 # take logits at the last location
-                logits = logits[:,-1,:] # (B, vocab_size)
+                logits = logits[:,-1,:] # (1, 8, 50304)
                 # get the probabilities
-                probs = F.softmax(logits, dim=-1)
+                probs = F.softmax(logits, dim=-1) # (1, 8, 50304)
                 # do top-k sampling of 50 (huggingface pipeline default)
                 # topk_probs here becomes (5, 50), topk_indices is (5, 50)
                 topk_probs, topk_indices = torch.topk(probs, 50, dim=-1)
+                # print(topk_probs.shape) # (1, 50)
+                # print(topk_indices.shape) # (1, 50)
+
+                if xgen.size(1) < 9:
+                    bprint(f"Final sample (first word) \n\t\t\t {topk_probs[0].tolist(), enc.decode(topk_indices[0].tolist())}")
+                    # TODO figure out why this is different than the block_loss printing...
+
+
                 # select a token from the top-k probabiliities
                 ix = torch.multinomial(topk_probs, 1, generator=sample_rng) # (B, 1)
                 # gather the correspdongin indicies
