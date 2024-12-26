@@ -43,3 +43,4 @@ In this one, we set `losses += _block_loss / self.config.n_layer`, where `_block
 
 Somehow, we want to incentivize high confidence (else e.g. loss accumulates forever? Currently this won't successfuly do this incentivization) whilst penalizing wrong answers. When there is no environmental feedback, the loss should just be the self-confidence (i.e. high if high confidence?). Whenever confidence is high, there is some probability of terminating the line of thought (which is good), yet also a chance of accumulating loss in prior steps. Then model should learn to be confident early.
 
+`loss_ = (xe * _confidence * _mask_BT).mean()`

@@ -289,10 +289,11 @@ class GPT(DualModule):
 
                     # NOTE: if _just_triggered = 1, then xe is multiplied in; else, if _just_triggered = 0, then factor = 1
                     # xe_factor = torch.pow(xe, _just_triggered)
-                    xe_factor = ((xe - 1) * _just_triggered + 1)
-                    loss_ = (xe_factor * _confidence * _mask_BT).mean()
+                    # xe_factor = ((xe - 1) * _just_triggered + 1)
+                    # loss_ = (xe_factor * _confidence * _mask_BT).mean()
+                    loss_ = (xe * _confidence * _mask_BT).mean()
                     savedConf.append(_confidence.mean())
-                    savedXeFactor.append((xe_factor * _confidence).mean())
+                    # savedXeFactor.append((xe_factor * _confidence).mean())
                     losses += loss_ 
                     # If mask is 0, then it has already "triggered", so no loss
                     # Loss is confidence unless at point of triggering
@@ -309,10 +310,10 @@ class GPT(DualModule):
                 # losses += _confidence / self.config.n_layer
         
         # print("total loss ", losses)
-        if losses < 0.05 and targets is not None:
+        if targets is not None and losses < 0.05:
             print("oh no")
             print("SAVED CONF ", savedConf)
-            print("SAVED XE FACTOR ", savedXeFactor)
+            # print("SAVED XE FACTOR ", savedXeFactor)
         if all_logits:
             return allLogits, losses, trueLoss
         else:
