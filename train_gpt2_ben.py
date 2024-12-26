@@ -190,7 +190,7 @@ class GPT(DualModule):
         x = self.transformer.ln_f(x) # apply the initial layer norm (this is backwards from the usual implementation, but same semantically)
 
         _logits = None
-        _mask_BT = None
+        _mask_BT = torch.ones(B,T,1, device=idx.device) # (B, T, 1) 
         trueLoss = None
 
         for i in range(self.config.n_layer):
@@ -225,13 +225,19 @@ class GPT(DualModule):
             # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
             # TODO: tbd shoudl just max the loss
             mask = _sample_rand < _nll_max # True/1 if loss should be counted, False/0 otherwise # (B, T, 1)
-            if _mask_BT is not None:
-                # if previously 0, stay 0
-                _mask_BT = mask * _mask_BT
-            else:
-                _mask_BT = mask
+
+
+            # if previously 0, stay 0
+            _new_mask_BT = mask * _mask_BT
+
+            # 1 if switched from 1 to 0 in this iteration, else 0
+            _just_triggered = _mask_BT - _new_mask_BT
+            _mask_BT = _new_mask_BT
+
             # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
             
+
+            # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
 
             _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
             # The higher the max, the higher the confidence (to inf)
@@ -276,15 +282,21 @@ class GPT(DualModule):
                 # print("CONFIDENCE SHAPE ", _confidence.shape)
 
                 if ENABLE_LAYER_LOSS:
-                    losses += (xe * _confidence * _mask_BT).mean() #(B,T,1)
+                    # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
+
+                    # NOTE: if _just_triggered = 1, then xe is multiplied in; else, if _just_triggered = 0, then factor = 1
+                    # xe_factor = torch.pow(xe, _just_triggered)
+                    xe_factor = ((xe - 1) * _just_triggered + 1)
+                    losses += (xe_factor * _confidence * _mask_BT).mean() #(B,T,1)
+                    # If mask is 0, then it has already "triggered", so no loss
+                    # Loss is confidence unless at point of triggering
                 
                 # print("LOSS SHAPE", losses.shape)
 
                 if i == self.config.n_layer - 1:
-                    _xe_mean = xe.mean()
-                    trueLoss = _xe_mean.detach()
+                    trueLoss = xe.mean().detach()
                     # if not ENABLE_LAYER_LOSS:
-                    losses += _xe_mean #NOTE for now, always penalize last layer since we have finite number of layers
+                    losses += (xe * _mask_BT).mean() #NOTE for now, always penalize last layer since we have finite number of layers
             else:
                 # NOTE this code path should be unused
                 losses += _confidence / self.config.n_layer
@@ -588,7 +600,7 @@ T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
+max_lr = 4*6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
