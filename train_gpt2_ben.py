@@ -195,6 +195,8 @@ class GPT(DualModule):
 
         # now forward through transformer
         losses = torch.tensor(0.0, device=idx.device)
+        confLoss = torch.tensor(0.0, device=idx.device)
+        targetLoss = torch.tensor(0.0, device=idx.device)
         allLogits = []
         # print(self.transformer.h)
         res = x
@@ -207,10 +209,10 @@ class GPT(DualModule):
         _true_logits = torch.zeros(B, T, self.config.vocab_size, device=idx.device)
 
         savedConf = []
-        savedXeFactor = []
+        # savedXeFactor = []
 
-        _xe_prev = None
-        _just_triggered_prev = None
+        # _xe_prev = None
+        # _just_triggered_prev = None
         _mask_BT_prev = None
 
         early_stop_num = 0.0
@@ -261,7 +263,7 @@ class GPT(DualModule):
             _just_triggered = _mask_BT - _new_mask_BT  #(B, T, 1)
             _mask_BT = _new_mask_BT # (B, T, 1)
 
-            _true_logits += _just_triggered * _logits # note not back proped, I think, _logits is result of lmhead._requires_grad(False) (B, T, vocab_size)
+            _true_logits = _true_logits + _just_triggered * _logits # note not back proped, I think, _logits is result of lmhead._requires_grad(False) (B, T, vocab_size)
 
             # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
             
@@ -308,19 +310,24 @@ class GPT(DualModule):
                 # print("MASK SHAPE ", _mask_BT.shape)
                 # print("CONFIDENCE SHAPE ", _confidence.shape)
 
+                # TODO: WHY IS ALL LOSS < TRUE LOSS
+
                 if ENABLE_LAYER_LOSS and i > 0:
-                    # TODO should use confidence of the NEXT layer, not of the current layer.
 
                     # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
 
-                    # NOTE: if _just_triggered = 1, then xe is multiplied in; else, if _just_triggered = 0, then factor = 1
+                    # NOTE: if _just_triggered = 1, then xe is multiplied in and _confidence is ignored; else, if _just_triggered = 0, then factor = 1
                     # xe_factor = torch.pow(xe, _just_triggered)
-                    xe_factor_prev = ((_xe_prev - 1) * _just_triggered_prev + 1)
-                    loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
+                    # xe_factor_prev = ((_xe_prev / _confidence - 1) * _just_triggered_prev + 1)
+
+                    # _mask_BT_prev = 0 if previous layer has triggered (inclusive)
+                    confLoss_contrib = (_confidence * _mask_BT_prev).mean()
+                    confLoss += confLoss_contrib
+
                     # loss_ = (xe * _confidence * _mask_BT).mean()
                     savedConf.append(_confidence.mean())
-                    savedXeFactor.append((xe_factor_prev * _confidence).mean())
-                    losses += loss_ 
+                    # savedXeFactor.append((xe_factor_prev * _confidence).mean())
+                    losses = losses + confLoss_contrib
                     # If mask is 0, then it has already "triggered", so no loss
                     # Loss is confidence unless at point of triggering
                 
@@ -330,21 +337,39 @@ class GPT(DualModule):
                 xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), reduction='none') #(B*T)
                 xe = xe.view(B, T, 1)
 
+                targetLoss_contrib = (xe * _just_triggered).mean()
+                losses = losses + targetLoss_contrib
+                targetLoss += targetLoss_contrib
+
+
                 if i == self.config.n_layer - 1:
 
                     # NOTE: uncomment below to get the true staggered loss
                     xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
-                    trueLoss = xe_staggered_loss
+                    trueLoss = xe_staggered_loss 
+                    # trueLoss = xe.mean().detach() #TODO compare with the prev
                     allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
 
                     # trueLoss = xe.mean().detach()
                     # if not ENABLE_LAYER_LOSS:
                     # _mask_BT_prev because if _mask_BT, it is always 0 at last layer
-                    losses += (xe * _mask_BT_prev).mean() #NOTE for now, always penalize last layer since we have finite number of layers
+
+                    # BELOW COMMENTED
+                    # confLoss = losses # 
+                    # targetLoss = (xe * _mask_BT_prev).mean()
+                    # losses = losses + targetLoss
+
+
+                    # print("MASK SUM ", _mask_BT_prev.sum().item(), B*T)
+                    # losses += xe.mean()
+                    #NOTE for now, always penalize last layer since we have finite number of layers
+
+                    early_stop_num = B*T - _mask_BT_prev.sum().item()
+
 
                 # Used when adding loss when computing confidence of subsequent layer
-                _xe_prev = xe
-                _just_triggered_prev = _just_triggered
+                # _xe_prev = xe
+                # _just_triggered_prev = _just_triggered
                 _mask_BT_prev = _mask_BT
 
             else:
@@ -352,18 +377,17 @@ class GPT(DualModule):
                 pass
                 # losses += _confidence / self.config.n_layer
         
-        early_stop_num = _mask_BT.sum().item()
         
         # print("total loss ", losses)
         if targets is not None and (losses.item() < 0.05 or losses.isnan().any()):
             print("oh no")
             print("SAVED CONF ", savedConf)
-            print("SAVED XE FACTOR ", savedXeFactor)
+            # print("SAVED XE FACTOR ", savedXeFactor)
             print("NLL MAX ", _nll_max)
         if all_logits:
-            return allLogits, losses, trueLoss, early_stop_num
+            return allLogits, losses, trueLoss, confLoss, targetLoss, early_stop_num
         else:
-            return _logits, losses, trueLoss, early_stop_num 
+            return _logits, losses, trueLoss, confLoss, targetLoss, early_stop_num 
             # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T and B
             #     if master_process and print_weights:
             #         bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
@@ -762,7 +786,7 @@ for step in range(max_steps):
                 x, y = val_loader.next_batch()
                 x, y = x.to(device), y.to(device)  
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, loss, _ = model(x, y)
+                    logits, _, loss, _, _, _ = model(x, y)
                 loss = loss / val_loss_steps # average accumulated loss
                 val_loss_accum += loss.detach() # why do i need to call detach if I never call backward on it
         if ddp:
@@ -792,7 +816,7 @@ for step in range(max_steps):
             # get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, loss, _ = model(tokens)
+                    logits, _, loss, _, _, _ = model(tokens)
                 pred_norm = hellaswag.get_most_likely_row(tokens, mask, logits)
             num_total += 1
             num_correct_norm += int(pred_norm == label)
@@ -832,7 +856,7 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
+                    logits, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
 
                 if xgen.size(1) < 9:
 
@@ -883,6 +907,8 @@ for step in range(max_steps):
     model.train()
     optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
     loss_accum = 0.0
+    conf_loss_accum = 0.0
+    target_loss_accum = 0.0
     loss_accum_all = 0.0
     earlyStopNum_accum = 0.0
     for micro_step in range(grad_accum_steps):
@@ -893,12 +919,14 @@ for step in range(max_steps):
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            _, loss, trueloss, earlyStopNum = model(x, y) # NOTE: we don't actually use the logits
+            _, loss, trueloss, confLoss, targetLoss, earlyStopNum = model(x, y) # NOTE: we don't actually use the logits
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps
         loss_accum_all += loss.detach()
         earlyStopNum_accum += earlyStopNum
+        conf_loss_accum += confLoss.detach() / grad_accum_steps
+        target_loss_accum += targetLoss.detach() / grad_accum_steps
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
@@ -929,7 +957,7 @@ for step in range(max_steps):
         tokens_per_sec = tokens_processed / dt
         flops = raw_model.estimate_mfu(fwdbwd_per_iter=(tokens_processed), dt=dt)
 
-        bprint(f"@ {step} train {loss_accum.item():.6f} , allloss: {loss_accum_all.item():.5f}, earlystop: {earlyStopNum_accum:.2f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, confloss: {conf_loss_accum.item():.4f}, targetloss: {target_loss_accum.item():.4f}, earlystop: {earlyStopNum_accum / (B*T*grad_accum_steps):.3f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:
