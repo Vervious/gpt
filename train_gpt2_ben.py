@@ -234,12 +234,15 @@ class GPT(DualModule):
 
             # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
             # TODO: tbd shoudl just max the loss
-            mask = _sample_rand < _nll_max # True/1 if loss should be counted, False/0 otherwise # (B, T, 1)
+            mask = _sample_rand < _nll_max # True/1 if subsequent loss should be counted, False/0 otherwise # (B, T, 1)
 
 
             # if previously 0, stay 0
             # set _mask_BT: 1 if loss this layer should count, 0 otherwise (i.e. early termination)
             _new_mask_BT = mask * _mask_BT
+
+            if i == self.config.n_layer - 1:
+                _new_mask_BT = torch.zeros_like(_mask_BT) # NOTE: always penalize last layer since we have finite number of layers
 
             # 1 if switched from 1 to 0 in this iteration, else 0
             _just_triggered = _mask_BT - _new_mask_BT  #(B, T, 1)
@@ -286,9 +289,6 @@ class GPT(DualModule):
             # so we add -0.1. if block is 50% confident, we add -0.69, reducing the loss.
 
             if targets is not None:
-                _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-                xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), reduction='none') #(B*T)
-                xe = xe.view(B, T, 1)
                 # We want _block_loss to be high when confidence is high, and low when confidence is low... but then won't the network just output low confidence?
                 # print("XE SHAPE ", xe.shape)
                 # print("MASK SHAPE ", _mask_BT.shape)
@@ -312,16 +312,21 @@ class GPT(DualModule):
                 
                 # print("LOSS SHAPE", losses.shape)
 
+                _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
+                xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), reduction='none') #(B*T)
+                xe = xe.view(B, T, 1)
+
                 if i == self.config.n_layer - 1:
 
                     # NOTE: uncomment below to get the true staggered loss
-                    # xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
-                    # trueLoss = xe_staggered_loss
-                    # allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
+                    xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
+                    trueLoss = xe_staggered_loss
+                    allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
 
-                    trueLoss = xe.mean().detach()
+                    # trueLoss = xe.mean().detach()
                     # if not ENABLE_LAYER_LOSS:
-                    losses += (xe * _mask_BT).mean() #NOTE for now, always penalize last layer since we have finite number of layers
+                    # _mask_BT_prev because if _mask_BT, it is always 0 at last layer
+                    losses += (xe * _mask_BT_prev).mean() #NOTE for now, always penalize last layer since we have finite number of layers
 
                 # Used when adding loss when computing confidence of subsequent layer
                 _xe_prev = xe

@@ -65,3 +65,5 @@ Definitely punish confidently wrong answers. But what if there is no target? Ask
 ```xe_factor_prev = ((_xe_prev - 1) * _just_triggered_prev + 1)
 loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
 ```
+
+What incentivizes higher confidence? Earlier termination thus less loss. Maybe I should really penalize the last layer... Also, adding the additional cross_entropy calculition cost another .5 sec per step.
