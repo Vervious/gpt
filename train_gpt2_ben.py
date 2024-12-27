@@ -267,7 +267,7 @@ class GPT(DualModule):
             
 
             # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
-            _confidence = -1 * log1mexp(_nll_max) # NOTE were we running into numerical stability problems? # (B, T, 1)
+            _confidence = -1 * log1mexp(-_nll_max) # NOTE were we running into numerical stability problems? # (B, T, 1)
             # _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
             # _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
             # The higher the max, the higher the confidence (to inf)
