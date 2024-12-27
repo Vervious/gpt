@@ -28,22 +28,22 @@ source $VENV_DIR/bin/activate
 echo "Upgrading pip..."
 pip install --upgrade pip
 
-# Check if requirements.txt exists
-if [ -f "requirements.txt" ]; then
-    echo "Installing packages from requirements.txt..."
-    pip install -r requirements.txt
-else
-    echo "No requirements.txt found. Installing predefined packages..."
-    # Define a list of packages to install
-    packages=(
-        numpy
-    )
+# # Check if requirements.txt exists
+# if [ -f "requirements.txt" ]; then
+#     echo "Installing packages from requirements.txt..."
+#     pip install -r requirements.txt
+# else
+#     echo "No requirements.txt found. Installing predefined packages..."
+#     # Define a list of packages to install
+#     packages=(
+#         numpy
+#     )
     
-    for package in "${packages[@]}"; do
-        echo "Installing $package..."
-        pip install "$package"
-    done
-fi
+#     for package in "${packages[@]}"; do
+#         echo "Installing $package..."
+#         pip install "$package"
+#     done
+# fi
 
 mkdir -p log
 
