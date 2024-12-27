@@ -193,6 +193,8 @@ class GPT(DualModule):
         _mask_BT = torch.ones(B,T,1, device=idx.device) # (B, T, 1) 
         trueLoss = None
 
+        _true_logits = torch.zeros(B, T, self.config.vocab_size, device=idx.device)
+
         savedConf = []
         savedXeFactor = []
 
@@ -240,8 +242,10 @@ class GPT(DualModule):
             _new_mask_BT = mask * _mask_BT
 
             # 1 if switched from 1 to 0 in this iteration, else 0
-            _just_triggered = _mask_BT - _new_mask_BT
-            _mask_BT = _new_mask_BT
+            _just_triggered = _mask_BT - _new_mask_BT  #(B, T, 1)
+            _mask_BT = _new_mask_BT # (B, T, 1)
+
+            _true_logits += _just_triggered * _logits # note not back proped, I think, _logits is result of lmhead._requires_grad(False) (B, T, vocab_size)
 
             # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
             
@@ -309,6 +313,12 @@ class GPT(DualModule):
                 # print("LOSS SHAPE", losses.shape)
 
                 if i == self.config.n_layer - 1:
+
+                    # NOTE: uncomment below to get the true staggered loss
+                    # xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
+                    # trueLoss = xe_staggered_loss
+                    # allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
+
                     trueLoss = xe.mean().detach()
                     # if not ENABLE_LAYER_LOSS:
                     losses += (xe * _mask_BT).mean() #NOTE for now, always penalize last layer since we have finite number of layers
@@ -622,7 +632,7 @@ def bprint(s):
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 4 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
@@ -817,7 +827,7 @@ for step in range(max_steps):
                         printgen.extend(rightParens)
 
                 logits = logits[-1] # (1, 8, 50304)
-                # take logits at the last location
+                # take logits at the last layer
                 logits = logits[:,-1,:] # (1, 8, 50304)
                 # get the probabilities
                 probs = F.softmax(logits, dim=-1) # (1, 8, 50304)
@@ -860,7 +870,7 @@ for step in range(max_steps):
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            logits, loss, trueloss = model(x, y)
+            _, loss, trueloss = model(x, y) # NOTE: we don't actually use the logits
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps
