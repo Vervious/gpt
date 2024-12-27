@@ -8,6 +8,17 @@ import tiktoken
 import time
 import hellaswag
 
+def log1mexp(x: torch.Tensor) -> torch.Tensor:
+    """Numerically accurate evaluation of log(1 - exp(x)) for x < 0.
+    See [Maechler2012accurate]_ for details.
+    """
+    mask = -math.log(2) < x  # x < 0
+    return torch.where(
+        mask,
+        (-x.expm1()).log(),
+        (-x.exp()).log1p(),
+    )
+
 
 class DualModule(nn.Module):
 
@@ -183,7 +194,7 @@ class GPT(DualModule):
         x = tok_emb + pos_emb # combine token and position embeddings
 
         # now forward through transformer
-        losses = 0.0
+        losses = torch.tensor(0.0, device=idx.device)
         allLogits = []
         # print(self.transformer.h)
         res = x
@@ -201,6 +212,8 @@ class GPT(DualModule):
         _xe_prev = None
         _just_triggered_prev = None
         _mask_BT_prev = None
+
+        early_stop_num = 0.0
 
         for i in range(self.config.n_layer):
             # This one is detached
@@ -254,7 +267,8 @@ class GPT(DualModule):
             
 
             # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
-            _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
+            _confidence = -1 * log1mexp(_nll_max) # NOTE were we running into numerical stability problems? # (B, T, 1)
+            # _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
             # _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
             # The higher the max, the higher the confidence (to inf)
             # max = low, low confidence (to 0)
@@ -338,15 +352,18 @@ class GPT(DualModule):
                 pass
                 # losses += _confidence / self.config.n_layer
         
+        early_stop_num = _mask_BT.sum().item()
+        
         # print("total loss ", losses)
-        if targets is not None and losses < 0.05:
+        if targets is not None and (losses.item() < 0.05 or losses.isnan().any()):
             print("oh no")
             print("SAVED CONF ", savedConf)
             print("SAVED XE FACTOR ", savedXeFactor)
+            print("NLL MAX ", _nll_max)
         if all_logits:
-            return allLogits, losses, trueLoss
+            return allLogits, losses, trueLoss, early_stop_num
         else:
-            return _logits, losses, trueLoss    
+            return _logits, losses, trueLoss, early_stop_num 
             # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T and B
             #     if master_process and print_weights:
             #         bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
@@ -745,7 +762,7 @@ for step in range(max_steps):
                 x, y = val_loader.next_batch()
                 x, y = x.to(device), y.to(device)  
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, loss = model(x, y)
+                    logits, _, loss, _ = model(x, y)
                 loss = loss / val_loss_steps # average accumulated loss
                 val_loss_accum += loss.detach() # why do i need to call detach if I never call backward on it
         if ddp:
@@ -775,7 +792,7 @@ for step in range(max_steps):
             # get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, loss = model(tokens)
+                    logits, _, loss, _ = model(tokens)
                 pred_norm = hellaswag.get_most_likely_row(tokens, mask, logits)
             num_total += 1
             num_correct_norm += int(pred_norm == label)
@@ -815,7 +832,7 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
+                    logits, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
 
                 if xgen.size(1) < 9:
 
@@ -838,7 +855,7 @@ for step in range(max_steps):
                 probs = F.softmax(logits, dim=-1) # (1, 8, 50304)
                 # do top-k sampling of 50 (huggingface pipeline default)
                 # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                topk_probs, topk_indices = torch.topk(probs, 50, dim=-1)
+                topk_probs, topk_indices = torch.topk(probs, 1, dim=-1) # TODO change 1 back to 50
                 # print(topk_probs.shape) # (1, 50)
                 # print(topk_indices.shape) # (1, 50)
 
@@ -867,6 +884,7 @@ for step in range(max_steps):
     optimizer.zero_grad() # recall that .backwards() adds to gradients in pytorch, so must start at 0
     loss_accum = 0.0
     loss_accum_all = 0.0
+    earlyStopNum_accum = 0.0
     for micro_step in range(grad_accum_steps):
         x, y = train_loader.next_batch()
         timesBatchUsed = train_loader.num_times_latest_batch_used()
@@ -875,11 +893,12 @@ for step in range(max_steps):
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            _, loss, trueloss = model(x, y) # NOTE: we don't actually use the logits
+            _, loss, trueloss, earlyStopNum = model(x, y) # NOTE: we don't actually use the logits
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps
         loss_accum_all += loss.detach()
+        earlyStopNum_accum += earlyStopNum
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
@@ -910,9 +929,7 @@ for step in range(max_steps):
         tokens_per_sec = tokens_processed / dt
         flops = raw_model.estimate_mfu(fwdbwd_per_iter=(tokens_processed), dt=dt)
 
-        print(f"step {step}, loss: {loss_accum.item():.8f}, allloss: {loss_accum_all.item():.8f} lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
-        with open(log_file, "a") as f:
-            f.write(f"@ {step} train {loss_accum.item():.8f} , allloss: {loss_accum_all.item():.4f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
+        bprint(f"@ {step} train {loss_accum.item():.6f} , allloss: {loss_accum_all.item():.5f}, earlystop: {earlyStopNum_accum:.2f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:
