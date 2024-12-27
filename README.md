@@ -44,3 +44,24 @@ In this one, we set `losses += _block_loss / self.config.n_layer`, where `_block
 Somehow, we want to incentivize high confidence (else e.g. loss accumulates forever? Currently this won't successfuly do this incentivization) whilst penalizing wrong answers. When there is no environmental feedback, the loss should just be the self-confidence (i.e. high if high confidence?). Whenever confidence is high, there is some probability of terminating the line of thought (which is good), yet also a chance of accumulating loss in prior steps. Then model should learn to be confident early.
 
 `loss_ = (xe * _confidence * _mask_BT).mean()`
+
+If targets exist, for now we always multiply them in at every layer (even if it is not sampled). Consider not doing this (todo, is there a theoretical difference?).
+
+##### 4-test
+
+Now, we don't use the true loss against the true target until the network is actually ready to output the target:
+
+```xe_factor = ((xe - 1) * _just_triggered + 1)
+loss_ = (xe_factor * _confidence * _mask_BT).mean()
+```
+
+This certainly punishes confidence early on.
+
+
+##### 5-test
+
+Definitely punish confidently wrong answers. But what if there is no target? Ask the next layer if wrong or not wrong. If next layer is very confident, punish (as before), else no change to error. (Is that reasonable?) Fix a bug about asking the next layer for confidence, not the current one (whoops). Or should we reward confidence. (By my simulateability theory, predictable actions are not interesting to me. So if the robot's action was predictable to me, that action is not interesting. But this seems to be different. Note, there is also a distinction between predictability and distinguishability. Also, "did I expect this" from a verifier's point of view, is different from "would I have done the same thing", because note that in self talk, the answer to the latter is always "yes". Maybe heuristically, if I am highly confident, then I did expect it; if I am not at all highly confident, then I did not expect the answer at all (it doesn't look like giberish either). Thus, we should reward low confidence, or punish high confidence.)
+
+```xe_factor_prev = ((_xe_prev - 1) * _just_triggered_prev + 1)
+loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
+```

@@ -196,12 +196,17 @@ class GPT(DualModule):
         savedConf = []
         savedXeFactor = []
 
+        _xe_prev = None
+        _just_triggered_prev = None
+        _mask_BT_prev = None
+
         for i in range(self.config.n_layer):
             # This one is detached
             x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
             
             x, res = self.transformer.sharedblock.requires_grad_(True)(x, res)
 
+            # _logits is after application of the current layer
             _logits = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
             # TODO: seems not to work if I dont' call requires_grad(False) on lm_head (maybe for obvious reasons), now check if I do call it.
             if all_logits or i == self.config.n_layer - 1:
@@ -231,6 +236,7 @@ class GPT(DualModule):
 
 
             # if previously 0, stay 0
+            # set _mask_BT: 1 if loss this layer should count, 0 otherwise (i.e. early termination)
             _new_mask_BT = mask * _mask_BT
 
             # 1 if switched from 1 to 0 in this iteration, else 0
@@ -241,8 +247,8 @@ class GPT(DualModule):
             
 
             # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
-
-            _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
+            _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
+            # _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
             # The higher the max, the higher the confidence (to inf)
             # max = low, low confidence (to 0)
             # TODO no grad the most recent application of attention
@@ -284,16 +290,18 @@ class GPT(DualModule):
                 # print("MASK SHAPE ", _mask_BT.shape)
                 # print("CONFIDENCE SHAPE ", _confidence.shape)
 
-                if ENABLE_LAYER_LOSS:
+                if ENABLE_LAYER_LOSS and i > 0:
+                    # TODO should use confidence of the NEXT layer, not of the current layer.
+
                     # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
 
                     # NOTE: if _just_triggered = 1, then xe is multiplied in; else, if _just_triggered = 0, then factor = 1
                     # xe_factor = torch.pow(xe, _just_triggered)
-                    # xe_factor = ((xe - 1) * _just_triggered + 1)
-                    # loss_ = (xe_factor * _confidence * _mask_BT).mean()
-                    loss_ = (xe * _confidence * _mask_BT).mean()
+                    xe_factor_prev = ((_xe_prev - 1) * _just_triggered_prev + 1)
+                    loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
+                    # loss_ = (xe * _confidence * _mask_BT).mean()
                     savedConf.append(_confidence.mean())
-                    # savedXeFactor.append((xe_factor * _confidence).mean())
+                    savedXeFactor.append((xe_factor_prev * _confidence).mean())
                     losses += loss_ 
                     # If mask is 0, then it has already "triggered", so no loss
                     # Loss is confidence unless at point of triggering
@@ -304,6 +312,12 @@ class GPT(DualModule):
                     trueLoss = xe.mean().detach()
                     # if not ENABLE_LAYER_LOSS:
                     losses += (xe * _mask_BT).mean() #NOTE for now, always penalize last layer since we have finite number of layers
+
+                # Used when adding loss when computing confidence of subsequent layer
+                _xe_prev = xe
+                _just_triggered_prev = _just_triggered
+                _mask_BT_prev = _mask_BT
+
             else:
                 # NOTE this code path should be unused except during inference
                 pass
@@ -313,7 +327,7 @@ class GPT(DualModule):
         if targets is not None and losses < 0.05:
             print("oh no")
             print("SAVED CONF ", savedConf)
-            # print("SAVED XE FACTOR ", savedXeFactor)
+            print("SAVED XE FACTOR ", savedXeFactor)
         if all_logits:
             return allLogits, losses, trueLoss
         else:
