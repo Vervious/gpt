@@ -70,3 +70,11 @@ loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
 ```
 
 What incentivizes higher confidence? Earlier termination thus less loss. Maybe I should really penalize the last layer... Also, adding the additional cross_entropy calculition cost another .5 sec per step.
+
+Result: 
+
+![loss plot](img/5-test.png)
+
+(Strangely linear, but also outputs "the" a hundred times)
+
+##### 6-test

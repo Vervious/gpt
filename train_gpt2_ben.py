@@ -216,6 +216,7 @@ class GPT(DualModule):
         _mask_BT_prev = None
 
         early_stop_num = 0.0
+        earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
         for i in range(self.config.n_layer):
             # This one is detached
@@ -262,6 +263,8 @@ class GPT(DualModule):
             # 1 if switched from 1 to 0 in this iteration, else 0
             _just_triggered = _mask_BT - _new_mask_BT  #(B, T, 1)
             _mask_BT = _new_mask_BT # (B, T, 1)
+
+            earlyStopLayerDict[i] = _just_triggered.sum().item()
 
             _true_logits = _true_logits + _just_triggered * _logits # note not back proped, I think, _logits is result of lmhead._requires_grad(False) (B, T, vocab_size)
 
@@ -385,9 +388,9 @@ class GPT(DualModule):
             # print("SAVED XE FACTOR ", savedXeFactor)
             print("NLL MAX ", _nll_max)
         if all_logits:
-            return allLogits, losses, trueLoss, confLoss, targetLoss, early_stop_num
+            return allLogits, losses, trueLoss, confLoss, targetLoss, early_stop_num, earlyStopLayerDict
         else:
-            return _logits, losses, trueLoss, confLoss, targetLoss, early_stop_num 
+            return _logits, losses, trueLoss, confLoss, targetLoss, early_stop_num, earlyStopLayerDict
             # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T and B
             #     if master_process and print_weights:
             #         bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
@@ -786,7 +789,7 @@ for step in range(max_steps):
                 x, y = val_loader.next_batch()
                 x, y = x.to(device), y.to(device)  
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, loss, _, _, _ = model(x, y)
+                    logits, _, loss, _, _, _, _= model(x, y)
                 loss = loss / val_loss_steps # average accumulated loss
                 val_loss_accum += loss.detach() # why do i need to call detach if I never call backward on it
         if ddp:
@@ -816,7 +819,7 @@ for step in range(max_steps):
             # get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, loss, _, _, _ = model(tokens)
+                    logits, _, loss, _, _, _, _ = model(tokens)
                 pred_norm = hellaswag.get_most_likely_row(tokens, mask, logits)
             num_total += 1
             num_correct_norm += int(pred_norm == label)
@@ -856,7 +859,7 @@ for step in range(max_steps):
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
+                    logits, _, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
 
                 if xgen.size(1) < 9:
 
@@ -911,6 +914,7 @@ for step in range(max_steps):
     target_loss_accum = 0.0
     loss_accum_all = 0.0
     earlyStopNum_accum = 0.0
+    earlyStopLayerDict_accum = torch.zeros(12, device=device)
     for micro_step in range(grad_accum_steps):
         x, y = train_loader.next_batch()
         timesBatchUsed = train_loader.num_times_latest_batch_used()
@@ -919,7 +923,7 @@ for step in range(max_steps):
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            _, loss, trueloss, confLoss, targetLoss, earlyStopNum = model(x, y) # NOTE: we don't actually use the logits
+            _, loss, trueloss, confLoss, targetLoss, earlyStopNum, earlyStopLayerDict = model(x, y) # NOTE: we don't actually use the logits
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps
@@ -927,6 +931,7 @@ for step in range(max_steps):
         earlyStopNum_accum += earlyStopNum
         conf_loss_accum += confLoss.detach() / grad_accum_steps
         target_loss_accum += targetLoss.detach() / grad_accum_steps
+        earlyStopLayerDict_accum += earlyStopLayerDict.detach()
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
@@ -957,7 +962,11 @@ for step in range(max_steps):
         tokens_per_sec = tokens_processed / dt
         flops = raw_model.estimate_mfu(fwdbwd_per_iter=(tokens_processed), dt=dt)
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, confloss: {conf_loss_accum.item():.4f}, targetloss: {target_loss_accum.item():.4f}, earlystop: {earlyStopNum_accum / (B*T*grad_accum_steps):.3f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        earlyStopLayerDict_accum /= (B*T*grad_accum_steps)
+
+        rList = [round(value, 2) for value in earlyStopLayerDict_accum.tolist()]
+
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, confloss: {conf_loss_accum.item():.4f}, targetloss: {target_loss_accum.item():.4f}, earlystop: {earlyStopNum_accum / (B*T*grad_accum_steps):.3f}, earlystopdict: {rList}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:
