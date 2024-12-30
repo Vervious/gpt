@@ -75,6 +75,6 @@ Result:
 
 ![loss plot](img/5-test.png)
 
-(Strangely linear, but also outputs "the" a hundred times)
+(Strangely linear, but also outputs "the" a hundred times. On further debugging, penalizing confidence appears to cause this behavior. Why?)
 
 ##### 6-test

@@ -239,6 +239,7 @@ class GPT(DualModule):
             # Cross entropy returns a positive loss (i.e. - log (pr))
             _nll_max = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), _targets.view(-1), reduction='none') # (B*T)
 
+
             _nll_max = _nll_max.view(B,T, 1) # (B, T) = -log(pr[target])
 
             # print("NLLMAXSHAPE ", _nll_max.shape)
@@ -316,6 +317,10 @@ class GPT(DualModule):
 
                 # TODO: WHY IS ALL LOSS < TRUE LOSS
 
+                _target_conf = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), targets.view(-1), reduction='none').view(B,T, 1) # (B*T)
+                _target_conf = -1 * log1mexp(-_target_conf)
+
+
                 if ENABLE_LAYER_LOSS and i > 0:
 
                     # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
@@ -328,13 +333,13 @@ class GPT(DualModule):
 
                     # TODO UNCOMMENT THIS BLOCK
                     # NOTE: detach _mask_BT for now, I don' tthink we really need it
-                    confLoss_contrib = (_confidence * _mask_BT_prev.detach()).mean()
-                    confLoss += confLoss_contrib
+                    confLoss_contrib = (_target_conf * _mask_BT_prev.detach()).mean() # _confidence
+                    confLoss -= confLoss_contrib
 
                     # loss_ = (xe * _confidence * _mask_BT).mean()
                     savedConf.append(_confidence.mean())
                     # savedXeFactor.append((xe_factor_prev * _confidence).mean())
-                    losses = losses + confLoss_contrib
+                    losses = losses - confLoss_contrib #TODO UNCMOMENT
 
 
                     # If mask is 0, then it has already "triggered", so no loss
