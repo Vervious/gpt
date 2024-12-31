@@ -154,10 +154,11 @@ class GPT(DualModule):
             wte = nn.Embedding(config.vocab_size, config.n_embd),
             # weights of position embedding
             wpe = nn.Embedding(config.block_size, config.n_embd),
-            # h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]), # TODO COMMEZNT
+            # h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]), #  COMMEZNT
             sharedblock = sharedBlock, # NOTE: this does not seem to degrade performance at least early in the training process
             # weights of layer normalization
-            ln_f =  nn.LayerNorm(config.n_embd), # sharedBlock.ln_1, # nn.LayerNorm(config.n_embd), TODO COMMENT
+            ln_f = sharedBlock.ln_1, # nn.LayerNorm(config.n_embd),
+            # NOTE we share ALL layer norms which may not be necessarily wise
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
@@ -323,8 +324,8 @@ class GPT(DualModule):
 
                 if ENABLE_LAYER_LOSS and i > 0:
 
-                    _target_conf = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), targets.view(-1), reduction='none').view(B,T, 1) # (B*T)
-                    _target_conf = -1 * log1mexp(-_target_conf)
+                    # _target_conf = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), targets.view(-1), reduction='none').view(B,T, 1) # (B*T)
+                    # _target_conf = -1 * log1mexp(-_target_conf)
 
                     # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
 
@@ -336,7 +337,7 @@ class GPT(DualModule):
 
                     # TODO UNCOMMENT THIS BLOCK
                     # NOTE: detach _mask_BT for now, I don' tthink we really need it
-                    confLoss_contrib = (_target_conf * _mask_BT_prev.detach()).mean() # _confidence
+                    confLoss_contrib = (_confidence * _mask_BT_prev.detach()).mean() # _confidence
                     confLoss -= confLoss_contrib
 
                     # loss_ = (xe * _confidence * _mask_BT).mean()
@@ -690,6 +691,9 @@ if torch.cuda.is_available():
 # HYPERPARAMETERS
 # ===================
 
+test_name="6-test-2"
+test_description="Reward confidence with GPT/2 learning rate."
+
 
 # Create log and persistence directory
 log_dir = "log-ben"
@@ -698,8 +702,8 @@ checkpoint_dir = "checkpoints-ben"
 os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(log_dir, exist_ok=True)
 os.makedirs(sample_dir, exist_ok=True)
-log_file = os.path.join(log_dir, "log.txt")
-sample_file = os.path.join(sample_dir, "main.txt")
+log_file = os.path.join(log_dir, f"{test_name}-log.txt")
+sample_file = os.path.join(sample_dir, f"{test_name}-main.txt")
 if master_process:
     with open(log_file, "w") as f: # clear log file
         pass
@@ -718,12 +722,12 @@ T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
+max_lr = 0.5* 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
-ENABLE_LAYER_LOSS = False
+ENABLE_LAYER_LOSS = True
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
@@ -740,6 +744,8 @@ if master_process:
     print(f"Num GPUs: {ddp_world_size}")
     bprint(f"Threshold: {THRESHOLD}")
     bprint(f"Enable layer loss: {ENABLE_LAYER_LOSS}")
+    bprint(f"Experiment name: {test_name}")
+    bprint(f"Experiment description: {test_description}")
 
 
     with open(log_file, "a") as f:
