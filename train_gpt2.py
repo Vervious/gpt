@@ -398,19 +398,19 @@ if torch.cuda.is_available():
 # ===================
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 16 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 2048 # sequence length
-total_batch_size = 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
+B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 1024 # sequence length
+total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 2*6e-4 # from GPT 3 paper # double it because it seems to work
+max_lr = 1*6e-4 # from GPT 3 paper # double it because it seems to work
 min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 
-hello_swag_frequency = 500
-validation_frequency = 250
-checkpoint_frequency = 2000
+hello_swag_frequency = 500000
+validation_frequency = 250000
+checkpoint_frequency = 200000
 sample_frequency = 1000
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
@@ -513,7 +513,7 @@ for step in range(max_steps):
         if master_process:
             print(f"validation loss: {val_loss_accum.item():.4f}")
             with open(log_file, "a") as f:
-                f.write(f"{step} val {val_loss_accum.item():.4f}\n")
+                f.write(f"@ {step} val {val_loss_accum.item():.4f}\n")
     
     if (step % checkpoint_frequency == 50 or step == max_steps - 1):
         # save model checkpoint
@@ -635,7 +635,7 @@ for step in range(max_steps):
 
         print(f"step {step}, loss: {loss_accum.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") # .item() ships value from device back to host 
         with open(log_file, "a") as f:
-            f.write(f"{step} train {loss_accum.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
+            f.write(f"@ {step} train {loss_accum.item():.8f}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}\n")
 
 
 if ddp:

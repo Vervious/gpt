@@ -154,11 +154,10 @@ class GPT(DualModule):
             wte = nn.Embedding(config.vocab_size, config.n_embd),
             # weights of position embedding
             wpe = nn.Embedding(config.block_size, config.n_embd),
-            # TODO: have the KQV weights also be shared across layers
-            # h = nn.ModuleList([shared_block for _ in range(config.n_layer)]),
+            # h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]), # TODO COMMEZNT
             sharedblock = sharedBlock, # NOTE: this does not seem to degrade performance at least early in the training process
             # weights of layer normalization
-            ln_f = sharedBlock.ln_1, # nn.LayerNorm(config.n_embd),
+            ln_f =  nn.LayerNorm(config.n_embd), # sharedBlock.ln_1, # nn.LayerNorm(config.n_embd), TODO COMMENT
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
@@ -219,89 +218,95 @@ class GPT(DualModule):
 
         for i in range(self.config.n_layer):
             # This one is detached
-            x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
             
-            x, res = self.transformer.sharedblock.requires_grad_(True)(x, res)
+            # block = self.transformer.h[i]
+            # x, res = block.requires_grad_(True)(x, res)
+            x, res = self.transformer.sharedblock.requires_grad_(True)(x, res) # TODO UNCOMMENT
 
-            # _logits is after application of the current layer
-            _logits_incl_curr_layer = self.lm_head.requires_grad_(True)(x)
-            _logits_skipping_curr_layer = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
-            # TODO: seems not to work if I dont' call requires_grad(False) on lm_head (maybe for obvious reasons), now check if I do call it.
-            if all_logits or i == self.config.n_layer - 1:
-                allLogits.append(_logits_skipping_curr_layer)
+            if ENABLE_LAYER_LOSS:
 
-            
-            _, _targets = _logits_skipping_curr_layer.detach().max(dim=-1) #(B, T) # NOTE: the [1] is to get the indices
+                x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
+                # _logits is after application of the current layer
+                _logits_incl_curr_layer = self.lm_head.requires_grad_(True)(x)
+                _logits_skipping_curr_layer = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
+                # TODO: seems not to work if I dont' call requires_grad(False) on lm_head (maybe for obvious reasons), now check if I do call it.
+                if all_logits or i == self.config.n_layer - 1:
+                    allLogits.append(_logits_skipping_curr_layer)
 
-            # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-            # (_logprobs.exp() * _logprobs).sum(dim=-1)
-            # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
-            # Cross entropy returns a positive loss (i.e. - log (pr))
-            _nll_max = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), _targets.view(-1), reduction='none') # (B*T)
+                
+                _, _targets = _logits_skipping_curr_layer.detach().max(dim=-1) #(B, T) # NOTE: the [1] is to get the indices
 
-
-            _nll_max = _nll_max.view(B,T, 1) # (B, T) = -log(pr[target])
-
-            # print("NLLMAXSHAPE ", _nll_max.shape)
-
-            _sample_rand = torch.rand(B, T, 1, device=idx.device).log() * -1
-            # NOTE: we want to perform the usual computations perhaps, but just stop propagating the gradient? on masked values / short circuited batches / Ts.
-            # I.e. for B,T where softmax(_logits).max() < _sample_rand, do an early stopping, and stop accumulating loss (where loss = -log(pr[target]) * confidence) thereafter
-            # Final loss (for each B,T) is -logli under those final logits
-
-            # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
-            # TODO: tbd shoudl just max the loss
-            mask = _sample_rand < _nll_max # True/1 if subsequent loss should be counted, False/0 otherwise # (B, T, 1)
+                # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
+                # (_logprobs.exp() * _logprobs).sum(dim=-1)
+                # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
+                # Cross entropy returns a positive loss (i.e. - log (pr))
+                _nll_max = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), _targets.view(-1), reduction='none') # (B*T)
 
 
-            # if previously 0, stay 0
-            # set _mask_BT: 1 if loss this layer should count, 0 otherwise (i.e. early termination)
-            _new_mask_BT = mask * _mask_BT
+                _nll_max = _nll_max.view(B,T, 1) # (B, T) = -log(pr[target])
 
-            if i == self.config.n_layer - 1:
-                _new_mask_BT = torch.zeros_like(_mask_BT) # NOTE: always penalize last layer since we have finite number of layers
+                # print("NLLMAXSHAPE ", _nll_max.shape)
 
-            # 1 if switched from 1 to 0 in this iteration, else 0
-            _just_triggered = (_mask_BT - _new_mask_BT).detach()  #(B, T, 1)
-            _mask_BT = _new_mask_BT # (B, T, 1)
+                _sample_rand = torch.rand(B, T, 1, device=idx.device).log() * -1
+                # NOTE: we want to perform the usual computations perhaps, but just stop propagating the gradient? on masked values / short circuited batches / Ts.
+                # I.e. for B,T where softmax(_logits).max() < _sample_rand, do an early stopping, and stop accumulating loss (where loss = -log(pr[target]) * confidence) thereafter
+                # Final loss (for each B,T) is -logli under those final logits
 
-            earlyStopLayerDict[i] = _just_triggered.sum().item()
+                # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
+                # TODO: tbd shoudl just max the loss
+                mask = _sample_rand < _nll_max # True/1 if subsequent loss should be counted, False/0 otherwise # (B, T, 1)
 
-            _true_logits = _true_logits + _just_triggered * _logits_incl_curr_layer # later we will backprop this against targets loss
 
-            # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
-            
+                # if previously 0, stay 0
+                # set _mask_BT: 1 if loss this layer should count, 0 otherwise (i.e. early termination)
+                _new_mask_BT = mask * _mask_BT
 
-            # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
-            _confidence = -1 * log1mexp(-_nll_max) # NOTE were we running into numerical stability problems? # (B, T, 1)
-            # _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
-            # _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
-            # The higher the max, the higher the confidence (to inf)
-            # max = low, low confidence (to 0)
-            # TODO no grad the most recent application of attention
-            # Times -1 to reward low confidence.
+                if i == self.config.n_layer - 1:
+                    _new_mask_BT = torch.zeros_like(_mask_BT) # NOTE: always penalize last layer since we have finite number of layers
 
-            if print_weights:
-                early_end = self.config.n_layer # can change to smaller number to "short circuit"
-                if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer) and master_process:
-                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                    with torch.no_grad():
-                        probs = F.softmax(_logits_skipping_curr_layer, dim=-1) # (B, T, vocab_size?)
-                        # print top k of the last T
-                        # do top-k sampling of 50 (huggingface pipeline default)
-                        # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                        topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                        fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
-                        bprint(f"Layer {i} B=0,T=-1 Confidence={_confidence[0,-1].item():.5f}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
-                    # if i > 5:
+                # 1 if switched from 1 to 0 in this iteration, else 0
+                _just_triggered = (_mask_BT - _new_mask_BT).detach()  #(B, T, 1)
+                _mask_BT = _new_mask_BT # (B, T, 1)
+
+                earlyStopLayerDict[i] = _just_triggered.sum().item()
+
+                _true_logits = _true_logits + _just_triggered * _logits_incl_curr_layer # later we will backprop this against targets loss
+
+                # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
+                
+
+                # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
+                _confidence = -1 * log1mexp(-_nll_max) # NOTE were we running into numerical stability problems? # (B, T, 1)
+                # _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
+                # _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
+                # The higher the max, the higher the confidence (to inf)
+                # max = low, low confidence (to 0)
+                # TODO no grad the most recent application of attention
+                # Times -1 to reward low confidence.
+
+                if _mask_BT[0,-1,0] == 0:
+                    if master_process and print_weights:
+                        bprint(f"\tB=0 T=-1 skipped layer {i}")
+
+                if print_weights:
+                    early_end = self.config.n_layer # can change to smaller number to "short circuit"
+                    if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer) and master_process:
+                        # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                        with torch.no_grad():
+                            probs = F.softmax(_logits_skipping_curr_layer, dim=-1) # (B, T, vocab_size?)
+                            # print top k of the last T
+                            # do top-k sampling of 50 (huggingface pipeline default)
+                            # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+                            topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+                            fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
+                            bprint(f"Layer {i} B=0,T=-1 Confidence={_confidence[0,-1].item():.5f}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
+                        # if i > 5:
+                        #     break
+                        # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                    # if i == early_end - 1:
                     #     break
-                    # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                # if i == early_end - 1:
-                #     break
 
-            if _mask_BT[0,-1,0] == 0:
-                if master_process and print_weights:
-                    bprint(f"\tB=0 T=-1 skipped layer {i}")
+            
             
             
             # losses += _block_loss / self.config.n_layer # NOTE: just try this for now # TODO before or after real loss computation?
@@ -315,13 +320,11 @@ class GPT(DualModule):
                 # print("MASK SHAPE ", _mask_BT.shape)
                 # print("CONFIDENCE SHAPE ", _confidence.shape)
 
-                # TODO: WHY IS ALL LOSS < TRUE LOSS
-
-                _target_conf = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), targets.view(-1), reduction='none').view(B,T, 1) # (B*T)
-                _target_conf = -1 * log1mexp(-_target_conf)
-
 
                 if ENABLE_LAYER_LOSS and i > 0:
+
+                    _target_conf = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), targets.view(-1), reduction='none').view(B,T, 1) # (B*T)
+                    _target_conf = -1 * log1mexp(-_target_conf)
 
                     # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
 
@@ -348,47 +351,50 @@ class GPT(DualModule):
                 # print("LOSS SHAPE", losses.shape)
 
                 
-                
-                # _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-                xe = F.cross_entropy(_logits_incl_curr_layer.view(-1, _logits_incl_curr_layer.size(-1)), targets.view(-1), reduction='none') #(B*T)
-                xe = xe.view(B, T, 1)
-                targetLoss_contrib = (xe * _just_triggered).mean()
-                losses = losses + targetLoss_contrib
-                targetLoss += targetLoss_contrib # IN PLACE
+                if ENABLE_LAYER_LOSS:
+                    # _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
+                    xe = F.cross_entropy(_logits_incl_curr_layer.view(-1, _logits_incl_curr_layer.size(-1)), targets.view(-1), reduction='none') #(B*T)
+                    xe = xe.view(B, T, 1)
+                    targetLoss_contrib = (xe * _just_triggered).mean()
+                    losses = losses + targetLoss_contrib
+                    targetLoss += targetLoss_contrib # IN PLACE
+                    trueLoss = targetLoss
 
 
                 if i == self.config.n_layer - 1:
 
                     # NOTE: keep this because... can't return some dummy thing instead
                     _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-                    # tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
-                    # trueLoss = tl
-                    # losses = losses + tl
 
-                    # # NOTE: uncomment for true trueLoss computation
-                    # xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
-                    # trueLoss = xe_staggered_loss 
-                    trueLoss = targetLoss
+                    if not ENABLE_LAYER_LOSS:
+                        tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
+                        trueLoss = tl
+                        losses = losses + tl
+                        allLogits.append(_logits)
+                    else:
+                        # # NOTE: uncomment for true trueLoss computation
+                        # xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
+                        # trueLoss = xe_staggered_loss 
 
-                    # trueLoss = xe.mean().detach() #TODO compare with the prev
-                    allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
-                    # NOTE: trueLoss slightly different than targetLoss, not sure why...
+                        # trueLoss = xe.mean().detach() #TODO compare with the prev
+                        allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
+                        # NOTE: trueLoss slightly different than targetLoss, not sure why...
 
-                    # trueLoss = xe.mean().detach()
-                    # if not ENABLE_LAYER_LOSS:
-                    # _mask_BT_prev because if _mask_BT, it is always 0 at last layer
+                        # trueLoss = xe.mean().detach()
+                        # if not ENABLE_LAYER_LOSS:
+                        # _mask_BT_prev because if _mask_BT, it is always 0 at last layer
 
-                    # BELOW COMMENTED
-                    # confLoss = losses # 
-                    # targetLoss = (xe * _mask_BT_prev).mean()
-                    # losses = losses + targetLoss
+                        # BELOW COMMENTED
+                        # confLoss = losses # 
+                        # targetLoss = (xe * _mask_BT_prev).mean()
+                        # losses = losses + targetLoss
 
 
-                    # print("MASK SUM ", _mask_BT_prev.sum().item(), B*T)
-                    # losses += xe.mean()
-                    #NOTE for now, always penalize last layer since we have finite number of layers
+                        # print("MASK SUM ", _mask_BT_prev.sum().item(), B*T)
+                        # losses += xe.mean()
+                        #NOTE for now, always penalize last layer since we have finite number of layers
 
-                    early_stop_num = B*T - _mask_BT_prev.sum().item()
+                        early_stop_num = B*T - _mask_BT_prev.sum().item()
 
 
                 # Used when adding loss when computing confidence of subsequent layer
@@ -398,16 +404,21 @@ class GPT(DualModule):
 
             else:
                 # NOTE this code path should be unused except during inference
-                pass
+                if i == self.config.n_layer - 1 and all_logits:
+                    if ENABLE_LAYER_LOSS:
+                        allLogits.append(_true_logits)
+                    else:
+                        _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
+                        allLogits.append(_logits)
                 # losses += _confidence / self.config.n_layer
         
         
         # print("total loss ", losses)
         if targets is not None and (losses.item() < 0.05 or losses.isnan().any()):
             print("oh no")
-            print("SAVED CONF ", savedConf)
-            # print("SAVED XE FACTOR ", savedXeFactor)
-            print("NLL MAX ", _nll_max)
+            # print("SAVED CONF ", savedConf)
+            # # print("SAVED XE FACTOR ", savedXeFactor)
+            # print("NLL MAX ", _nll_max)
         if all_logits:
             return allLogits, losses, trueLoss, confLoss, targetLoss, early_stop_num, earlyStopLayerDict
         else:
@@ -707,12 +718,12 @@ T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 4*6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
+max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
-ENABLE_LAYER_LOSS = True
+ENABLE_LAYER_LOSS = False
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
@@ -766,7 +777,7 @@ if ddp:
     # - nothing changes in forward pass
     # - in backwards pass, gradients are averaged across all GPUs (via allreduce)
     # -- every single rank gets the output of the allreduce
-    model = DDP(model, device_ids=[ddp_local_rank])
+    model = DDP(model, device_ids=[ddp_local_rank], find_unused_parameters=True)
 raw_model = model.module if ddp else model
 
 

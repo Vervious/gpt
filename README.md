@@ -78,3 +78,7 @@ Result:
 (Strangely linear, but also outputs "the" a hundred times. On further debugging, penalizing confidence appears to cause this behavior. Why?)
 
 ##### 6-test
+
+Note that "0-noearly" is the same as vanilla GPT (but reusing weights) without our early termination mechanism. "0-original" does not re-use any weights, and needs a smaller learning rate to converge properly. (It's odd that the behavior depends so thoroughly on the learning rate.) "0-gpt-custom" is the same as GPT but with our own code.
+
+Things to try: reduce learning rate for some of the earlier experiments...
