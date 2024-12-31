@@ -125,7 +125,7 @@ class Block(DualModule):
         # NOTE, for some reason LN(x) + self.attn(LN(x)) doesn't work as well. 
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
-        x = res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation
+        x = self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + 
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         x = x + self.mlp(self.ln_2(x))  # map operation (one to one)
         newres = x
@@ -691,8 +691,8 @@ if torch.cuda.is_available():
 # HYPERPARAMETERS
 # ===================
 
-test_name="6-test-2"
-test_description="Reward confidence with GPT/2 learning rate."
+test_name="7-test-1"
+test_description="Reused-weights GPT, without early termination, but removing residual from attention"
 
 
 # Create log and persistence directory
@@ -727,7 +727,7 @@ min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
-ENABLE_LAYER_LOSS = True
+ENABLE_LAYER_LOSS = False
 
 hello_swag_frequency = 600000
 validation_frequency = 2000

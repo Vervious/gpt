@@ -97,3 +97,15 @@ Our general hypothesis is that good training data is only one part of learning; 
 
 Note that the subsequent logit it generates is indeed such an assessment. Let us reward high confidence / penalize low confidence. (Is it an assessment? An embedding is a high-dimensional representation of a concept, or multiple concepts summed together, i.e. a thought; some may not be directly associated with single words, they may map to multiple words, and so forth... Confidence is just a measure of how they align with a specific english word.)
 
+The problem is that...
+
+A stream of   text that is
+  
+  of     text that is   next
+
+  of     text that is   next
+
+
+strangely, the third layer is guessing not the third layer, but continuing to guess the second layer...
+
+
