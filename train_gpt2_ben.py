@@ -68,20 +68,29 @@ class CausalSelfAttention(DualModule):
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
-        # Note: C = n_embd
-        # head size = C // self.n_head = 64
+        # # NOTE: value matrix seems redundant, could just change to the below
+        # v = x.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
-        # FlashAttention: fuse kernels for attention
-        # Does more flops (tradeoff) but because of operator fusion, much faster
-        # In particular, att never gets written to global memory (T x T = 1024 * 1024)
+        # TODO figure out what is wrong with the below code and why it breaks training if we use it instead of the pytorch version
+        # # Note: C = n_embd
+        # # head size = C // self.n_head = 64
+
+        # # FlashAttention: fuse kernels for attention
+        # # Does more flops (tradeoff) but because of operator fusion, much faster
+        # # In particular, att never gets written to global memory (T x T = 1024 * 1024)
 
         # # attention
         # att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
-        # att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf')) # only attend to historic tokens
+
+        # mask = torch.triu(torch.ones(T, T, device=x.device), diagonal=1).bool()  # Upper triangular matrix with diagonal offset by 1
+        # mask = mask.unsqueeze(0).unsqueeze(0)
+
+        # # mask = self.bias[:, :, :T, :T] == 0
+        # att = att.masked_fill(mask, float('-inf')) # only attend to historic tokens
         # att = F.softmax(att, dim=-1) # normalize attention
         # y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
         
-        # Just have Pytorch use FlashAttention for us.
+        # Just have Pytorch use FlashAttention for us. #TODO NVM
         y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
 
@@ -125,11 +134,13 @@ class Block(DualModule):
         # NOTE, for some reason LN(x) + self.attn(LN(x)) doesn't work as well. 
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
-        x = self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + 
+        x = res + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + 
+        # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         x = x + self.mlp(self.ln_2(x))  # map operation (one to one)
         newres = x
-        x = self.ln_1(x)
+        x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
+        # NOTE seems quite good res + attn(x), comment out ln_1
         return x, newres
 
 
@@ -218,11 +229,47 @@ class GPT(DualModule):
         earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
         for i in range(self.config.n_layer):
-            # This one is detached
+            prev_x = x # (B, T, n_embd)
+
+            with torch.no_grad():
+                if all_logits or print_weights:
+                    _logits = self.lm_head(x)
+                if all_logits:
+                    allLogits.append(_logits)
+                if print_weights:
+                    if (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1 or i == self.config.n_layer) and master_process:
+                        # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                        probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
+                        # print top k of the last T
+                        # do top-k sampling of 50 (huggingface pipeline default)
+                        # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+                        topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+                        fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
+                        bprint(f"Layer {i}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
+
             
             # block = self.transformer.h[i]
             # x, res = block.requires_grad_(True)(x, res)
             x, res = self.transformer.sharedblock.requires_grad_(True)(x, res) # TODO UNCOMMENT
+
+            # # For now, try computing dot products in embedding space
+            # target_embedding = torch.roll(prev_x, shifts=-1, dims=1) # shift in T dimension
+            # # NOTE: ignore the far right-most one
+            # dp = -1* (target_embedding[:,:-1,:] * x[:,:-1,:]).sum(dim=-1) / self.config.n_embd # dot product
+            # dp = dp.mean()
+            # losses += dp
+            # confLoss += dp
+
+            if targets is not None: # and i == self.config.n_layer - 1:
+
+                # NOTE: keep this because... can't return some dummy thing instead
+                _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
+
+                tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
+                trueLoss = tl
+                losses = losses + tl
+                allLogits.append(_logits)
+                   
 
             if ENABLE_LAYER_LOSS:
 
@@ -365,13 +412,15 @@ class GPT(DualModule):
                 if i == self.config.n_layer - 1:
 
                     # NOTE: keep this because... can't return some dummy thing instead
-                    _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
 
                     if not ENABLE_LAYER_LOSS:
-                        tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
-                        trueLoss = tl
-                        losses = losses + tl
-                        allLogits.append(_logits)
+                        pass
+                        # _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
+                        # tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
+                        # trueLoss = tl
+                        # print("lalala")
+                        # losses = losses + tl
+                        # allLogits.append(_logits)
                     else:
                         # # NOTE: uncomment for true trueLoss computation
                         # xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
@@ -416,7 +465,8 @@ class GPT(DualModule):
         
         # print("total loss ", losses)
         if targets is not None and (losses.item() < 0.05 or losses.isnan().any()):
-            print("oh no")
+            # print("oh no")
+            pass
             # print("SAVED CONF ", savedConf)
             # # print("SAVED XE FACTOR ", savedXeFactor)
             # print("NLL MAX ", _nll_max)
@@ -691,8 +741,8 @@ if torch.cuda.is_available():
 # HYPERPARAMETERS
 # ===================
 
-test_name="7-test-1"
-test_description="Reused-weights GPT, without early termination, but removing residual from attention"
+test_name="7-test-2"
+test_description="Vanilla GPT (reusing blocks), with dot product conf loss with previous layer"
 
 
 # Create log and persistence directory
@@ -722,7 +772,7 @@ T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 0.5* 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
+max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
 warmup_steps = 10
 use_compile = False # May run into bugs

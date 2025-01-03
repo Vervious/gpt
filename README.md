@@ -106,6 +106,17 @@ A stream of   text that is
   of     text that is   next
 
 
-strangely, the third layer is guessing not the third layer, but continuing to guess the second layer...
+strangely, the third layer is guessing not the third layer, but continuing to guess the second layer... If i don't feed the residual back in after applying the attention layer, performance is hurt substantially. Why is the residual so important in that case? Is the (previous) embedding itself really a very deep short term memory? Why can't inclusion of the past be learned?
+
+I guess because we add value matrices instead of the embedding itself, the past gets destroyed. (How necessary is the value matrix? Shouldn't the MLP setup deal with that already. Perhaps the value matrices should just be the embedding itself.)
+
+Note that the residual connection and c_proj are extremey important, and I do not know why. The value matrix does not seem so important. (perhaps we can get rid of c_proj?)
 
 
+
+A       stream of   text that is
+  
+stream  of     text that is   next
+of      text   that is   next .
+
+Alternatively, we can reward tokens that are equal to the next token in the previous layer.
