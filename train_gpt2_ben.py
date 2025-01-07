@@ -137,9 +137,10 @@ class Block(DualModule):
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
-        x = res + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        x = res * self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
+        midx = x
         x = x + self.mlp(self.ln_2(x))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
@@ -157,7 +158,7 @@ class Block(DualModule):
         # NOTE: doing res * attn(x) and x + mlp(LN(x)) explodes the prev when training last layer only, but when doing all layer loss, it is reasonable... (why?)
 
         # NOTE seems quite good res + attn(x), comment out ln_1
-        return x, newres
+        return x, newres, midx
 
 
 @dataclass
@@ -252,7 +253,7 @@ class GPT(DualModule):
             
             # block = self.transformer.h[i]
             # x, res = block.requires_grad_(True)(x, res)
-            x, res = self.transformer.sharedblock.requires_grad_(True)(x, res) # TODO UNCOMMENT
+            x, res, midx = self.transformer.sharedblock.requires_grad_(True)(x, res) # TODO UNCOMMENT
 
             # # For now, try computing dot products in embedding space
             # target_embedding = torch.roll(prev_x, shifts=-1, dims=1) # shift in T dimension
@@ -274,7 +275,8 @@ class GPT(DualModule):
                 if print_weights:
                     prevsize = res.std(dim=-1).mean()
                     nextsize = x.std(dim=-1).mean()
-                    bprint(f"SIZE COMPARISON prev {prevsize} next {nextsize}")
+                    midsize = midx.std(dim=-1).mean()
+                    bprint(f"SIZE COMPARISON prev {prevsize} mid {midsize} next {nextsize}")
                 # if print_weights:
                 #     _batch_0_target = _target_embd[:,-7:,:] #(B, 7, vocab_size?)
                 #     _probs = F.softmax(_batch_0_target, dim=-1) #(B, 7, vocab_size?)
@@ -314,7 +316,7 @@ class GPT(DualModule):
 
             if ENABLE_LAYER_LOSS:
 
-                x_False, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
+                x_False, _, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
                 # _logits is after application of the current layer
                 _logits_incl_curr_layer = self.lm_head.requires_grad_(True)(x)
                 _logits_skipping_curr_layer = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
@@ -782,8 +784,8 @@ else:
 # HYPERPARAMETERS
 # ===================
 
-test_name="9-experiment"
-test_description=" Reusing blocks, max LR 6e-4, computing loss every layer, res + attn(x), x + mlp(LN(x))"
+test_name="9-experiment-2"
+test_description=" Reusing blocks, max LR 6e-4, computing loss every layer, res + attn(x), x + mlp(LN(x)), computing midx"
 
 
 # Create log and persistence directory

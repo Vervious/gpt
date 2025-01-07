@@ -1,0 +1,418 @@
+1: sample 0: Hello, I'm a language model,
+------
+		( the:0.0012,:0.0016.:0.0013 the:0.0013 the:0.0013.:0.0012 the:0.0015,:0.0016)
+,
+------
+		(,:0.0016.:0.0013 the:0.0013 the:0.0013.:0.0012 the:0.0015,:0.0016,:0.0020)
+,,,,,,,,,,,
+50: sample 0: Hello, I'm a language model,
+------
+		(.:0.0781.:0.0432 to:0.0449 to:0.0540 the:0.0118.:0.1196.:0.1270 and:0.0461)
+ and
+------
+		(.:0.0432 to:0.0449 to:0.0540 the:0.0118.:0.1196.:0.1270 and:0.0461 the:0.0342)
+ the � and the “
+The the � and
+200: sample 0: Hello, I'm a language model,
+------
+		(.:0.0339 and:0.0732 to:0.0845 not:0.0635 I:0.0520,:0.1543,:0.1455 the:0.0967)
+ the
+------
+		( and:0.0732 to:0.0845 not:0.0635 I:0.0520,:0.1543,:0.1455 the:0.0967 first:0.0129)
+ first.
+The first
+The
+The
+The
+350: sample 0: Hello, I'm a language model,
+------
+		( the:0.0549 and:0.0559�:0.0840 a:0.1191 very:0.0137 of:0.1748 of:0.2539 the:0.0703)
+ the
+------
+		( and:0.0559�:0.0840 a:0.1191 very:0.0137 of:0.1748 of:0.2539 the:0.0703 book:0.0091)
+ book of the book, and the book, and the
+500: sample 0: Hello, I'm a language model,
+------
+		(.:0.0452 and:0.0674 will:0.0403 a:0.0583 is:0.0164 of:0.1797 of:0.1436 and:0.0674)
+ and
+------
+		( and:0.0674 will:0.0403 a:0.0583 is:0.0164 of:0.1797 of:0.1436 and:0.0674 the:0.0537)
+ the same.
+- The first-to-to
+650: sample 0: Hello, I'm a language model,
+------
+		(,:0.0603 and:0.0801 can:0.0967 the:0.0461 good:0.0184,:0.1279.:0.1245 and:0.2539)
+ and
+------
+		( and:0.0801 can:0.0967 the:0.0461 good:0.0184,:0.1279.:0.1245 and:0.2539 the:0.0913)
+ the other of the other.
+The idea of the
+800: sample 0: Hello, I'm a language model,
+------
+		(.:0.0723 and:0.0530.:0.0679 not:0.1079 good:0.0457 of:0.1670.:0.2236 and:0.1875)
+ and
+------
+		( and:0.0530.:0.0679 not:0.1079 good:0.0457 of:0.1670.:0.2236 and:0.1875 I:0.2168)
+ I was able to understand the same. I was able
+950: sample 0: Hello, I'm a language model,
+------
+		(,:0.0771 and:0.0688 have:0.0894 sure:0.0684 very:0.0669 of:0.2383 of:0.1289 and:0.2158)
+ and
+------
+		( and:0.0688 have:0.0894 sure:0.0684 very:0.0669 of:0.2383 of:0.1289 and:0.2158 I:0.3770)
+ I have a very different approach to the I have.
+1100: sample 0: Hello, I'm a language model,
+------
+		(,:0.1060 you:0.0938 have:0.0698 not:0.0889 very:0.0532 that:0.1230.:0.1318 and:0.2061)
+ and
+------
+		( you:0.0938 have:0.0698 not:0.0889 very:0.0532 that:0.1230.:0.1318 and:0.2061 I:0.3379)
+ I was a very interesting, and I was a very
+1250: sample 0: Hello, I'm a language model,
+------
+		(,:0.0493 and:0.0938�:0.1250 not:0.1377 very:0.0317.:0.0957.:0.2930 but:0.3086)
+ but
+------
+		( and:0.0938�:0.1250 not:0.1377 very:0.0317.:0.0957.:0.2930 but:0.3086 I:0.3555)
+ I was not a teacher.
+I was a teacher
+1400: sample 0: Hello, I'm a language model,
+------
+		(,:0.1396 and:0.0513�:0.2051 not:0.1602 teacher:0.0238 teacher:0.1079 that:0.2451 and:0.1738)
+ and
+------
+		( and:0.0513�:0.2051 not:0.1602 teacher:0.0238 teacher:0.1079 that:0.2451 and:0.1738 I:0.4434)
+ I am a teacher. I am a teacher. I
+1550: sample 0: Hello, I'm a language model,
+------
+		(.:0.1108 and:0.0938 am:0.0869 sure:0.1709 little:0.0388 that:0.0972.:0.2012 but:0.2227)
+ but
+------
+		( and:0.0938 am:0.0869 sure:0.1709 little:0.0388 that:0.0972.:0.2012 but:0.2227 I:0.4023)
+ I am a good thing. I am a good thing
+1700: sample 0: Hello, I'm a language model,
+------
+		(.:0.0728 the:0.0623'm:0.1162 not:0.1572 little:0.0903 teacher:0.0801,:0.1318 and:0.2617)
+ and
+------
+		( the:0.0623'm:0.1162 not:0.1572 little:0.0903 teacher:0.0801,:0.1318 and:0.2617 I:0.3418)
+ I'm going to be a little bit of a little
+1850: sample 0: Hello, I'm a language model,
+------
+		(.:0.1191 the:0.0452�:0.0815 the:0.0330 little:0.0596 teacher:0.1182.:0.1504 and:0.1011)
+ and
+------
+		( the:0.0452�:0.0815 the:0.0330 little:0.0596 teacher:0.1182.:0.1504 and:0.1011 I:0.4746)
+ I'm a teacher. I'm a teacher. I
+2000: sample 0: Hello, I'm a language model,
+------
+		(,:0.0535 the:0.0542 am:0.0942 sure:0.1147 little:0.0444 teacher:0.1777.:0.1875 and:0.2930)
+ and
+------
+		( the:0.0542 am:0.0942 sure:0.1147 little:0.0444 teacher:0.1777.:0.1875 and:0.2930 I:0.3945)
+ I'm going to be able to use it to help
+2150: sample 0: Hello, I'm a language model,
+------
+		(,:0.0483 and:0.0854�:0.1113 not:0.1167 little:0.0625 teacher:0.0996.:0.2266 and:0.3613)
+ and
+------
+		( and:0.0854�:0.1113 not:0.1167 little:0.0625 teacher:0.0996.:0.2266 and:0.3613 I:0.5703)
+ I am a good teacher. I have a lot of
+2300: sample 0: Hello, I'm a language model,
+------
+		(,:0.1289 the:0.0796�:0.1147 going:0.1426 little:0.0369.:0.0913.:0.1582 and:0.3027)
+ and
+------
+		( the:0.0796�:0.1147 going:0.1426 little:0.0369.:0.0913.:0.1582 and:0.3027 I:0.3574)
+ I'm going to have a lot of ideas for this
+2450: sample 0: Hello, I'm a language model,
+------
+		(.:0.0796 and:0.0977.:0.0942 not:0.0884 friend:0.0280 expert:0.0747.:0.1240 and:0.2373)
+ and
+------
+		( and:0.0977.:0.0942 not:0.0884 friend:0.0280 expert:0.0747.:0.1240 and:0.2373 I:0.2441)
+ I'm not a language model.
+- The first
+2600: sample 0: Hello, I'm a language model,
+------
+		(,:0.0845 and:0.0684�:0.1318 not:0.0500 friend:0.0199 expert:0.0923,:0.1553 and:0.3496)
+ and
+------
+		( and:0.0684�:0.1318 not:0.0500 friend:0.0199 expert:0.0923,:0.1553 and:0.3496 I:0.5703)
+ I'm a language model. I'm a language model
+2750: sample 0: Hello, I'm a language model,
+------
+		(,:0.0618 and:0.1191�:0.1187 going:0.1172 little:0.0603 expert:0.1992,:0.1230 and:0.2715)
+ and
+------
+		( and:0.1191�:0.1187 going:0.1172 little:0.0603 expert:0.1992,:0.1230 and:0.2715 I:0.4062)
+ I'm going to have a lot of fun. I
+2900: sample 0: Hello, I'm a language model,
+------
+		(,:0.1299 the:0.0476�:0.0811 going:0.1992 little:0.0608 teacher:0.1895.:0.1445 and:0.2578)
+ and
+------
+		( the:0.0476�:0.0811 going:0.1992 little:0.0608 teacher:0.1895.:0.1445 and:0.2578 I:0.5469)
+ I'm a good teacher. I'm a teacher.
+3050: sample 0: Hello, I'm a language model,
+------
+		(,:0.0791 the:0.0811 have:0.0752 going:0.1270 student:0.0284 teacher:0.0942.:0.1299 and:0.2217)
+ and
+------
+		( the:0.0811 have:0.0752 going:0.1270 student:0.0284 teacher:0.0942.:0.1299 and:0.2217 I:0.3848)
+ I can't help but I can't help but I
+3200: sample 0: Hello, I'm a language model,
+------
+		(.:0.1494 and:0.0654'm:0.0996 not:0.1035 great:0.0306 teacher:0.2324er:0.2656 and:0.2812)
+ and
+------
+		( and:0.0654'm:0.0996 not:0.1035 great:0.0306 teacher:0.2324er:0.2656 and:0.2812 I:0.3086)
+ I'm a language model.
+I'm a language
+3350: sample 0: Hello, I'm a language model,
+------
+		(.:0.1299 and:0.0669 have:0.0801 sure:0.1021 great:0.0312 expert:0.1494er:0.1465 and:0.2441)
+ and
+------
+		( and:0.0669 have:0.0801 sure:0.1021 great:0.0312 expert:0.1494er:0.1465 and:0.2441 I:0.3027)
+ I'm a language model.
+I'm a language
+3500: sample 0: Hello, I'm a language model,
+------
+		(.:0.1050 and:0.0796�:0.1064 not:0.0835 little:0.0408 teacher:0.1040er:0.3770 and:0.3438)
+ and
+------
+		( and:0.0796�:0.1064 not:0.0835 little:0.0408 teacher:0.1040er:0.3770 and:0.3438 I:0.3633)
+ I'm a language model. I'm a language model
+3650: sample 0: Hello, I'm a language model,
+------
+		(.:0.0859 the:0.0505�:0.1240 going:0.0889 little:0.0469 teacher:0.0688.:0.1855 and:0.2656)
+ and
+------
+		( the:0.0505�:0.1240 going:0.0889 little:0.0469 teacher:0.0688.:0.1855 and:0.2656 I:0.4238)
+ I'm a language model.
+I'm a language
+3800: sample 0: Hello, I'm a language model,
+------
+		(,:0.0967 the:0.0547 have:0.1226 not:0.0737 little:0.0449 expert:0.0806,:0.1211 and:0.2559)
+ and
+------
+		( the:0.0547 have:0.1226 not:0.0737 little:0.0449 expert:0.0806,:0.1211 and:0.2559 I:0.2520)
+ I'm a language model.
+I'm a language
+3950: sample 0: Hello, I'm a language model,
+------
+		(,:0.1050 the:0.0752 have:0.0972 glad:0.0669 good:0.0295 teacher:0.1099er:0.1953 and:0.2188)
+ and
+------
+		( the:0.0752 have:0.0972 glad:0.0669 good:0.0295 teacher:0.1099er:0.1953 and:0.2188 I:0.3086)
+ I'm a language model.
+I'm a language
+4100: sample 0: Hello, I'm a language model,
+------
+		(.:0.0996 the:0.0713 have:0.0962 not:0.0781 little:0.0718 teacher:0.0874,:0.1553 and:0.2891)
+ and
+------
+		( the:0.0713 have:0.0962 not:0.0781 little:0.0718 teacher:0.0874,:0.1553 and:0.2891 I:0.4648)
+ I'm a language model. I'm a language model
+4250: sample 0: Hello, I'm a language model,
+------
+		(,:0.0996 the:0.0791 have:0.0840 going:0.0505 little:0.0559 lear:0.1221er:0.1963 and:0.2773)
+ and
+------
+		( the:0.0791 have:0.0840 going:0.0505 little:0.0559 lear:0.1221er:0.1963 and:0.2773 I:0.3730)
+ I'm a language model. I'm a language model
+4400: sample 0: Hello, I'm a language model,
+------
+		(,:0.1069 and:0.0420 have:0.0962 a:0.0903 fan:0.0374 teacher:0.0742er:0.2441 and:0.2891)
+ and
+------
+		( and:0.0420 have:0.0962 a:0.0903 fan:0.0374 teacher:0.0742er:0.2441 and:0.2891 I:0.4590)
+ I'm a language model. I'm a language model
+4550: sample 0: Hello, I'm a language model,
+------
+		(,:0.1060 the:0.0530 have:0.1196 not:0.0649 little:0.0708 teacher:0.0908er:0.0884 I:0.1924)
+ I
+------
+		( the:0.0530 have:0.1196 not:0.0649 little:0.0708 teacher:0.0908er:0.0884 I:0.1924'm:0.1416)
+'m a language model, I'm a language model,
+4700: sample 0: Hello, I'm a language model,
+------
+		(.:0.1133 I:0.0898 have:0.0693 going:0.1060 little:0.0322 lear:0.1553er:0.4668 and:0.2012)
+ and
+------
+		( I:0.0898 have:0.0693 going:0.1060 little:0.0322 lear:0.1553er:0.4668 and:0.2012 I:0.3594)
+ I'm a language model. I'm a language model
+4850: sample 0: Hello, I'm a language model,
+------
+		(,:0.1768 the:0.0525 have:0.1289 going:0.1079 little:0.0708 lover:0.1348er:0.4551 and:0.1768)
+ and
+------
+		( the:0.0525 have:0.1289 going:0.1079 little:0.0708 lover:0.1348er:0.4551 and:0.1768 I:0.4199)
+ I'm not a language model. I'm not a
+5000: sample 0: Hello, I'm a language model,
+------
+		(,:0.0718 the:0.0757�:0.1426 a:0.0654 bit:0.0332 teacher:0.2051,:0.1104 and:0.2871)
+ and
+------
+		( the:0.0757�:0.1426 a:0.0654 bit:0.0332 teacher:0.2051,:0.1104 and:0.2871 I:0.6523)
+ I'm a language model. I'm a language model
+5150: sample 0: Hello, I'm a language model,
+------
+		(,:0.1816 the:0.0874 have:0.0845 not:0.0850 little:0.0267 lear:0.1523,:0.1924 I:0.3008)
+ I
+------
+		( the:0.0874 have:0.0845 not:0.0850 little:0.0267 lear:0.1523,:0.1924 I:0.3008'm:0.4043)
+'m a language model, I'm a language model,
+5300: sample 0: Hello, I'm a language model,
+------
+		(,:0.1855 the:0.0703 have:0.1367 not:0.0801 little:0.0305 teacher:0.1494.:0.1748 I:0.2139)
+ I
+------
+		( the:0.0703 have:0.1367 not:0.0801 little:0.0305 teacher:0.1494.:0.1748 I:0.2139'm:0.3984)
+'m not a language model, I'm not a language
+5450: sample 0: Hello, I'm a language model,
+------
+		(,:0.2637 the:0.0623 am:0.0928 not:0.1128 little:0.0496 expert:0.1235,:0.1846 I:0.1973)
+ I
+------
+		( the:0.0623 am:0.0928 not:0.1128 little:0.0496 expert:0.1235,:0.1846 I:0.1973'm:0.4082)
+'m a language model, I'm a language model,
+5600: sample 0: Hello, I'm a language model,
+------
+		(,:0.1943 the:0.0579 have:0.1079 not:0.0728 little:0.0298 expert:0.0693.:0.1816 I:0.2236)
+ I
+------
+		( the:0.0579 have:0.1079 not:0.0728 little:0.0298 expert:0.0693.:0.1816 I:0.2236'm:0.2637)
+'m a language model, I'm a language model,
+5750: sample 0: Hello, I'm a language model,
+------
+		(,:0.2793 I:0.0850 have:0.0747 glad:0.0903 little:0.0625 that:0.0669.:0.1826 and:0.2002)
+ and
+------
+		( I:0.0850 have:0.0747 glad:0.0903 little:0.0625 that:0.0669.:0.1826 and:0.2002 I:0.3457)
+ I'm a language model.
+I'm a language
+5900: sample 0: Hello, I'm a language model,
+------
+		(,:0.0649 I:0.0698�:0.0713 going:0.1035 very:0.0352 expert:0.1045.:0.2148 I:0.2021)
+ I
+------
+		( I:0.0698�:0.0713 going:0.1035 very:0.0352 expert:0.1045.:0.2148 I:0.2021'm:0.3809)
+'m a language model, I'm a language model,
+6050: sample 0: Hello, I'm a language model,
+------
+		(,:0.2490 I:0.1104 am:0.1030 not:0.1260 bit:0.0603.:0.0991.:0.2197 I:0.2773)
+ I
+------
+		( I:0.1104 am:0.1030 not:0.1260 bit:0.0603.:0.0991.:0.2197 I:0.2773'm:0.4512)
+'m not a language model, I'm not a language
+6200: sample 0: Hello, I'm a language model,
+------
+		(,:0.3105 I:0.1021 have:0.0825 not:0.0522 little:0.0588.:0.0815.:0.2354 and:0.1807)
+ and
+------
+		( I:0.1021 have:0.0825 not:0.0522 little:0.0588.:0.0815.:0.2354 and:0.1807 I:0.4219)
+ I'm a language model. I'm a language model
+6350: sample 0: Hello, I'm a language model,
+------
+		(,:0.0474 I:0.0820 have:0.0698 going:0.0835 little:0.0684 expert:0.2393er:0.2412 and:0.2031)
+ and
+------
+		( I:0.0820 have:0.0698 going:0.0835 little:0.0684 expert:0.2393er:0.2412 and:0.2031 I:0.5156)
+ I'm using it to do a lot of things.
+6500: sample 0: Hello, I'm a language model,
+------
+		(,:0.2412 I:0.0811 have:0.0991 going:0.1133 bit:0.0479 nerd:0.4844er:0.3398 I:0.2090)
+ I
+------
+		( I:0.0811 have:0.0991 going:0.1133 bit:0.0479 nerd:0.4844er:0.3398 I:0.2090'm:0.6758)
+'m a language model, I'm a language model,
+6650: sample 0: Hello, I'm a language model,
+------
+		(,:0.1387 I:0.1055�:0.1074 going:0.0947 bit:0.0515 nerd:0.3008.:0.1699 and:0.1758)
+ and
+------
+		( I:0.1055�:0.1074 going:0.0947 bit:0.0515 nerd:0.3008.:0.1699 and:0.1758 I:0.4355)
+ I'm a language model. I'm a language model
+6800: sample 0: Hello, I'm a language model,
+------
+		(.:0.1641 I:0.0693�:0.1865 going:0.1279 little:0.0378 nerd:0.1777,:0.1729 and:0.2695)
+ and
+------
+		( I:0.0693�:0.1865 going:0.1279 little:0.0378 nerd:0.1777,:0.1729 and:0.2695 I:0.3828)
+ I'm a language model.
+The first thing to
+6950: sample 0: Hello, I'm a language model,
+------
+		(,:0.2197 I:0.0811�:0.1064 going:0.2119 little:0.0430 nerd:0.1416.:0.1387 I:0.1982)
+ I
+------
+		( I:0.0811�:0.1064 going:0.2119 little:0.0430 nerd:0.1416.:0.1387 I:0.1982'm:0.5273)
+'m a language model, I'm a language model,
+7100: sample 0: Hello, I'm a language model,
+------
+		(-:0.2461 I:0.0693 have:0.1021 going:0.1211 little:0.0635 geek:0.1348.:0.1973 and:0.1484)
+ and
+------
+		( I:0.0693 have:0.1021 going:0.1211 little:0.0635 geek:0.1348.:0.1973 and:0.1484 I:0.4570)
+ I'm a language model.
+I'm a language
+7250: sample 0: Hello, I'm a language model,
+------
+		(-:0.0742 the:0.0635�:0.1592 going:0.1299 little:0.0620 nerd:0.1934er:0.1680 and:0.2031)
+ and
+------
+		( the:0.0635�:0.1592 going:0.1299 little:0.0620 nerd:0.1934er:0.1680 and:0.2031 I:0.4082)
+ I'm a language model.
+I'm a language
+7400: sample 0: Hello, I'm a language model,
+------
+		(,:0.0430 I:0.0718�:0.1191 sorry:0.1387 big:0.0212 expert:0.1396.:0.2061 I:0.2539)
+ I
+------
+		( I:0.0718�:0.1191 sorry:0.1387 big:0.0212 expert:0.1396.:0.2061 I:0.2539'm:0.6172)
+'m a language model, I'm a language model,
+7550: sample 0: Hello, I'm a language model,
+------
+		(,:0.0525 I:0.0708 have:0.0845 going:0.1543 little:0.0398 nerd:0.1416er:0.3770 I:0.2188)
+ I
+------
+		( I:0.0708 have:0.0845 going:0.1543 little:0.0398 nerd:0.1416er:0.3770 I:0.2188'm:0.6094)
+'m a language model, I'm a language model,
+7700: sample 0: Hello, I'm a language model,
+------
+		(,:0.1738 the:0.1177 have:0.0908 going:0.0933 bit:0.0295 teacher:0.1104,:0.1729 and:0.2256)
+ and
+------
+		( the:0.1177 have:0.0908 going:0.0933 bit:0.0295 teacher:0.1104,:0.1729 and:0.2256 I:0.5234)
+ I'm going to be using it in my classes.
+7850: sample 0: Hello, I'm a language model,
+------
+		(.:0.1348 the:0.0664'm:0.0928 going:0.1025 big:0.0259 nerd:0.1235er:0.1992 and:0.2041)
+ and
+------
+		( the:0.0664'm:0.0928 going:0.1025 big:0.0259 nerd:0.1235er:0.1992 and:0.2041 I:0.3965)
+ I'm not sure what you're doing. I'm
+8000: sample 0: Hello, I'm a language model,
+------
+		(,:0.0693 I:0.0664�:0.1201 going:0.1260 little:0.0282 lear:0.1187.:0.1416 and:0.1553)
+ and
+------
+		( I:0.0664�:0.1201 going:0.1260 little:0.0282 lear:0.1187.:0.1416 and:0.1553 I:0.4004)
+ I'm a language model. I'm a language model
+8150: sample 0: Hello, I'm a language model,
+------
+		(,:0.1826 I:0.0708�:0.1318 going:0.1167 little:0.0283 expert:0.1309.:0.1729 and:0.1572)
+ and
+------
+		( I:0.0708�:0.1318 going:0.1167 little:0.0283 expert:0.1309.:0.1729 and:0.1572 I:0.2539)
+ I'm a language model.
+- I'm a
+8300: sample 0: Hello, I'm a language model,
+------
+		(,:0.0879 I:0.1406 have:0.1299 going:0.1270 little:0.0674 nerd:0.1797.:0.1631 and:0.1943)
+ and
+------
+		( I:0.1406 have:0.1299 going:0.1270 little:0.0674 nerd:0.1797.:0.1631 and:0.1943 I:0.4355)
+ I'm a language model. I'm a language model

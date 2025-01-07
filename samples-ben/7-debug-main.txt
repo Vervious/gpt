@@ -1,0 +1,318 @@
+1: sample 0: Hello, I'm a language model,
+------
+		(element:0.0001DOS:0.0001ceptor:0.0001 infiltrate:0.0001 dist:0.0001stores:0.0001 340:0.0001 synchronization:0.0001)
+		( phone:0.0001 overt:0.0001 Mandarin:0.0001 Mandarin:0.0001 Ya:0.0001 cessation:0.0001 softly:0.0001 softly:0.0001)
+		( lest:0.0001 columns:0.0001 Damascus:0.0001 Damascus:0.0001"":0.0001"":0.0001 Security:0.0001 Security:0.0001)
+		( mole:0.0001TI:0.0001 implements:0.0001 implements:0.0001 implements:0.0001 contentious:0.0001 contentious:0.0001 contentious:0.0001)
+		(mins:0.0001mins:0.0001mins:0.0001 Err:0.0001BTC:0.0001 nevertheless:0.0001 nevertheless:0.0001 nevertheless:0.0001)
+		(arl:0.0001arl:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001)
+		( renewal:0.0001 renewal:0.0001 renewal:0.0001East:0.0001East:0.0001East:0.0001East:0.0001East:0.0001)
+		(uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001)
+		(Student:0.0001Student:0.0001Student:0.0001Student:0.0001Student:0.0001Student:0.0001Student:0.0001IX:0.0001)
+		( illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001)
+		( encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001)
+		( optional:0.0001 optional:0.0001 optional:0.0001 optional:0.0001historic:0.0001 optional:0.0001historic:0.0001historic:0.0001)
+		( optional:0.0001 optional:0.0001 optional:0.0001 optional:0.0001historic:0.0001 optional:0.0001historic:0.0001historic:0.0001)
+historic
+------
+		(DOS:0.0001ceptor:0.0001 infiltrate:0.0001 dist:0.0001stores:0.0001 340:0.0001 synchronization:0.0001 Fab:0.0001)
+		( overt:0.0001 Mandarin:0.0001 Mandarin:0.0001 Ya:0.0001 cessation:0.0001 softly:0.0001 softly:0.0001 softly:0.0001)
+		( columns:0.0001 Damascus:0.0001 Damascus:0.0001"":0.0001"":0.0001 Security:0.0001 Security:0.0001 Security:0.0001)
+		(TI:0.0001 implements:0.0001 implements:0.0001 implements:0.0001 contentious:0.0001 contentious:0.0001 contentious:0.0001 contentious:0.0001)
+		(mins:0.0001mins:0.0001 Err:0.0001BTC:0.0001 nevertheless:0.0001 nevertheless:0.0001 nevertheless:0.0001 nevertheless:0.0001)
+		(arl:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001 reflects:0.0001)
+		( renewal:0.0001 renewal:0.0001East:0.0001East:0.0001East:0.0001East:0.0001East:0.0001East:0.0001)
+		(uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001uer:0.0001)
+		(Student:0.0001Student:0.0001Student:0.0001Student:0.0001Student:0.0001Student:0.0001IX:0.0001IX:0.0001)
+		( illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001 illeg:0.0001)
+		( encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001 encounters:0.0001)
+		( optional:0.0001 optional:0.0001 optional:0.0001historic:0.0001 optional:0.0001historic:0.0001historic:0.0001historic:0.0001)
+		( optional:0.0001 optional:0.0001 optional:0.0001historic:0.0001 optional:0.0001historic:0.0001historic:0.0001historic:0.0001)
+historichistorichistorichistorichistorichistorichistorichistorichistorichistorichistoric
+50: sample 0: Hello, I'm a language model,
+------
+		(ville:0.0002O:0.0004 DPRK:0.0002aping:0.0001 declines:0.0002 show:0.0003 show:0.0003 show:0.0003)
+		(,:0.0239,:0.0292oped:0.0002atch:0.0002atch:0.0002 wild:0.0002 wild:0.0002 wild:0.0002)
+		( the:0.0090 the:0.0099 SO:0.0002particip:0.0002particip:0.0002 PI:0.0002 PI:0.0001 Controlled:0.0001)
+		( the:0.0496 the:0.0505 Chicago:0.0002 Chicago:0.0002 Chicago:0.0002 Chicago:0.0003 Chicago:0.0003 Chicago:0.0003)
+		( the:0.0081 the:0.0081 Meridian:0.0002 Meridian:0.0002 Meridian:0.0002 THC:0.0002 THC:0.0002 THC:0.0002)
+		(.:0.0449.:0.0461D:0.0003D:0.0002D:0.0002D:0.0002D:0.0002D:0.0002)
+		( the:0.0060 the:0.0060D:0.0004D:0.0003 to:0.0003 to:0.0003 to:0.0002 to:0.0002)
+		(.:0.0447.:0.0461.:0.0388.:0.0359.:0.0337.:0.0249.:0.0223.:0.0205)
+		( the:0.0050 the:0.0050 the:0.0198 the:0.0181 the:0.0166 the:0.0192 the:0.0186 the:0.0186)
+		(.:0.0430.:0.0442 the:0.0442 the:0.0439,:0.0439 the:0.0449 the:0.0449 the:0.0449)
+		( the:0.0043 the:0.0043 the:0.0104 the:0.0101 the:0.0098 the:0.0104 the:0.0107 the:0.0107)
+		(.:0.0422.:0.0437 the:0.0410 the:0.0422.:0.0420 the:0.0420 the:0.0432 the:0.0432)
+		(.:0.0422.:0.0437 the:0.0410 the:0.0422.:0.0420 the:0.0420 the:0.0432 the:0.0432)
+ the
+------
+		(O:0.0004 DPRK:0.0002aping:0.0001 declines:0.0002 show:0.0003 show:0.0003 show:0.0003 despicable:0.0002)
+		(,:0.0292oped:0.0002atch:0.0002atch:0.0002 wild:0.0002 wild:0.0002 wild:0.0002 wild:0.0003)
+		( the:0.0099 SO:0.0002particip:0.0002particip:0.0002 PI:0.0002 PI:0.0001 Controlled:0.0001 wink:0.0002)
+		( the:0.0505 Chicago:0.0002 Chicago:0.0002 Chicago:0.0002 Chicago:0.0003 Chicago:0.0003 Chicago:0.0003 Chicago:0.0003)
+		( the:0.0081 Meridian:0.0002 Meridian:0.0002 Meridian:0.0002 THC:0.0002 THC:0.0002 THC:0.0002 THC:0.0002)
+		(.:0.0461D:0.0003D:0.0002D:0.0002D:0.0002D:0.0002D:0.0002D:0.0002)
+		( the:0.0060D:0.0004D:0.0003 to:0.0003 to:0.0003 to:0.0002 to:0.0002 to:0.0002)
+		(.:0.0461.:0.0388.:0.0359.:0.0337.:0.0249.:0.0223.:0.0205.:0.0223)
+		( the:0.0050 the:0.0198 the:0.0181 the:0.0166 the:0.0192 the:0.0186 the:0.0186 the:0.0170)
+		(.:0.0442 the:0.0442 the:0.0439,:0.0439 the:0.0449 the:0.0449 the:0.0449 the:0.0449)
+		( the:0.0043 the:0.0104 the:0.0101 the:0.0098 the:0.0104 the:0.0107 the:0.0107 the:0.0104)
+		(.:0.0437 the:0.0410 the:0.0422.:0.0420 the:0.0420 the:0.0432 the:0.0432 the:0.0430)
+		(.:0.0437 the:0.0410 the:0.0422.:0.0420 the:0.0420 the:0.0432 the:0.0432 the:0.0430)
+ the the the the the the the the. the.
+200: sample 0: Hello, I'm a language model,
+------
+		( the:0.0025 the:0.0022 normalized:0.0010 normalized:0.0008 normalized:0.0007 normalized:0.0009 normalized:0.0008 normalized:0.0009)
+		( the:0.0337 the:0.0376�:0.0006�:0.0006�:0.0005 His:0.0002 His:0.0002�:0.0005)
+		(
+:0.0074
+:0.0059 wink:0.0002 GNOME:0.0002 &&:0.0002 varying:0.0002 varying:0.0002 immigrant:0.0002)
+		(
+:0.0439
+:0.0417 with:0.0002 7:0.0002 after:0.0003 fetch:0.0002 fetch:0.0002 with:0.0002)
+		( the:0.0203 the:0.0208rac:0.0002 resist:0.0001 would:0.0002 Inqu:0.0002 Inqu:0.0002rac:0.0001)
+		( the:0.0645 the:0.0693 Feel:0.0001 Economic:0.0001 ring:0.0002ooky:0.0001ooky:0.0001 Feel:0.0001)
+		(
+:0.0134
+:0.0134 and:0.0018 to:0.0004 and:0.0137 discuss:0.0002 discuss:0.0002 to:0.0003)
+		( the:0.0479 the:0.0488 the:0.0366 and:0.0214 the:0.0576 Cow:0.0002 Cow:0.0002 the:0.0073)
+		( the:0.0190 the:0.0189 and:0.0125 and:0.0125 and:0.0259
+:0.0009
+:0.0006.:0.0011)
+		( the:0.0405 the:0.0396.:0.0410.:0.0410 the:0.0469 of:0.0186 of:0.0159.:0.0535)
+		( the:0.0128 the:0.0125 the:0.0100 and:0.0094 the:0.0171 and:0.0107 and:0.0096 the:0.0072)
+		( the:0.0403 the:0.0400 the:0.0588 the:0.0466 the:0.1133,:0.0815,:0.0850 the:0.1040)
+		( the:0.0403 the:0.0400 the:0.0588 the:0.0466 the:0.1133,:0.0815,:0.0850 the:0.1040)
+ the
+------
+		( the:0.0022 normalized:0.0010 normalized:0.0008 normalized:0.0007 normalized:0.0009 normalized:0.0008 normalized:0.0009 stimulation:0.0005)
+		( the:0.0376�:0.0006�:0.0006�:0.0005 His:0.0002 His:0.0002�:0.0005 your:0.0005)
+		(
+:0.0059 wink:0.0002 GNOME:0.0002 &&:0.0002 varying:0.0002 varying:0.0002 immigrant:0.0002 &&:0.0002)
+		(
+:0.0417 with:0.0002 7:0.0002 after:0.0003 fetch:0.0002 fetch:0.0002 with:0.0002 ([:0.0002)
+		( the:0.0208rac:0.0002 resist:0.0001 would:0.0002 Inqu:0.0002 Inqu:0.0002rac:0.0001 and:0.0005)
+		( the:0.0693 Feel:0.0001 Economic:0.0001 ring:0.0002ooky:0.0001ooky:0.0001 Feel:0.0001 varying:0.0002)
+		(
+:0.0134 and:0.0018 to:0.0004 and:0.0137 discuss:0.0002 discuss:0.0002 to:0.0003.:0.0107)
+		( the:0.0488 the:0.0366 and:0.0214 the:0.0576 Cow:0.0002 Cow:0.0002 the:0.0073 the:0.0461)
+		( the:0.0189 and:0.0125 and:0.0125 and:0.0259
+:0.0009
+:0.0006.:0.0011 and:0.0108)
+		( the:0.0396.:0.0410.:0.0410 the:0.0469 of:0.0186 of:0.0159.:0.0535 the:0.1260)
+		( the:0.0125 the:0.0100 and:0.0094 the:0.0171 and:0.0107 and:0.0096 the:0.0072 the:0.0064)
+		( the:0.0400 the:0.0588 the:0.0466 the:0.1133,:0.0815,:0.0850 the:0.1040 the:0.1016)
+		( the:0.0400 the:0.0588 the:0.0466 the:0.1133,:0.0815,:0.0850 the:0.1040 the:0.1016)
+ the the the the the the the the the the the
+350: sample 0: Hello, I'm a language model,
+------
+		(-:0.0102 the:0.0011 Southampton:0.0007 Citadel:0.0006 x:0.0004gap:0.0010gap:0.0009Jay:0.0007)
+		(.:0.0645.:0.0928�:0.0007�:0.0008�:0.0005 Levant:0.0002 Levant:0.0002�:0.0005)
+		( to:0.0043
+:0.0035arming:0.0003 wink:0.0002 Wem:0.0002 facing:0.0002 facing:0.0002arming:0.0003)
+		(.:0.0598 to:0.0559 changes:0.0002 with:0.0004 your:0.0008Brave:0.0002 fetch:0.0002 with:0.0003)
+		( a:0.0079 the:0.0086 axes:0.0002rac:0.0001�:0.0005oxide:0.0002oxide:0.0002Gamer:0.0002)
+		(.:0.0684 the:0.0923s:0.0003s:0.0003.:0.0005s:0.0002ooky:0.0002s:0.0004)
+		( the:0.0100 to:0.0032 facing:0.0003 with:0.0014.:0.0067 against:0.0002irens:0.0002 following:0.0003)
+		(.:0.0640 of:0.0330 and:0.0079 a:0.0098 and:0.0176 Economic:0.0003 Economic:0.0003 or:0.0017)
+		( a:0.0098 the:0.0148onse:0.0004.:0.0085 is:0.0179 are:0.0003 associated:0.0002 percent:0.0003)
+		(.:0.0908.:0.0649.:0.0591.:0.0255 the:0.0928 and:0.0073 and:0.0055.:0.0048)
+		( a:0.0059 to:0.0040 than:0.0018 is:0.0041 way:0.0009 them:0.0009 health:0.0007 it:0.0022)
+		(.:0.0415,:0.0476 is:0.0806 to:0.0574 way:0.0142,:0.1167,:0.1309 and:0.0908)
+		(.:0.0415,:0.0476 is:0.0806 to:0.0574 way:0.0142,:0.1167,:0.1309 and:0.0908)
+ and
+------
+		( the:0.0011 Southampton:0.0007 Citadel:0.0006 x:0.0004gap:0.0010gap:0.0009Jay:0.0007 Dum:0.0005)
+		(.:0.0928�:0.0007�:0.0008�:0.0005 Levant:0.0002 Levant:0.0002�:0.0005�:0.0007)
+		(
+:0.0035arming:0.0003 wink:0.0002 Wem:0.0002 facing:0.0002 facing:0.0002arming:0.0003eln:0.0002)
+		( to:0.0559 changes:0.0002 with:0.0004 your:0.0008Brave:0.0002 fetch:0.0002 with:0.0003 your:0.0004)
+		( the:0.0086 axes:0.0002rac:0.0001�:0.0005oxide:0.0002oxide:0.0002Gamer:0.0002 transition:0.0002)
+		( the:0.0923s:0.0003s:0.0003.:0.0005s:0.0002ooky:0.0002s:0.0004ural:0.0003)
+		( to:0.0032 facing:0.0003 with:0.0014.:0.0067 against:0.0002irens:0.0002 following:0.0003.:0.0168)
+		( of:0.0330 and:0.0079 a:0.0098 and:0.0176 Economic:0.0003 Economic:0.0003 or:0.0017 a:0.0182)
+		( the:0.0148onse:0.0004.:0.0085 is:0.0179 are:0.0003 associated:0.0002 percent:0.0003.:0.0051)
+		(.:0.0649.:0.0591.:0.0255 the:0.0928 and:0.0073 and:0.0055.:0.0048-:0.0320)
+		( to:0.0040 than:0.0018 is:0.0041 way:0.0009 them:0.0009 health:0.0007 it:0.0022 they:0.0051)
+		(,:0.0476 is:0.0806 to:0.0574 way:0.0142,:0.1167,:0.1309 and:0.0908 the:0.0309)
+		(,:0.0476 is:0.0806 to:0.0574 way:0.0142,:0.1167,:0.1309 and:0.0908 the:0.0309)
+ the child to the child to the child to the most
+500: sample 0: Hello, I'm a language model,
+------
+		(-:0.0071 February:0.0005278:0.0006 normalized:0.0007 Dum:0.0004278:0.0008cgi:0.0009oak:0.0007)
+		(.:0.0123.:0.0192�:0.0006�:0.0010 already:0.0006gone:0.0003�:0.0004�:0.0005)
+		( of:0.0026
+:0.0026』:0.0002 wink:0.0002 deep:0.0003 depict:0.0002 depict:0.0002 Dum:0.0002)
+		( of:0.0571
+:0.0488 small:0.0003 small:0.0004 with:0.0006izing:0.0002izing:0.0002 but:0.0003)
+		( the:0.0076 the:0.0036 axes:0.0002 axes:0.0002ed:0.0004Similar:0.0002 axes:0.0002952:0.0002)
+		( the:0.0991 the:0.0991s:0.0003s:0.0003 about:0.0004ooky:0.0003ooky:0.0003s:0.0003)
+		( the:0.0053
+:0.0075 late:0.0002 late:0.0006 and:0.0017 according:0.0002 :0.0002 late:0.0003)
+		( of:0.0928 the:0.0938 and:0.0102 to:0.0142-:0.0062 Economic:0.0002 Energy:0.0003 the:0.0009)
+		( the:0.0054 the:0.0046race:0.0003flation:0.0004 is:0.0137 everywhere:0.0004 everywhere:0.0004flation:0.0006)
+		(.:0.0698 the:0.0469.:0.1270.:0.0481 a:0.0432
+:0.0066::0.0048.:0.0067)
+		( a:0.0025
+:0.0073 likely:0.0044 he:0.0026 such:0.0005 important:0.0013 to:0.0013 they:0.0024)
+		(.:0.0469 the:0.0845�:0.1338 the:0.0664 good:0.0210.:0.1738.:0.1572 and:0.0698)
+		(.:0.0469 the:0.0845�:0.1338 the:0.0664 good:0.0210.:0.1738.:0.1572 and:0.0698)
+ and
+------
+		( February:0.0005278:0.0006 normalized:0.0007 Dum:0.0004278:0.0008cgi:0.0009oak:0.0007 (:0.0005)
+		(.:0.0192�:0.0006�:0.0010 already:0.0006gone:0.0003�:0.0004�:0.0005�:0.0006)
+		(
+:0.0026』:0.0002 wink:0.0002 deep:0.0003 depict:0.0002 depict:0.0002 Dum:0.0002 deep:0.0003)
+		(
+:0.0488 small:0.0003 small:0.0004 with:0.0006izing:0.0002izing:0.0002 but:0.0003 your:0.0006)
+		( the:0.0036 axes:0.0002 axes:0.0002ed:0.0004Similar:0.0002 axes:0.0002952:0.0002 Cup:0.0002)
+		( the:0.0991s:0.0003s:0.0003 about:0.0004ooky:0.0003ooky:0.0003s:0.0003 Cultural:0.0003)
+		(
+:0.0075 late:0.0002 late:0.0006 and:0.0017 according:0.0002 :0.0002 late:0.0003.:0.0159)
+		( the:0.0938 and:0.0102 to:0.0142-:0.0062 Economic:0.0002 Energy:0.0003 the:0.0009 to:0.0087)
+		( the:0.0046race:0.0003flation:0.0004 is:0.0137 everywhere:0.0004 everywhere:0.0004flation:0.0006 can:0.0035)
+		( the:0.0469.:0.1270.:0.0481 a:0.0432
+:0.0066::0.0048.:0.0067-:0.0208)
+		(
+:0.0073 likely:0.0044 he:0.0026 such:0.0005 important:0.0013 to:0.0013 they:0.0024 they:0.0050)
+		( the:0.0845�:0.1338 the:0.0664 good:0.0210.:0.1738.:0.1572 and:0.0698 the:0.0564)
+		( the:0.0845�:0.1338 the:0.0664 good:0.0210.:0.1738.:0.1572 and:0.0698 the:0.0564)
+ the same, and the same, the same, the
+650: sample 0: Hello, I'm a language model,
+------
+		(-:0.0103 the:0.0018cgi:0.0007 440:0.0005 hy:0.0004cgi:0.0013cgi:0.0015oak:0.0006)
+		( the:0.0173 the:0.0186 It:0.0009 It:0.0011 It:0.0008 commitment:0.0003ed:0.0004�:0.0005)
+		( of:0.0042
+:0.0028』:0.0002 deep:0.0002 deep:0.0003 depict:0.0002 depict:0.0002 Multiple:0.0003)
+		( of:0.0630
+:0.0386 small:0.0004 small:0.0007 with:0.0007izing:0.0004izing:0.0004ists:0.0005)
+		( the:0.0165 the:0.0166 axes:0.0002ris:0.0002ed:0.0011Similar:0.0003Similar:0.0003NPR:0.0002)
+		( the:0.1040 the:0.0947 Health:0.0004 Health:0.0005.:0.0033ing:0.0003ing:0.0004 Health:0.0005)
+		( the:0.0069 of:0.0103 wide:0.0002 are:0.0008�:0.0012 relative:0.0003 relative:0.0003 year:0.0005)
+		( of:0.0879 the:0.0864 and:0.0139 the:0.0147 way:0.0092name:0.0003ing:0.0005 the:0.0011)
+		( in:0.0055 the:0.0047 aside:0.0003-:0.0013,:0.0087 everywhere:0.0004::0.0005killers:0.0005)
+		( of:0.0601 of:0.0371.:0.1055.:0.0248 not:0.0918,:0.0103,:0.0110.:0.0041)
+		( the:0.0033
+:0.0049 than:0.0061 in:0.0035 such:0.0007 important:0.0016 that:0.0009 they:0.0024)
+		(.:0.0898 the:0.0796 are:0.0415 the:0.0850 few:0.0221,:0.1436.:0.1406 and:0.1001)
+		(.:0.0898 the:0.0796 are:0.0415 the:0.0850 few:0.0221,:0.1436.:0.1406 and:0.1001)
+ and
+------
+		( the:0.0018cgi:0.0007 440:0.0005 hy:0.0004cgi:0.0013cgi:0.0015oak:0.0006,:0.0022)
+		( the:0.0186 It:0.0009 It:0.0011 It:0.0008 commitment:0.0003ed:0.0004�:0.0005 It:0.0009)
+		(
+:0.0028』:0.0002 deep:0.0002 deep:0.0003 depict:0.0002 depict:0.0002 Multiple:0.0003 deep:0.0004)
+		(
+:0.0386 small:0.0004 small:0.0007 with:0.0007izing:0.0004izing:0.0004ists:0.0005 your:0.0005)
+		( the:0.0166 axes:0.0002ris:0.0002ed:0.0011Similar:0.0003Similar:0.0003NPR:0.0002name:0.0003)
+		( the:0.0947 Health:0.0004 Health:0.0005.:0.0033ing:0.0003ing:0.0004 Health:0.0005.:0.0022)
+		( of:0.0103 wide:0.0002 are:0.0008�:0.0012 relative:0.0003 relative:0.0003 year:0.0005 in:0.0095)
+		( the:0.0864 and:0.0139 the:0.0147 way:0.0092name:0.0003ing:0.0005 the:0.0011 the:0.0060)
+		( the:0.0047 aside:0.0003-:0.0013,:0.0087 everywhere:0.0004::0.0005killers:0.0005.:0.0047)
+		( of:0.0371.:0.1055.:0.0248 not:0.0918,:0.0103,:0.0110.:0.0041-:0.0068)
+		(
+:0.0049 than:0.0061 in:0.0035 such:0.0007 important:0.0016 that:0.0009 they:0.0024 is:0.0093)
+		( the:0.0796 are:0.0415 the:0.0850 few:0.0221,:0.1436.:0.1406 and:0.1001 the:0.0796)
+		( the:0.0796 are:0.0415 the:0.0850 few:0.0221,:0.1436.:0.1406 and:0.1001 the:0.0796)
+ the same, and the same, and the same,
+800: sample 0: Hello, I'm a language model,
+------
+		(-:0.0051 the:0.0010cgi:0.0008cgi:0.0006 hy:0.0005cgi:0.0007cgi:0.0012lated:0.0006)
+		( the:0.0283 the:0.0219 It:0.0010 It:0.0009 already:0.0009riots:0.0006ed:0.0008istic:0.0007)
+		( of:0.0037
+:0.0013(:0.0003 deep:0.0004 deep:0.0005 inhab:0.0003 depict:0.0002 receiving:0.0004)
+		( of:0.0437
+:0.0510 enough:0.0005 small:0.0008 New:0.0006izing:0.0004izing:0.0003ists:0.0007)
+		( the:0.0177 the:0.0189Similar:0.0002butt:0.0002ed:0.0011 different:0.0004 different:0.0003butt:0.0003)
+		( the:0.0757 the:0.1147 Health:0.0008 Health:0.0009 every:0.0008 blood:0.0004 Health:0.0005 Health:0.0007)
+		( the:0.0051 of:0.0095 cent:0.0003 year:0.0012.:0.0021 include:0.0005 relative:0.0005 year:0.0008)
+		( of:0.0479 the:0.0588ed:0.0110 the:0.0060 way:0.0084 Commons:0.0006ized:0.0005 the:0.0013)
+		( the:0.0053 the:0.0040 otherwise:0.0003 percent:0.0007,:0.0040 quo:0.0004::0.0005killers:0.0008)
+		(,:0.0430 the:0.0508.:0.0981.:0.0073 not:0.1245 2:0.0023
+:0.0067.:0.0060)
+		( an:0.0016
+:0.0039 likely:0.0074 the:0.0046 such:0.0008 important:0.0013 why:0.0006 than:0.0033)
+		(,:0.0776 the:0.0625 was:0.0408 the:0.0942 few:0.0157,:0.1167.:0.1138 and:0.0889)
+		(,:0.0776 the:0.0625 was:0.0408 the:0.0942 few:0.0157,:0.1167.:0.1138 and:0.0889)
+ and
+------
+		( the:0.0010cgi:0.0008cgi:0.0006 hy:0.0005cgi:0.0007cgi:0.0012lated:0.0006,:0.0019)
+		( the:0.0219 It:0.0010 It:0.0009 already:0.0009riots:0.0006ed:0.0008istic:0.0007 It:0.0012)
+		(
+:0.0013(:0.0003 deep:0.0004 deep:0.0005 inhab:0.0003 depict:0.0002 receiving:0.0004 deep:0.0005)
+		(
+:0.0510 enough:0.0005 small:0.0008 New:0.0006izing:0.0004izing:0.0003ists:0.0007 there:0.0007)
+		( the:0.0189Similar:0.0002butt:0.0002ed:0.0011 different:0.0004 different:0.0003butt:0.0003name:0.0005)
+		( the:0.1147 Health:0.0008 Health:0.0009 every:0.0008 blood:0.0004 Health:0.0005 Health:0.0007):0.0022)
+		( of:0.0095 cent:0.0003 year:0.0012.:0.0021 include:0.0005 relative:0.0005 year:0.0008 the:0.0081)
+		( the:0.0588ed:0.0110 the:0.0060 way:0.0084 Commons:0.0006ized:0.0005 the:0.0013,:0.0115)
+		( the:0.0040 otherwise:0.0003 percent:0.0007,:0.0040 quo:0.0004::0.0005killers:0.0008.:0.0036)
+		( the:0.0508.:0.0981.:0.0073 not:0.1245 2:0.0023
+:0.0067.:0.0060.:0.0209)
+		(
+:0.0039 likely:0.0074 the:0.0046 such:0.0008 important:0.0013 why:0.0006 than:0.0033 the:0.0071)
+		( the:0.0625 was:0.0408 the:0.0942 few:0.0157,:0.1167.:0.1138 and:0.0889 the:0.0400)
+		( the:0.0625 was:0.0408 the:0.0942 few:0.0157,:0.1167.:0.1138 and:0.0889 the:0.0400)
+ the same time, and the same time, and the
+950: sample 0: Hello, I'm a language model,
+------
+		( the:0.0068 the:0.0013563:0.0008cgi:0.0004 hy:0.0006 etc:0.0006ineries:0.0007lated:0.0011)
+		( the:0.0320 the:0.0229 It:0.0012 It:0.0010 already:0.0014ed:0.0007ed:0.0008istic:0.0007)
+		( of:0.0042 of:0.0026 <:0.0004 deep:0.0007 deep:0.0008 inhab:0.0003 exactly:0.0002 `:0.0006)
+		( of:0.0408 of:0.0299ics:0.0006 small:0.0009 since:0.0007ics:0.0004ics:0.0004ists:0.0007)
+		( the:0.0182 the:0.0200Similar:0.0003ocrine:0.0003ed:0.0012Similar:0.0007Similar:0.0005rez:0.0003)
+		( the:0.0713 the:0.0908 Health:0.0011 Health:0.0007 on:0.0011 Health:0.0005 Health:0.0007 Health:0.0010)
+		( of:0.0072 of:0.0106 quo:0.0004 week:0.0014.:0.0017 include:0.0005 relative:0.0005 sure:0.0010)
+		( of:0.0554 the:0.0447 that:0.0112 the:0.0079 way:0.0160ise:0.0011ise:0.0008 the:0.0018)
+		( all:0.0028 from:0.0025 otherwise:0.0004 percent:0.0008,:0.0139 quo:0.0007 quo:0.0005killers:0.0010)
+		(.:0.0449 the:0.0574.:0.1235.:0.0070 not:0.0698 loss:0.0064,:0.0099killers:0.0031)
+		( was:0.0032,:0.0034 likely:0.0052,:0.0061 such:0.0006 to:0.0010 were:0.0006 the:0.0025)
+		( of:0.0776 the:0.1089 are:0.0518 the:0.0986 few:0.0227.:0.1611 of:0.3164 and:0.1069)
+		( of:0.0776 the:0.1089 are:0.0518 the:0.0986 few:0.0227.:0.1611 of:0.3164 and:0.1069)
+ and
+------
+		( the:0.0013563:0.0008cgi:0.0004 hy:0.0006 etc:0.0006ineries:0.0007lated:0.0011 link:0.0011)
+		( the:0.0229 It:0.0012 It:0.0010 already:0.0014ed:0.0007ed:0.0008istic:0.0007 It:0.0012)
+		( of:0.0026 <:0.0004 deep:0.0007 deep:0.0008 inhab:0.0003 exactly:0.0002 `:0.0006 deep:0.0007)
+		( of:0.0299ics:0.0006 small:0.0009 since:0.0007ics:0.0004ics:0.0004ists:0.0007 there:0.0010)
+		( the:0.0200Similar:0.0003ocrine:0.0003ed:0.0012Similar:0.0007Similar:0.0005rez:0.0003 agric:0.0005)
+		( the:0.0908 Health:0.0011 Health:0.0007 on:0.0011 Health:0.0005 Health:0.0007 Health:0.0010):0.0021)
+		( of:0.0106 quo:0.0004 week:0.0014.:0.0017 include:0.0005 relative:0.0005 sure:0.0010 the:0.0099)
+		( the:0.0447 that:0.0112 the:0.0079 way:0.0160ise:0.0011ise:0.0008 the:0.0018 on:0.0067)
+		( from:0.0025 otherwise:0.0004 percent:0.0008,:0.0139 quo:0.0007 quo:0.0005killers:0.0010.:0.0064)
+		( the:0.0574.:0.1235.:0.0070 not:0.0698 loss:0.0064,:0.0099killers:0.0031.:0.0236)
+		(,:0.0034 likely:0.0052,:0.0061 such:0.0006 to:0.0010 were:0.0006 the:0.0025,:0.0042)
+		( the:0.1089 are:0.0518 the:0.0986 few:0.0227.:0.1611 of:0.3164 and:0.1069 the:0.0479)
+		( the:0.1089 are:0.0518 the:0.0986 few:0.0227.:0.1611 of:0.3164 and:0.1069 the:0.0479)
+ the same way of the same time of the same time
+1100: sample 0: Hello, I'm a language model,
+------
+		( the:0.0060 the:0.0011563:0.0007 inver:0.0004 hy:0.0006 etc:0.0005 Parad:0.0010lated:0.0011)
+		( the:0.0422 the:0.0398 It:0.0011 It:0.0009 already:0.0014ed:0.0010ed:0.0011istic:0.0008)
+		( of:0.0044 of:0.0028 deep:0.0006 deep:0.0012 deep:0.0014spe:0.0003But:0.0003 `:0.0007)
+		( and:0.0359 and:0.0347ics:0.0008 small:0.0012 New:0.0007ics:0.0005ics:0.0006 small:0.0008)
+		( the:0.0205 the:0.0206Similar:0.0004 periods:0.0003ed:0.0012Similar:0.0008 than:0.0005bones:0.0003)
+		( the:0.0835 the:0.0850 Health:0.0011 Health:0.0007 like:0.0012 Health:0.0006 Health:0.0009 Health:0.0010)
+		( of:0.0069 of:0.0096 late:0.0004 day:0.0013.:0.0031 mainly:0.0005 relative:0.0006 according:0.0013)
+		( of:0.0439 the:0.0476ed:0.0102 the:0.0038 way:0.0156ise:0.0017ise:0.0010 the:0.0015)
+		( the:0.0029 it:0.0022 require:0.0005entimes:0.0011,:0.0226 quo:0.0005 year:0.0007killers:0.0008)
+		(,:0.0825,:0.0752.:0.0483 body:0.0062 not:0.0435ation:0.0082 day:0.0057.:0.0046)
+		( al:0.0013 al:0.0017 likely:0.0025 and:0.0028 compared:0.0003 active:0.0006 attention:0.0006 then:0.0013)
+		(.:0.0737 the:0.1777 have:0.0376 the:0.1270 few:0.0371.:0.1299 of:0.2012 and:0.1816)
+		(.:0.0737 the:0.1777 have:0.0376 the:0.1270 few:0.0371.:0.1299 of:0.2012 and:0.1816)
+ and
+------
+		( the:0.0011563:0.0007 inver:0.0004 hy:0.0006 etc:0.0005 Parad:0.0010lated:0.0011,:0.0015)
+		( the:0.0398 It:0.0011 It:0.0009 already:0.0014ed:0.0010ed:0.0011istic:0.0008 It:0.0011)
+		( of:0.0028 deep:0.0006 deep:0.0012 deep:0.0014spe:0.0003But:0.0003 `:0.0007 deep:0.0011)
+		( and:0.0347ics:0.0008 small:0.0012 New:0.0007ics:0.0005ics:0.0006 small:0.0008 there:0.0011)
+		( the:0.0206Similar:0.0004 periods:0.0003ed:0.0012Similar:0.0008 than:0.0005bones:0.0003 agric:0.0007)
+		( the:0.0850 Health:0.0011 Health:0.0007 like:0.0012 Health:0.0006 Health:0.0009 Health:0.0010age:0.0021)
+		( of:0.0096 late:0.0004 day:0.0013.:0.0031 mainly:0.0005 relative:0.0006 according:0.0013 the:0.0149)
+		( the:0.0476ed:0.0102 the:0.0038 way:0.0156ise:0.0017ise:0.0010 the:0.0015 well:0.0054)
+		( it:0.0022 require:0.0005entimes:0.0011,:0.0226 quo:0.0005 year:0.0007killers:0.0008.:0.0089)
+		(,:0.0752.:0.0483 body:0.0062 not:0.0435ation:0.0082 day:0.0057.:0.0046.:0.0156)
+		( al:0.0017 likely:0.0025 and:0.0028 compared:0.0003 active:0.0006 attention:0.0006 then:0.0013,:0.0017)
+		( the:0.1777 have:0.0376 the:0.1270 few:0.0371.:0.1299 of:0.2012 and:0.1816 the:0.0549)
+		( the:0.1777 have:0.0376 the:0.1270 few:0.0371.:0.1299 of:0.2012 and:0.1816 the:0.0549)
+ the author of the author of the author of the author

@@ -1,11 +1,11 @@
 # Data
 edu_fineweb10B/
 hellaswag/
-log/
+# log/
 samples/
 checkpoints/
-log-ben/
-samples-ben/
+# log-ben/
+# samples-ben/
 checkpoints-ben/
 
 # Byte-compiled / optimized / DLL files
