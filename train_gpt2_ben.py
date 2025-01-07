@@ -137,7 +137,7 @@ class Block(DualModule):
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
-        x = x + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        x = res + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         x = x + self.mlp(self.ln_2(x))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
@@ -782,8 +782,8 @@ else:
 # HYPERPARAMETERS
 # ===================
 
-test_name="8-xplusnotres-alllayer"
-test_description=" Reusing blocks, max LR 6e-4, computing loss every layer, x + attn(x), x + mlp(LN(x))"
+test_name="9-experiment"
+test_description=" Reusing blocks, max LR 6e-4, computing loss every layer, res + attn(x), x + mlp(LN(x))"
 
 
 # Create log and persistence directory
