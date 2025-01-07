@@ -125,8 +125,10 @@ class Block(DualModule):
         super().__init__()
         self.ln_1 = nn.LayerNorm(config.n_embd)
         self.attn = CausalSelfAttention(config)
+        self.attn2 = CausalSelfAttention(config)
         self.ln_2 = nn.LayerNorm(config.n_embd)
         self.mlp = MLP(config)
+        self.mlp2 = MLP(config)
     
     def forward(self, x, res):
         # note residual connection res
@@ -134,12 +136,26 @@ class Block(DualModule):
         # NOTE, for some reason LN(x) + self.attn(LN(x)) doesn't work as well. 
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
-        x = res + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + 
+        # NOTE: res will generally be very large...
+        x = res * self.attn2(x) + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
-        x = x + self.mlp(self.ln_2(x))  # map operation (one to one)
+        x = x * self.mlp2(self.ln_2(x)) + self.mlp(self.ln_2(x))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
+        # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
+        # NOTE: By step 116, prev is much larger, ~2.0
+        # also seems to get bigger as layer number grows...
+        # so the layer norm really makes things bigger.
+        # NOTE: if x + self.mlp, prev grows much much quicker, ~30 by step 48
+        # ^ but it seems to get a bit smaller over time
+        # Large (and increasing over layer num) prev remains true even if we don't 
+        # compute loss for every layer. (This is probably due to reuse...)
+        # NOTE: growth continues even if transformer block is not reused
+        # ^ again, in vanilla GPT, it gets smaller over time.
+        # NOTE: for some reason, for res*attn(x) with x*mlp(LN(x)), std is always 0 even for alllayer
+        # NOTE: doing res * attn(x) and x + mlp(LN(x)) explodes the prev when training last layer only, but when doing all layer loss, it is reasonable... (why?)
+
         # NOTE seems quite good res + attn(x), comment out ln_1
         return x, newres
 
@@ -231,21 +247,7 @@ class GPT(DualModule):
         for i in range(self.config.n_layer):
             prev_x = x # (B, T, n_embd)
 
-            with torch.no_grad():
-                if all_logits or print_weights:
-                    _logits = self.lm_head(x)
-                if all_logits:
-                    allLogits.append(_logits)
-                if print_weights:
-                    if (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1 or i == self.config.n_layer) and master_process:
-                        # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                        probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
-                        # print top k of the last T
-                        # do top-k sampling of 50 (huggingface pipeline default)
-                        # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                        topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                        fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
-                        bprint(f"Layer {i}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
+            
 
             
             # block = self.transformer.h[i]
@@ -254,13 +256,52 @@ class GPT(DualModule):
 
             # # For now, try computing dot products in embedding space
             # target_embedding = torch.roll(prev_x, shifts=-1, dims=1) # shift in T dimension
+
             # # NOTE: ignore the far right-most one
             # dp = -1* (target_embedding[:,:-1,:] * x[:,:-1,:]).sum(dim=-1) / self.config.n_embd # dot product
             # dp = dp.mean()
             # losses += dp
             # confLoss += dp
 
-            if targets is not None: # and i == self.config.n_layer - 1:
+
+            with torch.no_grad():
+                if all_logits or print_weights:
+                    _logits = self.lm_head(x)
+                    # _logits_target_ = self.lm_head(x[:,:-1,:])
+                    # _target_embd = self.lm_head(target_embedding[:,:-1,:])
+                if all_logits:
+                    allLogits.append(_logits)
+                if print_weights:
+                    prevsize = res.std(dim=-1).mean()
+                    nextsize = x.std(dim=-1).mean()
+                    bprint(f"SIZE COMPARISON prev {prevsize} next {nextsize}")
+                # if print_weights:
+                #     _batch_0_target = _target_embd[:,-7:,:] #(B, 7, vocab_size?)
+                #     _probs = F.softmax(_batch_0_target, dim=-1) #(B, 7, vocab_size?)
+                #     vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 7, 1)
+                #     v = idxs[0,:,0].tolist()
+
+                #     _logits_target_ = _logits_target_[:,-7:,:] #(B, 7, vocab_size?)
+                #     _probs = F.softmax(_logits_target_, dim=-1) #(B, 7, vocab_size?)
+                #     vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 7, 1)
+                #     cur = idxs[0,:,0].tolist()
+
+                #     a = "\t".join(enc.decode(v))
+                #     b = "\t".join(enc.decode(cur))
+
+                #     bprint(f"Layer {i} prev-targets\npre\t\t{a}\ncur\t\t{b}")
+
+                    # if (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1 or i == self.config.n_layer) and master_process:
+                    #     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
+                    #     probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
+                    #     # print top k of the last T
+                    #     # do top-k sampling of 50 (huggingface pipeline default)
+                    #     # topk_probs here becomes (5, 50), topk_indices is (5, 50)
+                    #     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
+                    #     fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
+                    #     bprint(f"Layer {i}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
+
+            if targets is not None: #and i == self.config.n_layer - 1:
 
                 # NOTE: keep this because... can't return some dummy thing instead
                 _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
@@ -269,7 +310,7 @@ class GPT(DualModule):
                 trueLoss = tl
                 losses = losses + tl
                 allLogits.append(_logits)
-                   
+                
 
             if ENABLE_LAYER_LOSS:
 
@@ -733,16 +774,16 @@ else:
     print(f"using device: {device}")
 
 
-torch.manual_seed(1234)
-if torch.cuda.is_available():
-    torch.cuda.manual_seed(1234)
+# torch.manual_seed(1234)
+# if torch.cuda.is_available():
+#     torch.cuda.manual_seed(1234)
 
 # ===================
 # HYPERPARAMETERS
 # ===================
 
-test_name="7-test-2"
-test_description="Vanilla GPT (reusing blocks), with dot product conf loss with previous layer"
+test_name="8-doubleattndoublemlp-alllayer"
+test_description=" Reusing blocks, max LR 6e-4, computing loss every layer, res*attn2(x) + attn(x), x * mlp2(LN(x)) + mlp(LN(x))"
 
 
 # Create log and persistence directory
@@ -794,6 +835,7 @@ if master_process:
     print(f"Num GPUs: {ddp_world_size}")
     bprint(f"Threshold: {THRESHOLD}")
     bprint(f"Enable layer loss: {ENABLE_LAYER_LOSS}")
+    bprint(f"MAX LEARNING RATE: {max_lr}")
     bprint(f"Experiment name: {test_name}")
     bprint(f"Experiment description: {test_description}")
 
@@ -990,7 +1032,7 @@ for step in range(max_steps):
         for i in range(num_return_sequences):
             tokens = printgen
             decoded = enc.decode(tokens)
-            print(f"rank {ddp_rank} sample {i}: {decoded}")
+            bprint(f"rank {ddp_rank} sample {i}: {decoded}")
             with open(sample_file, "a") as f:
                 f.write(f"{step}: sample {i}: {decoded}\n")
         
