@@ -120,3 +120,22 @@ stream  of     text that is   next
 of      text   that is   next .
 
 Alternatively, we can reward tokens that are equal to the next token in the previous layer.
+
+##### 8-experiments
+
+The probem with `res*attn2(x) + attn(x), x + mlp(LN(x))` seems to be that the residuals are blowing up the more we train it. Same with `res*attn2(x) + attn(x), x * mlp2(LN(x)) + mlp(LN(x))`. We see residuals like
+
+```SIZE COMPARISON prev 2.5294246673583984 next 1.1539545059204102
+SIZE COMPARISON prev 2.8568525314331055 next 1.1331876516342163
+SIZE COMPARISON prev 2.7836289405822754 next 1.121557354927063
+SIZE COMPARISON prev 3.347931385040283 next 1.1270164251327515
+SIZE COMPARISON prev 5.639773368835449 next 1.1290345191955566
+SIZE COMPARISON prev 15.21493911743164 next 1.1317602396011353
+SIZE COMPARISON prev 60.20911407470703 next 1.1316640377044678
+SIZE COMPARISON prev 284.3788757324219 next 1.1313221454620361
+SIZE COMPARISON prev 1445.6865234375 next 1.1314541101455688
+SIZE COMPARISON prev 7582.7626953125 next 1.1323127746582031
+SIZE COMPARISON prev 40300.05078125 next 1.133501410484314
+SIZE COMPARISON prev 216047.5625 next 1.1349073648452759
+```
+
