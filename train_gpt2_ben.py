@@ -123,10 +123,10 @@ class Block(DualModule):
 
     def __init__(self, config):
         super().__init__()
-        self.ln_1 = nn.LayerNorm(config.n_embd)
+        self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
         self.attn2 = CausalSelfAttention(config)
-        self.ln_2 = nn.LayerNorm(config.n_embd)
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.mlp = MLP(config)
         self.mlp2 = MLP(config)
     
@@ -137,11 +137,11 @@ class Block(DualModule):
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
-        x = res * self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        y = res + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
-        midx = x
-        x = x + self.mlp(self.ln_2(x))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
+        midx = y
+        x = x + self.mlp(self.ln_2(y))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
@@ -303,7 +303,7 @@ class GPT(DualModule):
                     #     fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
                     #     bprint(f"Layer {i}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
 
-            if targets is not None: #and i == self.config.n_layer - 1:
+            if targets is not None and (i == self.config.n_layer - 1 or ALL_LAYER_LOSS):
 
                 # NOTE: keep this because... can't return some dummy thing instead
                 _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
@@ -784,9 +784,12 @@ else:
 # HYPERPARAMETERS
 # ===================
 
-test_name="9-experiment-2"
-test_description=" Reusing blocks, max LR 6e-4, computing loss every layer, res + attn(x), x + mlp(LN(x)), computing midx"
+ALL_LAYER_LOSS = True
+ELEMENTWISEAFFINE = False
 
+
+test_name="10-resescape"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+attn(x), x = x + mlp(LN(y)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
@@ -836,7 +839,7 @@ if master_process:
     print(f"Training max steps: {max_steps}")
     print(f"Num GPUs: {ddp_world_size}")
     bprint(f"Threshold: {THRESHOLD}")
-    bprint(f"Enable layer loss: {ENABLE_LAYER_LOSS}")
+    bprint(f"Enable layer loss: {ALL_LAYER_LOSS}")
     bprint(f"MAX LEARNING RATE: {max_lr}")
     bprint(f"Experiment name: {test_name}")
     bprint(f"Experiment description: {test_description}")
