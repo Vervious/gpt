@@ -247,14 +247,26 @@ Perhaps this means that attn(x) outputs very small numbers, and they are trying 
 
 I wonder if res + attn(ln(res)) is at heart performing a "substitutition" into res. And x + mlp(ln(x)) evaluates an if statement and... maybe it should be
 
-y = res + attn(ln(res))
-x = x + mlp(ln(y))
+```y = res + attn(ln(res))
+x = x + mlp(ln(y))'''
 
 and we don't add y back in?
 
-Well, it turns out this sucks terribly:
+Well, it turns out this sucks, similarly to x = x + attn(x):
 
 ![loss plot](img/10-resescapei.png)
+
+What about
+
+```y = res + attn(ln(res))
+x = res + mlp(ln(y))'''
+
+well:
+
+![loss plot](img/10-x-escapei.png)
+
+
+(performance seems truly worse) so it is really quite important that the logits directly get the output of the attention layer (instead of solely feeding the attention layer into the mlp and then the output).
 
 General framework:
 - Backprop performs memorization of substitution rules.

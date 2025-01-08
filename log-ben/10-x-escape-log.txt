@@ -1,24 +1,14 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: True
 MAX LEARNING RATE: 0.0006
 Experiment name: 10-x-escape
 Experiment description:  Reusing blocks, max LR 6e-4, alllayerloss=True, y = res+attn(x), x = res + mlp(LN(y)), ELEMENTWISEAFFINE=False
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-compilation is off
-num decayed parameter tensors: 10, with 53,575,680 parameters
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1num decayed parameter tensors: 10, with 53,575,680 parameters
 num non-decayed parameter tensors: 8, with 13,824 parameters
-using fused AdamW: True
 @ 0 train 10.9435 , allloss: 131.3157, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-05, norm:106.8933, dt: 5196.99ms, tok/sec: 25220.76, flops:11.11, batch-reuse:1
 SIZE COMPARISON prev 0.08024699985980988 mid 0.04448319599032402 next 0.9998723268508911
 SIZE COMPARISON prev 0.14213836193084717 mid 0.09773813933134079 next 1.0004029273986816
@@ -2684,9 +2674,7 @@ rank 0 sample 0: Hello, I'm a language model,
 @ 1997 train 4.5113 , allloss: 54.3232, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:5.5132, dt: 1621.59ms, tok/sec: 80829.31, flops:35.60, batch-reuse:1
 @ 1998 train 4.4896 , allloss: 54.0607, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:4.8446, dt: 1622.17ms, tok/sec: 80800.42, flops:35.58, batch-reuse:1
 @ 1999 train 4.4255 , allloss: 53.2881, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:5.0822, dt: 1619.13ms, tok/sec: 80951.91, flops:35.65, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 4.6318
+@ 2000 val 4.6318
 SIZE COMPARISON prev 1.0494495630264282 mid 0.2650303840637207 next 1.0006465911865234
 SIZE COMPARISON prev 1.2178151607513428 mid 1.0659043788909912 next 1.000648021697998
 SIZE COMPARISON prev 1.4270291328430176 mid 1.231221079826355 next 1.000649094581604
@@ -5186,64 +5174,3 @@ rank 0 sample 0: Hello, I'm a language model,
 @ 3877 train 4.2332 , allloss: 51.2257, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9978e-04, norm:5.1594, dt: 1611.54ms, tok/sec: 81333.63, flops:35.82, batch-reuse:1
 @ 3878 train 4.1498 , allloss: 50.2098, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9978e-04, norm:5.2374, dt: 1613.45ms, tok/sec: 81237.13, flops:35.78, batch-reuse:1
 @ 3879 train 4.1875 , allloss: 50.6491, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9978e-04, norm:4.9815, dt: 1611.85ms, tok/sec: 81317.93, flops:35.81, batch-reuse:1
-W0108 12:34:26.963000 10190 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0108 12:34:26.963000 10190 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 10285 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1061, in <module>
-[rank0]:     _, loss, trueloss, confLoss, targetLoss, earlyStopNum, earlyStopLayerDict = model(x, y) # NOTE: we don't actually use the logits
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1654, in forward
-[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1470, in _run_ddp_forward
-[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 256, in forward
-[rank0]:     x, res, midx = self.transformer.sharedblock.requires_grad_(True)(x, res) # TODO UNCOMMENT
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 144, in forward
-[rank0]:     x = res + self.mlp(self.ln_2(y))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 116, in forward
-[rank0]:     x = self.c_fc(x)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 125, in forward
-[rank0]:     return F.linear(input, self.weight, self.bias)
-[rank0]: KeyboardInterrupt
-[rank0]:[W108 12:34:27.176443934 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 10190 got signal: 2
