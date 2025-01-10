@@ -141,7 +141,7 @@ class Block(DualModule):
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
-        x = res + self.mlp(self.ln_2(y))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
+        x = y * self.mlp(self.ln_2(y))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
@@ -785,11 +785,11 @@ else:
 # ===================
 
 ALL_LAYER_LOSS = True
-ELEMENTWISEAFFINE = False
+ELEMENTWISEAFFINE = False # whether LN parameters are learned
 
 
-test_name="10-x-escape"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+attn(x), x = res + mlp(LN(y)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="10-plustimes"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+attn(x), x = x * mlp(LN(y)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
