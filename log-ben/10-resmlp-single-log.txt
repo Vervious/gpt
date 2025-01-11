@@ -1,24 +1,14 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
 Experiment name: 10-resmlp-single
 Experiment description:  Reusing blocks, max LR 6e-4, alllayerloss=False, y = res+attn(x), x = x + mlp(LN(res)), ELEMENTWISEAFFINE=False
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-compilation is off
-num decayed parameter tensors: 10, with 53,575,680 parameters
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1num decayed parameter tensors: 10, with 53,575,680 parameters
 num non-decayed parameter tensors: 8, with 13,824 parameters
-using fused AdamW: True
 @ 0 train 11.0174 , allloss: 11.0174, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-05, norm:14.7916, dt: 1501.00ms, tok/sec: 87323.03, flops:38.46, batch-reuse:1
 SIZE COMPARISON prev 0.08847133815288544 mid 0.04670610651373863 next 1.0000035762786865
 SIZE COMPARISON prev 0.14883938431739807 mid 0.10468658804893494 next 1.0004241466522217
@@ -2695,9 +2685,7 @@ I'm a language
 @ 1997 train 4.1890 , allloss: 4.1890, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:0.7718, dt: 412.91ms, tok/sec: 317433.70, flops:139.79, batch-reuse:1
 @ 1998 train 4.1670 , allloss: 4.1670, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:0.7575, dt: 407.24ms, tok/sec: 321856.58, flops:141.74, batch-reuse:1
 @ 1999 train 4.1008 , allloss: 4.1008, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:0.7364, dt: 407.24ms, tok/sec: 321852.24, flops:141.74, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 4.2685
+@ 2000 val 4.2685
 SIZE COMPARISON prev 1.9766343832015991 mid 1.3511600494384766 next 1.000650405883789
 SIZE COMPARISON prev 2.4988350868225098 mid 2.3643150329589844 next 1.0006508827209473
 SIZE COMPARISON prev 2.4702229499816895 mid 2.5428216457366943 next 1.0006508827209473
@@ -5378,9 +5366,7 @@ rank 0 sample 0: Hello, I'm a language model,
 @ 3997 train 3.9539 , allloss: 3.9539, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9976e-04, norm:0.5841, dt: 406.93ms, tok/sec: 322096.63, flops:141.85, batch-reuse:1
 @ 3998 train 3.9168 , allloss: 3.9168, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9976e-04, norm:0.5509, dt: 407.30ms, tok/sec: 321806.46, flops:141.72, batch-reuse:1
 @ 3999 train 3.9812 , allloss: 3.9812, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9976e-04, norm:0.6479, dt: 407.53ms, tok/sec: 321623.84, flops:141.64, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9567
+@ 4000 val 3.9567
 @ 4000 train 3.9827 , allloss: 3.9827, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9976e-04, norm:0.6387, dt: 666.66ms, tok/sec: 196609.59, flops:86.58, batch-reuse:1
 @ 4001 train 3.8805 , allloss: 3.8805, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9976e-04, norm:0.6855, dt: 413.32ms, tok/sec: 317119.13, flops:139.65, batch-reuse:1
 @ 4002 train 3.9417 , allloss: 3.9417, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9976e-04, norm:0.6735, dt: 411.63ms, tok/sec: 318418.45, flops:140.23, batch-reuse:1
@@ -5925,32 +5911,3 @@ rank 0 sample 0: Hello, I'm a language model,
 		( and:0.0776�:0.1318 not:0.0776 fan:0.0488 scientist:0.0649,:0.1006 and:0.1816 I:0.3652)
  I'm a teacher.
 I'm a teacher.
-W0111 16:57:34.054000 8184 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0111 16:57:34.054000 8184 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 8268 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1058, in <module>
-[rank0]:     x, y = x.to(device), y.to(device)
-[rank0]: KeyboardInterrupt
-[rank0]:[W111 16:57:34.248996342 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 8184 got signal: 2

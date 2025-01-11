@@ -42,7 +42,6 @@ class CausalSelfAttention(DualModule):
         assert config.n_embd % config.n_head == 0
         # key, query, value batched for all heads
         self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
-        # output projection
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
         # regularization
@@ -63,12 +62,15 @@ class CausalSelfAttention(DualModule):
         # each token emits three vectors query, key, value
         qkv = self.c_attn(x)
         q,k,v = qkv.split(self.n_embd, dim=2)
+        # q,k = qkv.split(self.n_embd, dim=2)
         # treat heads as batches
         k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
         # # NOTE: value matrix seems redundant, could just change to the below
+        # why do we split up dimensionality of x this way
+        # v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
         # v = x.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
         # TODO figure out what is wrong with the below code and why it breaks training if we use it instead of the pytorch version
@@ -91,13 +93,13 @@ class CausalSelfAttention(DualModule):
         # y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
         
         # Just have Pytorch use FlashAttention for us. #TODO NVM
-        y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
+        y = F.scaled_dot_product_attention(q, k, v, is_causal=True) 
 
 
         y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
         # (B, T, n_embd)
         # output projection
-        y = self.c_proj(y) # NOTE: what is the point of this
+        y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         return y
 
 
@@ -141,7 +143,7 @@ class Block(DualModule):
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
-        x = y * self.mlp(self.ln_2(y))  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
+        x = y + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
@@ -784,12 +786,12 @@ else:
 # HYPERPARAMETERS
 # ===================
 
-ALL_LAYER_LOSS = True
+ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 
 
-test_name="10-plustimes"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+attn(x), x = x * mlp(LN(y)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="10-resmlp-single"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+attn(x), x = x + mlp(LN(res)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"

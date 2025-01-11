@@ -326,7 +326,62 @@ What about
 x = y + mlp(ln(res))
 ```
 
-i.e. how important is it that the output of attention gets fed into the MLP?
+i.e. how important is it that the output of attention gets fed into the MLP? It turns out, this works surprisingly well; i.e. attention and MLP both seem to be additive, *independent* components:
+
+![loss plot](img/10-resmlpi.png)
+
+```
+@ 4099 train 4.1100 , allloss: 50.7263, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9975e-04, norm:4.9580, dt: 1626.09ms, tok/sec: 80605.68, flops:35.50, batch-reuse:1
+SIZE COMPARISON prev 1.7276793718338013 mid 0.828337550163269 next 1.0006475448608398
+SIZE COMPARISON prev 2.3453421592712402 mid 1.9509013891220093 next 1.0006494522094727
+SIZE COMPARISON prev 3.0417964458465576 mid 2.5768418312072754 next 1.0006505250930786
+SIZE COMPARISON prev 3.7537474632263184 mid 3.24953031539917 next 1.0006508827209473
+SIZE COMPARISON prev 4.469127655029297 mid 3.953681230545044 next 1.0006511211395264
+SIZE COMPARISON prev 5.175540447235107 mid 4.6598124504089355 next 1.0006513595581055
+SIZE COMPARISON prev 5.872206687927246 mid 5.358777046203613 next 1.0006513595581055
+SIZE COMPARISON prev 6.5586748123168945 mid 6.048742294311523 next 1.000651478767395
+SIZE COMPARISON prev 7.23720645904541 mid 6.730024337768555 next 1.0006515979766846
+SIZE COMPARISON prev 7.907989501953125 mid 7.40459680557251 next 1.0006515979766846
+SIZE COMPARISON prev 8.572383880615234 mid 8.07198715209961 next 1.0006515979766846
+SIZE COMPARISON prev 9.231319427490234 mid 8.7335205078125 next 1.0006515979766846
+```
+
+Note that the above doesn't matter if we change the order of mlp and attn, namely
+
+```y = res + mlp(ln(res))
+x = y + attn(ln(res))
+```
+
+is equivalent.
+
+What happens if we remove the "all layer loss", and compute loss as per the usual method?
+
+![loss plot](img/10-resmlp-singlei.png)
+
+It is in fact, better; the all layer loss is utterly useless.
+
+But note that the std does not blow up as much, weirdly:
+
+```
+@ 4399 train 3.7913 , allloss: 3.7913, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9971e-04, norm:0.6440, dt: 411.78ms, tok/sec: 318308.01, flops:140.18, batch-reuse:1
+SIZE COMPARISON prev 2.829397439956665 mid 2.238248825073242 next 1.0006511211395264
+SIZE COMPARISON prev 2.9154844284057617 mid 2.7668395042419434 next 1.0006510019302368
+SIZE COMPARISON prev 2.937965154647827 mid 2.9097206592559814 next 1.0006510019302368
+SIZE COMPARISON prev 2.847860336303711 mid 2.835615634918213 next 1.0006510019302368
+SIZE COMPARISON prev 2.772952079772949 mid 2.7625179290771484 next 1.0006508827209473
+SIZE COMPARISON prev 2.7469887733459473 mid 2.7138304710388184 next 1.0006508827209473
+SIZE COMPARISON prev 2.775296211242676 mid 2.707706928253174 next 1.0006508827209473
+SIZE COMPARISON prev 2.8555359840393066 mid 2.748220682144165 next 1.0006508827209473
+SIZE COMPARISON prev 2.987206220626831 mid 2.838392496109009 next 1.0006510019302368
+SIZE COMPARISON prev 3.1633992195129395 mid 2.9731945991516113 next 1.0006511211395264
+SIZE COMPARISON prev 3.425197124481201 mid 3.1695663928985596 next 1.000651240348816
+SIZE COMPARISON prev 3.9492619037628174 mid 3.533745765686035 next 1.0006513595581055
+```
+
+
+Recall that in combinator calculuses, we need to be able to (1) copy arguments (inverting this operation is kind of the point of compression / learning a computation) and (2) apply arguments to each other (programmability). When inverting, I suspect it is just pattern match replacement (is this the MLP). Magnitude is somehow important for the encoding. Attention combines tokens into single embeddings? Is this some manifestation of programmability. Or, is everything truly in the forward direction. Attention takes a weighted sum of prior tokens.
+
+Somehow, addition feels like an application / one-step evaluation / perhaps it refers to the depth of the tree, and each embedding dimension is like a possible subtree at each level. Or does attention give tree structure.
 
 
 General framework:
