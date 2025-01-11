@@ -248,7 +248,8 @@ Perhaps this means that attn(x) outputs very small numbers, and they are trying 
 I wonder if res + attn(ln(res)) is at heart performing a "substitutition" into res. And x + mlp(ln(x)) evaluates an if statement and... maybe it should be
 
 ```y = res + attn(ln(res))
-x = x + mlp(ln(y))'''
+x = x + mlp(ln(y))
+```
 
 and we don't add y back in?
 
@@ -259,7 +260,8 @@ Well, it turns out this sucks, similarly to x = x + attn(x):
 What about
 
 ```y = res + attn(ln(res))
-x = res + mlp(ln(y))'''
+x = res + mlp(ln(y))
+```
 
 well:
 
@@ -317,6 +319,14 @@ SIZE COMPARISON prev 4965097.5 mid 489250.53125 next 1.0006515979766846
 SIZE COMPARISON prev 50753656.0 mid 4965097.5 next 1.0006515979766846
 SIZE COMPARISON prev 521954624.0 mid 50753656.0 next 1.0006515979766846
 ```
+
+What about
+
+```y = res + attn(ln(res))
+x = y + mlp(ln(res))
+```
+
+i.e. how important is it that the output of attention gets fed into the MLP?
 
 
 General framework:
