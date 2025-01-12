@@ -19,3 +19,200 @@ compilation is off
 num decayed parameter tensors: 10, with 53,575,680 parameters
 num non-decayed parameter tensors: 8, with 13,824 parameters
 using fused AdamW: True
+@ 0 train 10.9269 , allloss: 10.9269, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-05, norm:18.4634, dt: 3049.55ms, tok/sec: 42980.76, flops:18.93, batch-reuse:1
+SIZE COMPARISON prev 0.10868725180625916 mid 0.07798133790493011 next 1.0001959800720215
+SIZE COMPARISON prev 0.19770510494709015 mid 0.1635894775390625 next 1.0005191564559937
+SIZE COMPARISON prev 0.3262691795825958 mid 0.28602343797683716 next 1.0006039142608643
+SIZE COMPARISON prev 0.4756566286087036 mid 0.43129682540893555 next 1.0006294250488281
+SIZE COMPARISON prev 0.6357004642486572 mid 0.5893781185150146 next 1.0006392002105713
+SIZE COMPARISON prev 0.8016510605812073 mid 0.7544376254081726 next 1.0006439685821533
+SIZE COMPARISON prev 0.9712071418762207 mid 0.9236054420471191 next 1.0006463527679443
+SIZE COMPARISON prev 1.1430765390396118 mid 1.095350742340088 next 1.000647783279419
+SIZE COMPARISON prev 1.316596508026123 mid 1.2688552141189575 next 1.0006487369537354
+SIZE COMPARISON prev 1.491247296333313 mid 1.443580150604248 next 1.0006494522094727
+SIZE COMPARISON prev 1.6666972637176514 mid 1.6191418170928955 next 1.0006499290466309
+SIZE COMPARISON prev 1.8427687883377075 mid 1.7953356504440308 next 1.00065016746521
+Final sample (0 word) 
+			 ([0.000392913818359375], ',')
+Final sample (1 word) 
+			 ([0.000392913818359375], ',')
+rank 0 sample 0: Hello, I'm a language model,
+------
+		(Hello:0.0002152:0.0003 I:0.0004'm:0.0004 a:0.0008 language:0.0004 model:0.0004,:0.0008)
+		( whom:0.0003152:0.0002 Nurse:0.0002thin:0.0002 a:0.0002 hiding:0.0002ature:0.0002,:0.0003)
+		( whom:0.0002,:0.0002 Farmers:0.0001 register:0.0002 Farmers:0.0002 hiding:0.0002 easier:0.0002,:0.0003)
+		( whom:0.0002,:0.0002 Farmers:0.0002ipe:0.0002ipe:0.0002 hiding:0.0002,:0.0002,:0.0003)
+		( Lowry:0.0002,:0.0002 showcased:0.0002 showcased:0.0002,:0.0002,:0.0002,:0.0002,:0.0003)
+		( Lowry:0.0001,:0.0003,:0.0002,:0.0002,:0.0002,:0.0002,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0002,:0.0002,:0.0002,:0.0002,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0002,:0.0002,:0.0003,:0.0003,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0002,:0.0002,:0.0003,:0.0003,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0002,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004)
+		(,:0.0002,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004)
+,
+------
+		(152:0.0003 I:0.0004'm:0.0004 a:0.0008 language:0.0004 model:0.0004,:0.0008,:0.0004)
+		(152:0.0002 Nurse:0.0002thin:0.0002 a:0.0002 hiding:0.0002ature:0.0002,:0.0003,:0.0002)
+		(,:0.0002 Farmers:0.0001 register:0.0002 Farmers:0.0002 hiding:0.0002 easier:0.0002,:0.0003,:0.0002)
+		(,:0.0002 Farmers:0.0002ipe:0.0002ipe:0.0002 hiding:0.0002,:0.0002,:0.0003,:0.0003)
+		(,:0.0002 showcased:0.0002 showcased:0.0002,:0.0002,:0.0002,:0.0002,:0.0003,:0.0003)
+		(,:0.0003,:0.0002,:0.0002,:0.0002,:0.0002,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0002,:0.0002,:0.0002,:0.0002,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0002,:0.0002,:0.0003,:0.0003,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0002,:0.0002,:0.0003,:0.0003,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0002,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004,:0.0004)
+		(,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0003,:0.0004,:0.0004)
+,,,,,,,,,,,
+@ 1 train 10.4409 , allloss: 10.4409, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:1.2000e-04, norm:11.0529, dt: 978.42ms, tok/sec: 133962.46, flops:59.00, batch-reuse:1
+@ 2 train 10.0202 , allloss: 10.0202, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:1.8000e-04, norm:6.3513, dt: 412.08ms, tok/sec: 318071.36, flops:140.07, batch-reuse:1
+@ 3 train 9.7103 , allloss: 9.7103, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:2.4000e-04, norm:3.9766, dt: 412.82ms, tok/sec: 317507.77, flops:139.83, batch-reuse:1
+@ 4 train 9.5146 , allloss: 9.5146, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:3.0000e-04, norm:2.7720, dt: 412.09ms, tok/sec: 318067.50, flops:140.07, batch-reuse:1
+@ 5 train 9.3734 , allloss: 9.3734, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:3.6000e-04, norm:2.1513, dt: 412.63ms, tok/sec: 317653.80, flops:139.89, batch-reuse:1
+@ 6 train 9.0682 , allloss: 9.0682, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:4.2000e-04, norm:2.0974, dt: 414.43ms, tok/sec: 316268.07, flops:139.28, batch-reuse:1
+@ 7 train 8.8284 , allloss: 8.8284, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:4.8000e-04, norm:1.7948, dt: 413.48ms, tok/sec: 317000.82, flops:139.60, batch-reuse:1
+@ 8 train 8.5705 , allloss: 8.5705, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.4000e-04, norm:1.5477, dt: 413.58ms, tok/sec: 316920.23, flops:139.57, batch-reuse:1
+@ 9 train 8.2978 , allloss: 8.2978, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.3677, dt: 413.46ms, tok/sec: 317011.24, flops:139.61, batch-reuse:1
+@ 10 train 8.1194 , allloss: 8.1194, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.0472, dt: 413.73ms, tok/sec: 316802.61, flops:139.52, batch-reuse:1
+@ 11 train 7.9626 , allloss: 7.9626, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.9166, dt: 413.11ms, tok/sec: 317282.38, flops:139.73, batch-reuse:1
+@ 12 train 7.8216 , allloss: 7.8216, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7793, dt: 412.82ms, tok/sec: 317506.85, flops:139.83, batch-reuse:1
+@ 13 train 7.7862 , allloss: 7.7862, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5949, dt: 411.80ms, tok/sec: 318287.19, flops:140.17, batch-reuse:1
+@ 14 train 7.7348 , allloss: 7.7348, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5450, dt: 410.21ms, tok/sec: 319526.83, flops:140.72, batch-reuse:1
+@ 15 train 7.7172 , allloss: 7.7172, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5234, dt: 410.56ms, tok/sec: 319251.47, flops:140.59, batch-reuse:1
+@ 16 train 7.7019 , allloss: 7.7019, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7276, dt: 413.41ms, tok/sec: 317052.74, flops:139.63, batch-reuse:1
+@ 17 train 7.7567 , allloss: 7.7567, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.8658, dt: 414.17ms, tok/sec: 316471.07, flops:139.37, batch-reuse:1
+@ 18 train 7.7550 , allloss: 7.7550, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7211, dt: 413.57ms, tok/sec: 316924.98, flops:139.57, batch-reuse:1
+@ 19 train 7.6231 , allloss: 7.6231, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5607, dt: 412.93ms, tok/sec: 317417.21, flops:139.79, batch-reuse:1
+@ 20 train 7.7116 , allloss: 7.7116, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6192, dt: 413.91ms, tok/sec: 316664.84, flops:139.45, batch-reuse:1
+@ 21 train 7.6921 , allloss: 7.6921, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.6738, dt: 414.16ms, tok/sec: 316477.62, flops:139.37, batch-reuse:1
+@ 22 train 7.6728 , allloss: 7.6728, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.9970, dt: 414.74ms, tok/sec: 316033.89, flops:139.18, batch-reuse:1
+@ 23 train 7.9041 , allloss: 7.9041, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.7866, dt: 414.76ms, tok/sec: 316021.36, flops:139.17, batch-reuse:1
+@ 24 train 7.8131 , allloss: 7.8131, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.0005, dt: 412.80ms, tok/sec: 317520.97, flops:139.83, batch-reuse:1
+@ 25 train 7.5844 , allloss: 7.5844, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.2146, dt: 414.23ms, tok/sec: 316420.25, flops:139.35, batch-reuse:1
+@ 26 train 7.7011 , allloss: 7.7011, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.0980, dt: 414.03ms, tok/sec: 316573.12, flops:139.41, batch-reuse:1
+@ 27 train 7.6385 , allloss: 7.6385, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5329, dt: 415.22ms, tok/sec: 315669.15, flops:139.02, batch-reuse:1
+@ 28 train 7.6620 , allloss: 7.6620, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:1.1376, dt: 416.38ms, tok/sec: 314791.95, flops:138.63, batch-reuse:1
+@ 29 train 7.7079 , allloss: 7.7079, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.8619, dt: 416.03ms, tok/sec: 315057.14, flops:138.75, batch-reuse:1
+@ 30 train 7.5692 , allloss: 7.5692, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.3743, dt: 414.28ms, tok/sec: 316382.73, flops:139.33, batch-reuse:1
+@ 31 train 7.6248 , allloss: 7.6248, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4996, dt: 413.70ms, tok/sec: 316828.91, flops:139.53, batch-reuse:1
+@ 32 train 7.6045 , allloss: 7.6045, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7399, dt: 416.03ms, tok/sec: 315054.62, flops:138.75, batch-reuse:1
+@ 33 train 7.5314 , allloss: 7.5314, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7130, dt: 417.55ms, tok/sec: 313906.53, flops:138.24, batch-reuse:1
+@ 34 train 7.5364 , allloss: 7.5364, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4582, dt: 418.66ms, tok/sec: 313077.60, flops:137.88, batch-reuse:1
+@ 35 train 7.4996 , allloss: 7.4996, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.8719, dt: 417.34ms, tok/sec: 314068.11, flops:138.31, batch-reuse:1
+@ 36 train 7.4602 , allloss: 7.4602, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6990, dt: 413.50ms, tok/sec: 316982.54, flops:139.59, batch-reuse:1
+@ 37 train 7.4815 , allloss: 7.4815, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5048, dt: 413.78ms, tok/sec: 316771.03, flops:139.50, batch-reuse:1
+@ 38 train 7.4235 , allloss: 7.4235, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5124, dt: 413.44ms, tok/sec: 317027.32, flops:139.61, batch-reuse:1
+@ 39 train 7.4592 , allloss: 7.4592, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4377, dt: 411.93ms, tok/sec: 318191.76, flops:140.13, batch-reuse:1
+@ 40 train 7.4676 , allloss: 7.4676, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5171, dt: 410.54ms, tok/sec: 319270.75, flops:140.60, batch-reuse:1
+@ 41 train 7.4179 , allloss: 7.4179, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4223, dt: 412.79ms, tok/sec: 317527.21, flops:139.83, batch-reuse:1
+@ 42 train 7.3883 , allloss: 7.3883, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4835, dt: 413.38ms, tok/sec: 317072.49, flops:139.63, batch-reuse:1
+@ 43 train 7.3953 , allloss: 7.3953, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5575, dt: 416.48ms, tok/sec: 314715.54, flops:138.60, batch-reuse:1
+@ 44 train 7.4156 , allloss: 7.4156, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6650, dt: 415.44ms, tok/sec: 315504.11, flops:138.94, batch-reuse:1
+@ 45 train 7.3265 , allloss: 7.3265, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5455, dt: 415.24ms, tok/sec: 315654.65, flops:139.01, batch-reuse:1
+@ 46 train 7.3523 , allloss: 7.3523, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5005, dt: 417.15ms, tok/sec: 314211.89, flops:138.37, batch-reuse:1
+@ 47 train 7.2815 , allloss: 7.2815, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6851, dt: 415.07ms, tok/sec: 315784.47, flops:139.07, batch-reuse:1
+@ 48 train 7.2810 , allloss: 7.2810, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6010, dt: 414.92ms, tok/sec: 315895.70, flops:139.12, batch-reuse:1
+@ 49 train 7.2917 , allloss: 7.2917, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4909, dt: 415.81ms, tok/sec: 315221.72, flops:138.82, batch-reuse:1
+SIZE COMPARISON prev 1.3409581184387207 mid 0.37402403354644775 next 1.0006465911865234
+SIZE COMPARISON prev 6.585042476654053 mid 1.6457533836364746 next 1.0006515979766846
+SIZE COMPARISON prev 11.231782913208008 mid 7.165406227111816 next 1.0006515979766846
+SIZE COMPARISON prev 15.39140510559082 mid 11.966558456420898 next 1.0006515979766846
+SIZE COMPARISON prev 19.260208129882812 mid 16.179365158081055 next 1.0006515979766846
+SIZE COMPARISON prev 22.888195037841797 mid 20.022151947021484 next 1.0006515979766846
+SIZE COMPARISON prev 26.349239349365234 mid 23.62614631652832 next 1.0006515979766846
+SIZE COMPARISON prev 29.672504425048828 mid 27.049396514892578 next 1.0006515979766846
+SIZE COMPARISON prev 32.90312957763672 mid 30.353551864624023 next 1.0006515979766846
+SIZE COMPARISON prev 36.07212829589844 mid 33.57916259765625 next 1.0006515979766846
+SIZE COMPARISON prev 39.199485778808594 mid 36.75037384033203 next 1.0006515979766846
+SIZE COMPARISON prev 42.29579162597656 mid 39.882057189941406 next 1.0006515979766846
+Final sample (0 word) 
+			 ([0.1005859375], ' the')
+Final sample (1 word) 
+			 ([0.0074462890625], 'The')
+rank 0 sample 0: Hello, I'm a language model,
+------
+		( Likes:0.0005 and:0.0152-:0.0009Rule:0.0004 the:0.0311 imprison:0.0004ortunate:0.0004 and:0.0245)
+		(phis:0.0003,:0.0410,:0.0247ing:0.0014 the:0.0227,:0.0018ing:0.0013 and:0.0522)
+		(ing:0.0011 of:0.0483.:0.0737,:0.0106 the:0.0124,:0.0147,:0.0088 and:0.0515)
+		(,:0.0040 and:0.0476.:0.0918,:0.0262 the:0.0091.:0.0381.:0.0249 the:0.0554)
+		(,:0.0101 the:0.0483.:0.0933,:0.0410 the:0.0077.:0.0603.:0.0469 the:0.0640)
+		(,:0.0178 the:0.0547.:0.0835.:0.0540 the:0.0076.:0.0776.:0.0640 the:0.0713)
+		(.:0.0289 the:0.0618.:0.0708.:0.0605 the:0.0076.:0.0884.:0.0781 the:0.0801)
+		(.:0.0400 the:0.0674.:0.0605.:0.0640 the:0.0078.:0.0933.:0.0869 the:0.0850)
+		(.:0.0493 the:0.0718.:0.0488.:0.0659 the:0.0083.:0.1011.:0.0947 the:0.0898)
+		(.:0.0583 the:0.0762.:0.0408.:0.0645 the:0.0085.:0.1040.:0.1030 the:0.0952)
+		(.:0.0645 the:0.0786.:0.0330.:0.0613 the:0.0089.:0.1016.:0.1064 the:0.1006)
+		(.:0.0693 the:0.0835 the:0.0361.:0.0586 the:0.0094.:0.1050.:0.1099 the:0.1006)
+		(.:0.0693 the:0.0835 the:0.0361.:0.0586 the:0.0094.:0.1050.:0.1099 the:0.1006)
+ the
+------
+		( and:0.0152-:0.0009Rule:0.0004 the:0.0311 imprison:0.0004ortunate:0.0004 and:0.0245 be:0.0056)
+		(,:0.0410,:0.0247ing:0.0014 the:0.0227,:0.0018ing:0.0013 and:0.0522-:0.0072)
+		( of:0.0483.:0.0737,:0.0106 the:0.0124,:0.0147,:0.0088 and:0.0515The:0.0078)
+		( and:0.0476.:0.0918,:0.0262 the:0.0091.:0.0381.:0.0249 the:0.0554The:0.0081)
+		( the:0.0483.:0.0933,:0.0410 the:0.0077.:0.0603.:0.0469 the:0.0640The:0.0081)
+		( the:0.0547.:0.0835.:0.0540 the:0.0076.:0.0776.:0.0640 the:0.0713The:0.0081)
+		( the:0.0618.:0.0708.:0.0605 the:0.0076.:0.0884.:0.0781 the:0.0801The:0.0081)
+		( the:0.0674.:0.0605.:0.0640 the:0.0078.:0.0933.:0.0869 the:0.0850The:0.0081)
+		( the:0.0718.:0.0488.:0.0659 the:0.0083.:0.1011.:0.0947 the:0.0898The:0.0079)
+		( the:0.0762.:0.0408.:0.0645 the:0.0085.:0.1040.:0.1030 the:0.0952The:0.0079)
+		( the:0.0786.:0.0330.:0.0613 the:0.0089.:0.1016.:0.1064 the:0.1006The:0.0077)
+		( the:0.0835 the:0.0361.:0.0586 the:0.0094.:0.1050.:0.1099 the:0.1006The:0.0074)
+		( the:0.0835 the:0.0361.:0.0586 the:0.0094.:0.1050.:0.1099 the:0.1006The:0.0074)
+TheThe theTheThe theThe theThe theThe
+@ 50 train 7.3887 , allloss: 7.3887, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6229, dt: 566.93ms, tok/sec: 231197.43, flops:101.82, batch-reuse:1
+@ 51 train 7.4376 , allloss: 7.4376, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7205, dt: 413.25ms, tok/sec: 317169.99, flops:139.68, batch-reuse:1
+@ 52 train 7.2585 , allloss: 7.2585, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6577, dt: 413.28ms, tok/sec: 317154.43, flops:139.67, batch-reuse:1
+@ 53 train 7.2234 , allloss: 7.2234, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6384, dt: 415.09ms, tok/sec: 315769.05, flops:139.06, batch-reuse:1
+@ 54 train 7.3122 , allloss: 7.3122, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5809, dt: 418.69ms, tok/sec: 313050.68, flops:137.86, batch-reuse:1
+@ 55 train 7.3871 , allloss: 7.3871, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6156, dt: 427.97ms, tok/sec: 306263.31, flops:134.87, batch-reuse:1
+@ 56 train 7.2039 , allloss: 7.2039, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6232, dt: 416.34ms, tok/sec: 314820.43, flops:138.64, batch-reuse:1
+@ 57 train 7.1354 , allloss: 7.1354, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5890, dt: 413.93ms, tok/sec: 316648.79, flops:139.45, batch-reuse:1
+@ 58 train 7.1910 , allloss: 7.1910, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5718, dt: 413.66ms, tok/sec: 316857.39, flops:139.54, batch-reuse:1
+@ 59 train 6.9996 , allloss: 6.9996, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6318, dt: 414.26ms, tok/sec: 316399.85, flops:139.34, batch-reuse:1
+@ 60 train 7.1736 , allloss: 7.1736, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5036, dt: 415.17ms, tok/sec: 315706.49, flops:139.03, batch-reuse:1
+@ 61 train 7.1158 , allloss: 7.1158, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4069, dt: 413.77ms, tok/sec: 316774.50, flops:139.50, batch-reuse:1
+@ 62 train 7.1701 , allloss: 7.1701, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.9227, dt: 413.08ms, tok/sec: 317301.42, flops:139.74, batch-reuse:1
+@ 63 train 7.1298 , allloss: 7.1298, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5875, dt: 410.99ms, tok/sec: 318914.22, flops:140.45, batch-reuse:1
+@ 64 train 7.0995 , allloss: 7.0995, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5637, dt: 416.19ms, tok/sec: 314929.72, flops:138.69, batch-reuse:1
+@ 65 train 7.1892 , allloss: 7.1892, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4691, dt: 417.75ms, tok/sec: 313756.05, flops:138.17, batch-reuse:1
+@ 66 train 7.2243 , allloss: 7.2243, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.7257, dt: 412.49ms, tok/sec: 317757.36, flops:139.94, batch-reuse:1
+@ 67 train 7.1001 , allloss: 7.1001, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4543, dt: 412.51ms, tok/sec: 317742.30, flops:139.93, batch-reuse:1
+@ 68 train 7.1554 , allloss: 7.1554, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.6487, dt: 413.69ms, tok/sec: 316839.86, flops:139.53, batch-reuse:1
+@ 69 train 7.0476 , allloss: 7.0476, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4997, dt: 412.62ms, tok/sec: 317658.21, flops:139.89, batch-reuse:1
+@ 70 train 7.0628 , allloss: 7.0628, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.4635, dt: 413.41ms, tok/sec: 317052.19, flops:139.63, batch-reuse:1
+@ 71 train 7.0191 , allloss: 7.0191, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.3964, dt: 415.67ms, tok/sec: 315327.67, flops:138.87, batch-reuse:1
+W0112 10:42:02.845000 3502 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
+W0112 10:42:02.846000 3502 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 3616 closing signal SIGINT
+@ 72 train 7.0782 , allloss: 7.0782, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-04, norm:0.5646, dt: 416.66ms, tok/sec: 314576.70, flops:138.54, batch-reuse:1[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1106, in <module>
+[rank0]:     bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, confloss: {conf_loss_accum.item():.4f}, targetloss: {target_loss_accum.item():.4f}, earlystop: {earlyStopNum_accum / (B*T*grad_accum_steps):.3f}, earlystopdict: {rList}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 812, in bprint
+[rank0]:     print(s)
+[rank0]: KeyboardInterrupt
+[rank0]:[W112 10:42:03.008310072 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+Traceback (most recent call last):
+  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
+    result = agent.run()
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
+    result = f(*args, **kwargs)
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
+    result = self._invoke_run(role)
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 3502 got signal: 2
