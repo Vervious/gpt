@@ -479,10 +479,13 @@ Somehow, addition feels like an application / one-step evaluation / perhaps it r
 Somehow, a sequence of embeddings represents code. The attention component learns how individual tokens (read subtrees) programmatically act on other tokens (other subtrees). (But what is this value matrix?) Note that addition does not distinguish between left and right subtrees, or have an order, so how do we deal with it...  
 
 
-
-
 General framework:
 - Backprop performs memorization of substitution rules.
 - regularization through LN limits "how much" we can memorize (limiting standard deviation).
 - forward pass performs the actual computation.
+
+Try again:
+- the embedding itself encodes things like its position in the tree... and also its subtree... which is itself a sum of embeddings... (how is this possible? We only give it a 1D positional embedding.)
+- The MLP maps nodes (i.e. subtrees) to compressed inverses.
+- Attention then joins more nodes together as appropriate. (Why not join all nodes together? Well, maybe MLP cannot distinguish such a big sum? It shouldn't actually matter..., MLP should be able to distinguish. So why?) (If we sum everything together at every T, then the MLP triggers for every location T.)
 
