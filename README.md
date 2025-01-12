@@ -378,10 +378,105 @@ SIZE COMPARISON prev 3.425197124481201 mid 3.1695663928985596 next 1.00065124034
 SIZE COMPARISON prev 3.9492619037628174 mid 3.533745765686035 next 1.0006513595581055
 ```
 
+What happens if we 2x the attention component?
+
+![loss plot](img/10-resmlp-single-2xi.png)
+
+```
+@ 2449 train 4.2471 , allloss: 4.2471, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9991e-04, norm:0.7454, dt: 411.36ms, tok/sec: 318631.23, flops:140.32, batch-reuse:1
+SIZE COMPARISON prev 3.474045753479004 mid 2.998915672302246 next 1.0006513595581055
+SIZE COMPARISON prev 3.860865592956543 mid 3.8047633171081543 next 1.0006513595581055
+SIZE COMPARISON prev 3.176105499267578 mid 3.17417573928833 next 1.0006511211395264
+SIZE COMPARISON prev 2.7696032524108887 mid 2.7842602729797363 next 1.0006510019302368
+SIZE COMPARISON prev 2.601201057434082 mid 2.6080410480499268 next 1.0006508827209473
+SIZE COMPARISON prev 2.55460524559021 mid 2.5488529205322266 next 1.0006508827209473
+SIZE COMPARISON prev 2.535594940185547 mid 2.500566244125366 next 1.0006508827209473
+SIZE COMPARISON prev 2.5360474586486816 mid 2.458188056945801 next 1.0006508827209473
+SIZE COMPARISON prev 2.598814010620117 mid 2.465818405151367 next 1.0006508827209473
+SIZE COMPARISON prev 2.779794216156006 mid 2.578892707824707 next 1.0006510019302368
+SIZE COMPARISON prev 3.112057685852051 mid 2.8377723693847656 next 1.0006511211395264
+SIZE COMPARISON prev 3.612070083618164 mid 3.259913444519043 next 1.0006513595581055
+```
+
+It is worse... why? But it eventually converges, so it doesn't really matter. What if we 0.5x it?
+
+![loss plot](img/10-resmlp-single-halfxi.png)
+
+```
+@ 1999 train 4.1020 , allloss: 4.1020, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9994e-04, norm:0.6649, dt: 422.70ms, tok/sec: 310084.43, flops:136.56, batch-reuse:1
+val: loaded 100000000 tokens (first shard)
+val: 1 epoch (1 shard) = 12207 mini-batches
+validation loss: 4.2778
+SIZE COMPARISON prev 1.7215176820755005 mid 1.1063441038131714 next 1.0006499290466309
+SIZE COMPARISON prev 2.114750385284424 mid 1.966301441192627 next 1.0006506443023682
+SIZE COMPARISON prev 1.981388807296753 mid 2.1172070503234863 next 1.0006502866744995
+SIZE COMPARISON prev 1.8269994258880615 mid 1.9413310289382935 next 1.00065016746521
+SIZE COMPARISON prev 1.6911734342575073 mid 1.7758653163909912 next 1.0006499290466309
+SIZE COMPARISON prev 1.6034241914749146 mid 1.6564953327178955 next 1.0006498098373413
+SIZE COMPARISON prev 1.5692648887634277 mid 1.589362621307373 next 1.0006496906280518
+SIZE COMPARISON prev 1.5858174562454224 mid 1.5691030025482178 next 1.0006496906280518
+SIZE COMPARISON prev 1.6530719995498657 mid 1.5916287899017334 next 1.0006498098373413
+SIZE COMPARISON prev 1.7865718603134155 mid 1.6776154041290283 next 1.0006500482559204
+SIZE COMPARISON prev 2.007704973220825 mid 1.845852017402649 next 1.000650405883789
+SIZE COMPARISON prev 2.3220303058624268 mid 2.0987911224365234 next 1.0006507635116577
+```
+
+It is identical... So it seems that attention is not particularly useful for early gains; it's really the MLP that matters. If we skip out on attention completely:
+
+![loss plot](img/10-resmlp-single-noattni.png)
+
+
+```
+@ 1699 train 5.8143 , allloss: 5.8143, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9996e-04, norm:0.2052, dt: 272.28ms, tok/sec: 481386.85, flops:212.00, batch-reuse:1
+SIZE COMPARISON prev 3.032069206237793 mid 0.034484002739191055 next 1.0006475448608398
+SIZE COMPARISON prev 4.604878902435303 mid 3.032069206237793 next 1.0006513595581055
+SIZE COMPARISON prev 4.4857869148254395 mid 4.604878902435303 next 1.0006513595581055
+SIZE COMPARISON prev 4.478532791137695 mid 4.4857869148254395 next 1.0006513595581055
+SIZE COMPARISON prev 4.600770473480225 mid 4.478532791137695 next 1.000651478767395
+SIZE COMPARISON prev 4.848290920257568 mid 4.600770473480225 next 1.0006513595581055
+SIZE COMPARISON prev 5.205094337463379 mid 4.848290920257568 next 1.0006513595581055
+SIZE COMPARISON prev 5.654345989227295 mid 5.205094337463379 next 1.0006515979766846
+SIZE COMPARISON prev 6.184695720672607 mid 5.654345989227295 next 1.0006513595581055
+SIZE COMPARISON prev 6.788667678833008 mid 6.184695720672607 next 1.000651478767395
+SIZE COMPARISON prev 7.458611965179443 mid 6.788667678833008 next 1.0006515979766846
+SIZE COMPARISON prev 8.18480110168457 mid 7.458611965179443 next 1.0006517171859741
+```
+
+It is worse! Whew. Our efforts are validted. But note that the residual still grows... Here, prev is the size of newres, x is the size of ln(prev), and mid is the size of prevres (as opposed to prevres + attn). So MLP is definitely adding a component (perhaps over and over again). 
+
+
+What happens (for fun) if we do `y = res  + self.attn(x)*self.mlp(x)`:
+
+![loss plot](img/10-resmlp-single-attnxmlpi.png)
+
+```
+@ 6349 train 3.8610 , allloss: 3.8610, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9941e-04, norm:0.7167, dt: 409.91ms, tok/sec: 319757.28, flops:140.82, batch-reuse:1
+SIZE COMPARISON prev 4.092894554138184 mid 4.092894554138184 next 1.0006513595581055
+SIZE COMPARISON prev 4.809565544128418 mid 4.809565544128418 next 1.0006513595581055
+SIZE COMPARISON prev 4.6843671798706055 mid 4.6843671798706055 next 1.0006513595581055
+SIZE COMPARISON prev 4.60699462890625 mid 4.60699462890625 next 1.0006513595581055
+SIZE COMPARISON prev 4.567028999328613 mid 4.567028999328613 next 1.0006513595581055
+SIZE COMPARISON prev 4.567410945892334 mid 4.567410945892334 next 1.0006513595581055
+SIZE COMPARISON prev 4.6050896644592285 mid 4.6050896644592285 next 1.0006513595581055
+SIZE COMPARISON prev 4.691596508026123 mid 4.691596508026123 next 1.000651478767395
+SIZE COMPARISON prev 4.89960241317749 mid 4.89960241317749 next 1.0006513595581055
+SIZE COMPARISON prev 5.414493083953857 mid 5.414493083953857 next 1.0006515979766846
+SIZE COMPARISON prev 6.540674686431885 mid 6.540674686431885 next 1.0006515979766846
+SIZE COMPARISON prev 8.01706314086914 mid 8.01706314086914 next 1.0006517171859741
+rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
+```
+
+It seems to be the best yet.
+
+What happens if we only feed in `attn(x) + mlp(x)` into the attn and mlp components of the next layer, and not the res? (This one crashes).
+
+
 
 Recall that in combinator calculuses, we need to be able to (1) copy arguments (inverting this operation is kind of the point of compression / learning a computation) and (2) apply arguments to each other (programmability). When inverting, I suspect it is just pattern match replacement (is this the MLP). Magnitude is somehow important for the encoding. Attention combines tokens into single embeddings? Is this some manifestation of programmability. Or, is everything truly in the forward direction. Attention takes a weighted sum of prior tokens.
 
 Somehow, addition feels like an application / one-step evaluation / perhaps it refers to the depth of the tree, and each embedding dimension is like a possible subtree at each level. Or does attention give tree structure.
+
+Somehow, a sequence of embeddings represents code. The attention component learns how individual tokens (read subtrees) programmatically act on other tokens (other subtrees). (But what is this value matrix?) Note that addition does not distinguish between left and right subtrees, or have an order, so how do we deal with it...  
 
 
 

@@ -132,18 +132,18 @@ class Block(DualModule):
         self.mlp = MLP(config)
         self.mlp2 = MLP(config)
     
-    def forward(self, x, res):
+    def forward(self, x, res, y):
         # note residual connection res
         # out = self.ln_1(x)
         # NOTE, for some reason LN(x) + self.attn(LN(x)) doesn't work as well. 
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
-        y = res + 2*self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        y = self.attn(x)*self.mlp(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
-        x = y + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
+        x = res + y  # + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
@@ -160,7 +160,7 @@ class Block(DualModule):
         # NOTE: doing res * attn(x) and x + mlp(LN(x)) explodes the prev when training last layer only, but when doing all layer loss, it is reasonable... (why?)
 
         # NOTE seems quite good res + attn(x), comment out ln_1
-        return x, newres, midx
+        return x, newres, midx, y
 
 
 @dataclass
@@ -247,6 +247,8 @@ class GPT(DualModule):
         early_stop_num = 0.0
         earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
+        y = x
+
         for i in range(self.config.n_layer):
             prev_x = x # (B, T, n_embd)
 
@@ -255,7 +257,7 @@ class GPT(DualModule):
             
             # block = self.transformer.h[i]
             # x, res = block.requires_grad_(True)(x, res)
-            x, res, midx = self.transformer.sharedblock.requires_grad_(True)(x, res) # TODO UNCOMMENT
+            x, res, midx, y = self.transformer.sharedblock.requires_grad_(True)(x, res, y) # TODO UNCOMMENT
 
             # # For now, try computing dot products in embedding space
             # target_embedding = torch.roll(prev_x, shifts=-1, dims=1) # shift in T dimension
@@ -278,7 +280,7 @@ class GPT(DualModule):
                     prevsize = res.std(dim=-1).mean()
                     nextsize = x.std(dim=-1).mean()
                     midsize = midx.std(dim=-1).mean()
-                    bprint(f"SIZE COMPARISON prev {prevsize} mid {midsize} next {nextsize}")
+                    bprint(f"SIZE COMPARISON nextres {prevsize} attn*mlp {midsize} layernormed {nextsize}")
                 # if print_weights:
                 #     _batch_0_target = _target_embd[:,-7:,:] #(B, 7, vocab_size?)
                 #     _probs = F.softmax(_batch_0_target, dim=-1) #(B, 7, vocab_size?)
@@ -318,7 +320,7 @@ class GPT(DualModule):
 
             if ENABLE_LAYER_LOSS:
 
-                x_False, _, _ = self.transformer.sharedblock.requires_grad_(False)(x, res)
+                x_False, _, _, _ = self.transformer.sharedblock.requires_grad_(False)(x, res, y)
                 # _logits is after application of the current layer
                 _logits_incl_curr_layer = self.lm_head.requires_grad_(True)(x)
                 _logits_skipping_curr_layer = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
@@ -790,8 +792,8 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 
 
-test_name="10-resmlp-single-2x"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+2*attn(x), x = x + mlp(LN(res)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="10-resmlp-single-axm-recurse"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(y)*self.mlp(y), x=res+y, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
@@ -978,8 +980,10 @@ for step in range(max_steps):
     if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)) or step == 1: # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
         model.eval()
         num_return_sequences = 1
-        max_length = 20 # 9
-        tokens = enc.encode("Hello, I'm a language model,")
+        max_length = 30 # 9
+        # tokens = enc.encode("Hello, I'm a language model,")
+        tokens = enc.encode("A Poem for you! Roses are red, Potatoes are ")
+        XLEN = len(tokens)
         printgen = tokens
         leftParens = enc.encode("\t\t(")
         rightParens = enc.encode(")\n")
@@ -989,7 +993,7 @@ for step in range(max_steps):
         sample_rng = torch.Generator(device=device)
         sample_rng.manual_seed(42 + ddp_rank) # different seed for each GPU
         while xgen.size(1) < max_length:
-            if xgen.size(1) < 9:
+            if xgen.size(1) < XLEN + 1:
                 _print_weights_val = True
             else:
                 _print_weights_val = False
@@ -998,7 +1002,7 @@ for step in range(max_steps):
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
                     logits, _, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
 
-                if xgen.size(1) < 10:
+                if xgen.size(1) < XLEN + 2:
 
                     printgen.extend(enc.encode("\n------\n"))    
                     for l in logits:

@@ -1,24 +1,14 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
 Experiment name: 10-resmlp-single-axm-recurse
 Experiment description:  Reusing blocks, max LR 6e-4, alllayerloss=False, y = self.attn(y)*self.mlp(y), x=res+y, ELEMENTWISEAFFINE=False
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-compilation is off
-num decayed parameter tensors: 10, with 53,575,680 parameters
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1num decayed parameter tensors: 10, with 53,575,680 parameters
 num non-decayed parameter tensors: 8, with 13,824 parameters
-using fused AdamW: True
 @ 0 train 11.5258 , allloss: 11.5258, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:6.0000e-05, norm:2.0002, dt: 1632.22ms, tok/sec: 80303.06, flops:35.36, batch-reuse:1
 SIZE COMPARISON nextres 0.028543800115585327 attn*mlp 0.00213623046875 layernormed 0.994548499584198
 SIZE COMPARISON nextres 0.028807885944843292 attn*mlp 0.0021514892578125 layernormed 0.9946566224098206

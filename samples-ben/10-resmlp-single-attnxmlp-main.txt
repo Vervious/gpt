@@ -1,0 +1,1510 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.5234 are:0.4141 red:0.3398,:0.2266 Pot:0.5391atoes:0.3672 are:0.5234 :0.3516)
+		( Roses:0.5234 are:0.3848 red:0.3262,:0.2266 Pot:0.5234atoes:0.3535 are:0.5078 :0.3379)
+		( Roses:0.4902 are:0.3555 red:0.2988,:0.2158 Pot:0.4902atoes:0.3398 are:0.4902 :0.3242)
+		( Roses:0.4590 are:0.3145 red:0.2734,:0.2061 Pot:0.4746atoes:0.3262 are:0.4590 :0.3105)
+		( Roses:0.4141 are:0.2754 red:0.2500,:0.1963 Pot:0.4297atoes:0.2988 are:0.4141 :0.2852)
+		( Roses:0.3691 are:0.2168 red:0.2168,:0.1768 Pot:0.3828atoes:0.2617 are:0.3691 :0.2598)
+		( Roses:0.3125 are:0.1777 red:0.1865,:0.1514 Pot:0.3398atoes:0.2266 are:0.3262 :0.2256)
+		( Roses:0.2500 are:0.1289 red:0.1514,:0.1357 Pot:0.2871atoes:0.1855 are:0.2754 :0.1846)
+		( Roses:0.2061 are:0.0981 red:0.1289,:0.1152 Pot:0.2383atoes:0.1592 are:0.2168 :0.1504)
+		( Roses:0.1592 are:0.0693 red:0.1035,:0.0923 Pot:0.1865atoes:0.1216 are:0.1777 :0.1147)
+		( Roses:0.1221 are:0.0488 red:0.0776,:0.0776 Pot:0.1514atoes:0.0972 are:0.1367 :0.0864)
+		( Roses:0.0923 are:0.0352 red:0.0618,:0.0654 Pot:0.1152atoes:0.0732 are:0.1035 :0.0649)
+		( Roses:0.0923 are:0.0352 red:0.0618,:0.0654 Pot:0.1152atoes:0.0732 are:0.1035 :0.0649)
+ 
+------
+		( are:0.4141 red:0.3398,:0.2266 Pot:0.5391atoes:0.3672 are:0.5234 :0.3516 :0.3691)
+		( are:0.3848 red:0.3262,:0.2266 Pot:0.5234atoes:0.3535 are:0.5078 :0.3379 :0.3691)
+		( are:0.3555 red:0.2988,:0.2158 Pot:0.4902atoes:0.3398 are:0.4902 :0.3242 :0.3535)
+		( are:0.3145 red:0.2734,:0.2061 Pot:0.4746atoes:0.3262 are:0.4590 :0.3105 :0.3398)
+		( are:0.2754 red:0.2500,:0.1963 Pot:0.4297atoes:0.2988 are:0.4141 :0.2852 :0.3125)
+		( are:0.2168 red:0.2168,:0.1768 Pot:0.3828atoes:0.2617 are:0.3691 :0.2598 :0.2852)
+		( are:0.1777 red:0.1865,:0.1514 Pot:0.3398atoes:0.2266 are:0.3262 :0.2256 :0.2617)
+		( are:0.1289 red:0.1514,:0.1357 Pot:0.2871atoes:0.1855 are:0.2754 :0.1846 :0.2266)
+		( are:0.0981 red:0.1289,:0.1152 Pot:0.2383atoes:0.1592 are:0.2168 :0.1504 :0.1953)
+		( are:0.0693 red:0.1035,:0.0923 Pot:0.1865atoes:0.1216 are:0.1777 :0.1147 :0.1680)
+		( are:0.0488 red:0.0776,:0.0776 Pot:0.1514atoes:0.0972 are:0.1367 :0.0864 :0.1357)
+		( are:0.0352 red:0.0618,:0.0654 Pot:0.1152atoes:0.0732 are:0.1035 :0.0649 :0.1089)
+		( are:0.0352 red:0.0618,:0.0654 Pot:0.1152atoes:0.0732 are:0.1035 :0.0649 :0.1089)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0525 the:0.0457.:0.0579 and:0.0391.:0.0796,:0.0566 the:0.0491
+:0.2139)
+		(,:0.0811 the:0.0471.:0.0508 the:0.0410.:0.0623,:0.0747 the:0.0500
+:0.1143)
+		(,:0.0713 the:0.0464.:0.0464 the:0.0427.:0.0559,:0.0674 the:0.0503
+:0.1016)
+		(,:0.0659 the:0.0449.:0.0442 the:0.0430.:0.0520.:0.0649 the:0.0498
+:0.0938)
+		(.:0.0645 the:0.0430 the:0.0449 the:0.0435.:0.0498.:0.0615 the:0.0493
+:0.0913)
+		(.:0.0635 the:0.0410 the:0.0452 the:0.0449.:0.0474.:0.0605 the:0.0486
+:0.0884)
+		(.:0.0618 the:0.0393 the:0.0457 the:0.0449.:0.0464.:0.0591 the:0.0476
+:0.0854)
+		(.:0.0605 the:0.0371 the:0.0459 the:0.0452.:0.0452.:0.0576 the:0.0481
+:0.0854)
+		(.:0.0608 the:0.0364 the:0.0461 the:0.0452.:0.0454.:0.0579 the:0.0469
+:0.0825)
+		(.:0.0593 the:0.0344 the:0.0464 the:0.0454.:0.0444.:0.0566 the:0.0474
+:0.0825)
+		(.:0.0579 the:0.0337 the:0.0466 the:0.0454 the:0.0444.:0.0569 the:0.0461
+:0.0820)
+		(.:0.0579 the:0.0317 the:0.0466 the:0.0457 the:0.0447.:0.0554 the:0.0452
+:0.0820)
+		(.:0.0579 the:0.0317 the:0.0466 the:0.0457 the:0.0447.:0.0554 the:0.0452
+:0.0820)
+
+
+------
+		( the:0.0457.:0.0579 and:0.0391.:0.0796,:0.0566 the:0.0491
+:0.2139
+:0.0713)
+		( the:0.0471.:0.0508 the:0.0410.:0.0623,:0.0747 the:0.0500
+:0.1143
+:0.0674)
+		( the:0.0464.:0.0464 the:0.0427.:0.0559,:0.0674 the:0.0503
+:0.1016
+:0.0664)
+		( the:0.0449.:0.0442 the:0.0430.:0.0520.:0.0649 the:0.0498
+:0.0938
+:0.0664)
+		( the:0.0430 the:0.0449 the:0.0435.:0.0498.:0.0615 the:0.0493
+:0.0913
+:0.0645)
+		( the:0.0410 the:0.0452 the:0.0449.:0.0474.:0.0605 the:0.0486
+:0.0884
+:0.0640)
+		( the:0.0393 the:0.0457 the:0.0449.:0.0464.:0.0591 the:0.0476
+:0.0854
+:0.0640)
+		( the:0.0371 the:0.0459 the:0.0452.:0.0452.:0.0576 the:0.0481
+:0.0854
+:0.0635)
+		( the:0.0364 the:0.0461 the:0.0452.:0.0454.:0.0579 the:0.0469
+:0.0825
+:0.0630)
+		( the:0.0344 the:0.0464 the:0.0454.:0.0444.:0.0566 the:0.0474
+:0.0825
+:0.0630)
+		( the:0.0337 the:0.0466 the:0.0454 the:0.0444.:0.0569 the:0.0461
+:0.0820
+:0.0630)
+		( the:0.0317 the:0.0466 the:0.0457 the:0.0447.:0.0554 the:0.0452
+:0.0820
+:0.0645)
+		( the:0.0317 the:0.0466 the:0.0457 the:0.0447.:0.0554 the:0.0452
+:0.0820
+:0.0645)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+200: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( of:0.1357 to:0.0417-:0.1406 and:0.0713 Press:0.0044 are:0.0398 to:0.0330ator:0.0014)
+		( of:0.1406 not:0.0540 and:0.1924 and:0.1035s:0.0073,:0.0537 not:0.0442�:0.0044)
+		( of:0.1260 not:0.0654 and:0.1963 and:0.1089s:0.0082,:0.0708 not:0.0510�:0.0162)
+		(,:0.1113 not:0.0654 and:0.1816 and:0.1128.:0.0090,:0.0884 not:0.0496�:0.0270)
+		(,:0.1147 not:0.0596 and:0.1514 and:0.1060.:0.0104,:0.0962 not:0.0474�:0.0359)
+		(,:0.1182 not:0.0554 and:0.1260 and:0.1011.:0.0110,:0.1001 not:0.0435�:0.0435)
+		(,:0.1177 not:0.0518-:0.1104 and:0.0967.:0.0109,:0.1045 not:0.0403�:0.0510)
+		(,:0.1167 not:0.0464-:0.1030 and:0.0898.:0.0110,:0.1099 not:0.0364�:0.0554)
+		(,:0.1147 not:0.0427-:0.0938 and:0.0845.:0.0108,:0.1084 not:0.0332�:0.0598)
+		(,:0.1089 not:0.0383-:0.0864 and:0.0791.:0.0110,:0.1069 not:0.0312�:0.0640)
+		(,:0.1074 not:0.0344-:0.0791 and:0.0742.:0.0109,:0.1113 not:0.0277�:0.0679)
+		(,:0.1060 not:0.0320-:0.0737 and:0.0698.:0.0109,:0.1089 not:0.0255�:0.0679)
+		(,:0.1060 not:0.0320-:0.0737 and:0.0698.:0.0109,:0.1089 not:0.0255�:0.0679)
+�
+------
+		( to:0.0417-:0.1406 and:0.0713 Press:0.0044 are:0.0398 to:0.0330ator:0.0014ator:0.0075)
+		( not:0.0540 and:0.1924 and:0.1035s:0.0073,:0.0537 not:0.0442�:0.0044ical:0.0095)
+		( not:0.0654 and:0.1963 and:0.1089s:0.0082,:0.0708 not:0.0510�:0.0162ical:0.0122)
+		( not:0.0654 and:0.1816 and:0.1128.:0.0090,:0.0884 not:0.0496�:0.0270ical:0.0140)
+		( not:0.0596 and:0.1514 and:0.1060.:0.0104,:0.0962 not:0.0474�:0.0359ical:0.0139)
+		( not:0.0554 and:0.1260 and:0.1011.:0.0110,:0.1001 not:0.0435�:0.0435�:0.0152)
+		( not:0.0518-:0.1104 and:0.0967.:0.0109,:0.1045 not:0.0403�:0.0510�:0.0204)
+		( not:0.0464-:0.1030 and:0.0898.:0.0110,:0.1099 not:0.0364�:0.0554�:0.0250)
+		( not:0.0427-:0.0938 and:0.0845.:0.0108,:0.1084 not:0.0332�:0.0598�:0.0297)
+		( not:0.0383-:0.0864 and:0.0791.:0.0110,:0.1069 not:0.0312�:0.0640�:0.0339)
+		( not:0.0344-:0.0791 and:0.0742.:0.0109,:0.1113 not:0.0277�:0.0679�:0.0383)
+		( not:0.0320-:0.0737 and:0.0698.:0.0109,:0.1089 not:0.0255�:0.0679�:0.0410)
+		( not:0.0320-:0.0737 and:0.0698.:0.0109,:0.1089 not:0.0255�:0.0679�:0.0410)
+���������������
+350: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( is:0.0398 a:0.0549-:0.1211 and:0.0894entially:0.0303 are:0.0972 many:0.0464
+:0.0037)
+		( to:0.0864 a:0.0527 to:0.1289 and:0.1108entially:0.0422 are:0.1021 many:0.0457
+:0.0172)
+		( to:0.0840 the:0.0437 to:0.1445 but:0.1133entially:0.0449 are:0.1250 not:0.0444
+:0.0261)
+		( to:0.0830 the:0.0432 to:0.1167 and:0.1216entially:0.0496 are:0.1631 not:0.0430
+:0.0596)
+		(.:0.0977 a:0.0469 and:0.1084 and:0.1338entially:0.0540 are:0.1953 a:0.0442
+:0.1011)
+		(.:0.1133 a:0.0530 and:0.1011 and:0.1357entially:0.0513 are:0.2207 a:0.0454
+:0.1250)
+		(.:0.1182 a:0.0576 and:0.0913 and:0.1270entially:0.0459 are:0.2236 a:0.0464
+:0.1357)
+		(,:0.1147 a:0.0566 and:0.0820 and:0.1201assium:0.0461 are:0.2373 a:0.0439
+:0.1465)
+		(,:0.1167 a:0.0564 and:0.0732 and:0.1069assium:0.0491 are:0.2422 a:0.0420
+:0.1416)
+		(,:0.1123 a:0.0535 and:0.0649 and:0.0952assium:0.0508 are:0.2383 a:0.0391
+:0.1436)
+		(,:0.1074 a:0.0496 and:0.0576 you:0.0894assium:0.0508 are:0.2500 a:0.0366
+:0.1387)
+		(,:0.0957 a:0.0476 and:0.0527 you:0.0884assium:0.0493 are:0.2490 a:0.0344
+:0.1328)
+		(,:0.0957 a:0.0476 and:0.0527 you:0.0884assium:0.0493 are:0.2490 a:0.0344
+:0.1328)
+
+
+------
+		( a:0.0549-:0.1211 and:0.0894entially:0.0303 are:0.0972 many:0.0464
+:0.0037The:0.0713)
+		( a:0.0527 to:0.1289 and:0.1108entially:0.0422 are:0.1021 many:0.0457
+:0.0172The:0.0708)
+		( the:0.0437 to:0.1445 but:0.1133entially:0.0449 are:0.1250 not:0.0444
+:0.0261The:0.0664)
+		( the:0.0432 to:0.1167 and:0.1216entially:0.0496 are:0.1631 not:0.0430
+:0.0596The:0.0679)
+		( a:0.0469 and:0.1084 and:0.1338entially:0.0540 are:0.1953 a:0.0442
+:0.1011The:0.0688)
+		( a:0.0530 and:0.1011 and:0.1357entially:0.0513 are:0.2207 a:0.0454
+:0.1250The:0.0684)
+		( a:0.0576 and:0.0913 and:0.1270entially:0.0459 are:0.2236 a:0.0464
+:0.1357The:0.0625)
+		( a:0.0566 and:0.0820 and:0.1201assium:0.0461 are:0.2373 a:0.0439
+:0.1465The:0.0588)
+		( a:0.0564 and:0.0732 and:0.1069assium:0.0491 are:0.2422 a:0.0420
+:0.1416The:0.0532)
+		( a:0.0535 and:0.0649 and:0.0952assium:0.0508 are:0.2383 a:0.0391
+:0.1436The:0.0457)
+		( a:0.0496 and:0.0576 you:0.0894assium:0.0508 are:0.2500 a:0.0366
+:0.1387The:0.0417)
+		( a:0.0476 and:0.0527 you:0.0884assium:0.0493 are:0.2490 a:0.0344
+:0.1328The:0.0381)
+		( a:0.0476 and:0.0527 you:0.0884assium:0.0493 are:0.2490 a:0.0344
+:0.1328The:0.0381)
+The first of the most of the most of the most of the most of
+500: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0109 also:0.0596-:0.1035 which:0.0952assium:0.0474 are:0.1191 also:0.0566 :0.0114)
+		( and:0.0315 not:0.0581-:0.1177 which:0.0996assium:0.0437 and:0.0549 not:0.0625
+:0.0825)
+		( and:0.0396 not:0.0447 and:0.1074 but:0.1108assium:0.0510 and:0.0679 not:0.0586
+:0.0649)
+		(,:0.0608 the:0.0552 and:0.1084 but:0.1187assium:0.0718 are:0.1211 not:0.0698
+:0.1030)
+		(,:0.1177 the:0.0781 and:0.1011 and:0.1074assium:0.0933 are:0.1924 not:0.0776
+:0.1572)
+		(,:0.1650 the:0.0981-:0.0923 and:0.1094assium:0.1152 are:0.2412 not:0.0732
+:0.2041)
+		(,:0.1562 the:0.1011,:0.0923 and:0.0986assium:0.1235 are:0.2373 not:0.0679
+:0.2090)
+		(,:0.1289 the:0.0957,:0.0938 and:0.0957assium:0.1270,:0.2051 not:0.0581
+:0.1914)
+		(,:0.1157 the:0.0786,:0.0981 and:0.0894assium:0.1196,:0.2354 not:0.0466
+:0.1758)
+		(,:0.1089 the:0.0659,:0.1021 and:0.0884assium:0.1138,:0.2539 not:0.0371
+:0.1689)
+		(,:0.0991 the:0.0579,:0.1060 and:0.0864assium:0.1021,:0.2715 a:0.0320
+:0.1621)
+		(,:0.0918 the:0.0513,:0.1079 and:0.0820assium:0.0864,:0.2793 a:0.0315
+:0.1465)
+		(,:0.0918 the:0.0513,:0.1079 and:0.0820assium:0.0864,:0.2793 a:0.0315
+:0.1465)
+
+
+------
+		( also:0.0596-:0.1035 which:0.0952assium:0.0474 are:0.1191 also:0.0566 :0.0114The:0.0703)
+		( not:0.0581-:0.1177 which:0.0996assium:0.0437 and:0.0549 not:0.0625
+:0.0825-:0.0444)
+		( not:0.0447 and:0.1074 but:0.1108assium:0.0510 and:0.0679 not:0.0586
+:0.0649-:0.0520)
+		( the:0.0552 and:0.1084 but:0.1187assium:0.0718 are:0.1211 not:0.0698
+:0.1030-:0.0605)
+		( the:0.0781 and:0.1011 and:0.1074assium:0.0933 are:0.1924 not:0.0776
+:0.1572-:0.0732)
+		( the:0.0981-:0.0923 and:0.1094assium:0.1152 are:0.2412 not:0.0732
+:0.2041-:0.0703)
+		( the:0.1011,:0.0923 and:0.0986assium:0.1235 are:0.2373 not:0.0679
+:0.2090-:0.0723)
+		( the:0.0957,:0.0938 and:0.0957assium:0.1270,:0.2051 not:0.0581
+:0.1914-:0.0815)
+		( the:0.0786,:0.0981 and:0.0894assium:0.1196,:0.2354 not:0.0466
+:0.1758-:0.0845)
+		( the:0.0659,:0.1021 and:0.0884assium:0.1138,:0.2539 not:0.0371
+:0.1689-:0.0806)
+		( the:0.0579,:0.1060 and:0.0864assium:0.1021,:0.2715 a:0.0320
+:0.1621-:0.0693)
+		( the:0.0513,:0.1079 and:0.0820assium:0.0864,:0.2793 a:0.0315
+:0.1465-:0.0571)
+		( the:0.0513,:0.1079 and:0.0820assium:0.0864,:0.2793 a:0.0315
+:0.1465-:0.0571)
+- The most common in the most common, and the most of the most
+650: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0137 now:0.0388-:0.0728 which:0.1016assium:0.1245 are:0.0981 also:0.0356vern:0.0160)
+		( and:0.0250 now:0.0344 and:0.1147 but:0.0562assium:0.0874 and:0.0625 also:0.0253________:0.0179)
+		( and:0.0391 now:0.0284 and:0.1279 but:0.0608assium:0.0918 and:0.0825 also:0.0250________:0.0170)
+		( and:0.0664 also:0.0349 and:0.1318 but:0.0742assium:0.1006 and:0.1138 also:0.0369________:0.0198)
+		(,:0.1216 the:0.0564 and:0.1318 and:0.0933assium:0.1128,:0.1816 also:0.0527________:0.0249)
+		(,:0.1670 the:0.0830 and:0.1338 and:0.1211assium:0.1270,:0.2471 also:0.0608ery:0.0306)
+		(,:0.1641 the:0.0981 and:0.1396 and:0.1328assium:0.1348,:0.3027 not:0.0630ery:0.0403)
+		(,:0.1406 the:0.0923 and:0.1445 and:0.1484assium:0.1328,:0.3770 not:0.0645ery:0.0505)
+		(,:0.1147 the:0.0835 and:0.1416 and:0.1484assium:0.1260,:0.4453 not:0.0569ery:0.0625)
+		(.:0.1235 the:0.0713 and:0.1357 and:0.1396assium:0.1162,:0.4883 a:0.0513ery:0.0728)
+		(.:0.1357 the:0.0674 and:0.1338 and:0.1250om:0.1050,:0.5039 a:0.0518ery:0.0801)
+		(.:0.1504 a:0.0669 and:0.1279 and:0.1064om:0.0977,:0.5000 a:0.0500ery:0.0850)
+		(.:0.1504 a:0.0669 and:0.1279 and:0.1064om:0.0977,:0.5000 a:0.0500ery:0.0850)
+ery
+------
+		( now:0.0388-:0.0728 which:0.1016assium:0.1245 are:0.0981 also:0.0356vern:0.0160 for:0.0148)
+		( now:0.0344 and:0.1147 but:0.0562assium:0.0874 and:0.0625 also:0.0253________:0.0179ll:0.0156)
+		( now:0.0284 and:0.1279 but:0.0608assium:0.0918 and:0.0825 also:0.0250________:0.0170ll:0.0144)
+		( also:0.0349 and:0.1318 but:0.0742assium:0.1006 and:0.1138 also:0.0369________:0.0198 and:0.0244)
+		( the:0.0564 and:0.1318 and:0.0933assium:0.1128,:0.1816 also:0.0527________:0.0249 and:0.0500)
+		( the:0.0830 and:0.1338 and:0.1211assium:0.1270,:0.2471 also:0.0608ery:0.0306 and:0.0840)
+		( the:0.0981 and:0.1396 and:0.1328assium:0.1348,:0.3027 not:0.0630ery:0.0403 and:0.1177)
+		( the:0.0923 and:0.1445 and:0.1484assium:0.1328,:0.3770 not:0.0645ery:0.0505,:0.1689)
+		( the:0.0835 and:0.1416 and:0.1484assium:0.1260,:0.4453 not:0.0569ery:0.0625,:0.2422)
+		( the:0.0713 and:0.1357 and:0.1396assium:0.1162,:0.4883 a:0.0513ery:0.0728,:0.3164)
+		( the:0.0674 and:0.1338 and:0.1250om:0.1050,:0.5039 a:0.0518ery:0.0801,:0.3477)
+		( a:0.0669 and:0.1279 and:0.1064om:0.0977,:0.5000 a:0.0500ery:0.0850,:0.3633)
+		( a:0.0669 and:0.1279 and:0.1064om:0.0977,:0.5000 a:0.0500ery:0.0850,:0.3633)
+, and are a good idea of the people.
+The first thing is
+800: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hips:0.0059 now:0.0374-:0.0151 which:0.0540assium:0.1895 are:0.0410 now:0.0366vern:0.0143)
+		( Press:0.0018 also:0.0173efined:0.0320 but:0.0272assium:0.1191 and:0.0214 also:0.0151urch:0.0330)
+		( Press:0.0022 also:0.0143efined:0.0393 but:0.0286assium:0.1064 and:0.0231 also:0.0129vern:0.0282)
+		( and:0.0033 also:0.0194efined:0.0381 but:0.0369assium:0.1138 and:0.0427 also:0.0161urch:0.0295)
+		(,:0.0075 also:0.0291 and:0.0483 but:0.0466assium:0.1270 and:0.0820 not:0.0221urch:0.0356)
+		(,:0.0200 also:0.0430 and:0.0713 and:0.0645assium:0.1377 and:0.1455 not:0.0356urch:0.0457)
+		(,:0.0430 also:0.0537 and:0.1011 and:0.0889assium:0.1572,:0.2051 not:0.0520vern:0.0598)
+		(,:0.0645 the:0.0583 and:0.1289 and:0.1016assium:0.1602,:0.2539 not:0.0625vern:0.0825)
+		(!:0.1045 the:0.0659 and:0.1426 and:0.0962om:0.2100,:0.2773 not:0.0605vern:0.1035)
+		(!:0.1602 a:0.0747 and:0.1514 and:0.0776om:0.2715,:0.2812 a:0.0493vern:0.1216)
+		(!:0.2031 a:0.0820 and:0.1533 and:0.0601om:0.3066,:0.2832 a:0.0532vern:0.1108)
+		(!:0.2061 a:0.0840 and:0.1523 white:0.0645om:0.3262,:0.2715 a:0.0505vern:0.0947)
+		(!:0.2061 a:0.0840 and:0.1523 white:0.0645om:0.3262,:0.2715 a:0.0505vern:0.0947)
+vern
+------
+		( now:0.0374-:0.0151 which:0.0540assium:0.1895 are:0.0410 now:0.0366vern:0.0143acular:0.3867)
+		( also:0.0173efined:0.0320 but:0.0272assium:0.1191 and:0.0214 also:0.0151urch:0.0330acular:0.2500)
+		( also:0.0143efined:0.0393 but:0.0286assium:0.1064 and:0.0231 also:0.0129vern:0.0282acular:0.2236)
+		( also:0.0194efined:0.0381 but:0.0369assium:0.1138 and:0.0427 also:0.0161urch:0.0295acular:0.2422)
+		( also:0.0291 and:0.0483 but:0.0466assium:0.1270 and:0.0820 not:0.0221urch:0.0356acular:0.2676)
+		( also:0.0430 and:0.0713 and:0.0645assium:0.1377 and:0.1455 not:0.0356urch:0.0457acular:0.3008)
+		( also:0.0537 and:0.1011 and:0.0889assium:0.1572,:0.2051 not:0.0520vern:0.0598acular:0.3223)
+		( the:0.0583 and:0.1289 and:0.1016assium:0.1602,:0.2539 not:0.0625vern:0.0825acular:0.3457)
+		( the:0.0659 and:0.1426 and:0.0962om:0.2100,:0.2773 not:0.0605vern:0.1035acular:0.3262)
+		( a:0.0747 and:0.1514 and:0.0776om:0.2715,:0.2812 a:0.0493vern:0.1216acular:0.2656)
+		( a:0.0820 and:0.1533 and:0.0601om:0.3066,:0.2832 a:0.0532vern:0.1108acular:0.1992)
+		( a:0.0840 and:0.1523 white:0.0645om:0.3262,:0.2715 a:0.0505vern:0.0947acular:0.1416)
+		( a:0.0840 and:0.1523 white:0.0645om:0.3262,:0.2715 a:0.0505vern:0.0947acular:0.1416)
+acular, and are a good idea of the most important things you can see
+950: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hips:0.0234 also:0.0408 blood:0.0131 which:0.0972entially:0.2539 are:0.0381 also:0.0347iced:0.0134)
+		(ptions:0.0045 also:0.0144efined:0.0564 but:0.0309assium:0.1670oms:0.0055 now:0.0109iced:0.0388)
+		(ptions:0.0033 also:0.0120efined:0.0713 but:0.0282assium:0.1592 and:0.0061 usually:0.0093iced:0.0417)
+		(arians:0.0030 also:0.0161efined:0.0713 but:0.0325assium:0.1650 and:0.0118 usually:0.0104iced:0.0449)
+		(arians:0.0028 also:0.0245efined:0.0767 but:0.0393assium:0.1816 and:0.0266 usually:0.0121iced:0.0476)
+		(,:0.0060 also:0.0388efined:0.0884 and:0.0522assium:0.1846 and:0.0608 not:0.0177iced:0.0566)
+		(,:0.0155 also:0.0571efined:0.1089 and:0.0889assium:0.1904 and:0.1270 not:0.0287iced:0.0674)
+		(,:0.0349 also:0.0679efined:0.1240 and:0.1201assium:0.1768,:0.2217 not:0.0398iced:0.0894)
+		(,:0.0613 also:0.0605efined:0.1177 and:0.1387om:0.1855,:0.3145 not:0.0449iced:0.1113)
+		(.:0.0811 a:0.0588 and:0.0957 and:0.1187om:0.2891,:0.3672 a:0.0469iced:0.1230)
+		(.:0.1133 a:0.0742 and:0.1069 and:0.0889om:0.3730,:0.3750 a:0.0613iced:0.1182)
+		(.:0.1279 a:0.0894 and:0.1089 white:0.0918om:0.4180,:0.3574 a:0.0718iced:0.1040)
+		(.:0.1279 a:0.0894 and:0.1089 white:0.0918om:0.4180,:0.3574 a:0.0718iced:0.1040)
+iced
+------
+		( also:0.0408 blood:0.0131 which:0.0972entially:0.2539 are:0.0381 also:0.0347iced:0.0134 to:0.0258)
+		( also:0.0144efined:0.0564 but:0.0309assium:0.1670oms:0.0055 now:0.0109iced:0.0388 by:0.0092)
+		( also:0.0120efined:0.0713 but:0.0282assium:0.1592 and:0.0061 usually:0.0093iced:0.0417 to:0.0098)
+		( also:0.0161efined:0.0713 but:0.0325assium:0.1650 and:0.0118 usually:0.0104iced:0.0449 by:0.0167)
+		( also:0.0245efined:0.0767 but:0.0393assium:0.1816 and:0.0266 usually:0.0121iced:0.0476 by:0.0315)
+		( also:0.0388efined:0.0884 and:0.0522assium:0.1846 and:0.0608 not:0.0177iced:0.0566 by:0.0596)
+		( also:0.0571efined:0.1089 and:0.0889assium:0.1904 and:0.1270 not:0.0287iced:0.0674 by:0.1079)
+		( also:0.0679efined:0.1240 and:0.1201assium:0.1768,:0.2217 not:0.0398iced:0.0894 by:0.1562)
+		( also:0.0605efined:0.1177 and:0.1387om:0.1855,:0.3145 not:0.0449iced:0.1113 by:0.1504)
+		( a:0.0588 and:0.0957 and:0.1187om:0.2891,:0.3672 a:0.0469iced:0.1230,:0.1680)
+		( a:0.0742 and:0.1069 and:0.0889om:0.3730,:0.3750 a:0.0613iced:0.1182,:0.2100)
+		( a:0.0894 and:0.1089 white:0.0918om:0.4180,:0.3574 a:0.0718iced:0.1040,:0.2344)
+		( a:0.0894 and:0.1089 white:0.0918om:0.4180,:0.3574 a:0.0718iced:0.1040,:0.2344)
+, and are not a good place.
+The following:
+- The
+1100: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(cape:0.0159 now:0.0298 blood:0.0126 which:0.0542assium:0.2197 are:0.0253 still:0.0259vern:0.0228)
+		(ptions:0.0023 now:0.0051efined:0.0189 but:0.0099assium:0.1748adays:0.0054 usually:0.0053vern:0.0317)
+		(ptions:0.0020 now:0.0038efined:0.0190 but:0.0074assium:0.1758adays:0.0050 usually:0.0053iced:0.0277)
+		(arians:0.0021 now:0.0044iscovered:0.0227 but:0.0076assium:0.1904 like:0.0053 usually:0.0059iced:0.0309)
+		(arians:0.0021 also:0.0059iscovered:0.0298 but:0.0101assium:0.2090 like:0.0079 usually:0.0071iced:0.0374)
+		(!:0.0033 also:0.0097iscovered:0.0435 but:0.0161assium:0.2305 are:0.0172 usually:0.0093iced:0.0449)
+		( are:0.0093 also:0.0167iscovered:0.0684 but:0.0270assium:0.2520 are:0.0581 not:0.0129iced:0.0571)
+		( are:0.0281 a:0.0280iscovered:0.1069 and:0.0588assium:0.2637 are:0.1582 not:0.0212iced:0.0684)
+		( are:0.0630 a:0.0630iscovered:0.1396 and:0.1089assium:0.2422 are:0.2656 a:0.0403vern:0.0781)
+		( are:0.0996 a:0.1108iscovered:0.1367 and:0.1279assium:0.1934 are:0.3945 a:0.0618ery:0.0879)
+		( are:0.1201 a:0.1465 and:0.1299 and:0.1055om:0.1758 are:0.5078 a:0.0762ery:0.0796)
+		( are:0.1152 a:0.1631,:0.1553 and:0.0732om:0.1904 are:0.5625 a:0.0771ery:0.0591)
+		( are:0.1152 a:0.1631,:0.1553 and:0.0732om:0.1904 are:0.5625 a:0.0771ery:0.0591)
+ery
+------
+		( now:0.0298 blood:0.0126 which:0.0542assium:0.2197 are:0.0253 still:0.0259vern:0.0228thro:0.0952)
+		( now:0.0051efined:0.0189 but:0.0099assium:0.1748adays:0.0054 usually:0.0053vern:0.0317thro:0.0334)
+		( now:0.0038efined:0.0190 but:0.0074assium:0.1758adays:0.0050 usually:0.0053iced:0.0277thro:0.0310)
+		( now:0.0044iscovered:0.0227 but:0.0076assium:0.1904 like:0.0053 usually:0.0059iced:0.0309thro:0.0349)
+		( also:0.0059iscovered:0.0298 but:0.0101assium:0.2090 like:0.0079 usually:0.0071iced:0.0374thro:0.0447)
+		( also:0.0097iscovered:0.0435 but:0.0161assium:0.2305 are:0.0172 usually:0.0093iced:0.0449thro:0.0645)
+		( also:0.0167iscovered:0.0684 but:0.0270assium:0.2520 are:0.0581 not:0.0129iced:0.0571thro:0.0952)
+		( a:0.0280iscovered:0.1069 and:0.0588assium:0.2637 are:0.1582 not:0.0212iced:0.0684thro:0.1387)
+		( a:0.0630iscovered:0.1396 and:0.1089assium:0.2422 are:0.2656 a:0.0403vern:0.0781thro:0.1650)
+		( a:0.1108iscovered:0.1367 and:0.1279assium:0.1934 are:0.3945 a:0.0618ery:0.0879thro:0.1680)
+		( a:0.1465 and:0.1299 and:0.1055om:0.1758 are:0.5078 a:0.0762ery:0.0796thro:0.1650)
+		( a:0.1631,:0.1553 and:0.0732om:0.1904 are:0.5625 a:0.0771ery:0.0591thro:0.1533)
+		( a:0.1631,:0.1553 and:0.0732om:0.1904 are:0.5625 a:0.0771ery:0.0591thro:0.1533)
+throids, and are a common type of sweet, and are a common
+1250: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(cape:0.0101 also:0.0237 blood:0.0092 which:0.0525assium:0.2109 we:0.0074 not:0.0205iced:0.0159)
+		(ptions:0.0104 already:0.0043efined:0.0133 but:0.0121assium:0.1533atonin:0.0032 usually:0.0036iced:0.0378)
+		(ptions:0.0094 now:0.0038efined:0.0134 but:0.0104assium:0.1846atonin:0.0029 usually:0.0038iced:0.0383)
+		(ptions:0.0086 now:0.0048iscovered:0.0142 but:0.0112assium:0.1973 like:0.0038 usually:0.0041iced:0.0396)
+		(ptions:0.0072 also:0.0063iscovered:0.0203 but:0.0150assium:0.2041 like:0.0056 not:0.0064iced:0.0505)
+		(ptions:0.0053 also:0.0111iscovered:0.0322 but:0.0247assium:0.2266 and:0.0105 not:0.0123iced:0.0684)
+		(!:0.0082 also:0.0198iscovered:0.0542 but:0.0444assium:0.2324 and:0.0386 not:0.0250iced:0.0938)
+		(!:0.0281 also:0.0286iscovered:0.0869 but:0.0708assium:0.2354,:0.1299 not:0.0437iced:0.1279)
+		(!:0.0684 the:0.0425 and:0.1147 and:0.0952assium:0.2109,:0.3340 not:0.0549iced:0.1611)
+		(!:0.1050 a:0.0630 and:0.1611 and:0.1240assium:0.1553,:0.4473 the:0.0540iced:0.1611)
+		(!:0.1211 a:0.0791,:0.1807 and:0.1108om:0.1060,:0.4629 a:0.0559iced:0.1377)
+		(!:0.1177 a:0.0869,:0.2354 and:0.0864om:0.1006,:0.4355 a:0.0586iced:0.1035)
+		(!:0.1177 a:0.0869,:0.2354 and:0.0864om:0.1006,:0.4355 a:0.0586iced:0.1035)
+iced
+------
+		( also:0.0237 blood:0.0092 which:0.0525assium:0.2109 we:0.0074 not:0.0205iced:0.0159 to:0.0068)
+		( already:0.0043efined:0.0133 but:0.0121assium:0.1533atonin:0.0032 usually:0.0036iced:0.0378uously:0.0073)
+		( now:0.0038efined:0.0134 but:0.0104assium:0.1846atonin:0.0029 usually:0.0038iced:0.0383uously:0.0068)
+		( now:0.0048iscovered:0.0142 but:0.0112assium:0.1973 like:0.0038 usually:0.0041iced:0.0396uously:0.0054)
+		( also:0.0063iscovered:0.0203 but:0.0150assium:0.2041 like:0.0056 not:0.0064iced:0.0505 by:0.0052)
+		( also:0.0111iscovered:0.0322 but:0.0247assium:0.2266 and:0.0105 not:0.0123iced:0.0684 by:0.0142)
+		( also:0.0198iscovered:0.0542 but:0.0444assium:0.2324 and:0.0386 not:0.0250iced:0.0938 by:0.0457)
+		( also:0.0286iscovered:0.0869 but:0.0708assium:0.2354,:0.1299 not:0.0437iced:0.1279 to:0.1235)
+		( the:0.0425 and:0.1147 and:0.0952assium:0.2109,:0.3340 not:0.0549iced:0.1611 to:0.1914)
+		( a:0.0630 and:0.1611 and:0.1240assium:0.1553,:0.4473 the:0.0540iced:0.1611 to:0.1777)
+		( a:0.0791,:0.1807 and:0.1108om:0.1060,:0.4629 a:0.0559iced:0.1377,:0.2139)
+		( a:0.0869,:0.2354 and:0.0864om:0.1006,:0.4355 a:0.0586iced:0.1035,:0.2676)
+		( a:0.0869,:0.2354 and:0.0864om:0.1006,:0.4355 a:0.0586iced:0.1035,:0.2676)
+, and are not a great way to make a difference.
+The Po
+1400: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hops:0.0083 also:0.0228 blood:0.0134�:0.0332assium:0.2139eness:0.0042 still:0.0184urch:0.0137)
+		(ptions:0.0029 actually:0.0030ouble:0.0178000:0.0063assium:0.1650eness:0.0030 actually:0.0030ills:0.0116)
+		(ptions:0.0025als:0.0024iscovered:0.0151�:0.0052assium:0.1729eness:0.0019als:0.0027urch:0.0104)
+		(ptions:0.0023als:0.0024iscovered:0.0206 but:0.0063assium:0.1914 salads:0.0015als:0.0030iced:0.0117)
+		(hops:0.0021 often:0.0031iscovered:0.0291 but:0.0096assium:0.2178 and:0.0026 actually:0.0037iced:0.0159)
+		(!:0.0027 all:0.0056iscovered:0.0439 but:0.0177assium:0.2500 and:0.0105 all:0.0073iced:0.0220)
+		(!:0.0119 all:0.0119iscovered:0.0654 but:0.0349assium:0.2715 and:0.0559 all:0.0162iced:0.0305)
+		(!:0.0518 all:0.0234iscovered:0.0884 but:0.0635assium:0.2617 and:0.2070 all:0.0297ery:0.0537)
+		(!:0.1465 all:0.0381 and:0.0981 but:0.0820om:0.3145,:0.3477 the:0.0471ery:0.1006)
+		(!:0.2295 a:0.0654 and:0.1406 and:0.0874om:0.4980,:0.4277 a:0.0674ery:0.1562)
+		(!:0.2637 a:0.0894,:0.1953 red:0.0913om:0.5859,:0.3887 a:0.0820ery:0.1816)
+		(!:0.2539 a:0.0918,:0.2451 red:0.1245om:0.5586,:0.3281 a:0.0796ery:0.1504)
+		(!:0.2539 a:0.0918,:0.2451 red:0.1245om:0.5586,:0.3281 a:0.0796ery:0.1504)
+ery
+------
+		( also:0.0228 blood:0.0134�:0.0332assium:0.2139eness:0.0042 still:0.0184urch:0.0137the:0.0330)
+		( actually:0.0030ouble:0.0178000:0.0063assium:0.1650eness:0.0030 actually:0.0030ills:0.0116thro:0.0132)
+		(als:0.0024iscovered:0.0151�:0.0052assium:0.1729eness:0.0019als:0.0027urch:0.0104thro:0.0157)
+		(als:0.0024iscovered:0.0206 but:0.0063assium:0.1914 salads:0.0015als:0.0030iced:0.0117thro:0.0189)
+		( often:0.0031iscovered:0.0291 but:0.0096assium:0.2178 and:0.0026 actually:0.0037iced:0.0159thro:0.0254)
+		( all:0.0056iscovered:0.0439 but:0.0177assium:0.2500 and:0.0105 all:0.0073iced:0.0220thro:0.0356)
+		( all:0.0119iscovered:0.0654 but:0.0349assium:0.2715 and:0.0559 all:0.0162iced:0.0305thro:0.0493)
+		( all:0.0234iscovered:0.0884 but:0.0635assium:0.2617 and:0.2070 all:0.0297ery:0.0537thro:0.0620)
+		( all:0.0381 and:0.0981 but:0.0820om:0.3145,:0.3477 the:0.0471ery:0.1006thro:0.0630)
+		( a:0.0654 and:0.1406 and:0.0874om:0.4980,:0.4277 a:0.0674ery:0.1562,:0.1011)
+		( a:0.0894,:0.1953 red:0.0913om:0.5859,:0.3887 a:0.0820ery:0.1816,:0.1484)
+		( a:0.0918,:0.2451 red:0.1245om:0.5586,:0.3281 a:0.0796ery:0.1504,:0.1562)
+		( a:0.0918,:0.2451 red:0.1245om:0.5586,:0.3281 a:0.0796ery:0.1504,:0.1562)
+, and they are used to make a difference.
+The first thing you
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hops:0.0116 still:0.0261 blood:0.0142 but:0.0232atoes:0.2227 are:0.0046 still:0.0276ills:0.0310)
+		(hops:0.0027 actually:0.0025iscovered:0.0192000:0.0036atoes:0.2812eness:0.0029 actually:0.0024ills:0.0244)
+		(hops:0.0023 actually:0.0016iscovered:0.0166000:0.0028atoes:0.3027eness:0.0015als:0.0016urch:0.0194)
+		(hops:0.0025 now:0.0017iscovered:0.0189�:0.0022atoes:0.3223cers:0.0012als:0.0018iced:0.0200)
+		(hops:0.0027 now:0.0023iscovered:0.0243�:0.0021atoes:0.3516 like:0.0014als:0.0020iced:0.0273)
+		(hops:0.0029 now:0.0037iscovered:0.0334 and:0.0031atoes:0.3848 and:0.0026 actually:0.0030iced:0.0410)
+		(hops:0.0029 now:0.0063iscovered:0.0457 and:0.0084atoes:0.4141 and:0.0110 actually:0.0048iced:0.0598)
+		(!:0.0071 now:0.0112iscovered:0.0596 and:0.0261atoes:0.4160,:0.0596 all:0.0103iced:0.0933)
+		(!:0.0270 also:0.0201iscovered:0.0708 and:0.0625atoes:0.3906,:0.2461 the:0.0259iced:0.1387)
+		(!:0.0732 a:0.0388 and:0.0952 and:0.0894atoes:0.3125,:0.4316 the:0.0476iced:0.1895)
+		(!:0.1201 a:0.0713 and:0.1436 yellow:0.1182atoes:0.2275,:0.4980 a:0.0601iced:0.2041)
+		(!:0.1367 a:0.0933,:0.1895 red:0.1504atoes:0.1582,:0.4922 red:0.0674iced:0.1982)
+		(!:0.1367 a:0.0933,:0.1895 red:0.1504atoes:0.1582,:0.4922 red:0.0674iced:0.1982)
+iced
+------
+		( still:0.0261 blood:0.0142 but:0.0232atoes:0.2227 are:0.0046 still:0.0276ills:0.0310rers:0.0175)
+		( actually:0.0025iscovered:0.0192000:0.0036atoes:0.2812eness:0.0029 actually:0.0024ills:0.0244rers:0.0067)
+		( actually:0.0016iscovered:0.0166000:0.0028atoes:0.3027eness:0.0015als:0.0016urch:0.0194rers:0.0052)
+		( now:0.0017iscovered:0.0189�:0.0022atoes:0.3223cers:0.0012als:0.0018iced:0.0200rers:0.0048)
+		( now:0.0023iscovered:0.0243�:0.0021atoes:0.3516 like:0.0014als:0.0020iced:0.0273rers:0.0044)
+		( now:0.0037iscovered:0.0334 and:0.0031atoes:0.3848 and:0.0026 actually:0.0030iced:0.0410 potatoes:0.0048)
+		( now:0.0063iscovered:0.0457 and:0.0084atoes:0.4141 and:0.0110 actually:0.0048iced:0.0598 by:0.0116)
+		( now:0.0112iscovered:0.0596 and:0.0261atoes:0.4160,:0.0596 all:0.0103iced:0.0933 by:0.0513)
+		( also:0.0201iscovered:0.0708 and:0.0625atoes:0.3906,:0.2461 the:0.0259iced:0.1387 by:0.1562)
+		( a:0.0388 and:0.0952 and:0.0894atoes:0.3125,:0.4316 the:0.0476iced:0.1895 by:0.2109)
+		( a:0.0713 and:0.1436 yellow:0.1182atoes:0.2275,:0.4980 a:0.0601iced:0.2041 by:0.1709)
+		( a:0.0933,:0.1895 red:0.1504atoes:0.1582,:0.4922 red:0.0674iced:0.1982 to:0.1113)
+		( a:0.0933,:0.1895 red:0.1504atoes:0.1582,:0.4922 red:0.0674iced:0.1982 to:0.1113)
+ to be a great way to get a good way to get a good way
+1700: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hops:0.0104 still:0.0216 blood:0.0107 but:0.0211atoes:0.2070ynthesis:0.0061 still:0.0198ills:0.0444)
+		(hops:0.0014 actually:0.0017efined:0.0284 Calif:0.0023atoes:0.2285eness:0.0019als:0.0014urch:0.0197)
+		(hops:0.0014als:0.0016iscovered:0.0267 Calif:0.0017atoes:0.2461cers:0.0015als:0.0016urch:0.0188)
+		(hops:0.0016als:0.0019iscovered:0.0322itionally:0.0015atoes:0.2617cers:0.0017als:0.0019urch:0.0214)
+		(hops:0.0017als:0.0022iscovered:0.0444 but:0.0021atoes:0.2871 Juice:0.0021 actually:0.0023iced:0.0267)
+		(hops:0.0018 now:0.0032iscovered:0.0664 but:0.0040atoes:0.3066 are:0.0029 typically:0.0041iced:0.0417)
+		( Today:0.0019 also:0.0056iscovered:0.0957 but:0.0085atoes:0.3184 are:0.0128 the:0.0081iced:0.0664)
+		(!:0.0045 a:0.0125iscovered:0.1338 but:0.0190atoes:0.3066 are:0.0554 the:0.0259iced:0.0972)
+		(!:0.0197 a:0.0442iscovered:0.1523 and:0.0332assium:0.2871,:0.2246 a:0.0588iced:0.1250)
+		(!:0.0562 a:0.0952 and:0.1309 red:0.0654assium:0.2480,:0.3867 a:0.0820iced:0.1270)
+		(!:0.0869 a:0.1250 and:0.1709 red:0.1299assium:0.2119,:0.4531 a:0.0742
+:0.1079)
+		(!:0.0918 a:0.1221,:0.1914 red:0.1445assium:0.1953,:0.4570 a:0.0547
+:0.1157)
+		(!:0.0918 a:0.1221,:0.1914 red:0.1445assium:0.1953,:0.4570 a:0.0547
+:0.1157)
+
+
+------
+		( still:0.0216 blood:0.0107 but:0.0211atoes:0.2070ynthesis:0.0061 still:0.0198ills:0.0444In:0.0154)
+		( actually:0.0017efined:0.0284 Calif:0.0023atoes:0.2285eness:0.0019als:0.0014urch:0.0197itous:0.0015)
+		(als:0.0016iscovered:0.0267 Calif:0.0017atoes:0.2461cers:0.0015als:0.0016urch:0.0188itous:0.0014)
+		(als:0.0019iscovered:0.0322itionally:0.0015atoes:0.2617cers:0.0017als:0.0019urch:0.0214itous:0.0012)
+		(als:0.0022iscovered:0.0444 but:0.0021atoes:0.2871 Juice:0.0021 actually:0.0023iced:0.0267|:0.0014)
+		( now:0.0032iscovered:0.0664 but:0.0040atoes:0.3066 are:0.0029 typically:0.0041iced:0.0417|:0.0027)
+		( also:0.0056iscovered:0.0957 but:0.0085atoes:0.3184 are:0.0128 the:0.0081iced:0.0664|:0.0068)
+		( a:0.0125iscovered:0.1338 but:0.0190atoes:0.3066 are:0.0554 the:0.0259iced:0.0972|:0.0190)
+		( a:0.0442iscovered:0.1523 and:0.0332assium:0.2871,:0.2246 a:0.0588iced:0.1250-:0.0566)
+		( a:0.0952 and:0.1309 red:0.0654assium:0.2480,:0.3867 a:0.0820iced:0.1270-:0.1260)
+		( a:0.1250 and:0.1709 red:0.1299assium:0.2119,:0.4531 a:0.0742
+:0.1079-:0.1299)
+		( a:0.1221,:0.1914 red:0.1445assium:0.1953,:0.4570 a:0.0547
+:0.1157-:0.1011)
+		( a:0.1221,:0.1914 red:0.1445assium:0.1953,:0.4570 a:0.0547
+:0.1157-:0.1011)
+- The most common type of plant is the plant that is used in the
+1850: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hip:0.0048 still:0.0215 blood:0.0150 but:0.0166atoes:0.2119ynthesis:0.0031 still:0.0232ills:0.0500)
+		(blers:0.0013 actually:0.0012iscovered:0.0317 but:0.0014atoes:0.1729atonin:0.0024als:0.0012ills:0.0123)
+		(blers:0.0014 urging:0.0014iscovered:0.0322�:0.0016atoes:0.1836atonin:0.0024als:0.0014ills:0.0110)
+		(blers:0.0016 urging:0.0017iscovered:0.0369 but:0.0017atoes:0.2002atonin:0.0020als:0.0019ills:0.0126)
+		(blers:0.0019 also:0.0023iscovered:0.0518 but:0.0028atoes:0.2148atonin:0.0015als:0.0023iced:0.0148)
+		(blers:0.0020 also:0.0046iscovered:0.0767 but:0.0060atoes:0.2393 and:0.0017 typically:0.0038iced:0.0211)
+		(blers:0.0018 also:0.0095iscovered:0.1206 but:0.0150atoes:0.2578 and:0.0071 all:0.0085iced:0.0315)
+		(!:0.0028 also:0.0181iscovered:0.1631 but:0.0381atoes:0.2715 and:0.0342 the:0.0197iced:0.0476)
+		(!:0.0160 a:0.0320iscovered:0.1943 but:0.0791atoes:0.2373,:0.1240 a:0.0496ery:0.0640)
+		(!:0.0654 a:0.0874iscovered:0.1826 but:0.0859atoes:0.1709,:0.2891 a:0.0947ery:0.1104)
+		(!:0.1289 a:0.1494iscovered:0.1377 red:0.1045om:0.2021,:0.3887 a:0.1226ery:0.1289)
+		(!:0.1367 a:0.1709,:0.1494 red:0.1484om:0.2236,:0.4180 a:0.1123ery:0.1045)
+		(!:0.1367 a:0.1709,:0.1494 red:0.1484om:0.2236,:0.4180 a:0.1123ery:0.1045)
+ery
+------
+		( still:0.0215 blood:0.0150 but:0.0166atoes:0.2119ynthesis:0.0031 still:0.0232ills:0.0500the:0.0212)
+		( actually:0.0012iscovered:0.0317 but:0.0014atoes:0.1729atonin:0.0024als:0.0012ills:0.0123thro:0.0084)
+		( urging:0.0014iscovered:0.0322�:0.0016atoes:0.1836atonin:0.0024als:0.0014ills:0.0110thro:0.0112)
+		( urging:0.0017iscovered:0.0369 but:0.0017atoes:0.2002atonin:0.0020als:0.0019ills:0.0126thro:0.0170)
+		( also:0.0023iscovered:0.0518 but:0.0028atoes:0.2148atonin:0.0015als:0.0023iced:0.0148thro:0.0261)
+		( also:0.0046iscovered:0.0767 but:0.0060atoes:0.2393 and:0.0017 typically:0.0038iced:0.0211thro:0.0405)
+		( also:0.0095iscovered:0.1206 but:0.0150atoes:0.2578 and:0.0071 all:0.0085iced:0.0315thro:0.0737)
+		( also:0.0181iscovered:0.1631 but:0.0381atoes:0.2715 and:0.0342 the:0.0197iced:0.0476thro:0.1367)
+		( a:0.0320iscovered:0.1943 but:0.0791atoes:0.2373,:0.1240 a:0.0496ery:0.0640thro:0.2100)
+		( a:0.0874iscovered:0.1826 but:0.0859atoes:0.1709,:0.2891 a:0.0947ery:0.1104thro:0.2520)
+		( a:0.1494iscovered:0.1377 red:0.1045om:0.2021,:0.3887 a:0.1226ery:0.1289th:0.2656)
+		( a:0.1709,:0.1494 red:0.1484om:0.2236,:0.4180 a:0.1123ery:0.1045th:0.3672)
+		( a:0.1709,:0.1494 red:0.1484om:0.2236,:0.4180 a:0.1123ery:0.1045th:0.3672)
+thmus, and the most common type of pottery.
+- The
+2000: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(boro:0.0035 still:0.0195iscovered:0.0172�:0.0108assium:0.2930pan:0.0039 still:0.0204ills:0.0339)
+		(atile:0.0013 actually:0.0011efined:0.0386�:0.0014atoes:0.1396cemic:0.0014 disproportionately:0.0009ills:0.0144)
+		(atile:0.0012 urging:0.0010efined:0.0356twitter:0.0017atoes:0.1709atonin:0.0012ola:0.0009iced:0.0126)
+		(blers:0.0013 urging:0.0012efined:0.0413twitter:0.0018assium:0.2080iotics:0.0014 trademarks:0.0013iced:0.0197)
+		(blers:0.0014 now:0.0016iscovered:0.0571twitter:0.0016assium:0.2656 Juice:0.0016 trademarks:0.0022iced:0.0334)
+		(dale:0.0016 now:0.0027iscovered:0.0854 but:0.0017assium:0.3027 like:0.0022 trademarks:0.0027iced:0.0564)
+		(dale:0.0025 now:0.0048iscovered:0.1211 but:0.0044assium:0.3438 are:0.0114 best:0.0064iced:0.0947)
+		(dale:0.0037 also:0.0102iscovered:0.1523 but:0.0127assium:0.3516 are:0.0913 a:0.0204iced:0.1494)
+		(!:0.0194 a:0.0435iscovered:0.1709 and:0.0327assium:0.3262 are:0.3438 a:0.0664iced:0.2148)
+		(!:0.0684 a:0.1260iscovered:0.1318 and:0.0579assium:0.2715 are:0.5430 a:0.1201iced:0.2559)
+		(!:0.1040 a:0.1836,:0.2051 red:0.1108assium:0.2617 are:0.5898 a:0.1328iced:0.2695)
+		(!:0.1001 a:0.1885,:0.2969 red:0.1348assium:0.2930 are:0.5508 a:0.1187iced:0.2734)
+		(!:0.1001 a:0.1885,:0.2969 red:0.1348assium:0.2930 are:0.5508 a:0.1187iced:0.2734)
+iced
+------
+		( still:0.0195iscovered:0.0172�:0.0108assium:0.2930pan:0.0039 still:0.0204ills:0.0339rers:0.0210)
+		( actually:0.0011efined:0.0386�:0.0014atoes:0.1396cemic:0.0014 disproportionately:0.0009ills:0.0144rers:0.0052)
+		( urging:0.0010efined:0.0356twitter:0.0017atoes:0.1709atonin:0.0012ola:0.0009iced:0.0126rers:0.0041)
+		( urging:0.0012efined:0.0413twitter:0.0018assium:0.2080iotics:0.0014 trademarks:0.0013iced:0.0197rers:0.0048)
+		( now:0.0016iscovered:0.0571twitter:0.0016assium:0.2656 Juice:0.0016 trademarks:0.0022iced:0.0334rers:0.0053)
+		( now:0.0027iscovered:0.0854 but:0.0017assium:0.3027 like:0.0022 trademarks:0.0027iced:0.0564rers:0.0056)
+		( now:0.0048iscovered:0.1211 but:0.0044assium:0.3438 are:0.0114 best:0.0064iced:0.0947rers:0.0055)
+		( also:0.0102iscovered:0.1523 but:0.0127assium:0.3516 are:0.0913 a:0.0204iced:0.1494 by:0.0149)
+		( a:0.0435iscovered:0.1709 and:0.0327assium:0.3262 are:0.3438 a:0.0664iced:0.2148 to:0.0510)
+		( a:0.1260iscovered:0.1318 and:0.0579assium:0.2715 are:0.5430 a:0.1201iced:0.2559 to:0.0918)
+		( a:0.1836,:0.2051 red:0.1108assium:0.2617 are:0.5898 a:0.1328iced:0.2695,:0.1318)
+		( a:0.1885,:0.2969 red:0.1348assium:0.2930 are:0.5508 a:0.1187iced:0.2734,:0.1963)
+		( a:0.1885,:0.2969 red:0.1348assium:0.2930 are:0.5508 a:0.1187iced:0.2734,:0.1963)
+, and are a great source of vitamin C.
+- The American Academy
+2150: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(boro:0.0030 actually:0.0135iscovered:0.0143 and:0.0106assium:0.2168pan:0.0053 actually:0.0132ills:0.0369)
+		(eness:0.0011 actually:0.0010efined:0.0381known:0.0013atoes:0.1680paces:0.0023ias:0.0008vern:0.0103)
+		(eness:0.0009 urging:0.0010efined:0.0403twitter:0.0016atoes:0.1914paces:0.0020als:0.0010vern:0.0075)
+		(eness:0.0010 urging:0.0012efined:0.0408twitter:0.0019atoes:0.2207paces:0.0017als:0.0015_______:0.0087)
+		(eness:0.0012 urging:0.0012efined:0.0449twitter:0.0017atoes:0.2383 juices:0.0020als:0.0021_______:0.0119)
+		(eness:0.0013 often:0.0020efined:0.0540 but:0.0023atoes:0.2578 juices:0.0019 often:0.0030_______:0.0173)
+		(ados:0.0014 often:0.0042efined:0.0625 but:0.0056atoes:0.2734 and:0.0066 often:0.0063_______:0.0270)
+		( Posted:0.0019 often:0.0077iscovered:0.0713 but:0.0143atoes:0.2773 and:0.0269 often:0.0114_______:0.0391)
+		(!:0.0074 a:0.0160iscovered:0.0703 but:0.0315atoes:0.2480 and:0.0986 a:0.0261_______:0.0559)
+		(!:0.0320 a:0.0562 and:0.0664 and:0.0503assium:0.1914,:0.2285 a:0.0610vern:0.0894)
+		( are:0.0850 a:0.1152 and:0.1494 yellow:0.0840om:0.2373,:0.3516 a:0.0928vern:0.1299)
+		( are:0.1328 a:0.1416 and:0.1963 yellow:0.0918om:0.2988,:0.3984 a:0.1021ery:0.1982)
+		( are:0.1328 a:0.1416 and:0.1963 yellow:0.0918om:0.2988,:0.3984 a:0.1021ery:0.1982)
+ery
+------
+		( actually:0.0135iscovered:0.0143 and:0.0106assium:0.2168pan:0.0053 actually:0.0132ills:0.0369the:0.0544)
+		( actually:0.0010efined:0.0381known:0.0013atoes:0.1680paces:0.0023ias:0.0008vern:0.0103bugs:0.0087)
+		( urging:0.0010efined:0.0403twitter:0.0016atoes:0.1914paces:0.0020als:0.0010vern:0.0075bugs:0.0086)
+		( urging:0.0012efined:0.0408twitter:0.0019atoes:0.2207paces:0.0017als:0.0015_______:0.0087bugs:0.0085)
+		( urging:0.0012efined:0.0449twitter:0.0017atoes:0.2383 juices:0.0020als:0.0021_______:0.0119bugs:0.0084)
+		( often:0.0020efined:0.0540 but:0.0023atoes:0.2578 juices:0.0019 often:0.0030_______:0.0173thro:0.0124)
+		( often:0.0042efined:0.0625 but:0.0056atoes:0.2734 and:0.0066 often:0.0063_______:0.0270thro:0.0197)
+		( often:0.0077iscovered:0.0713 but:0.0143atoes:0.2773 and:0.0269 often:0.0114_______:0.0391the:0.0383)
+		( a:0.0160iscovered:0.0703 but:0.0315atoes:0.2480 and:0.0986 a:0.0261_______:0.0559the:0.0830)
+		( a:0.0562 and:0.0664 and:0.0503assium:0.1914,:0.2285 a:0.0610vern:0.0894the:0.1562)
+		( a:0.1152 and:0.1494 yellow:0.0840om:0.2373,:0.3516 a:0.0928vern:0.1299the:0.2090)
+		( a:0.1416 and:0.1963 yellow:0.0918om:0.2988,:0.3984 a:0.1021ery:0.1982the:0.2061)
+		( a:0.1416 and:0.1963 yellow:0.0918om:0.2988,:0.3984 a:0.1021ery:0.1982the:0.2061)
+thema, and they are a great way to get a good night�
+2300: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(pan:0.0029 still:0.0150iscovered:0.0275 and:0.0085atoes:0.3398pan:0.0041 still:0.0153ills:0.0325)
+		(clerosis:0.0010 disproportionately:0.0008ouble:0.0659known:0.0013atoes:0.1885paces:0.0019 disproportionately:0.0008iced:0.0150)
+		(adeon:0.0009 trademarks:0.0008iscovered:0.0596twitter:0.0015atoes:0.2676paces:0.0018 trademarks:0.0010iced:0.0171)
+		(!!!!!!!!:0.0009 trademarks:0.0011iscovered:0.0679twitter:0.0019atoes:0.3496 bugs:0.0018als:0.0015iced:0.0240)
+		( bugs:0.0011 trademarks:0.0015iscovered:0.0879twitter:0.0019atoes:0.4375 bugs:0.0024 trademarks:0.0022iced:0.0374)
+		( bugs:0.0016 trademarks:0.0020iscovered:0.1147 trout:0.0019atoes:0.5156 bugs:0.0028 usually:0.0031iced:0.0569)
+		( bugs:0.0021 often:0.0034iscovered:0.1562but:0.0027atoes:0.5742 bugs:0.0030 usually:0.0069iced:0.0889)
+		(!:0.0027 often:0.0076iscovered:0.1777 but:0.0072atoes:0.5938 are:0.0129 usually:0.0146iced:0.1299)
+		(!:0.0179 also:0.0166iscovered:0.1855 but:0.0192atoes:0.5781,:0.0654 a:0.0243iced:0.1855)
+		(!:0.0830 a:0.0415iscovered:0.1328 yellow:0.0400atoes:0.4941,:0.2598 a:0.0588iced:0.2217)
+		(!:0.1680 a:0.0874 and:0.1108 yellow:0.0703atoes:0.3242,:0.3945 a:0.0791iced:0.2285)
+		( are:0.2295 a:0.1074,:0.1514 yellow:0.0762atoes:0.2148,:0.4551 a:0.0723iced:0.2227)
+		( are:0.2295 a:0.1074,:0.1514 yellow:0.0762atoes:0.2148,:0.4551 a:0.0723iced:0.2227)
+iced
+------
+		( still:0.0150iscovered:0.0275 and:0.0085atoes:0.3398pan:0.0041 still:0.0153ills:0.0325rers:0.0119)
+		( disproportionately:0.0008ouble:0.0659known:0.0013atoes:0.1885paces:0.0019 disproportionately:0.0008iced:0.0150rers:0.0020)
+		( trademarks:0.0008iscovered:0.0596twitter:0.0015atoes:0.2676paces:0.0018 trademarks:0.0010iced:0.0171rers:0.0021)
+		( trademarks:0.0011iscovered:0.0679twitter:0.0019atoes:0.3496 bugs:0.0018als:0.0015iced:0.0240rers:0.0022)
+		( trademarks:0.0015iscovered:0.0879twitter:0.0019atoes:0.4375 bugs:0.0024 trademarks:0.0022iced:0.0374rers:0.0026)
+		( trademarks:0.0020iscovered:0.1147 trout:0.0019atoes:0.5156 bugs:0.0028 usually:0.0031iced:0.0569 potatoes:0.0034)
+		( often:0.0034iscovered:0.1562but:0.0027atoes:0.5742 bugs:0.0030 usually:0.0069iced:0.0889 potatoes:0.0056)
+		( often:0.0076iscovered:0.1777 but:0.0072atoes:0.5938 are:0.0129 usually:0.0146iced:0.1299 up:0.0226)
+		( also:0.0166iscovered:0.1855 but:0.0192atoes:0.5781,:0.0654 a:0.0243iced:0.1855 up:0.0786)
+		( a:0.0415iscovered:0.1328 yellow:0.0400atoes:0.4941,:0.2598 a:0.0588iced:0.2217 up:0.1216)
+		( a:0.0874 and:0.1108 yellow:0.0703atoes:0.3242,:0.3945 a:0.0791iced:0.2285 up:0.1030)
+		( a:0.1074,:0.1514 yellow:0.0762atoes:0.2148,:0.4551 a:0.0723iced:0.2227 in:0.0942)
+		( a:0.1074,:0.1514 yellow:0.0762atoes:0.2148,:0.4551 a:0.0723iced:0.2227 in:0.0942)
+ in a variety of colors, including red, yellow, yellow, yellow,
+2450: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(ander:0.0015 still:0.0165iscovered:0.0356 and:0.0070atoes:0.1445 guys:0.0025 still:0.0152ills:0.0840)
+		( Recession:0.0011gary:0.0011iscovered:0.0918known:0.0012atoes:0.0991itable:0.0013gary:0.0011iced:0.0145)
+		( Recession:0.0009gary:0.0012iscovered:0.0913twitter:0.0017atoes:0.1348cers:0.0017gary:0.0010iced:0.0165)
+		(!!!!!!!!:0.0007ias:0.0010iscovered:0.1074twitter:0.0022atoes:0.1621cers:0.0019 trademarks:0.0016iced:0.0229)
+		(bly:0.0009 trademarks:0.0012iscovered:0.1426 huh:0.0022atoes:0.2012 bugs:0.0019 trademarks:0.0024iced:0.0354)
+		(bly:0.0011 principally:0.0015iscovered:0.1963 huh:0.0033atoes:0.2432 bugs:0.0023 trademarks:0.0031iced:0.0520)
+		( Today:0.0015 also:0.0026iscovered:0.2578 huh:0.0044atoes:0.2754 vegetables:0.0025 always:0.0034iced:0.0732)
+		( lovers:0.0027 also:0.0077iscovered:0.3164 but:0.0084atoes:0.2852 and:0.0115 always:0.0090iced:0.1035)
+		(!:0.0109 the:0.0177iscovered:0.3105 but:0.0315atoes:0.2441 and:0.0601 a:0.0305iced:0.1494)
+		(!:0.0564 a:0.0698iscovered:0.1895 and:0.0884ent:0.1748,:0.2080 a:0.0771iced:0.2051)
+		(!:0.1357 a:0.1299 and:0.1436 and:0.0947ent:0.2070,:0.3379 a:0.1060iced:0.2412)
+		(!:0.1729 a:0.1406,:0.1709 red:0.1299ent:0.2051,:0.3750 a:0.0952iced:0.2412)
+		(!:0.1729 a:0.1406,:0.1709 red:0.1299ent:0.2051,:0.3750 a:0.0952iced:0.2412)
+iced
+------
+		( still:0.0165iscovered:0.0356 and:0.0070atoes:0.1445 guys:0.0025 still:0.0152ills:0.0840rers:0.0081)
+		(gary:0.0011iscovered:0.0918known:0.0012atoes:0.0991itable:0.0013gary:0.0011iced:0.0145ema:0.0023)
+		(gary:0.0012iscovered:0.0913twitter:0.0017atoes:0.1348cers:0.0017gary:0.0010iced:0.0165ema:0.0020)
+		(ias:0.0010iscovered:0.1074twitter:0.0022atoes:0.1621cers:0.0019 trademarks:0.0016iced:0.0229ewater:0.0022)
+		( trademarks:0.0012iscovered:0.1426 huh:0.0022atoes:0.2012 bugs:0.0019 trademarks:0.0024iced:0.0354ewater:0.0020)
+		( principally:0.0015iscovered:0.1963 huh:0.0033atoes:0.2432 bugs:0.0023 trademarks:0.0031iced:0.0520uled:0.0026)
+		( also:0.0026iscovered:0.2578 huh:0.0044atoes:0.2754 vegetables:0.0025 always:0.0034iced:0.0732 up:0.0042)
+		( also:0.0077iscovered:0.3164 but:0.0084atoes:0.2852 and:0.0115 always:0.0090iced:0.1035 by:0.0206)
+		( the:0.0177iscovered:0.3105 but:0.0315atoes:0.2441 and:0.0601 a:0.0305iced:0.1494 by:0.0938)
+		( a:0.0698iscovered:0.1895 and:0.0884ent:0.1748,:0.2080 a:0.0771iced:0.2051 by:0.1777)
+		( a:0.1299 and:0.1436 and:0.0947ent:0.2070,:0.3379 a:0.1060iced:0.2412 by:0.1709)
+		( a:0.1406,:0.1709 red:0.1299ent:0.2051,:0.3750 a:0.0952iced:0.2412,:0.1289)
+		( a:0.1406,:0.1709 red:0.1299ent:0.2051,:0.3750 a:0.0952iced:0.2412,:0.1289)
+, and the leaves are red, and the leaves are red.
+-
+2600: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(cence:0.0030 still:0.0145iscovered:0.0522 and:0.0059atoes:0.2480enne:0.0029 still:0.0135ills:0.1201)
+		(clerosis:0.0011gary:0.0011iscovered:0.0923abetes:0.0011atoes:0.1689atonin:0.0013gary:0.0012iced:0.0183)
+		(clerosis:0.0012ently:0.0014iscovered:0.1069twitter:0.0011atoes:0.2432cers:0.0016 trademarks:0.0011iced:0.0320)
+		(clerosis:0.0012ently:0.0014iscovered:0.1338 huh:0.0015atoes:0.3418cers:0.0024 trademarks:0.0022iced:0.0583)
+		( Today:0.0012 trademarks:0.0016iscovered:0.1855 huh:0.0023atoes:0.4336cers:0.0027 trademarks:0.0038iced:0.1089)
+		( Today:0.0020 usually:0.0021iscovered:0.2441 huh:0.0032atoes:0.5117 juices:0.0023 trademarks:0.0048iced:0.1904)
+		( Today:0.0031 also:0.0045iscovered:0.3105 but:0.0037atoes:0.5586 are:0.0034 usually:0.0046iced:0.2969)
+		(!:0.0104 also:0.0115iscovered:0.3457 but:0.0170atoes:0.5625 are:0.0250 not:0.0101iced:0.4258)
+		(!:0.0654 a:0.0344iscovered:0.3047 and:0.0542atoes:0.4883,:0.1885 a:0.0444iced:0.5391)
+		(!:0.1553 a:0.1016iscovered:0.1982 pink:0.0659om:0.2598,:0.4160 a:0.0879iced:0.5938)
+		( are:0.1768 a:0.1416iscovered:0.1128 pink:0.0884om:0.3223,:0.4902 a:0.0874iced:0.6172)
+		( are:0.1572 a:0.1396,:0.1196 pink:0.0884om:0.2129,:0.5039 a:0.0713iced:0.6133)
+		( are:0.1572 a:0.1396,:0.1196 pink:0.0884om:0.2129,:0.5039 a:0.0713iced:0.6133)
+iced
+------
+		( still:0.0145iscovered:0.0522 and:0.0059atoes:0.2480enne:0.0029 still:0.0135ills:0.1201rers:0.0194)
+		(gary:0.0011iscovered:0.0923abetes:0.0011atoes:0.1689atonin:0.0013gary:0.0012iced:0.0183rers:0.0028)
+		(ently:0.0014iscovered:0.1069twitter:0.0011atoes:0.2432cers:0.0016 trademarks:0.0011iced:0.0320rers:0.0031)
+		(ently:0.0014iscovered:0.1338 huh:0.0015atoes:0.3418cers:0.0024 trademarks:0.0022iced:0.0583rers:0.0038)
+		( trademarks:0.0016iscovered:0.1855 huh:0.0023atoes:0.4336cers:0.0027 trademarks:0.0038iced:0.1089rers:0.0047)
+		( usually:0.0021iscovered:0.2441 huh:0.0032atoes:0.5117 juices:0.0023 trademarks:0.0048iced:0.1904rers:0.0050)
+		( also:0.0045iscovered:0.3105 but:0.0037atoes:0.5586 are:0.0034 usually:0.0046iced:0.2969uled:0.0069)
+		( also:0.0115iscovered:0.3457 but:0.0170atoes:0.5625 are:0.0250 not:0.0101iced:0.4258 up:0.0244)
+		( a:0.0344iscovered:0.3047 and:0.0542atoes:0.4883,:0.1885 a:0.0444iced:0.5391 up:0.0757)
+		( a:0.1016iscovered:0.1982 pink:0.0659om:0.2598,:0.4160 a:0.0879iced:0.5938 up:0.0806)
+		( a:0.1416iscovered:0.1128 pink:0.0884om:0.3223,:0.4902 a:0.0874iced:0.6172,:0.1113)
+		( a:0.1396,:0.1196 pink:0.0884om:0.2129,:0.5039 a:0.0713iced:0.6133,:0.1348)
+		( a:0.1396,:0.1196 pink:0.0884om:0.2129,:0.5039 a:0.0713iced:0.6133,:0.1348)
+, and the leaves are red, and the leaves are red.
+-
+2750: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hip:0.0039 still:0.0128efined:0.0181�:0.0056assium:0.2207afety:0.0021 still:0.0128ills:0.1069)
+		(clerosis:0.0012gary:0.0016iscovered:0.0640�:0.0015entials:0.0703cemic:0.0017gary:0.0015iced:0.0248)
+		(clerosis:0.0012gary:0.0018iscovered:0.0649�:0.0018atoes:0.0981cemic:0.0014gary:0.0014iced:0.0317)
+		(clerosis:0.0012gary:0.0017iscovered:0.0718�:0.0017atoes:0.1260cers:0.0014gary:0.0012iced:0.0518)
+		( Today:0.0011gary:0.0015iscovered:0.0908�:0.0013atoes:0.1582cers:0.0014 popping:0.0016iced:0.0835)
+		( Today:0.0018 undoubtedly:0.0013iscovered:0.1138 huh:0.0019atoes:0.1934 Like:0.0013 popping:0.0021iced:0.1182)
+		( Today:0.0028 definitely:0.0018iscovered:0.1396 huh:0.0025atoes:0.2178 like:0.0020 favorites:0.0029iced:0.1582)
+		( Today:0.0039 also:0.0042iscovered:0.1514 purple:0.0039atoes:0.2295 and:0.0052 best:0.0071iced:0.2148)
+		(!:0.0126 also:0.0105iscovered:0.1484 purple:0.0139atoes:0.2100,:0.0311 a:0.0192iced:0.2793)
+		(!:0.0718 a:0.0393iscovered:0.1060 purple:0.0408ent:0.1338,:0.1641 a:0.0781iced:0.3340)
+		( are:0.1689 a:0.1050 and:0.1279 purple:0.0762om:0.1934,:0.3047 a:0.1436iced:0.3340)
+		( are:0.1904 a:0.1270 and:0.1523 purple:0.0859om:0.1562,:0.3789 a:0.1602iced:0.3203)
+		( are:0.1904 a:0.1270 and:0.1523 purple:0.0859om:0.1562,:0.3789 a:0.1602iced:0.3203)
+iced
+------
+		( still:0.0128efined:0.0181�:0.0056assium:0.2207afety:0.0021 still:0.0128ills:0.1069rers:0.0090)
+		(gary:0.0016iscovered:0.0640�:0.0015entials:0.0703cemic:0.0017gary:0.0015iced:0.0248ema:0.0023)
+		(gary:0.0018iscovered:0.0649�:0.0018atoes:0.0981cemic:0.0014gary:0.0014iced:0.0317ema:0.0022)
+		(gary:0.0017iscovered:0.0718�:0.0017atoes:0.1260cers:0.0014gary:0.0012iced:0.0518oxin:0.0025)
+		(gary:0.0015iscovered:0.0908�:0.0013atoes:0.1582cers:0.0014 popping:0.0016iced:0.0835oxin:0.0031)
+		( undoubtedly:0.0013iscovered:0.1138 huh:0.0019atoes:0.1934 Like:0.0013 popping:0.0021iced:0.1182uled:0.0042)
+		( definitely:0.0018iscovered:0.1396 huh:0.0025atoes:0.2178 like:0.0020 favorites:0.0029iced:0.1582uled:0.0066)
+		( also:0.0042iscovered:0.1514 purple:0.0039atoes:0.2295 and:0.0052 best:0.0071iced:0.2148uled:0.0089)
+		( also:0.0105iscovered:0.1484 purple:0.0139atoes:0.2100,:0.0311 a:0.0192iced:0.2793 up:0.0220)
+		( a:0.0393iscovered:0.1060 purple:0.0408ent:0.1338,:0.1641 a:0.0781iced:0.3340 up:0.0552)
+		( a:0.1050 and:0.1279 purple:0.0762om:0.1934,:0.3047 a:0.1436iced:0.3340,:0.0815)
+		( a:0.1270 and:0.1523 purple:0.0859om:0.1562,:0.3789 a:0.1602iced:0.3203,:0.1328)
+		( a:0.1270 and:0.1523 purple:0.0859om:0.1562,:0.3789 a:0.1602iced:0.3203,:0.1328)
+, and they are a great way to keep you from getting your own.
+2900: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(cence:0.0043 still:0.0103irection:0.0503 and:0.0050assium:0.1357afety:0.0022 still:0.0106ills:0.0369)
+		( Recession:0.0011gary:0.0016iscovered:0.0806abetes:0.0012atoes:0.1118cemic:0.0023gary:0.0015iced:0.0437)
+		( Limbaugh:0.0009gary:0.0018iscovered:0.0752twitter:0.0012atoes:0.1494cemic:0.0019gary:0.0013iced:0.0613)
+		(ander:0.0010gary:0.0017iscovered:0.0825twitter:0.0016atoes:0.1924cers:0.0022 disproportionately:0.0013iced:0.1021)
+		(ander:0.0015gary:0.0015iscovered:0.1064twitter:0.0016atoes:0.2344cers:0.0020 trademarks:0.0013iced:0.1689)
+		(ander:0.0022 urging:0.0016iscovered:0.1436 huh:0.0015atoes:0.2852 intolerance:0.0020 popping:0.0017iced:0.2598)
+		(ander:0.0034 definitely:0.0021iscovered:0.1885 huh:0.0020atoes:0.3301 intolerance:0.0021 favorites:0.0023iced:0.3633)
+		(ander:0.0052 also:0.0057iscovered:0.2236 but:0.0063atoes:0.3516 and:0.0045 also:0.0081iced:0.4570)
+		(!:0.0114 also:0.0177iscovered:0.2412 but:0.0294atoes:0.3496 are:0.0317 also:0.0239iced:0.5547)
+		(!:0.0854 the:0.0432iscovered:0.1768 but:0.0679atoes:0.2412,:0.1631 a:0.0649iced:0.6367)
+		(!:0.1963 a:0.1089iscovered:0.1040 blue:0.1123om:0.3066,:0.2988 a:0.1079iced:0.6680)
+		(!:0.2314 a:0.1099,:0.1167 blue:0.1475om:0.2754,:0.3301 a:0.1045iced:0.7188)
+		(!:0.2314 a:0.1099,:0.1167 blue:0.1475om:0.2754,:0.3301 a:0.1045iced:0.7188)
+iced
+------
+		( still:0.0103irection:0.0503 and:0.0050assium:0.1357afety:0.0022 still:0.0106ills:0.0369rers:0.0104)
+		(gary:0.0016iscovered:0.0806abetes:0.0012atoes:0.1118cemic:0.0023gary:0.0015iced:0.0437ema:0.0014)
+		(gary:0.0018iscovered:0.0752twitter:0.0012atoes:0.1494cemic:0.0019gary:0.0013iced:0.0613ema:0.0015)
+		(gary:0.0017iscovered:0.0825twitter:0.0016atoes:0.1924cers:0.0022 disproportionately:0.0013iced:0.1021ema:0.0014)
+		(gary:0.0015iscovered:0.1064twitter:0.0016atoes:0.2344cers:0.0020 trademarks:0.0013iced:0.1689rers:0.0017)
+		( urging:0.0016iscovered:0.1436 huh:0.0015atoes:0.2852 intolerance:0.0020 popping:0.0017iced:0.2598uled:0.0022)
+		( definitely:0.0021iscovered:0.1885 huh:0.0020atoes:0.3301 intolerance:0.0021 favorites:0.0023iced:0.3633uled:0.0037)
+		( also:0.0057iscovered:0.2236 but:0.0063atoes:0.3516 and:0.0045 also:0.0081iced:0.4570 potatoes:0.0056)
+		( also:0.0177iscovered:0.2412 but:0.0294atoes:0.3496 are:0.0317 also:0.0239iced:0.5547 potatoes:0.0104)
+		( the:0.0432iscovered:0.1768 but:0.0679atoes:0.2412,:0.1631 a:0.0649iced:0.6367 up:0.0234)
+		( a:0.1089iscovered:0.1040 blue:0.1123om:0.3066,:0.2988 a:0.1079iced:0.6680,:0.0491)
+		( a:0.1099,:0.1167 blue:0.1475om:0.2754,:0.3301 a:0.1045iced:0.7188,:0.0815)
+		( a:0.1099,:0.1167 blue:0.1475om:0.2754,:0.3301 a:0.1045iced:0.7188,:0.0815)
+, and the leaves are red.
+- The leaves are white, and
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(amic:0.0014 still:0.0105iscovered:0.0258 and:0.0057atoes:0.1191 harvest:0.0023 still:0.0117ills:0.1030)
+		( Recession:0.0010gary:0.0011ouble:0.0596abetes:0.0014atoes:0.0933paces:0.0018gary:0.0010iced:0.0231)
+		( Limbaugh:0.0011gary:0.0012efined:0.0525abetes:0.0012atoes:0.1279paces:0.0015ias:0.0011iced:0.0381)
+		( Limbaugh:0.0011ias:0.0011efined:0.0586twitter:0.0015atoes:0.1602oxide:0.0014ias:0.0014iced:0.0635)
+		(!!!!!!!!:0.0010ias:0.0012efined:0.0698twitter:0.0015atoes:0.2090oxide:0.0019 trademarks:0.0018iced:0.1108)
+		(iosis:0.0014 trademarks:0.0017efined:0.0903twitter:0.0012atoes:0.2480oxide:0.0022 trademarks:0.0025iced:0.1699)
+		( lovers:0.0023 trademarks:0.0021efined:0.1108but:0.0022atoes:0.2891oxide:0.0025 favorites:0.0029iced:0.2451)
+		( lovers:0.0043 often:0.0034efined:0.1299 but:0.0058atoes:0.2988,:0.0052 ideal:0.0072iced:0.3184)
+		(!:0.0080 also:0.0106efined:0.1182 but:0.0277atoes:0.2676,:0.0574 a:0.0145iced:0.4082)
+		(!:0.0503 a:0.0388iscovered:0.0811 yellow:0.0796om:0.2559,:0.3320 a:0.0603iced:0.4766)
+		(!:0.1216 a:0.0957,:0.1289 yellow:0.1797om:0.4473,:0.5430 a:0.0942iced:0.5156)
+		(!:0.1484 a:0.1074,:0.1904 yellow:0.2051om:0.4395,:0.5742 a:0.0903iced:0.5742)
+		(!:0.1484 a:0.1074,:0.1904 yellow:0.2051om:0.4395,:0.5742 a:0.0903iced:0.5742)
+iced
+------
+		( still:0.0105iscovered:0.0258 and:0.0057atoes:0.1191 harvest:0.0023 still:0.0117ills:0.1030rers:0.0080)
+		(gary:0.0011ouble:0.0596abetes:0.0014atoes:0.0933paces:0.0018gary:0.0010iced:0.0231ema:0.0015)
+		(gary:0.0012efined:0.0525abetes:0.0012atoes:0.1279paces:0.0015ias:0.0011iced:0.0381aturally:0.0015)
+		(ias:0.0011efined:0.0586twitter:0.0015atoes:0.1602oxide:0.0014ias:0.0014iced:0.0635uct:0.0016)
+		(ias:0.0012efined:0.0698twitter:0.0015atoes:0.2090oxide:0.0019 trademarks:0.0018iced:0.1108 aback:0.0020)
+		( trademarks:0.0017efined:0.0903twitter:0.0012atoes:0.2480oxide:0.0022 trademarks:0.0025iced:0.1699uled:0.0031)
+		( trademarks:0.0021efined:0.1108but:0.0022atoes:0.2891oxide:0.0025 favorites:0.0029iced:0.2451uled:0.0052)
+		( often:0.0034efined:0.1299 but:0.0058atoes:0.2988,:0.0052 ideal:0.0072iced:0.3184ering:0.0121)
+		( also:0.0106efined:0.1182 but:0.0277atoes:0.2676,:0.0574 a:0.0145iced:0.4082 up:0.0203)
+		( a:0.0388iscovered:0.0811 yellow:0.0796om:0.2559,:0.3320 a:0.0603iced:0.4766 up:0.0444)
+		( a:0.0957,:0.1289 yellow:0.1797om:0.4473,:0.5430 a:0.0942iced:0.5156 in:0.0630)
+		( a:0.1074,:0.1904 yellow:0.2051om:0.4395,:0.5742 a:0.0903iced:0.5742,:0.0840)
+		( a:0.1074,:0.1904 yellow:0.2051om:0.4395,:0.5742 a:0.0903iced:0.5742,:0.0840)
+, and the iced potatoes are iced potatoes.
+- The 
+3200: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(vation:0.0020 still:0.0109irection:0.0176 and:0.0052assium:0.0908 harvest:0.0021 still:0.0112ills:0.0422)
+		( Recession:0.0013gary:0.0011iscovered:0.0486abetes:0.0012atoes:0.0554cemic:0.0020gary:0.0011ills:0.0086)
+		( Recession:0.0012gary:0.0012iscovered:0.0471twitter:0.0013atoes:0.0869cemic:0.0014gary:0.0011iced:0.0150)
+		( Recession:0.0012gary:0.0011iscovered:0.0559twitter:0.0017atoes:0.1245 intolerance:0.0014 popping:0.0010iced:0.0286)
+		(bugs:0.0012 happiest:0.0012iscovered:0.0747twitter:0.0018atoes:0.1631 vegetables:0.0014 popping:0.0014iced:0.0510)
+		( lovers:0.0022 definitely:0.0015iscovered:0.1035but:0.0017atoes:0.1963 vegetables:0.0021 favorites:0.0023iced:0.0825)
+		( lovers:0.0046 often:0.0028iscovered:0.1406but:0.0038atoes:0.2373 vegetables:0.0025 usually:0.0033iced:0.1240)
+		( lovers:0.0089 always:0.0087iscovered:0.1777 but:0.0129atoes:0.2559 that:0.0102 ideal:0.0084iced:0.1895)
+		( are:0.0278 always:0.0247iscovered:0.1816 but:0.0532atoes:0.2168,:0.0596 a:0.0273iced:0.2617)
+		( are:0.1797 a:0.1030 and:0.1021 blue:0.0752atoes:0.1128,:0.2500 a:0.0962iced:0.3262)
+		( are:0.2637 a:0.1592 and:0.1924 blue:0.1069om:0.1143,:0.3770 a:0.1279iced:0.3496)
+		( are:0.2012 a:0.1436 and:0.2178 blue:0.1064om:0.0737,:0.4238 a:0.1143iced:0.3848)
+		( are:0.2012 a:0.1436 and:0.2178 blue:0.1064om:0.0737,:0.4238 a:0.1143iced:0.3848)
+iced
+------
+		( still:0.0109irection:0.0176 and:0.0052assium:0.0908 harvest:0.0021 still:0.0112ills:0.0422rers:0.0134)
+		(gary:0.0011iscovered:0.0486abetes:0.0012atoes:0.0554cemic:0.0020gary:0.0011ills:0.0086aturally:0.0023)
+		(gary:0.0012iscovered:0.0471twitter:0.0013atoes:0.0869cemic:0.0014gary:0.0011iced:0.0150rers:0.0018)
+		(gary:0.0011iscovered:0.0559twitter:0.0017atoes:0.1245 intolerance:0.0014 popping:0.0010iced:0.0286rers:0.0022)
+		( happiest:0.0012iscovered:0.0747twitter:0.0018atoes:0.1631 vegetables:0.0014 popping:0.0014iced:0.0510 potatoes:0.0032)
+		( definitely:0.0015iscovered:0.1035but:0.0017atoes:0.1963 vegetables:0.0021 favorites:0.0023iced:0.0825 potatoes:0.0056)
+		( often:0.0028iscovered:0.1406but:0.0038atoes:0.2373 vegetables:0.0025 usually:0.0033iced:0.1240 potatoes:0.0107)
+		( always:0.0087iscovered:0.1777 but:0.0129atoes:0.2559 that:0.0102 ideal:0.0084iced:0.1895 potatoes:0.0188)
+		( always:0.0247iscovered:0.1816 but:0.0532atoes:0.2168,:0.0596 a:0.0273iced:0.2617 up:0.0417)
+		( a:0.1030 and:0.1021 blue:0.0752atoes:0.1128,:0.2500 a:0.0962iced:0.3262,:0.0618)
+		( a:0.1592 and:0.1924 blue:0.1069om:0.1143,:0.3770 a:0.1279iced:0.3496,:0.1279)
+		( a:0.1436 and:0.2178 blue:0.1064om:0.0737,:0.4238 a:0.1143iced:0.3848,:0.1777)
+		( a:0.1436 and:0.2178 blue:0.1064om:0.0737,:0.4238 a:0.1143iced:0.3848,:0.1777)
+, and the leaves are red.
+- The leaves are red, and
+3350: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hirt:0.0027 still:0.0094irection:0.0474 and:0.0046entials:0.0977enne:0.0034 still:0.0084ills:0.0569)
+		( Recession:0.0010gary:0.0011iscovered:0.0767regulated:0.0011entials:0.0977actic:0.0018gary:0.0009vern:0.0099)
+		(!!!!!!!!:0.0009gary:0.0010iscovered:0.0762regulated:0.0010entials:0.1001cers:0.0016ias:0.0009iced:0.0135)
+		(!!!!!!!!:0.0010ias:0.0011iscovered:0.0889twitter:0.0010atoes:0.1270cers:0.0017 principally:0.0012iced:0.0222)
+		(ander:0.0012 principally:0.0013iscovered:0.1123twitter:0.0010atoes:0.1846cers:0.0015 principally:0.0016iced:0.0378)
+		(atically:0.0019 principally:0.0018iscovered:0.1299but:0.0013atoes:0.2354onia:0.0019 principally:0.0020iced:0.0613)
+		( lovers:0.0035 often:0.0024efined:0.1523 purple:0.0028atoes:0.2793onia:0.0027 notoriously:0.0024iced:0.0869)
+		( lovers:0.0067 often:0.0078efined:0.1807 orange:0.0130atoes:0.2891 and:0.0045 not:0.0064iced:0.1260)
+		(!:0.0134 always:0.0188efined:0.1660 orange:0.0498atoes:0.2275,:0.0369 a:0.0264iced:0.1777)
+		( are:0.0815 a:0.0850iscovered:0.0918 orange:0.0859ent:0.1982,:0.1689 a:0.0903iced:0.2197)
+		( are:0.1592 a:0.1367,:0.1816 yellow:0.1245ent:0.1816 are:0.2988 a:0.0918iced:0.2793)
+		(!:0.1533 a:0.1221,:0.2246 yellow:0.1279ent:0.1289 are:0.3516 yellow:0.0737iced:0.3516)
+		(!:0.1533 a:0.1221,:0.2246 yellow:0.1279ent:0.1289 are:0.3516 yellow:0.0737iced:0.3516)
+iced
+------
+		( still:0.0094irection:0.0474 and:0.0046entials:0.0977enne:0.0034 still:0.0084ills:0.0569rers:0.0094)
+		(gary:0.0011iscovered:0.0767regulated:0.0011entials:0.0977actic:0.0018gary:0.0009vern:0.0099itating:0.0019)
+		(gary:0.0010iscovered:0.0762regulated:0.0010entials:0.1001cers:0.0016ias:0.0009iced:0.0135itating:0.0020)
+		(ias:0.0011iscovered:0.0889twitter:0.0010atoes:0.1270cers:0.0017 principally:0.0012iced:0.0222itating:0.0022)
+		( principally:0.0013iscovered:0.1123twitter:0.0010atoes:0.1846cers:0.0015 principally:0.0016iced:0.0378ivable:0.0026)
+		( principally:0.0018iscovered:0.1299but:0.0013atoes:0.2354onia:0.0019 principally:0.0020iced:0.0613uled:0.0038)
+		( often:0.0024efined:0.1523 purple:0.0028atoes:0.2793onia:0.0027 notoriously:0.0024iced:0.0869ering:0.0094)
+		( often:0.0078efined:0.1807 orange:0.0130atoes:0.2891 and:0.0045 not:0.0064iced:0.1260ering:0.0227)
+		( always:0.0188efined:0.1660 orange:0.0498atoes:0.2275,:0.0369 a:0.0264iced:0.1777ering:0.0288)
+		( a:0.0850iscovered:0.0918 orange:0.0859ent:0.1982,:0.1689 a:0.0903iced:0.2197 by:0.0718)
+		( a:0.1367,:0.1816 yellow:0.1245ent:0.1816 are:0.2988 a:0.0918iced:0.2793 by:0.0820)
+		( a:0.1221,:0.2246 yellow:0.1279ent:0.1289 are:0.3516 yellow:0.0737iced:0.3516,:0.0674)
+		( a:0.1221,:0.2246 yellow:0.1279ent:0.1289 are:0.3516 yellow:0.0737iced:0.3516,:0.0674)
+, and the iced is iced.
+- Perennials are
+3500: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(vation:0.0029 still:0.0081irection:0.0747 but:0.0035assium:0.1904paces:0.0025 still:0.0086ills:0.0413)
+		( Recession:0.0010gary:0.0013iscovered:0.0659abetes:0.0013entials:0.1367cemic:0.0014gary:0.0012iced:0.0126)
+		(adeon:0.0010gary:0.0014iscovered:0.0737iously:0.0013entials:0.1260 Cruz:0.0012gary:0.0011iced:0.0187)
+		(!!!!!!!!:0.0010gary:0.0015iscovered:0.0786iously:0.0017atoes:0.1299 Cruz:0.0012 disproportionately:0.0012iced:0.0309)
+		(!!!!!!!!:0.0011gary:0.0013iscovered:0.0938iously:0.0021atoes:0.1797elia:0.0011 disproportionately:0.0012iced:0.0474)
+		(atically:0.0014 definitely:0.0012iscovered:0.1118iously:0.0021atoes:0.2139elia:0.0016 principally:0.0016iced:0.0708)
+		( lovers:0.0023 definitely:0.0022iscovered:0.1318but:0.0022atoes:0.2490elia:0.0019 mostly:0.0026iced:0.0986)
+		( lovers:0.0051 always:0.0052iscovered:0.1387 but:0.0066atoes:0.2598 Grow:0.0023 usually:0.0073iced:0.1416)
+		( lovers:0.0098 always:0.0200iscovered:0.1230 but:0.0283atoes:0.2393,:0.0197 a:0.0165iced:0.2041)
+		( are:0.0327 a:0.0608iscovered:0.0708 orange:0.0542assium:0.1797,:0.2275 a:0.0718iced:0.2773)
+		( are:0.1338 a:0.1206,:0.1982 orange:0.0737assium:0.1406,:0.4629 a:0.1064iced:0.3281)
+		( are:0.1387 a:0.1187,:0.2695 white:0.0938assium:0.1875,:0.4668 a:0.1011iced:0.3262)
+		( are:0.1387 a:0.1187,:0.2695 white:0.0938assium:0.1875,:0.4668 a:0.1011iced:0.3262)
+iced
+------
+		( still:0.0081irection:0.0747 but:0.0035assium:0.1904paces:0.0025 still:0.0086ills:0.0413uling:0.0047)
+		(gary:0.0013iscovered:0.0659abetes:0.0013entials:0.1367cemic:0.0014gary:0.0012iced:0.0126itating:0.0019)
+		(gary:0.0014iscovered:0.0737iously:0.0013entials:0.1260 Cruz:0.0012gary:0.0011iced:0.0187itating:0.0022)
+		(gary:0.0015iscovered:0.0786iously:0.0017atoes:0.1299 Cruz:0.0012 disproportionately:0.0012iced:0.0309itating:0.0026)
+		(gary:0.0013iscovered:0.0938iously:0.0021atoes:0.1797elia:0.0011 disproportionately:0.0012iced:0.0474aturally:0.0031)
+		( definitely:0.0012iscovered:0.1118iously:0.0021atoes:0.2139elia:0.0016 principally:0.0016iced:0.0708aturally:0.0037)
+		( definitely:0.0022iscovered:0.1318but:0.0022atoes:0.2490elia:0.0019 mostly:0.0026iced:0.0986uled:0.0051)
+		( always:0.0052iscovered:0.1387 but:0.0066atoes:0.2598 Grow:0.0023 usually:0.0073iced:0.1416uled:0.0073)
+		( always:0.0200iscovered:0.1230 but:0.0283atoes:0.2393,:0.0197 a:0.0165iced:0.2041 up:0.0120)
+		( a:0.0608iscovered:0.0708 orange:0.0542assium:0.1797,:0.2275 a:0.0718iced:0.2773 up:0.0420)
+		( a:0.1206,:0.1982 orange:0.0737assium:0.1406,:0.4629 a:0.1064iced:0.3281 in:0.1201)
+		( a:0.1187,:0.2695 white:0.0938assium:0.1875,:0.4668 a:0.1011iced:0.3262 in:0.1445)
+		( a:0.1187,:0.2695 white:0.0938assium:0.1875,:0.4668 a:0.1011iced:0.3262 in:0.1445)
+ in the same color as the same color as the same color.
+The
+3650: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(vation:0.0031 still:0.0081oub:0.0240 but:0.0032assium:0.1245enne:0.0021 still:0.0071ills:0.0493)
+		( Limbaugh:0.0013gary:0.0013efined:0.0605abetes:0.0009entials:0.0771cemic:0.0026gary:0.0014iced:0.0137)
+		( Limbaugh:0.0015gary:0.0014efined:0.0608aken:0.0011atoes:0.1191cemic:0.0017ias:0.0012iced:0.0189)
+		( Limbaugh:0.0015gary:0.0014efined:0.0698iously:0.0014atoes:0.1699 intolerance:0.0015ias:0.0013iced:0.0371)
+		(ander:0.0017gary:0.0013efined:0.0894iously:0.0014atoes:0.2207vier:0.0016 popping:0.0014iced:0.0586)
+		(ander:0.0023ata:0.0017efined:0.1143but:0.0022atoes:0.2578vier:0.0019 notoriously:0.0021iced:0.0854)
+		(ander:0.0033ata:0.0029efined:0.1455but:0.0047atoes:0.3047 Grow:0.0018 usually:0.0044iced:0.1099)
+		( lovers:0.0059 often:0.0062efined:0.1689 but:0.0116atoes:0.3203 that:0.0033 usually:0.0112iced:0.1367)
+		(!:0.0113 just:0.0154efined:0.1641 but:0.0513atoes:0.2832,:0.0194 a:0.0239iced:0.1738)
+		(!:0.0933 a:0.0879efined:0.0757 but:0.0718ent:0.1924,:0.1465 a:0.0806iced:0.2090)
+		(!:0.2148 a:0.1367,:0.1846 red:0.0771ent:0.2285,:0.2773 a:0.0933iced:0.2539)
+		(!:0.2598 a:0.1201,:0.2090 red:0.0874ent:0.1885,:0.2988 a:0.0845iced:0.3008)
+		(!:0.2598 a:0.1201,:0.2090 red:0.0874ent:0.1885,:0.2988 a:0.0845iced:0.3008)
+iced
+------
+		( still:0.0081oub:0.0240 but:0.0032assium:0.1245enne:0.0021 still:0.0071ills:0.0493rers:0.0043)
+		(gary:0.0013efined:0.0605abetes:0.0009entials:0.0771cemic:0.0026gary:0.0014iced:0.0137itating:0.0018)
+		(gary:0.0014efined:0.0608aken:0.0011atoes:0.1191cemic:0.0017ias:0.0012iced:0.0189itating:0.0020)
+		(gary:0.0014efined:0.0698iously:0.0014atoes:0.1699 intolerance:0.0015ias:0.0013iced:0.0371itating:0.0026)
+		(gary:0.0013efined:0.0894iously:0.0014atoes:0.2207vier:0.0016 popping:0.0014iced:0.0586itating:0.0032)
+		(ata:0.0017efined:0.1143but:0.0022atoes:0.2578vier:0.0019 notoriously:0.0021iced:0.0854aturally:0.0039)
+		(ata:0.0029efined:0.1455but:0.0047atoes:0.3047 Grow:0.0018 usually:0.0044iced:0.1099 potatoes:0.0043)
+		( often:0.0062efined:0.1689 but:0.0116atoes:0.3203 that:0.0033 usually:0.0112iced:0.1367 up:0.0082)
+		( just:0.0154efined:0.1641 but:0.0513atoes:0.2832,:0.0194 a:0.0239iced:0.1738 up:0.0405)
+		( a:0.0879efined:0.0757 but:0.0718ent:0.1924,:0.1465 a:0.0806iced:0.2090 up:0.0986)
+		( a:0.1367,:0.1846 red:0.0771ent:0.2285,:0.2773 a:0.0933iced:0.2539 up:0.1030)
+		( a:0.1201,:0.2090 red:0.0874ent:0.1885,:0.2988 a:0.0845iced:0.3008,:0.1128)
+		( a:0.1201,:0.2090 red:0.0874ent:0.1885,:0.2988 a:0.0845iced:0.3008,:0.1128)
+, and they are red.
+- The Poem of the Poem
+3800: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(vation:0.0022 still:0.0123ox:0.0267 and:0.0036atoes:0.1377enne:0.0021 still:0.0109ills:0.0444)
+		( Limbaugh:0.0013gary:0.0017efined:0.0713mat:0.0009atoes:0.1279cemic:0.0024gary:0.0019iced:0.0167)
+		( Limbaugh:0.0014gary:0.0017efined:0.0796aken:0.0012atoes:0.1895iencies:0.0016gary:0.0017iced:0.0292)
+		( Limbaugh:0.0014gary:0.0016efined:0.0947iously:0.0013atoes:0.2520iencies:0.0015gary:0.0014iced:0.0488)
+		( Limbaugh:0.0014ivers:0.0015efined:0.1128iously:0.0013atoes:0.3086 intolerance:0.0015 favorites:0.0011iced:0.0830)
+		(ander:0.0013 definitely:0.0016efined:0.1455but:0.0019atoes:0.3574 chips:0.0018 favorites:0.0019iced:0.1279)
+		( lovers:0.0022 definitely:0.0027efined:0.1709but:0.0046atoes:0.3906 chips:0.0023 usually:0.0036iced:0.1729)
+		( lovers:0.0043 always:0.0064efined:0.1914 but:0.0110atoes:0.3828 Grow:0.0029 usually:0.0099iced:0.2363)
+		(!:0.0092 always:0.0208efined:0.1768 but:0.0505atoes:0.3418 are:0.0277 usually:0.0192iced:0.3027)
+		(!:0.1021 a:0.0464,:0.0811 green:0.0928atoes:0.2480 are:0.1533 a:0.0527iced:0.3477)
+		(!:0.3047 a:0.0825,:0.2285 green:0.1270atoes:0.1846 are:0.3145 red:0.0854iced:0.3809)
+		(!:0.3750 a:0.0786,:0.2520 green:0.1279atoes:0.1699 are:0.4199 red:0.1099iced:0.4121)
+		(!:0.3750 a:0.0786,:0.2520 green:0.1279atoes:0.1699 are:0.4199 red:0.1099iced:0.4121)
+iced
+------
+		( still:0.0123ox:0.0267 and:0.0036atoes:0.1377enne:0.0021 still:0.0109ills:0.0444rers:0.0039)
+		(gary:0.0017efined:0.0713mat:0.0009atoes:0.1279cemic:0.0024gary:0.0019iced:0.0167itating:0.0017)
+		(gary:0.0017efined:0.0796aken:0.0012atoes:0.1895iencies:0.0016gary:0.0017iced:0.0292itating:0.0025)
+		(gary:0.0016efined:0.0947iously:0.0013atoes:0.2520iencies:0.0015gary:0.0014iced:0.0488itating:0.0032)
+		(ivers:0.0015efined:0.1128iously:0.0013atoes:0.3086 intolerance:0.0015 favorites:0.0011iced:0.0830itating:0.0038)
+		( definitely:0.0016efined:0.1455but:0.0019atoes:0.3574 chips:0.0018 favorites:0.0019iced:0.1279itating:0.0038)
+		( definitely:0.0027efined:0.1709but:0.0046atoes:0.3906 chips:0.0023 usually:0.0036iced:0.1729ering:0.0044)
+		( always:0.0064efined:0.1914 but:0.0110atoes:0.3828 Grow:0.0029 usually:0.0099iced:0.2363ering:0.0099)
+		( always:0.0208efined:0.1768 but:0.0505atoes:0.3418 are:0.0277 usually:0.0192iced:0.3027 up:0.0262)
+		( a:0.0464,:0.0811 green:0.0928atoes:0.2480 are:0.1533 a:0.0527iced:0.3477 up:0.0684)
+		( a:0.0825,:0.2285 green:0.1270atoes:0.1846 are:0.3145 red:0.0854iced:0.3809,:0.1235)
+		( a:0.0786,:0.2520 green:0.1279atoes:0.1699 are:0.4199 red:0.1099iced:0.4121,:0.1475)
+		( a:0.0786,:0.2520 green:0.1279atoes:0.1699 are:0.4199 red:0.1099iced:0.4121,:0.1475)
+, and the leaves are red.
+- The leaves are green, and
+3950: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0025 still:0.0098iscovered:0.0488 and:0.0026assium:0.1089enne:0.0043 still:0.0104ills:0.0304)
+		( Limbaugh:0.0014gary:0.0011iscovered:0.1196iously:0.0010entials:0.0796cemic:0.0042gary:0.0011iced:0.0160)
+		( Limbaugh:0.0015icably:0.0012iscovered:0.1201iously:0.0012atoes:0.1147cemic:0.0028gary:0.0011iced:0.0262)
+		( Limbaugh:0.0015icably:0.0012efined:0.1230iously:0.0013atoes:0.1748 intolerance:0.0023ias:0.0012iced:0.0442)
+		(!!!!!!!!:0.0015ias:0.0012efined:0.1484iously:0.0014atoes:0.2246 intolerance:0.0026atically:0.0013iced:0.0801)
+		( lovers:0.0025 definitely:0.0012efined:0.1875iously:0.0013atoes:0.2578 intolerance:0.0027 usually:0.0014iced:0.1260)
+		( lovers:0.0054 definitely:0.0022efined:0.2295but:0.0030atoes:0.2852 Grow:0.0026 usually:0.0031iced:0.1904)
+		( lovers:0.0112 often:0.0056efined:0.2793but:0.0070atoes:0.2930 Grow:0.0042 usually:0.0079iced:0.2715)
+		( lovers:0.0205 always:0.0198efined:0.3086 but:0.0444atoes:0.2637 and:0.0276 a:0.0194iced:0.3945)
+		( are:0.0510 a:0.0830efined:0.2500 green:0.1108ent:0.1738,:0.1592 a:0.0894iced:0.5430)
+		( are:0.1914 a:0.1338,:0.1187 green:0.1572ent:0.2217 are:0.2559 a:0.0996iced:0.6836)
+		( are:0.1807 a:0.1084,:0.1611 green:0.1357assium:0.2559 are:0.3418 a:0.0894iced:0.7461)
+		( are:0.1807 a:0.1084,:0.1611 green:0.1357assium:0.2559 are:0.3418 a:0.0894iced:0.7461)
+iced
+------
+		( still:0.0098iscovered:0.0488 and:0.0026assium:0.1089enne:0.0043 still:0.0104ills:0.0304rers:0.0051)
+		(gary:0.0011iscovered:0.1196iously:0.0010entials:0.0796cemic:0.0042gary:0.0011iced:0.0160itating:0.0022)
+		(icably:0.0012iscovered:0.1201iously:0.0012atoes:0.1147cemic:0.0028gary:0.0011iced:0.0262itating:0.0027)
+		(icably:0.0012efined:0.1230iously:0.0013atoes:0.1748 intolerance:0.0023ias:0.0012iced:0.0442itating:0.0039)
+		(ias:0.0012efined:0.1484iously:0.0014atoes:0.2246 intolerance:0.0026atically:0.0013iced:0.0801itating:0.0054)
+		( definitely:0.0012efined:0.1875iously:0.0013atoes:0.2578 intolerance:0.0027 usually:0.0014iced:0.1260itating:0.0059)
+		( definitely:0.0022efined:0.2295but:0.0030atoes:0.2852 Grow:0.0026 usually:0.0031iced:0.1904itating:0.0049)
+		( often:0.0056efined:0.2793but:0.0070atoes:0.2930 Grow:0.0042 usually:0.0079iced:0.2715ering:0.0074)
+		( always:0.0198efined:0.3086 but:0.0444atoes:0.2637 and:0.0276 a:0.0194iced:0.3945 up:0.0189)
+		( a:0.0830efined:0.2500 green:0.1108ent:0.1738,:0.1592 a:0.0894iced:0.5430 up:0.0669)
+		( a:0.1338,:0.1187 green:0.1572ent:0.2217 are:0.2559 a:0.0996iced:0.6836,:0.1196)
+		( a:0.1084,:0.1611 green:0.1357assium:0.2559 are:0.3418 a:0.0894iced:0.7461,:0.1436)
+		( a:0.1084,:0.1611 green:0.1357assium:0.2559 are:0.3418 a:0.0894iced:0.7461,:0.1436)
+, and the leaves are red.
+- The leaves are red, and
+4100: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(pots:0.0034 still:0.0094iscovered:0.0288 and:0.0035atoes:0.0718pace:0.0026 still:0.0097ills:0.0398)
+		(STON:0.0015gary:0.0012iscovered:0.0811iously:0.0011atoes:0.0649cemic:0.0025gary:0.0012iced:0.0141)
+		(STON:0.0016gary:0.0010iscovered:0.0859iously:0.0013atoes:0.1064 intolerance:0.0022gary:0.0010iced:0.0242)
+		(STON:0.0017 happiest:0.0009iscovered:0.0952iously:0.0016atoes:0.1484 intolerance:0.0021etically:0.0011iced:0.0435)
+		(STON:0.0017 happiest:0.0011iscovered:0.1123iously:0.0017atoes:0.1953 intolerance:0.0023etically:0.0011iced:0.0703)
+		( lovers:0.0030 endless:0.0013iscovered:0.1318but:0.0017atoes:0.2314balls:0.0027 plentiful:0.0014iced:0.1045)
+		( lovers:0.0062ata:0.0023iscovered:0.1523but:0.0039atoes:0.2695balls:0.0036 plentiful:0.0024iced:0.1406)
+		( lovers:0.0126 often:0.0057efined:0.1729 but:0.0098atoes:0.2949 Grow:0.0055 usually:0.0057iced:0.1758)
+		( lovers:0.0206 a:0.0332efined:0.1670 but:0.0515atoes:0.2773,:0.0471 a:0.0479iced:0.2158)
+		(!:0.0493 a:0.1455efined:0.0698 green:0.0796atoes:0.1846,:0.3066 a:0.1699iced:0.2500)
+		( are:0.0986 a:0.1621,:0.1172 yellow:0.1279atoes:0.1963,:0.4629 a:0.1680iced:0.2461)
+		(!:0.0996 a:0.1416,:0.1455 yellow:0.1226atoes:0.2158,:0.4961 a:0.1436iced:0.2461)
+		(!:0.0996 a:0.1416,:0.1455 yellow:0.1226atoes:0.2158,:0.4961 a:0.1436iced:0.2461)
+iced
+------
+		( still:0.0094iscovered:0.0288 and:0.0035atoes:0.0718pace:0.0026 still:0.0097ills:0.0398rers:0.0063)
+		(gary:0.0012iscovered:0.0811iously:0.0011atoes:0.0649cemic:0.0025gary:0.0012iced:0.0141itating:0.0028)
+		(gary:0.0010iscovered:0.0859iously:0.0013atoes:0.1064 intolerance:0.0022gary:0.0010iced:0.0242itating:0.0040)
+		( happiest:0.0009iscovered:0.0952iously:0.0016atoes:0.1484 intolerance:0.0021etically:0.0011iced:0.0435itating:0.0060)
+		( happiest:0.0011iscovered:0.1123iously:0.0017atoes:0.1953 intolerance:0.0023etically:0.0011iced:0.0703itating:0.0084)
+		( endless:0.0013iscovered:0.1318but:0.0017atoes:0.2314balls:0.0027 plentiful:0.0014iced:0.1045itating:0.0091)
+		(ata:0.0023iscovered:0.1523but:0.0039atoes:0.2695balls:0.0036 plentiful:0.0024iced:0.1406itating:0.0075)
+		( often:0.0057efined:0.1729 but:0.0098atoes:0.2949 Grow:0.0055 usually:0.0057iced:0.1758led:0.0063)
+		( a:0.0332efined:0.1670 but:0.0515atoes:0.2773,:0.0471 a:0.0479iced:0.2158 up:0.0201)
+		( a:0.1455efined:0.0698 green:0.0796atoes:0.1846,:0.3066 a:0.1699iced:0.2500,:0.0674)
+		( a:0.1621,:0.1172 yellow:0.1279atoes:0.1963,:0.4629 a:0.1680iced:0.2461,:0.1123)
+		( a:0.1416,:0.1455 yellow:0.1226atoes:0.2158,:0.4961 a:0.1436iced:0.2461,:0.1245)
+		( a:0.1416,:0.1455 yellow:0.1226atoes:0.2158,:0.4961 a:0.1436iced:0.2461,:0.1245)
+, and the fruit is a sweet, sweet, and sweet fruit.
+
+4250: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0039 still:0.0101iscovered:0.0278 and:0.0034assium:0.1768hops:0.0022 still:0.0107ills:0.0293)
+		(STON:0.0017gary:0.0012iscovered:0.1040mat:0.0014entially:0.0728 intolerance:0.0032gary:0.0012iced:0.0087)
+		(STON:0.0021icably:0.0011iscovered:0.1040iously:0.0018atoes:0.0991 intolerance:0.0030iously:0.0010iced:0.0145)
+		(STON:0.0025icably:0.0010iscovered:0.1128iously:0.0022atoes:0.1396 intolerance:0.0034ivers:0.0012iced:0.0254)
+		(STON:0.0025 hereby:0.0012iscovered:0.1309iously:0.0021atoes:0.1777 intolerance:0.0039ivers:0.0013iced:0.0400)
+		(STON:0.0022 hereby:0.0014iscovered:0.1621but:0.0020atoes:0.2012 intolerance:0.0045 popping:0.0020iced:0.0593)
+		( lovers:0.0043 awesome:0.0020iscovered:0.1953but:0.0054atoes:0.2256 Grow:0.0050 plentiful:0.0032iced:0.0840)
+		( lovers:0.0101 always:0.0075iscovered:0.2168 but:0.0255atoes:0.2451 Grow:0.0083 always:0.0078iced:0.1050)
+		( lovers:0.0159 a:0.0466iscovered:0.1865 green:0.0869atoes:0.1992,:0.0610 a:0.0654iced:0.1367)
+		( are:0.0513 a:0.1562,:0.1113 green:0.1670ent:0.2637,:0.2754 a:0.1250iced:0.1826)
+		( are:0.0771 a:0.1523,:0.1641 yellow:0.1553assium:0.1787,:0.3438 red:0.0996iced:0.2422)
+		(!:0.0908 a:0.1416,:0.2256 green:0.1387assium:0.1699,:0.3242 red:0.1074iced:0.2773)
+		(!:0.0908 a:0.1416,:0.2256 green:0.1387assium:0.1699,:0.3242 red:0.1074iced:0.2773)
+iced
+------
+		( still:0.0101iscovered:0.0278 and:0.0034assium:0.1768hops:0.0022 still:0.0107ills:0.0293rers:0.0054)
+		(gary:0.0012iscovered:0.1040mat:0.0014entially:0.0728 intolerance:0.0032gary:0.0012iced:0.0087itating:0.0026)
+		(icably:0.0011iscovered:0.1040iously:0.0018atoes:0.0991 intolerance:0.0030iously:0.0010iced:0.0145itating:0.0042)
+		(icably:0.0010iscovered:0.1128iously:0.0022atoes:0.1396 intolerance:0.0034ivers:0.0012iced:0.0254itating:0.0064)
+		( hereby:0.0012iscovered:0.1309iously:0.0021atoes:0.1777 intolerance:0.0039ivers:0.0013iced:0.0400itating:0.0085)
+		( hereby:0.0014iscovered:0.1621but:0.0020atoes:0.2012 intolerance:0.0045 popping:0.0020iced:0.0593itating:0.0085)
+		( awesome:0.0020iscovered:0.1953but:0.0054atoes:0.2256 Grow:0.0050 plentiful:0.0032iced:0.0840ering:0.0074)
+		( always:0.0075iscovered:0.2168 but:0.0255atoes:0.2451 Grow:0.0083 always:0.0078iced:0.1050ering:0.0166)
+		( a:0.0466iscovered:0.1865 green:0.0869atoes:0.1992,:0.0610 a:0.0654iced:0.1367 up:0.0581)
+		( a:0.1562,:0.1113 green:0.1670ent:0.2637,:0.2754 a:0.1250iced:0.1826 up:0.1270)
+		( a:0.1523,:0.1641 yellow:0.1553assium:0.1787,:0.3438 red:0.0996iced:0.2422 up:0.0840)
+		( a:0.1416,:0.2256 green:0.1387assium:0.1699,:0.3242 red:0.1074iced:0.2773 potatoes:0.1099)
+		( a:0.1416,:0.2256 green:0.1387assium:0.1699,:0.3242 red:0.1074iced:0.2773 potatoes:0.1099)
+ potatoes, Potatoes are iced potatoes, Potatoes are iced potatoes
+4400: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0037 still:0.0121ox:0.0209 and:0.0028assium:0.1484cemic:0.0024 still:0.0115ills:0.0294)
+		(STON:0.0021icably:0.0012efined:0.0835mat:0.0019entially:0.0874cemic:0.0035inges:0.0012iced:0.0203)
+		(STON:0.0025ivers:0.0015efined:0.0952mat:0.0016entially:0.1191 intolerance:0.0029ivers:0.0013iced:0.0354)
+		(STON:0.0029ivers:0.0020efined:0.1128iously:0.0019entially:0.1631 intolerance:0.0030ivers:0.0018iced:0.0618)
+		(STON:0.0029ivers:0.0023efined:0.1426iously:0.0020entially:0.1836 intolerance:0.0033atically:0.0020iced:0.0967)
+		(STON:0.0026ata:0.0022efined:0.1768iously:0.0018entially:0.1807onia:0.0043ata:0.0032iced:0.1309)
+		( lovers:0.0040ata:0.0040efined:0.2041but:0.0031entially:0.1562onia:0.0069ata:0.0052iced:0.1699)
+		( lovers:0.0067 awesome:0.0058efined:0.2227 but:0.0108atoes:0.1738 Grow:0.0079 not:0.0063iced:0.2031)
+		( lovers:0.0095 a:0.0199efined:0.1758 but:0.0437atoes:0.1592 are:0.0170 a:0.0391iced:0.2344)
+		( are:0.0703 a:0.1279,:0.0815 green:0.1206ent:0.1602 are:0.1328 a:0.1221iced:0.2715)
+		( are:0.2139 a:0.1855,:0.1660 green:0.1475assium:0.1699 are:0.2754 a:0.1108iced:0.3203)
+		( are:0.1699 a:0.1689,:0.2217 green:0.1338assium:0.2168 are:0.3203 red:0.1040iced:0.3535)
+		( are:0.1699 a:0.1689,:0.2217 green:0.1338assium:0.2168 are:0.3203 red:0.1040iced:0.3535)
+iced
+------
+		( still:0.0121ox:0.0209 and:0.0028assium:0.1484cemic:0.0024 still:0.0115ills:0.0294leneck:0.0040)
+		(icably:0.0012efined:0.0835mat:0.0019entially:0.0874cemic:0.0035inges:0.0012iced:0.0203leneck:0.0030)
+		(ivers:0.0015efined:0.0952mat:0.0016entially:0.1191 intolerance:0.0029ivers:0.0013iced:0.0354itating:0.0040)
+		(ivers:0.0020efined:0.1128iously:0.0019entially:0.1631 intolerance:0.0030ivers:0.0018iced:0.0618itating:0.0064)
+		(ivers:0.0023efined:0.1426iously:0.0020entially:0.1836 intolerance:0.0033atically:0.0020iced:0.0967itating:0.0087)
+		(ata:0.0022efined:0.1768iously:0.0018entially:0.1807onia:0.0043ata:0.0032iced:0.1309itating:0.0093)
+		(ata:0.0040efined:0.2041but:0.0031entially:0.1562onia:0.0069ata:0.0052iced:0.1699itating:0.0064)
+		( awesome:0.0058efined:0.2227 but:0.0108atoes:0.1738 Grow:0.0079 not:0.0063iced:0.2031ema:0.0096)
+		( a:0.0199efined:0.1758 but:0.0437atoes:0.1592 are:0.0170 a:0.0391iced:0.2344 up:0.0347)
+		( a:0.1279,:0.0815 green:0.1206ent:0.1602 are:0.1328 a:0.1221iced:0.2715 up:0.1338)
+		( a:0.1855,:0.1660 green:0.1475assium:0.1699 are:0.2754 a:0.1108iced:0.3203 with:0.1216)
+		( a:0.1689,:0.2217 green:0.1338assium:0.2168 are:0.3203 red:0.1040iced:0.3535 potatoes:0.1797)
+		( a:0.1689,:0.2217 green:0.1338assium:0.2168 are:0.3203 red:0.1040iced:0.3535 potatoes:0.1797)
+ potatoes, and the roots are green.
+The leaves are green, and
+4550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0038 still:0.0084irection:0.0332 and:0.0039atoes:0.1133pan:0.0030 still:0.0070ills:0.0306)
+		(STON:0.0022icably:0.0011efined:0.0854mat:0.0025atoes:0.1089 intolerance:0.0051icably:0.0010iced:0.0140)
+		(STON:0.0027icably:0.0014efined:0.0991mat:0.0020atoes:0.1904 intolerance:0.0053iously:0.0012iced:0.0265)
+		(STON:0.0032icably:0.0014efined:0.1182iously:0.0017atoes:0.2812 intolerance:0.0057atically:0.0013iced:0.0488)
+		(STON:0.0032icably:0.0013efined:0.1514iously:0.0015atoes:0.3398 intolerance:0.0058atically:0.0014iced:0.0825)
+		(STON:0.0028 VERY:0.0017efined:0.1738but:0.0025atoes:0.3984 intolerance:0.0058ata:0.0019iced:0.1270)
+		(ander:0.0034 everywhere:0.0032efined:0.1992but:0.0059atoes:0.4531 intolerance:0.0054 everywhere:0.0035iced:0.1807)
+		(ander:0.0049 everywhere:0.0066efined:0.2129 but:0.0250atoes:0.4902 Grow:0.0052 everywhere:0.0083iced:0.2305)
+		( are:0.0060 also:0.0172efined:0.1885 but:0.1187atoes:0.5000 are:0.0245 not:0.0199iced:0.2949)
+		( are:0.0688 a:0.1006efined:0.0850 but:0.1895atoes:0.4590 are:0.1855 a:0.0859iced:0.3926)
+		( are:0.2061 a:0.1592,:0.1846 but:0.1494atoes:0.4219 are:0.3652 a:0.0957iced:0.4863)
+		( are:0.1748 a:0.1406,:0.2441 green:0.0811atoes:0.3594 are:0.3887 red:0.0791iced:0.5586)
+		( are:0.1748 a:0.1406,:0.2441 green:0.0811atoes:0.3594 are:0.3887 red:0.0791iced:0.5586)
+iced
+------
+		( still:0.0084irection:0.0332 and:0.0039atoes:0.1133pan:0.0030 still:0.0070ills:0.0306rers:0.0042)
+		(icably:0.0011efined:0.0854mat:0.0025atoes:0.1089 intolerance:0.0051icably:0.0010iced:0.0140leneck:0.0019)
+		(icably:0.0014efined:0.0991mat:0.0020atoes:0.1904 intolerance:0.0053iously:0.0012iced:0.0265itating:0.0027)
+		(icably:0.0014efined:0.1182iously:0.0017atoes:0.2812 intolerance:0.0057atically:0.0013iced:0.0488itating:0.0042)
+		(icably:0.0013efined:0.1514iously:0.0015atoes:0.3398 intolerance:0.0058atically:0.0014iced:0.0825itating:0.0053)
+		( VERY:0.0017efined:0.1738but:0.0025atoes:0.3984 intolerance:0.0058ata:0.0019iced:0.1270itating:0.0056)
+		( everywhere:0.0032efined:0.1992but:0.0059atoes:0.4531 intolerance:0.0054 everywhere:0.0035iced:0.1807uled:0.0051)
+		( everywhere:0.0066efined:0.2129 but:0.0250atoes:0.4902 Grow:0.0052 everywhere:0.0083iced:0.2305uled:0.0073)
+		( also:0.0172efined:0.1885 but:0.1187atoes:0.5000 are:0.0245 not:0.0199iced:0.2949 up:0.0393)
+		( a:0.1006efined:0.0850 but:0.1895atoes:0.4590 are:0.1855 a:0.0859iced:0.3926 up:0.1553)
+		( a:0.1592,:0.1846 but:0.1494atoes:0.4219 are:0.3652 a:0.0957iced:0.4863 up:0.1543)
+		( a:0.1406,:0.2441 green:0.0811atoes:0.3594 are:0.3887 red:0.0791iced:0.5586 with:0.1143)
+		( a:0.1406,:0.2441 green:0.0811atoes:0.3594 are:0.3887 red:0.0791iced:0.5586 with:0.1143)
+ with a variety of colors.
+- The Poem for the Poem
+4700: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0067 still:0.0084efined:0.0222 and:0.0041assium:0.0786enne:0.0034 still:0.0093ills:0.0234)
+		(STON:0.0028icably:0.0011efined:0.0864mat:0.0023entially:0.0581 intolerance:0.0057icably:0.0010icky:0.0165)
+		(STON:0.0031icably:0.0013efined:0.0942mat:0.0023entially:0.0884 intolerance:0.0064iously:0.0014iced:0.0260)
+		(STON:0.0032 happiest:0.0014efined:0.1108iously:0.0025entially:0.1338 intolerance:0.0066atically:0.0021iced:0.0459)
+		(STON:0.0031 endless:0.0017efined:0.1270iously:0.0025entially:0.1611 intolerance:0.0066atically:0.0023iced:0.0698)
+		(STON:0.0025 endless:0.0020efined:0.1553but:0.0027entially:0.1729 intolerance:0.0061 happiest:0.0027iced:0.0996)
+		( lovers:0.0031 mainly:0.0034efined:0.1826but:0.0060entially:0.1631 intolerance:0.0054ata:0.0042iced:0.1191)
+		( lovers:0.0052 mainly:0.0073efined:0.2061 but:0.0148entially:0.1172 Grow:0.0080 mainly:0.0068iced:0.1504)
+		( lovers:0.0077 always:0.0164efined:0.2051 but:0.0771assium:0.1182 are:0.0131 a:0.0194iced:0.1924)
+		(!:0.0315 a:0.0742efined:0.1021 but:0.1699om:0.1709 are:0.1309 a:0.0913iced:0.2559)
+		( are:0.1001 a:0.1475,:0.1914 but:0.1484om:0.1953 are:0.3457 a:0.0972iced:0.2988)
+		( are:0.1021 a:0.1318,:0.2500 but:0.0840om:0.1230 are:0.4102 red:0.1318iced:0.3516)
+		( are:0.1021 a:0.1318,:0.2500 but:0.0840om:0.1230 are:0.4102 red:0.1318iced:0.3516)
+iced
+------
+		( still:0.0084efined:0.0222 and:0.0041assium:0.0786enne:0.0034 still:0.0093ills:0.0234rers:0.0055)
+		(icably:0.0011efined:0.0864mat:0.0023entially:0.0581 intolerance:0.0057icably:0.0010icky:0.0165itating:0.0020)
+		(icably:0.0013efined:0.0942mat:0.0023entially:0.0884 intolerance:0.0064iously:0.0014iced:0.0260itating:0.0034)
+		( happiest:0.0014efined:0.1108iously:0.0025entially:0.1338 intolerance:0.0066atically:0.0021iced:0.0459itating:0.0051)
+		( endless:0.0017efined:0.1270iously:0.0025entially:0.1611 intolerance:0.0066atically:0.0023iced:0.0698itating:0.0062)
+		( endless:0.0020efined:0.1553but:0.0027entially:0.1729 intolerance:0.0061 happiest:0.0027iced:0.0996itating:0.0056)
+		( mainly:0.0034efined:0.1826but:0.0060entially:0.1631 intolerance:0.0054ata:0.0042iced:0.1191itating:0.0044)
+		( mainly:0.0073efined:0.2061 but:0.0148entially:0.1172 Grow:0.0080 mainly:0.0068iced:0.1504ering:0.0076)
+		( always:0.0164efined:0.2051 but:0.0771assium:0.1182 are:0.0131 a:0.0194iced:0.1924ering:0.0140)
+		( a:0.0742efined:0.1021 but:0.1699om:0.1709 are:0.1309 a:0.0913iced:0.2559 up:0.0347)
+		( a:0.1475,:0.1914 but:0.1484om:0.1953 are:0.3457 a:0.0972iced:0.2988 in:0.0903)
+		( a:0.1318,:0.2500 but:0.0840om:0.1230 are:0.4102 red:0.1318iced:0.3516 in:0.0786)
+		( a:0.1318,:0.2500 but:0.0840om:0.1230 are:0.4102 red:0.1318iced:0.3516 in:0.0786)
+ in red, Potatoes are red, Potatoes are red, Potatoes
+4850: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(cling:0.0033 still:0.0090iscovered:0.0269 and:0.0031atoes:0.0688enne:0.0045 still:0.0096ills:0.0152)
+		(STON:0.0027icably:0.0017iscovered:0.1035iously:0.0014entials:0.0444 intolerance:0.0056icably:0.0014icky:0.0076)
+		(STON:0.0031icably:0.0020iscovered:0.1089iously:0.0020atoes:0.0713 intolerance:0.0064icably:0.0014icky:0.0123)
+		(STON:0.0034icably:0.0020iscovered:0.1133iously:0.0023atoes:0.1011 intolerance:0.0071atically:0.0015iced:0.0208)
+		(STON:0.0034 endless:0.0024iscovered:0.1270iously:0.0024atoes:0.1182 intolerance:0.0079atically:0.0019iced:0.0334)
+		(STON:0.0028 endless:0.0031iscovered:0.1406but:0.0026atoes:0.1338 intolerance:0.0076 popping:0.0026iced:0.0508)
+		( lovers:0.0038 endless:0.0034efined:0.1396but:0.0062atoes:0.1445onia:0.0068ata:0.0038iced:0.0645)
+		( lovers:0.0060 often:0.0070efined:0.1611but:0.0123atoes:0.1543onia:0.0081 mainly:0.0050icky:0.0850)
+		( lovers:0.0080 also:0.0184efined:0.1387 but:0.0244atoes:0.1426 that:0.0142 a:0.0153iced:0.1045)
+		(,:0.0347 a:0.0796 and:0.1108 green:0.0850om:0.1025,:0.1084 a:0.0850iced:0.1494)
+		(,:0.1094 a:0.1533,:0.2891 green:0.1348om:0.1699,:0.3105 red:0.0874iced:0.2236)
+		(,:0.1035 a:0.1445,:0.3477 green:0.1235om:0.1631,:0.3652 red:0.1240iced:0.3301)
+		(,:0.1035 a:0.1445,:0.3477 green:0.1235om:0.1631,:0.3652 red:0.1240iced:0.3301)
+iced
+------
+		( still:0.0090iscovered:0.0269 and:0.0031atoes:0.0688enne:0.0045 still:0.0096ills:0.0152rers:0.0099)
+		(icably:0.0017iscovered:0.1035iously:0.0014entials:0.0444 intolerance:0.0056icably:0.0014icky:0.0076rers:0.0023)
+		(icably:0.0020iscovered:0.1089iously:0.0020atoes:0.0713 intolerance:0.0064icably:0.0014icky:0.0123itating:0.0036)
+		(icably:0.0020iscovered:0.1133iously:0.0023atoes:0.1011 intolerance:0.0071atically:0.0015iced:0.0208itating:0.0064)
+		( endless:0.0024iscovered:0.1270iously:0.0024atoes:0.1182 intolerance:0.0079atically:0.0019iced:0.0334itating:0.0081)
+		( endless:0.0031iscovered:0.1406but:0.0026atoes:0.1338 intolerance:0.0076 popping:0.0026iced:0.0508itating:0.0072)
+		( endless:0.0034efined:0.1396but:0.0062atoes:0.1445onia:0.0068ata:0.0038iced:0.0645uled:0.0064)
+		( often:0.0070efined:0.1611but:0.0123atoes:0.1543onia:0.0081 mainly:0.0050icky:0.0850uled:0.0089)
+		( also:0.0184efined:0.1387 but:0.0244atoes:0.1426 that:0.0142 a:0.0153iced:0.1045 up:0.0098)
+		( a:0.0796 and:0.1108 green:0.0850om:0.1025,:0.1084 a:0.0850iced:0.1494 up:0.0366)
+		( a:0.1533,:0.2891 green:0.1348om:0.1699,:0.3105 red:0.0874iced:0.2236,:0.0967)
+		( a:0.1445,:0.3477 green:0.1235om:0.1631,:0.3652 red:0.1240iced:0.3301,:0.1167)
+		( a:0.1445,:0.3477 green:0.1235om:0.1631,:0.3652 red:0.1240iced:0.3301,:0.1167)
+, and the red is red.
+- The red is red.
+
+5000: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(pace:0.0061 still:0.0107ox:0.0439 and:0.0029entials:0.0840enne:0.0056 still:0.0099ills:0.0151)
+		(STON:0.0027icably:0.0016iscovered:0.0918iously:0.0019entials:0.0674 intolerance:0.0055icably:0.0015iced:0.0112)
+		(STON:0.0031icably:0.0021iscovered:0.1025iously:0.0024atoes:0.0840 intolerance:0.0060icably:0.0015iced:0.0228)
+		(STON:0.0033icably:0.0023iscovered:0.0972iously:0.0027atoes:0.1226 intolerance:0.0064 popping:0.0019iced:0.0410)
+		(STON:0.0033icably:0.0022iscovered:0.1025iously:0.0028atoes:0.1562 intolerance:0.0062 popping:0.0029iced:0.0630)
+		( lovers:0.0033 popping:0.0024iscovered:0.1133but:0.0040atoes:0.1826 intolerance:0.0057 popping:0.0038iced:0.0869)
+		( lovers:0.0047 mainly:0.0050iscovered:0.1196but:0.0102atoes:0.2129onia:0.0060 mainly:0.0054iced:0.1079)
+		( lovers:0.0070 often:0.0120efined:0.1240but:0.0214atoes:0.2236 Grow:0.0067 mainly:0.0123iced:0.1309)
+		(!:0.0119 a:0.0278efined:0.1216 but:0.0466atoes:0.2227 are:0.0243 a:0.0393iced:0.1582)
+		(!:0.0703 a:0.1582 and:0.0894 but:0.0918atoes:0.1846,:0.1631 a:0.1641iced:0.1992)
+		( are:0.0972 a:0.2012,:0.2061 yellow:0.0845assium:0.2754,:0.2852 a:0.1641iced:0.2793)
+		(!:0.1060 a:0.1895,:0.2500 yellow:0.1016assium:0.4180,:0.2949 a:0.1309iced:0.4023)
+		(!:0.1060 a:0.1895,:0.2500 yellow:0.1016assium:0.4180,:0.2949 a:0.1309iced:0.4023)
+iced
+------
+		( still:0.0107ox:0.0439 and:0.0029entials:0.0840enne:0.0056 still:0.0099ills:0.0151rers:0.0056)
+		(icably:0.0016iscovered:0.0918iously:0.0019entials:0.0674 intolerance:0.0055icably:0.0015iced:0.0112leneck:0.0026)
+		(icably:0.0021iscovered:0.1025iously:0.0024atoes:0.0840 intolerance:0.0060icably:0.0015iced:0.0228leneck:0.0028)
+		(icably:0.0023iscovered:0.0972iously:0.0027atoes:0.1226 intolerance:0.0064 popping:0.0019iced:0.0410itating:0.0032)
+		(icably:0.0022iscovered:0.1025iously:0.0028atoes:0.1562 intolerance:0.0062 popping:0.0029iced:0.0630itating:0.0040)
+		( popping:0.0024iscovered:0.1133but:0.0040atoes:0.1826 intolerance:0.0057 popping:0.0038iced:0.0869ried:0.0040)
+		( mainly:0.0050iscovered:0.1196but:0.0102atoes:0.2129onia:0.0060 mainly:0.0054iced:0.1079ried:0.0056)
+		( often:0.0120efined:0.1240but:0.0214atoes:0.2236 Grow:0.0067 mainly:0.0123iced:0.1309ering:0.0066)
+		( a:0.0278efined:0.1216 but:0.0466atoes:0.2227 are:0.0243 a:0.0393iced:0.1582ling:0.0150)
+		( a:0.1582 and:0.0894 but:0.0918atoes:0.1846,:0.1631 a:0.1641iced:0.1992,:0.0422)
+		( a:0.2012,:0.2061 yellow:0.0845assium:0.2754,:0.2852 a:0.1641iced:0.2793,:0.1260)
+		( a:0.1895,:0.2500 yellow:0.1016assium:0.4180,:0.2949 a:0.1309iced:0.4023,:0.1216)
+		( a:0.1895,:0.2500 yellow:0.1016assium:0.4180,:0.2949 a:0.1309iced:0.4023,:0.1216)
+, and they are a good source of antioxidants.
+- The most important
+5150: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0034 still:0.0077iscovered:0.0557 and:0.0026entials:0.1348enne:0.0045 still:0.0084ills:0.0156)
+		(STON:0.0021icably:0.0014iscovered:0.1514ounded:0.0018entials:0.1201 intolerance:0.0042icably:0.0014iced:0.0063)
+		(STON:0.0024icably:0.0018iscovered:0.1553ounded:0.0022entials:0.1201 intolerance:0.0045icably:0.0016iced:0.0121)
+		(STON:0.0026icably:0.0021iscovered:0.1641�:0.0025entially:0.1226 intolerance:0.0049 popping:0.0016iced:0.0221)
+		(STON:0.0025icably:0.0020iscovered:0.1768iously:0.0021entially:0.1475 intolerance:0.0051 popping:0.0025iced:0.0369)
+		( lovers:0.0031 popping:0.0031iscovered:0.1807but:0.0025entially:0.1455onia:0.0066 popping:0.0035iced:0.0540)
+		( lovers:0.0051 popping:0.0047iscovered:0.1924but:0.0059atoes:0.1514onia:0.0094ata:0.0062iced:0.0728)
+		( lovers:0.0085 everywhere:0.0070efined:0.2109but:0.0104atoes:0.1514onia:0.0088ata:0.0072iced:0.0928)
+		( lovers:0.0124 often:0.0155efined:0.2207 but:0.0493atoes:0.1318 are:0.0188 a:0.0192iced:0.1245)
+		(!:0.0601 a:0.1035 and:0.1035 but:0.1187assium:0.1099 are:0.1475 a:0.0820iced:0.1709)
+		( are:0.1621 a:0.1846,:0.2520 but:0.1074assium:0.1270 are:0.2910 a:0.1016iced:0.2129)
+		( are:0.1426 a:0.1797,:0.3027 white:0.0928assium:0.2041 are:0.3203 red:0.0972iced:0.2754)
+		( are:0.1426 a:0.1797,:0.3027 white:0.0928assium:0.2041 are:0.3203 red:0.0972iced:0.2754)
+iced
+------
+		( still:0.0077iscovered:0.0557 and:0.0026entials:0.1348enne:0.0045 still:0.0084ills:0.0156rers:0.0049)
+		(icably:0.0014iscovered:0.1514ounded:0.0018entials:0.1201 intolerance:0.0042icably:0.0014iced:0.0063leneck:0.0020)
+		(icably:0.0018iscovered:0.1553ounded:0.0022entials:0.1201 intolerance:0.0045icably:0.0016iced:0.0121leneck:0.0020)
+		(icably:0.0021iscovered:0.1641�:0.0025entially:0.1226 intolerance:0.0049 popping:0.0016iced:0.0221itating:0.0027)
+		(icably:0.0020iscovered:0.1768iously:0.0021entially:0.1475 intolerance:0.0051 popping:0.0025iced:0.0369itating:0.0030)
+		( popping:0.0031iscovered:0.1807but:0.0025entially:0.1455onia:0.0066 popping:0.0035iced:0.0540rying:0.0037)
+		( popping:0.0047iscovered:0.1924but:0.0059atoes:0.1514onia:0.0094ata:0.0062iced:0.0728ering:0.0052)
+		( everywhere:0.0070efined:0.2109but:0.0104atoes:0.1514onia:0.0088ata:0.0072iced:0.0928ering:0.0116)
+		( often:0.0155efined:0.2207 but:0.0493atoes:0.1318 are:0.0188 a:0.0192iced:0.1245ling:0.0206)
+		( a:0.1035 and:0.1035 but:0.1187assium:0.1099 are:0.1475 a:0.0820iced:0.1709 up:0.0640)
+		( a:0.1846,:0.2520 but:0.1074assium:0.1270 are:0.2910 a:0.1016iced:0.2129,:0.1279)
+		( a:0.1797,:0.3027 white:0.0928assium:0.2041 are:0.3203 red:0.0972iced:0.2754,:0.1484)
+		( a:0.1797,:0.3027 white:0.0928assium:0.2041 are:0.3203 red:0.0972iced:0.2754,:0.1484)
+, and the flowers are red.
+The flowers are a great source of
+5300: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0051 still:0.0104irection:0.0425 and:0.0027entials:0.1152enne:0.0078 still:0.0101ills:0.0160)
+		( Limbaugh:0.0021icably:0.0016iscovered:0.1226iously:0.0017entials:0.1216cemic:0.0024icably:0.0016iced:0.0116)
+		( Limbaugh:0.0022icably:0.0022iscovered:0.1245iously:0.0025entials:0.1235 intolerance:0.0023icably:0.0018iced:0.0206)
+		(rily:0.0023icably:0.0025iscovered:0.1318iously:0.0030entially:0.1494onia:0.0044atically:0.0020iced:0.0330)
+		(rily:0.0019icably:0.0025iscovered:0.1357iously:0.0031entially:0.1797onia:0.0093atically:0.0026iced:0.0498)
+		( lovers:0.0019 popping:0.0024iscovered:0.1514iously:0.0027atoes:0.2012onia:0.0177ata:0.0036iced:0.0659)
+		( lovers:0.0031 everywhere:0.0049iscovered:0.1592but:0.0049atoes:0.2520onia:0.0270ata:0.0068iced:0.0815)
+		( lovers:0.0055 everywhere:0.0133iscovered:0.1670but:0.0096atoes:0.2969onia:0.0334 everywhere:0.0155iced:0.1060)
+		( lovers:0.0088 everywhere:0.0249efined:0.1748 but:0.0400atoes:0.3301onia:0.0233 everywhere:0.0239iced:0.1348)
+		(!:0.0554 a:0.0874efined:0.1328 and:0.1060atoes:0.3125 are:0.2344 a:0.1035iced:0.1924)
+		(!:0.1133 a:0.2090,:0.1611 but:0.0825atoes:0.2793 are:0.5352 a:0.1611iced:0.2676)
+		(!:0.1289 a:0.2021,:0.1934 white:0.0640atoes:0.2832 are:0.5586 a:0.1436iced:0.3945)
+		(!:0.1289 a:0.2021,:0.1934 white:0.0640atoes:0.2832 are:0.5586 a:0.1436iced:0.3945)
+iced
+------
+		( still:0.0104irection:0.0425 and:0.0027entials:0.1152enne:0.0078 still:0.0101ills:0.0160rers:0.0051)
+		(icably:0.0016iscovered:0.1226iously:0.0017entials:0.1216cemic:0.0024icably:0.0016iced:0.0116cers:0.0020)
+		(icably:0.0022iscovered:0.1245iously:0.0025entials:0.1235 intolerance:0.0023icably:0.0018iced:0.0206cers:0.0022)
+		(icably:0.0025iscovered:0.1318iously:0.0030entially:0.1494onia:0.0044atically:0.0020iced:0.0330itating:0.0036)
+		(icably:0.0025iscovered:0.1357iously:0.0031entially:0.1797onia:0.0093atically:0.0026iced:0.0498itating:0.0050)
+		( popping:0.0024iscovered:0.1514iously:0.0027atoes:0.2012onia:0.0177ata:0.0036iced:0.0659itating:0.0045)
+		( everywhere:0.0049iscovered:0.1592but:0.0049atoes:0.2520onia:0.0270ata:0.0068iced:0.0815itating:0.0035)
+		( everywhere:0.0133iscovered:0.1670but:0.0096atoes:0.2969onia:0.0334 everywhere:0.0155iced:0.1060ling:0.0070)
+		( everywhere:0.0249efined:0.1748 but:0.0400atoes:0.3301onia:0.0233 everywhere:0.0239iced:0.1348ling:0.0194)
+		( a:0.0874efined:0.1328 and:0.1060atoes:0.3125 are:0.2344 a:0.1035iced:0.1924 up:0.0591)
+		( a:0.2090,:0.1611 but:0.0825atoes:0.2793 are:0.5352 a:0.1611iced:0.2676 up:0.1943)
+		( a:0.2021,:0.1934 white:0.0640atoes:0.2832 are:0.5586 a:0.1436iced:0.3945 up:0.1885)
+		( a:0.2021,:0.1934 white:0.0640atoes:0.2832 are:0.5586 a:0.1436iced:0.3945 up:0.1885)
+ up, and they are a good source of vitamin C.
+The most
+5450: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(chel:0.0044 still:0.0096iscovered:0.0476 and:0.0018atoes:0.0708enne:0.0063 still:0.0099ills:0.0166)
+		(STON:0.0023icably:0.0012iscovered:0.1162iously:0.0019entials:0.0474 intolerance:0.0031icably:0.0012iced:0.0132)
+		(rily:0.0026icably:0.0014iscovered:0.1318iously:0.0024atoes:0.0703 intolerance:0.0037atically:0.0015iced:0.0240)
+		(rily:0.0026 happiest:0.0016iscovered:0.1543iously:0.0028atoes:0.0981 intolerance:0.0041atically:0.0024iced:0.0469)
+		(rily:0.0023ata:0.0021iscovered:0.1621iously:0.0025entially:0.1191 intolerance:0.0045ata:0.0035iced:0.0693)
+		( lovers:0.0029ata:0.0039iscovered:0.1846iously:0.0018entially:0.1338onia:0.0054ata:0.0063iced:0.0957)
+		( lovers:0.0045ata:0.0064iscovered:0.1934but:0.0040atoes:0.1396onia:0.0082ata:0.0105iced:0.1250)
+		( lovers:0.0075 everywhere:0.0093iscovered:0.2031but:0.0081atoes:0.1484onia:0.0085ata:0.0118iced:0.1543)
+		(!:0.0157 also:0.0159iscovered:0.1865 but:0.0317atoes:0.1250,:0.0254 also:0.0214iced:0.1934)
+		(!:0.1025 a:0.0693iscovered:0.1235 but:0.0825om:0.0986,:0.2324 a:0.0674iced:0.2373)
+		(!:0.1807 a:0.1572,:0.2285 green:0.0996om:0.1177,:0.4727 a:0.1113iced:0.2891)
+		(!:0.1729 a:0.1582,:0.3125 white:0.1060assium:0.1289,:0.5234 a:0.1001iced:0.3906)
+		(!:0.1729 a:0.1582,:0.3125 white:0.1060assium:0.1289,:0.5234 a:0.1001iced:0.3906)
+iced
+------
+		( still:0.0096iscovered:0.0476 and:0.0018atoes:0.0708enne:0.0063 still:0.0099ills:0.0166rers:0.0072)
+		(icably:0.0012iscovered:0.1162iously:0.0019entials:0.0474 intolerance:0.0031icably:0.0012iced:0.0132leneck:0.0022)
+		(icably:0.0014iscovered:0.1318iously:0.0024atoes:0.0703 intolerance:0.0037atically:0.0015iced:0.0240rers:0.0024)
+		( happiest:0.0016iscovered:0.1543iously:0.0028atoes:0.0981 intolerance:0.0041atically:0.0024iced:0.0469itating:0.0027)
+		(ata:0.0021iscovered:0.1621iously:0.0025entially:0.1191 intolerance:0.0045ata:0.0035iced:0.0693itating:0.0033)
+		(ata:0.0039iscovered:0.1846iously:0.0018entially:0.1338onia:0.0054ata:0.0063iced:0.0957itches:0.0032)
+		(ata:0.0064iscovered:0.1934but:0.0040atoes:0.1396onia:0.0082ata:0.0105iced:0.1250ling:0.0048)
+		( everywhere:0.0093iscovered:0.2031but:0.0081atoes:0.1484onia:0.0085ata:0.0118iced:0.1543ling:0.0114)
+		( also:0.0159iscovered:0.1865 but:0.0317atoes:0.1250,:0.0254 also:0.0214iced:0.1934 up:0.0229)
+		( a:0.0693iscovered:0.1235 but:0.0825om:0.0986,:0.2324 a:0.0674iced:0.2373 up:0.1123)
+		( a:0.1572,:0.2285 green:0.0996om:0.1177,:0.4727 a:0.1113iced:0.2891 up:0.2207)
+		( a:0.1582,:0.3125 white:0.1060assium:0.1289,:0.5234 a:0.1001iced:0.3906 up:0.1914)
+		( a:0.1582,:0.3125 white:0.1060assium:0.1289,:0.5234 a:0.1001iced:0.3906 up:0.1914)
+ up in the same way as the other.
+The first thing you can
+5600: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0043 still:0.0098irection:0.0192 and:0.0021atoes:0.0718paces:0.0042 still:0.0093________:0.0107)
+		(STON:0.0021icably:0.0012iscovered:0.0408mat:0.0019entials:0.0786 intolerance:0.0020icably:0.0012iced:0.0092)
+		(STON:0.0023icably:0.0018iscovered:0.0427iously:0.0023entials:0.0894 intolerance:0.0022atically:0.0014iced:0.0155)
+		(STON:0.0024icably:0.0021iscovered:0.0415iously:0.0031atoes:0.0850 intolerance:0.0026atically:0.0029iced:0.0283)
+		(STON:0.0023icably:0.0021efined:0.0471iously:0.0034entially:0.1069onia:0.0034atically:0.0037iced:0.0449)
+		( lovers:0.0021ata:0.0036efined:0.0601iously:0.0033entially:0.1191onia:0.0064ata:0.0071iced:0.0586)
+		( lovers:0.0034ata:0.0068efined:0.0815but:0.0064entially:0.1191onia:0.0093ata:0.0125iced:0.0742)
+		( lovers:0.0061 everywhere:0.0114efined:0.1060but:0.0118atoes:0.1206onia:0.0090ata:0.0135iced:0.0869)
+		( lovers:0.0100 a:0.0181efined:0.1250 but:0.0576atoes:0.1060,:0.0107 a:0.0388iced:0.1050)
+		( are:0.0542 a:0.1299,:0.0679 but:0.1582ent:0.0996,:0.1235 a:0.1216________:0.1377)
+		( are:0.2090 a:0.1680,:0.2227 but:0.0981ent:0.1006,:0.2656 a:0.0991________:0.1943)
+		( are:0.1455 a:0.1396,:0.2930 purple:0.1016assium:0.0908,:0.2734 red:0.0723iced:0.2227)
+		( are:0.1455 a:0.1396,:0.2930 purple:0.1016assium:0.0908,:0.2734 red:0.0723iced:0.2227)
+iced
+------
+		( still:0.0098irection:0.0192 and:0.0021atoes:0.0718paces:0.0042 still:0.0093________:0.0107hot:0.0041)
+		(icably:0.0012iscovered:0.0408mat:0.0019entials:0.0786 intolerance:0.0020icably:0.0012iced:0.0092cers:0.0016)
+		(icably:0.0018iscovered:0.0427iously:0.0023entials:0.0894 intolerance:0.0022atically:0.0014iced:0.0155itating:0.0025)
+		(icably:0.0021iscovered:0.0415iously:0.0031atoes:0.0850 intolerance:0.0026atically:0.0029iced:0.0283itating:0.0042)
+		(icably:0.0021efined:0.0471iously:0.0034entially:0.1069onia:0.0034atically:0.0037iced:0.0449itating:0.0050)
+		(ata:0.0036efined:0.0601iously:0.0033entially:0.1191onia:0.0064ata:0.0071iced:0.0586itating:0.0046)
+		(ata:0.0068efined:0.0815but:0.0064entially:0.1191onia:0.0093ata:0.0125iced:0.0742ling:0.0037)
+		( everywhere:0.0114efined:0.1060but:0.0118atoes:0.1206onia:0.0090ata:0.0135iced:0.0869ling:0.0096)
+		( a:0.0181efined:0.1250 but:0.0576atoes:0.1060,:0.0107 a:0.0388iced:0.1050ling:0.0236)
+		( a:0.1299,:0.0679 but:0.1582ent:0.0996,:0.1235 a:0.1216________:0.1377 up:0.0747)
+		( a:0.1680,:0.2227 but:0.0981ent:0.1006,:0.2656 a:0.0991________:0.1943 up:0.1187)
+		( a:0.1396,:0.2930 purple:0.1016assium:0.0908,:0.2734 red:0.0723iced:0.2227 in:0.0781)
+		( a:0.1396,:0.2930 purple:0.1016assium:0.0908,:0.2734 red:0.0723iced:0.2227 in:0.0781)
+ in the same way as the Sun.
+The Sun is a very bright
+5750: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0034 still:0.0087irection:0.0437 and:0.0028atoes:0.0791paces:0.0055 still:0.0075?":0.0088)
+		(STON:0.0027icably:0.0013iscovered:0.0488iously:0.0024entials:0.0874 intolerance:0.0029icably:0.0013iced:0.0105)
+		(STON:0.0029icably:0.0017iscovered:0.0540iously:0.0040entials:0.0845 intolerance:0.0031iously:0.0013iced:0.0195)
+		(STON:0.0030icably:0.0018efined:0.0605iously:0.0047atoes:0.1187onia:0.0042ata:0.0017iced:0.0330)
+		(STON:0.0028 popping:0.0023efined:0.0801iously:0.0044atoes:0.1465onia:0.0068ata:0.0033iced:0.0464)
+		( lovers:0.0027 popping:0.0041efined:0.0967iously:0.0036atoes:0.1836onia:0.0109ata:0.0066iced:0.0625)
+		( lovers:0.0044ata:0.0078efined:0.1235but:0.0047atoes:0.2227onia:0.0161ata:0.0118iced:0.0742)
+		( lovers:0.0077ata:0.0113efined:0.1494 but:0.0125atoes:0.2520onia:0.0151ata:0.0139iced:0.0825)
+		(!:0.0117 a:0.0267efined:0.1426 but:0.0559atoes:0.2480 are:0.0164 a:0.0464iced:0.0972)
+		(!:0.0564 a:0.1807 and:0.1084 but:0.1250atoes:0.1904,:0.1348 a:0.1670iced:0.1118)
+		( are:0.1543 a:0.2539,:0.2148 but:0.1035atoes:0.1729,:0.2891 a:0.1758ery:0.1475)
+		( are:0.1396 a:0.2354,:0.2100 yellow:0.0806assium:0.1748,:0.3125 a:0.1377ery:0.1846)
+		( are:0.1396 a:0.2354,:0.2100 yellow:0.0806assium:0.1748,:0.3125 a:0.1377ery:0.1846)
+ery
+------
+		( still:0.0087irection:0.0437 and:0.0028atoes:0.0791paces:0.0055 still:0.0075?":0.0088cling:0.0145)
+		(icably:0.0013iscovered:0.0488iously:0.0024entials:0.0874 intolerance:0.0029icably:0.0013iced:0.0105thro:0.0029)
+		(icably:0.0017iscovered:0.0540iously:0.0040entials:0.0845 intolerance:0.0031iously:0.0013iced:0.0195thro:0.0041)
+		(icably:0.0018efined:0.0605iously:0.0047atoes:0.1187onia:0.0042ata:0.0017iced:0.0330thro:0.0068)
+		( popping:0.0023efined:0.0801iously:0.0044atoes:0.1465onia:0.0068ata:0.0033iced:0.0464thro:0.0105)
+		( popping:0.0041efined:0.0967iously:0.0036atoes:0.1836onia:0.0109ata:0.0066iced:0.0625thro:0.0168)
+		(ata:0.0078efined:0.1235but:0.0047atoes:0.2227onia:0.0161ata:0.0118iced:0.0742thro:0.0312)
+		(ata:0.0113efined:0.1494 but:0.0125atoes:0.2520onia:0.0151ata:0.0139iced:0.0825thro:0.0630)
+		( a:0.0267efined:0.1426 but:0.0559atoes:0.2480 are:0.0164 a:0.0464iced:0.0972thro:0.1279)
+		( a:0.1807 and:0.1084 but:0.1250atoes:0.1904,:0.1348 a:0.1670iced:0.1118thro:0.1787)
+		( a:0.2539,:0.2148 but:0.1035atoes:0.1729,:0.2891 a:0.1758ery:0.1475thro:0.1689)
+		( a:0.2354,:0.2100 yellow:0.0806assium:0.1748,:0.3125 a:0.1377ery:0.1846thro:0.1680)
+		( a:0.2354,:0.2100 yellow:0.0806assium:0.1748,:0.3125 a:0.1377ery:0.1846thro:0.1680)
+throat, and they are a very common type of plant.
+The
+5900: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Limbaugh:0.0041 still:0.0073irection:0.0352 and:0.0022assium:0.0781pace:0.0044 still:0.0071?":0.0082)
+		(STON:0.0023icably:0.0012iscovered:0.0591iously:0.0031entially:0.0747 intolerance:0.0022icably:0.0012iced:0.0110)
+		(rily:0.0027icably:0.0016iscovered:0.0613iously:0.0047entially:0.1074 intolerance:0.0022icably:0.0012iced:0.0194)
+		(rily:0.0028icably:0.0017iscovered:0.0623iously:0.0055entially:0.1406onia:0.0035atically:0.0014iced:0.0327)
+		(rily:0.0026 endless:0.0018iscovered:0.0645iously:0.0052entially:0.1787onia:0.0062atically:0.0019iced:0.0532)
+		( lovers:0.0023 endless:0.0022iscovered:0.0728iously:0.0039entially:0.1914onia:0.0104ata:0.0029iced:0.0693)
+		( lovers:0.0033 everywhere:0.0044iscovered:0.0776but:0.0043entially:0.1836onia:0.0161ata:0.0052iced:0.0835)
+		( lovers:0.0049 everywhere:0.0104efined:0.0850 orange:0.0081atoes:0.1953onia:0.0181ata:0.0075iced:0.0981)
+		(!:0.0085 everywhere:0.0162efined:0.0947 orange:0.0282atoes:0.2168onia:0.0107 also:0.0146iced:0.1216)
+		(!:0.0481 a:0.0825 and:0.0659 green:0.0815atoes:0.1924,:0.1172 a:0.0864iced:0.1611)
+		( are:0.2812 a:0.1904 and:0.1660 green:0.1318atoes:0.1602,:0.3105 a:0.1094iced:0.2041)
+		( are:0.2500 a:0.1680,:0.1680 green:0.1157assium:0.2695,:0.3340 a:0.0859iced:0.2715)
+		( are:0.2500 a:0.1680,:0.1680 green:0.1157assium:0.2695,:0.3340 a:0.0859iced:0.2715)
+iced
+------
+		( still:0.0073irection:0.0352 and:0.0022assium:0.0781pace:0.0044 still:0.0071?":0.0082rers:0.0034)
+		(icably:0.0012iscovered:0.0591iously:0.0031entially:0.0747 intolerance:0.0022icably:0.0012iced:0.0110itating:0.0022)
+		(icably:0.0016iscovered:0.0613iously:0.0047entially:0.1074 intolerance:0.0022icably:0.0012iced:0.0194itating:0.0045)
+		(icably:0.0017iscovered:0.0623iously:0.0055entially:0.1406onia:0.0035atically:0.0014iced:0.0327itating:0.0066)
+		( endless:0.0018iscovered:0.0645iously:0.0052entially:0.1787onia:0.0062atically:0.0019iced:0.0532itating:0.0068)
+		( endless:0.0022iscovered:0.0728iously:0.0039entially:0.1914onia:0.0104ata:0.0029iced:0.0693itating:0.0053)
+		( everywhere:0.0044iscovered:0.0776but:0.0043entially:0.1836onia:0.0161ata:0.0052iced:0.0835itating:0.0034)
+		( everywhere:0.0104efined:0.0850 orange:0.0081atoes:0.1953onia:0.0181ata:0.0075iced:0.0981ling:0.0060)
+		( everywhere:0.0162efined:0.0947 orange:0.0282atoes:0.2168onia:0.0107 also:0.0146iced:0.1216 up:0.0101)
+		( a:0.0825 and:0.0659 green:0.0815atoes:0.1924,:0.1172 a:0.0864iced:0.1611 up:0.0537)
+		( a:0.1904 and:0.1660 green:0.1318atoes:0.1602,:0.3105 a:0.1094iced:0.2041 in:0.1172)
+		( a:0.1680,:0.1680 green:0.1157assium:0.2695,:0.3340 a:0.0859iced:0.2715 in:0.0977)
+		( a:0.1680,:0.1680 green:0.1157assium:0.2695,:0.3340 a:0.0859iced:0.2715 in:0.0977)
+ in a very small amount of water.
+- The most common type of
+6050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(pace:0.0025 still:0.0087ox:0.0255 and:0.0028assium:0.1069paces:0.0032 still:0.0074icky:0.0076)
+		(STON:0.0026icably:0.0010iscovered:0.0786mat:0.0022entials:0.0618iencies:0.0029icably:0.0010!!!:0.0103)
+		(STON:0.0026icably:0.0015iscovered:0.0859iously:0.0022entially:0.0742iencies:0.0033icably:0.0011!!!:0.0151)
+		(STON:0.0025icably:0.0017iscovered:0.0884iously:0.0026entially:0.0996onia:0.0044atically:0.0021!!!:0.0221)
+		( lovers:0.0025 popping:0.0017iscovered:0.0938iously:0.0024entially:0.1201onia:0.0089atically:0.0030!!!:0.0286)
+		( lovers:0.0038 popping:0.0030iscovered:0.1011but:0.0022entially:0.1279onia:0.0145atically:0.0036!!!:0.0376)
+		( lovers:0.0063 everywhere:0.0056iscovered:0.1055but:0.0065entially:0.1289onia:0.0206ata:0.0065!!!:0.0464)
+		( lovers:0.0112 everywhere:0.0141iscovered:0.1113but:0.0153assium:0.1426onia:0.0250 everywhere:0.0128!!!:0.0579)
+		( lovers:0.0190 always:0.0209efined:0.1006 but:0.0664assium:0.1514onia:0.0172 often:0.0254!!!:0.0674)
+		(!:0.0635 a:0.1147 and:0.0688 but:0.1797assium:0.1235,:0.1465 a:0.1177!!!:0.0649)
+		( are:0.1611 a:0.1885 and:0.1758 but:0.1475assium:0.1270,:0.3203 a:0.1187________:0.1138)
+		(!:0.1689 a:0.1621,:0.1484 yellow:0.0767assium:0.2334,:0.3164 a:0.0869________:0.1050)
+		(!:0.1689 a:0.1621,:0.1484 yellow:0.0767assium:0.2334,:0.3164 a:0.0869________:0.1050)
+________
+------
+		( still:0.0087ox:0.0255 and:0.0028assium:0.1069paces:0.0032 still:0.0074icky:0.0076___:0.0057)
+		(icably:0.0010iscovered:0.0786mat:0.0022entials:0.0618iencies:0.0029icably:0.0010!!!:0.0103______:0.0073)
+		(icably:0.0015iscovered:0.0859iously:0.0022entially:0.0742iencies:0.0033icably:0.0011!!!:0.0151___:0.0104)
+		(icably:0.0017iscovered:0.0884iously:0.0026entially:0.0996onia:0.0044atically:0.0021!!!:0.0221___:0.0156)
+		( popping:0.0017iscovered:0.0938iously:0.0024entially:0.1201onia:0.0089atically:0.0030!!!:0.0286___:0.0216)
+		( popping:0.0030iscovered:0.1011but:0.0022entially:0.1279onia:0.0145atically:0.0036!!!:0.0376___:0.0292)
+		( everywhere:0.0056iscovered:0.1055but:0.0065entially:0.1289onia:0.0206ata:0.0065!!!:0.0464___:0.0374)
+		( everywhere:0.0141iscovered:0.1113but:0.0153assium:0.1426onia:0.0250 everywhere:0.0128!!!:0.0579___:0.0474)
+		( always:0.0209efined:0.1006 but:0.0664assium:0.1514onia:0.0172 often:0.0254!!!:0.0674___:0.0591)
+		( a:0.1147 and:0.0688 but:0.1797assium:0.1235,:0.1465 a:0.1177!!!:0.0649___:0.0767)
+		( a:0.1885 and:0.1758 but:0.1475assium:0.1270,:0.3203 a:0.1187________:0.1138___:0.0928)
+		( a:0.1621,:0.1484 yellow:0.0767assium:0.2334,:0.3164 a:0.0869________:0.1050___:0.1040)
+		( a:0.1621,:0.1484 yellow:0.0767assium:0.2334,:0.3164 a:0.0869________:0.1050___:0.1040)
+___.
+- The first time you have a garden, you can plant
+6200: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Timbers:0.0034 still:0.0080irection:0.0442gal:0.0021entials:0.0557hops:0.0021 still:0.0079icky:0.0128)
+		(STON:0.0022icably:0.0009iscovered:0.0491mat:0.0023entials:0.0742 intolerance:0.0030icably:0.0008icky:0.0119)
+		(rily:0.0025icably:0.0014iscovered:0.0522mat:0.0023entials:0.0679onia:0.0040 happiest:0.0009icky:0.0176)
+		(rily:0.0027 ALWAYS:0.0016efined:0.0518iously:0.0023entially:0.0728onia:0.0079 popping:0.0016icky:0.0223)
+		(ishly:0.0028 popping:0.0028efined:0.0591iously:0.0020atoes:0.0835onia:0.0143 popping:0.0028icky:0.0266)
+		(ishly:0.0032 popping:0.0050efined:0.0645but:0.0042atoes:0.0928onia:0.0253 popping:0.0042iced:0.0344)
+		(ishly:0.0037 popping:0.0078efined:0.0737but:0.0110atoes:0.1001onia:0.0356ata:0.0067iced:0.0422)
+		(ishly:0.0040 everywhere:0.0125efined:0.0864but:0.0219atoes:0.0938onia:0.0330 everywhere:0.0104vern:0.0505)
+		(!:0.0113 everywhere:0.0172efined:0.0835 but:0.0552atoes:0.0796onia:0.0177 everywhere:0.0148vern:0.0796)
+		(!:0.0518 a:0.0918 and:0.0942 and:0.1406om:0.0869,:0.1235 a:0.0776vern:0.1523)
+		( are:0.1299 a:0.1855,:0.2129 but:0.1118om:0.1377,:0.3047 a:0.1050vern:0.2656)
+		( are:0.1113 a:0.1631,:0.2266 white:0.1128om:0.1230,:0.3164 a:0.0742vern:0.2363)
+		( are:0.1113 a:0.1631,:0.2266 white:0.1128om:0.1230,:0.3164 a:0.0742vern:0.2363)
+vern
+------
+		( still:0.0080irection:0.0442gal:0.0021entials:0.0557hops:0.0021 still:0.0079icky:0.0128ote:0.0264)
+		(icably:0.0009iscovered:0.0491mat:0.0023entials:0.0742 intolerance:0.0030icably:0.0008icky:0.0119acular:0.0160)
+		(icably:0.0014iscovered:0.0522mat:0.0023entials:0.0679onia:0.0040 happiest:0.0009icky:0.0176acular:0.0474)
+		( ALWAYS:0.0016efined:0.0518iously:0.0023entially:0.0728onia:0.0079 popping:0.0016icky:0.0223acular:0.1240)
+		( popping:0.0028efined:0.0591iously:0.0020atoes:0.0835onia:0.0143 popping:0.0028icky:0.0266acular:0.2334)
+		( popping:0.0050efined:0.0645but:0.0042atoes:0.0928onia:0.0253 popping:0.0042iced:0.0344acular:0.3906)
+		( popping:0.0078efined:0.0737but:0.0110atoes:0.1001onia:0.0356ata:0.0067iced:0.0422acular:0.5469)
+		( everywhere:0.0125efined:0.0864but:0.0219atoes:0.0938onia:0.0330 everywhere:0.0104vern:0.0505acular:0.6719)
+		( everywhere:0.0172efined:0.0835 but:0.0552atoes:0.0796onia:0.0177 everywhere:0.0148vern:0.0796acular:0.7539)
+		( a:0.0918 and:0.0942 and:0.1406om:0.0869,:0.1235 a:0.0776vern:0.1523acular:0.7500)
+		( a:0.1855,:0.2129 but:0.1118om:0.1377,:0.3047 a:0.1050vern:0.2656acular:0.6562)
+		( a:0.1631,:0.2266 white:0.1128om:0.1230,:0.3164 a:0.0742vern:0.2363acular:0.6055)
+		( a:0.1631,:0.2266 white:0.1128om:0.1230,:0.3164 a:0.0742vern:0.2363acular:0.6055)
+acular, and they are a great example of the way to go.
+
+6350: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(hot:0.0031 still:0.0074irection:0.0449gal:0.0025entials:0.0835hops:0.0033 still:0.0070!!!:0.0106)
+		(STON:0.0020icably:0.0010iscovered:0.0962mat:0.0021entials:0.0811 intolerance:0.0035icably:0.0008!!!:0.0167)
+		(rily:0.0027icably:0.0015iscovered:0.1040iously:0.0025atoes:0.0962 intolerance:0.0041atically:0.0011!!!:0.0258)
+		(rily:0.0029 endless:0.0019iscovered:0.1084iously:0.0029atoes:0.1426onia:0.0052atically:0.0015!!!:0.0327)
+		(rily:0.0027 endless:0.0029iscovered:0.1187iously:0.0024atoes:0.1982onia:0.0099ata:0.0024!!!:0.0435)
+		(rily:0.0024 endless:0.0039iscovered:0.1211but:0.0039atoes:0.2334onia:0.0179ata:0.0048!!!:0.0513)
+		( us:0.0021 everywhere:0.0089iscovered:0.1270but:0.0108atoes:0.2754onia:0.0223ata:0.0085!!!:0.0596)
+		(!:0.0058 everywhere:0.0167iscovered:0.1250 but:0.0408atoes:0.3066onia:0.0162 everywhere:0.0168!!!:0.0723)
+		(!:0.0293 a:0.0398iscovered:0.0840 but:0.1914atoes:0.3125 are:0.0623 a:0.0574vern:0.0723)
+		( are:0.1206 a:0.1982 and:0.1963 but:0.2598atoes:0.2871 are:0.2891 a:0.1475vern:0.1206)
+		( are:0.1973 a:0.1904,:0.2158 but:0.1660atoes:0.4062 are:0.4473 a:0.1143ery:0.1875)
+		(,:0.1147 a:0.1562,:0.2383 and:0.1079atoes:0.4648 are:0.3828 red:0.0908ery:0.2305)
+		(,:0.1147 a:0.1562,:0.2383 and:0.1079atoes:0.4648 are:0.3828 red:0.0908ery:0.2305)
+ery
+------
+		( still:0.0074irection:0.0449gal:0.0025entials:0.0835hops:0.0033 still:0.0070!!!:0.0106cling:0.0123)
+		(icably:0.0010iscovered:0.0962mat:0.0021entials:0.0811 intolerance:0.0035icably:0.0008!!!:0.0167nergy:0.0024)
+		(icably:0.0015iscovered:0.1040iously:0.0025atoes:0.0962 intolerance:0.0041atically:0.0011!!!:0.0258thro:0.0026)
+		( endless:0.0019iscovered:0.1084iously:0.0029atoes:0.1426onia:0.0052atically:0.0015!!!:0.0327thro:0.0034)
+		( endless:0.0029iscovered:0.1187iously:0.0024atoes:0.1982onia:0.0099ata:0.0024!!!:0.0435ll:0.0056)
+		( endless:0.0039iscovered:0.1211but:0.0039atoes:0.2334onia:0.0179ata:0.0048!!!:0.0513ll:0.0087)
+		( everywhere:0.0089iscovered:0.1270but:0.0108atoes:0.2754onia:0.0223ata:0.0085!!!:0.0596thro:0.0138)
+		( everywhere:0.0167iscovered:0.1250 but:0.0408atoes:0.3066onia:0.0162 everywhere:0.0168!!!:0.0723thro:0.0287)
+		( a:0.0398iscovered:0.0840 but:0.1914atoes:0.3125 are:0.0623 a:0.0574vern:0.0723thro:0.0669)
+		( a:0.1982 and:0.1963 but:0.2598atoes:0.2871 are:0.2891 a:0.1475vern:0.1206thro:0.1104)
+		( a:0.1904,:0.2158 but:0.1660atoes:0.4062 are:0.4473 a:0.1143ery:0.1875ll:0.1719)
+		( a:0.1562,:0.2383 and:0.1079atoes:0.4648 are:0.3828 red:0.0908ery:0.2305the:0.2109)
+		( a:0.1562,:0.2383 and:0.1079atoes:0.4648 are:0.3828 red:0.0908ery:0.2305the:0.2109)
+thema, and the seeds are red.
+The seeds are red,
