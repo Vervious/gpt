@@ -384,6 +384,8 @@ Recall that in combinator calculuses, we need to be able to (1) copy arguments (
 Somehow, addition feels like an application / one-step evaluation / perhaps it refers to the depth of the tree, and each embedding dimension is like a possible subtree at each level. Or does attention give tree structure.
 
 
+
+
 General framework:
 - Backprop performs memorization of substitution rules.
 - regularization through LN limits "how much" we can memorize (limiting standard deviation).
