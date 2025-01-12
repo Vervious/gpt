@@ -139,7 +139,7 @@ class Block(DualModule):
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
-        y = res + self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        y = res + 2*self.attn(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
@@ -790,8 +790,8 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 
 
-test_name="10-resmlp-single"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+attn(x), x = x + mlp(LN(res)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="10-resmlp-single-2x"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = res+2*attn(x), x = x + mlp(LN(res)), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
