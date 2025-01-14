@@ -132,10 +132,9 @@ class Block(DualModule):
 
     def __init__(self, config):
         super().__init__()
-        self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+        self.ln = nn.RMSNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
         self.attn2 = CausalSelfAttention(config)
-        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.mlp = MLP(config)
         self.mlp2 = MLP(config)
     
@@ -147,15 +146,15 @@ class Block(DualModule):
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
         mlp = self.mlp(x)
-        mlp2 = self.mlp2(x)
+        # mlp2 = self.mlp2(x)
         attn = self.attn(x)
-        y = attn * mlp + mlp2 # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        y = attn * mlp # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
         x = res + y  # + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
-        x = self.ln_1(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
+        x = self.ln(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
         # NOTE: By step 116, prev is much larger, ~2.0
         # also seems to get bigger as layer number grows...
@@ -170,7 +169,7 @@ class Block(DualModule):
         # NOTE: doing res * attn(x) and x + mlp(LN(x)) explodes the prev when training last layer only, but when doing all layer loss, it is reasonable... (why?)
 
         # NOTE seems quite good res + attn(x), comment out ln_1
-        return x, newres, midx, y, attn, mlp, mlp2
+        return x, newres, midx, y, attn, mlp, res
 
 
 @dataclass
@@ -830,8 +829,8 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 
 
-test_name="10-resmlp-single-axm-novalue-extramlp"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, z = self.attn(x)*self.mlp(x)+self.mlp2(x), x=res+z, no value matrix (use identity instead), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="10-resmlp-single-axm-novalue-rms"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, z = self.attn(x)*self.mlp(x), x=res+z, no value, use RMSNorm, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
@@ -880,7 +879,7 @@ ENABLE_LAYER_LOSS = False
 hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 20000
-sample_frequency = 150
+sample_frequency = 500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches

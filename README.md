@@ -534,3 +534,25 @@ Question:
 what happens if i backprop every layer, but only propagate the gradient one layer
 
 termination when it no longer updates / when it converges
+
+
+
+## On Backprop
+
+Note that the all_layer generally does seem slightly worse. For instance:
+
+```testname = "10-resmlp-single-axm-novalue-copy-alllayer"
+basename = "10-resmlp-single-axm-novalue"
+```
+
+![loss plot](img/10-resmlp-single-axm-novalue-copy-alllayeri.png)
+
+With all-layer loss, the mlp size does seem smaller, and the graphs seemed more centered.
+
+Let us now try it without deep propagation, i.e. all layer but only propagating the gradient one step:
+
+
+## RMSNorm
+
+Now, going bak to single layer loss, using the axm architecture, what does it look like with RMSNorm?
+
