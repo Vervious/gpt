@@ -470,6 +470,41 @@ It seems to be the best yet.
 
 What happens if we only feed in `attn(x) + mlp(x)` into the attn and mlp components of the next layer, and not the res? (This one crashes).
 
+What happens if we remove the value matrix, and instead just use the identity matrix, and them sum together the output of all of the heads?
+
+
+![loss plot](img/10-resmlp-single-axm-novaluei.png)
+
+```
+@ 4699 train 3.9265 , allloss: 3.9265, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9967e-04, norm:0.6336, dt: 1324.04ms, tok/sec: 98993.98, flops:42.88, batch-reuse:1
+INFO nextres 33.397308349609375 attn*mlp 33.40809631347656 layernormed 1.0006517171859741
+	 attn_hist -29.4375<tensor([ 45., 134., 166., 263., 119.,  41.])>29.25 mlp_hist -10.4375<tensor([ 24., 123., 402., 207.,  10.,   2.], dtype=torch.bfloat16)>15.0625
+INFO nextres 193.25694274902344 attn*mlp 195.94659423828125 layernormed 1.0006517171859741
+	 attn_hist -75.375<tensor([  1.,  11., 467., 249.,  38.,   2.])>72.75 mlp_hist -58.5<tensor([ 74., 122., 255., 280.,  33.,   5.], dtype=torch.bfloat16)>80.0
+INFO nextres 120.01077270507812 attn*mlp 82.8893814086914 layernormed 1.0006517171859741
+	 attn_hist -52.5<tensor([ 14., 545., 197.,  10.,   1.,   1.])>116.25 mlp_hist -18.125<tensor([  7.,   3., 272., 278., 190.,  17.], dtype=torch.bfloat16)>6.28125
+INFO nextres 71.63121032714844 attn*mlp 55.632476806640625 layernormed 1.0006517171859741
+	 attn_hist -45.75<tensor([ 14., 526., 212.,  12.,   2.,   2.])>102.75 mlp_hist -13.0625<tensor([  7.,  24., 362., 226., 137.,  12.], dtype=torch.bfloat16)>5.21875
+INFO nextres 44.969993591308594 attn*mlp 30.2081298828125 layernormed 1.0006517171859741
+	 attn_hist -49.875<tensor([  8., 436., 308.,  12.,   2.,   2.])>106.5 mlp_hist -7.6875<tensor([ 11., 276., 183., 214.,  74.,  10.], dtype=torch.bfloat16)>3.8125
+INFO nextres 29.09838104248047 attn*mlp 18.429052352905273 layernormed 1.0006517171859741
+	 attn_hist -45.375<tensor([ 27., 598., 130.,  10.,   1.,   2.])>109.5 mlp_hist -4.8125<tensor([155., 192., 158., 181.,  71.,  11.], dtype=torch.bfloat16)>2.78125
+INFO nextres 19.71997833251953 attn*mlp 12.138340950012207 layernormed 1.0006517171859741
+	 attn_hist -35.8125<tensor([132., 586.,  42.,   6.,   1.,   1.])>112.5 mlp_hist -3.65625<tensor([210., 152., 167., 177.,  56.,   6.], dtype=torch.bfloat16)>2.609375
+INFO nextres 15.027619361877441 attn*mlp 7.450224876403809 layernormed 1.0006517171859741
+	 attn_hist -34.5<tensor([121., 542.,  94.,   9.,   1.,   1.])>99.0 mlp_hist -3.25<tensor([166., 180., 143., 212.,  57.,  10.], dtype=torch.bfloat16)>2.09375
+INFO nextres 13.641393661499023 attn*mlp 5.161359786987305 layernormed 1.0006517171859741
+	 attn_hist -36.75<tensor([ 47., 202., 477.,  38.,   2.,   2.])>73.875 mlp_hist -3.1875<tensor([ 13., 253., 178., 238.,  70.,  16.], dtype=torch.bfloat16)>1.609375
+INFO nextres 15.402214050292969 attn*mlp 6.81701135635376 layernormed 1.0006517171859741
+	 attn_hist -36.5625<tensor([ 28., 136., 418., 123.,  58.,   5.])>44.25 mlp_hist -4.125<tensor([  4.,  26.,  81., 354., 270.,  33.], dtype=torch.bfloat16)>1.5703125
+INFO nextres 19.019399642944336 attn*mlp 8.641536712646484 layernormed 1.0006517171859741
+	 attn_hist -30.0<tensor([ 65., 130., 418.,  95.,  55.,   5.])>43.5 mlp_hist -5.03125<tensor([ 24., 156., 308.,  90., 113.,  78.], dtype=torch.bfloat16)>5.65625
+INFO nextres 20.741458892822266 attn*mlp 7.100666046142578 layernormed 1.0006517171859741
+	 attn_hist -34.3125<tensor([ 21., 186., 411., 108.,  38.,   4.])>50.625 mlp_hist -5.34375<tensor([ 23., 328., 159.,  73.,  66., 120.], dtype=torch.bfloat16)>8.1875
+```
+
+It is almost as good, but definitely not as good (I wonder if because we got rid of that one projection matrix).
+
 
 
 Recall that in combinator calculuses, we need to be able to (1) copy arguments (inverting this operation is kind of the point of compression / learning a computation) and (2) apply arguments to each other (programmability). When inverting, I suspect it is just pattern match replacement (is this the MLP). Magnitude is somehow important for the encoding. Attention combines tokens into single embeddings? Is this some manifestation of programmability. Or, is everything truly in the forward direction. Attention takes a weighted sum of prior tokens.

@@ -41,7 +41,8 @@ class CausalSelfAttention(DualModule):
         super().__init__()
         assert config.n_embd % config.n_head == 0
         # key, query, value batched for all heads
-        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
+        # self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
+        self.c_attn = nn.Linear(config.n_embd, 2 * config.n_embd)
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
         # regularization
@@ -60,17 +61,18 @@ class CausalSelfAttention(DualModule):
         # nh is "number of heads", hs is "head size", C is number of channels is nh * hs
         # e.g. GPT2 (124M), n_head = 12, hs = 64, nh*hs=C=768 channels
         # each token emits three vectors query, key, value
-        qkv = self.c_attn(x)
-        q,k,v = qkv.split(self.n_embd, dim=2)
-        # q,k = qkv.split(self.n_embd, dim=2)
+        # qkv = self.c_attn(x)
+        # q,k,v = qkv.split(self.n_embd, dim=2)
+        qk = self.c_attn(x)
+        q,k = qk.split(self.n_embd, dim=2)
         # treat heads as batches
         k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+        # v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
         # # NOTE: value matrix seems redundant, could just change to the below
         # why do we split up dimensionality of x this way
-        # v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
+        v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
         # v = x.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
         # TODO figure out what is wrong with the below code and why it breaks training if we use it instead of the pytorch version
@@ -93,13 +95,18 @@ class CausalSelfAttention(DualModule):
         # y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
         
         # Just have Pytorch use FlashAttention for us. #TODO NVM
-        y = F.scaled_dot_product_attention(q, k, v, is_causal=True) 
+        y = F.scaled_dot_product_attention(q, k, v, is_causal=True)  
 
+        # TODO: uncomment for mnultihead attention
+        # y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
+        # # (B, T, n_embd)
+        # # output projection
+        # y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
 
-        y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
-        # (B, T, n_embd)
-        # output projection
-        y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
+        # without value matrix: (B, nh, T, T)
+        y = y @ x.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
+        y = y.sum(dim=1) # sum up the head dimension
+
         return y
 
 
@@ -139,7 +146,10 @@ class Block(DualModule):
         # ^ it is incredibly important that the residual is not passed through the layer norm... (TODO why??? Layers can no-op?)
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
-        y = self.attn(x)*self.mlp(x) # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        mlp = self.mlp(x)
+        mlp2 = self.mlp2(x)
+        attn = self.attn(x)
+        y = attn * mlp + mlp2 # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
@@ -160,7 +170,7 @@ class Block(DualModule):
         # NOTE: doing res * attn(x) and x + mlp(LN(x)) explodes the prev when training last layer only, but when doing all layer loss, it is reasonable... (why?)
 
         # NOTE seems quite good res + attn(x), comment out ln_1
-        return x, newres, midx, y
+        return x, newres, midx, y, attn, mlp, mlp2
 
 
 @dataclass
@@ -257,7 +267,8 @@ class GPT(DualModule):
             
             # block = self.transformer.h[i]
             # x, res = block.requires_grad_(True)(x, res)
-            x, res, midx, y = self.transformer.sharedblock.requires_grad_(True)(x, res, y) # TODO UNCOMMENT
+            x, res, midx, y, attn_signal, mlp_signal, mlp2_signal = self.transformer.sharedblock.requires_grad_(True)(x, res, y) # TODO UNCOMMENT
+            
 
             # # For now, try computing dot products in embedding space
             # target_embedding = torch.roll(prev_x, shifts=-1, dims=1) # shift in T dimension
@@ -280,7 +291,34 @@ class GPT(DualModule):
                     prevsize = res.std(dim=-1).mean()
                     nextsize = x.std(dim=-1).mean()
                     midsize = midx.std(dim=-1).mean()
-                    bprint(f"SIZE COMPARISON nextres {prevsize} attn*mlp {midsize} layernormed {nextsize}")
+                    bprint(f"INFO nextres {prevsize} attn*mlp {midsize} layernormed {nextsize}")
+                    # attn_signal and mlp_signal are B, T, C
+                    attn_signal = attn_signal.detach().cpu()
+                    mlp_signal = mlp_signal.detach().cpu()
+                    as_ = attn_signal[0,0,:]
+                    ml_ = mlp_signal[0,0,:]
+                    x_ = x.detach().cpu()[0,0,:]
+                    res_ = res.detach().cpu()[0,0,:]
+                    ml2_ = mlp2_signal.detach().cpu()[0,0,:]
+
+                    as_min = as_.min().item()
+                    as_max = as_.max().item()
+                    ml_min = ml_.min().item()
+                    ml_max = ml_.max().item()
+                    x_min = x_.min().item()
+                    x_max = x_.max().item()
+                    attn_hist = torch.histc(as_, bins=10, min=-100, max=100)
+                    mlp_hist = torch.histc(ml_, bins=10, min=-50, max=50)
+                    x_hist = torch.histc(x_, bins=10, min=-50, max=50)
+
+                    bprint(f"\t\t\tattn_hist {as_min}<{attn_hist}>{as_max}\n\t\t\tmlp_hist {ml_min}<{mlp_hist}>{ml_max}\n\t\t\tx_hist {x_min}<{x_hist}>{x_max}")
+                    cprint(f"\t@ {i}")
+                    cprint(f"\t\t# {as_.tolist()}")
+                    cprint(f"\t\t$ {ml_.tolist()}")
+                    cprint(f"\t\t% {(ml_*as_).tolist()}")
+                    cprint(f"\t\t^ {x_.tolist()}")
+                    cprint(f"\t\t& {res_.tolist()}")
+                    cprint(f"\t\t* {ml2_.tolist()}")
                 # if print_weights:
                 #     _batch_0_target = _target_embd[:,-7:,:] #(B, 7, vocab_size?)
                 #     _probs = F.softmax(_batch_0_target, dim=-1) #(B, 7, vocab_size?)
@@ -320,7 +358,7 @@ class GPT(DualModule):
 
             if ENABLE_LAYER_LOSS:
 
-                x_False, _, _, _ = self.transformer.sharedblock.requires_grad_(False)(x, res, y)
+                x_False, _, _, _, _, _, _ = self.transformer.sharedblock.requires_grad_(False)(x, res, y)
                 # _logits is after application of the current layer
                 _logits_incl_curr_layer = self.lm_head.requires_grad_(True)(x)
                 _logits_skipping_curr_layer = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
@@ -792,27 +830,37 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 
 
-test_name="10-resmlp-single-axm-recurse"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(y)*self.mlp(y), x=res+y, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="10-resmlp-single-axm-novalue-extramlp"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, z = self.attn(x)*self.mlp(x)+self.mlp2(x), x=res+z, no value matrix (use identity instead), ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
+superlog_dir = "superlog"
 sample_dir = "samples-ben"
 checkpoint_dir = "checkpoints-ben"
 os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(log_dir, exist_ok=True)
+os.makedirs(superlog_dir, exist_ok=True)
 os.makedirs(sample_dir, exist_ok=True)
 log_file = os.path.join(log_dir, f"{test_name}-log.txt")
+superlog_file = os.path.join(superlog_dir, f"{test_name}.txt")
 sample_file = os.path.join(sample_dir, f"{test_name}-main.txt")
 if master_process:
     with open(log_file, "w") as f: # clear log file
         pass
     with open(sample_file, "w") as f: # clear samples file
         pass
+    with open(superlog_file, "w") as f: # clear samples file
+        pass
 
 def bprint(s):
     print(s)
     with open(log_file, "a") as f:
+        f.write(s + "\n")
+
+def cprint(s):
+    # print(s)
+    with open(superlog_file, "a") as f:
         f.write(s + "\n")
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
@@ -992,6 +1040,7 @@ for step in range(max_steps):
         xgen = tokens.to(device)
         sample_rng = torch.Generator(device=device)
         sample_rng.manual_seed(42 + ddp_rank) # different seed for each GPU
+        cprint(f"! {step}")
         while xgen.size(1) < max_length:
             if xgen.size(1) < XLEN + 1:
                 _print_weights_val = True
