@@ -556,3 +556,9 @@ Let us now try it without deep propagation, i.e. all layer but only propagating 
 
 Now, going bak to single layer loss, using the axm architecture, what does it look like with RMSNorm?
 
+
+## On MLP
+
+One hypothesis is that the MLP performs a copy of the embedding in a memorized location, i.e. it rotates it, or adds a positional embedding (and maybe this is why the residual is important?)
+
+Try MLP(x+LN(y))
