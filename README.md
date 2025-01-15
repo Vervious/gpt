@@ -13,7 +13,7 @@
 
 ```screen -r```
 
-```screen -dm bash -c 'torchrun --standalone --nproc_per_node=1 train_gpt2_ben.py > log/screen.txt 2>&1'```
+```screen -dm bash -c 'torchrun --standalone --nproc_per_node=1 train_gpt2_ben.py > screen.txt 2>&1'```
 
 Setup:
 
@@ -562,3 +562,8 @@ Now, going bak to single layer loss, using the axm architecture, what does it lo
 One hypothesis is that the MLP performs a copy of the embedding in a memorized location, i.e. it rotates it, or adds a positional embedding (and maybe this is why the residual is important?)
 
 Try MLP(x+LN(y))
+
+Position embeddings are definitely additive. If we switch from `x = tok_emb + pos_emb` to `x = tok_emb * pos_emb`, the capability of the model to compute is completely destroyed:
+
+![loss plot](img/11-axm-multposi.png)
+

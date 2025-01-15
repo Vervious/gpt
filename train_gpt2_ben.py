@@ -150,7 +150,7 @@ class Block(DualModule):
         # mlp2 = self.mlp2(x)
         attn = self.attn(x)
         mlp = self.mlp(x)
-        y = attn+mlp # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        y = attn*mlp # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
@@ -232,7 +232,7 @@ class GPT(DualModule):
         pos = torch.arange(0, T, dtype=torch.long, device=idx.device) # shape (T)
         pos_emb = self.transformer.wpe(pos) # position embeddings shape (T, n_embd) # same for every row, then broadcast
         tok_emb = self.transformer.wte(idx) # token embeddings shape (B, T, n_embd)
-        x = tok_emb # + pos_emb # combine token and position embeddings
+        x = tok_emb + pos_emb # combine token and position embeddings
 
         # now forward through transformer
         losses = torch.tensor(0.0, device=idx.device)
@@ -831,8 +831,8 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 VALUE_MATRIX = False
 
-test_name="11-apm-nopos"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(x), z=self.mlp(x)+y, x=res+z, NO POSITIONAL EMBED, use RMSNorm, VALUEMATRIX={VALUE_MATRIX}, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="11-axm"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(x), z=self.mlp(x)*y, x=res+z, use RMSNorm, VALUEMATRIX={VALUE_MATRIX}, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"
