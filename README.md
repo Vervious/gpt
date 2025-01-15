@@ -583,3 +583,5 @@ Now, let's see what happens if we don't feed in the residual to future layers, b
 
 Nope! The residual is clearly important for reasons other than the initial positional embedding.
 
+What if we do: `y = KQ(x) @ mlp(x)` instead?
+
