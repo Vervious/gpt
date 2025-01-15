@@ -1,0 +1,64 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(Source:0.0002 slashing:0.0002 abst:0.0002form:0.0002 ballistic:0.0002 gamer:0.0002 Cornel:0.0002phans:0.0002)
+		(code:0.0002 Insider:0.0002 Noise:0.0002 storage:0.0002ected:0.0002also:0.0002 Across:0.0002phas:0.0002)
+		(:0.0002 ADC:0.0003Design:0.0002 Robb:0.0002ura:0.0002marriage:0.0001886:0.0001eth:0.0001)
+		(A:0.0002 Ful:0.0002 times:0.0002ties:0.0002 Euro:0.0002Log:0.0003 Zach:0.0002Log:0.0002)
+		( ideally:0.0002meric:0.0001 Lew:0.0002 wander:0.0001 magic:0.0001 Treaty:0.0001 appalled:0.0001 knowledgeable:0.0002)
+		(raved:0.0002Log:0.0002Log:0.0002raved:0.0002Log:0.0002raved:0.0002Log:0.0002Log:0.0002)
+		( Suite:0.0001 ter:0.0002scene:0.0002scene:0.0001scene:0.0001scene:0.0001Builder:0.0001scene:0.0001)
+		(Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002)
+		( stimuli:0.0002process:0.0002scene:0.0002Builder:0.0002Builder:0.0002Builder:0.0002Builder:0.0002Builder:0.0001)
+		( dancing:0.0002 dancing:0.0001 tant:0.0002ishable:0.0001ishable:0.0001ishable:0.0001 Dietary:0.0001 Dietary:0.0001)
+		( dancing:0.0002 dancing:0.0002 rem:0.0002remote:0.0002remote:0.0002remote:0.0002remote:0.0001 Cody:0.0001)
+		(fair:0.0002fair:0.0002 Fried:0.0002 Fried:0.0002 Fried:0.0002UTH:0.0002 Pork:0.0002 Pork:0.0002)
+		(fair:0.0002fair:0.0002 Fried:0.0002 Fried:0.0002 Fried:0.0002UTH:0.0002 Pork:0.0002 Pork:0.0002)
+ Pork
+------
+		( slashing:0.0002 abst:0.0002form:0.0002 ballistic:0.0002 gamer:0.0002 Cornel:0.0002phans:0.0002 intens:0.0002)
+		( Insider:0.0002 Noise:0.0002 storage:0.0002ected:0.0002also:0.0002 Across:0.0002phas:0.0002 ****:0.0002)
+		( ADC:0.0003Design:0.0002 Robb:0.0002ura:0.0002marriage:0.0001886:0.0001eth:0.0001letters:0.0002)
+		( Ful:0.0002 times:0.0002ties:0.0002 Euro:0.0002Log:0.0003 Zach:0.0002Log:0.0002Log:0.0002)
+		(meric:0.0001 Lew:0.0002 wander:0.0001 magic:0.0001 Treaty:0.0001 appalled:0.0001 knowledgeable:0.0002 momentarily:0.0001)
+		(Log:0.0002Log:0.0002raved:0.0002Log:0.0002raved:0.0002Log:0.0002Log:0.0002Log:0.0002)
+		( ter:0.0002scene:0.0002scene:0.0001scene:0.0001scene:0.0001Builder:0.0001scene:0.0001scene:0.0001)
+		(Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002Log:0.0002)
+		(process:0.0002scene:0.0002Builder:0.0002Builder:0.0002Builder:0.0002Builder:0.0002Builder:0.0001Builder:0.0001)
+		( dancing:0.0001 tant:0.0002ishable:0.0001ishable:0.0001ishable:0.0001 Dietary:0.0001 Dietary:0.0001 Dietary:0.0001)
+		( dancing:0.0002 rem:0.0002remote:0.0002remote:0.0002remote:0.0002remote:0.0001 Cody:0.0001 Cody:0.0002)
+		(fair:0.0002 Fried:0.0002 Fried:0.0002 Fried:0.0002UTH:0.0002 Pork:0.0002 Pork:0.0002 Pork:0.0002)
+		(fair:0.0002 Fried:0.0002 Fried:0.0002 Fried:0.0002UTH:0.0002 Pork:0.0002 Pork:0.0002 Pork:0.0002)
+ Pork Pork Pork Pork Pork Pork Pork Pork Pork Pork Pork Pork Pork 1978 Pork
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( 2004:0.0003
+:0.0011 of:0.0011 of:0.0030 of:0.0026 of:0.0023 of:0.0020 of:0.0035)
+		( the:0.0276 the:0.0630 the:0.0698 the:0.0771 the:0.0820 the:0.0801 the:0.0840 the:0.0859)
+		( 2004:0.0002 2004:0.0002 2004:0.0002 of:0.0002 of:0.0003 of:0.0003 of:0.0003 of:0.0003)
+		( the:0.0256 the:0.0281 the:0.0281 the:0.0298 the:0.0315 the:0.0325 the:0.0344 the:0.0334)
+		(rael:0.0002rael:0.0002 Rivals:0.0002 Rivals:0.0002 Rivals:0.0002 Rivals:0.0002 obscure:0.0002 obscure:0.0002)
+		( the:0.0032 the:0.0046 the:0.0055 the:0.0068 the:0.0078 the:0.0087 the:0.0098 the:0.0102)
+		(UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002 1978:0.0002 1978:0.0002)
+		( the:0.0192 the:0.0190 the:0.0190 the:0.0189 the:0.0189 the:0.0194 the:0.0200 the:0.0195)
+		( dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002)
+		( of:0.0020 of:0.0018 of:0.0015 of:0.0014 of:0.0013 of:0.0012 of:0.0011 of:0.0010)
+		(UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002)
+		( the:0.0115 the:0.0115 the:0.0115 the:0.0119 the:0.0123 the:0.0131 the:0.0139 the:0.0135)
+		( the:0.0115 the:0.0115 the:0.0115 the:0.0119 the:0.0123 the:0.0131 the:0.0139 the:0.0135)
+ the
+------
+		(
+:0.0011 of:0.0011 of:0.0030 of:0.0026 of:0.0023 of:0.0020 of:0.0035 of:0.0012)
+		( the:0.0630 the:0.0698 the:0.0771 the:0.0820 the:0.0801 the:0.0840 the:0.0859 the:0.1040)
+		( 2004:0.0002 2004:0.0002 of:0.0002 of:0.0003 of:0.0003 of:0.0003 of:0.0003 of:0.0003)
+		( the:0.0281 the:0.0281 the:0.0298 the:0.0315 the:0.0325 the:0.0344 the:0.0334 the:0.0344)
+		(rael:0.0002 Rivals:0.0002 Rivals:0.0002 Rivals:0.0002 Rivals:0.0002 obscure:0.0002 obscure:0.0002 obscure:0.0002)
+		( the:0.0046 the:0.0055 the:0.0068 the:0.0078 the:0.0087 the:0.0098 the:0.0102 the:0.0109)
+		(UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002 1978:0.0002 1978:0.0002 1978:0.0002)
+		( the:0.0190 the:0.0190 the:0.0189 the:0.0189 the:0.0194 the:0.0200 the:0.0195 the:0.0194)
+		( dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002 dismay:0.0002)
+		( of:0.0018 of:0.0015 of:0.0014 of:0.0013 of:0.0012 of:0.0011 of:0.0010 of:0.0009)
+		(UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002UC:0.0002)
+		( the:0.0115 the:0.0115 the:0.0119 the:0.0123 the:0.0131 the:0.0139 the:0.0135 the:0.0143)
+		( the:0.0115 the:0.0115 the:0.0119 the:0.0123 the:0.0131 the:0.0139 the:0.0135 the:0.0143)
+ the the the the the the the the the the the the the the the

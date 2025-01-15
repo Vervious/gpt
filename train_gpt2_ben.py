@@ -154,7 +154,7 @@ class Block(DualModule):
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
         midx = y
-        x = res + y  # + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
+        x = y # res + y  # + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
         newres = x
         x = self.ln(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
@@ -269,6 +269,8 @@ class GPT(DualModule):
             # block = self.transformer.h[i]
             # x, res = block.requires_grad_(True)(x, res)
             x, res, midx, y, attn_signal, mlp_signal, mlp2_signal = self.transformer.sharedblock.requires_grad_(True)(x, res, y) # TODO UNCOMMENT
+
+            x = x + pos_emb
             
 
             # # For now, try computing dot products in embedding space
@@ -831,8 +833,8 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 VALUE_MATRIX = False
 
-test_name="11-axm"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(x), z=self.mlp(x)*y, x=res+z, use RMSNorm, VALUEMATRIX={VALUE_MATRIX}, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="11-axm-addposembagain-nores"
+test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(x), z=self.mlp(x)*y, x=N(z)+pos_emb, use RMSNorm, VALUEMATRIX={VALUE_MATRIX}, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
 
 # Create log and persistence directory
 log_dir = "log-ben"

@@ -567,3 +567,19 @@ Position embeddings are definitely additive. If we switch from `x = tok_emb + po
 
 ![loss plot](img/11-axm-multposi.png)
 
+If we do `y = self.attn(x), z=self.mlp(x*y)*y`, the capability is slightly weakened, but not fully destroyed (it probably also converges?)
+
+![loss plot](img/11-axm-mlpinputmodi.png)
+
+Adjusting the input again, `y = self.attn(x), z=self.mlp(x+y)*y`
+
+![loss plot](img/11-axm-mlpinputmod2i.png)
+
+So really, we want to feed in just x into the mlp. (Why?)
+
+Now, let's see what happens if we don't feed in the residual to future layers, but we do add the positional embedding back in:
+
+![loss plot](img/11-axm-addposembagain-noresi.png)
+
+Nope! The residual is clearly important for reasons other than the initial positional embedding.
+
