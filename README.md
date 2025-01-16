@@ -762,3 +762,7 @@ x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}),
 ![loss plot](img/11-mlponly-mlponattn-value.png)
 
 Generally, we need a way for mlp to express a `no-op`. Also, one question is why taking the attention out actually makes it train faster.
+
+# Bringing the forward pass together
+
+One question is, how come we don't just sum together the entire context window? Well, the thing is that some tokens attend to other tokens selectively, and not others. So it could be that `[A B]` does something, but `[C B]` does not, and we should really only sum tokens together when we know it (potentially) does something. (Or, does attention compute instead whether `A` and `B` are positioned together / near each other?) (In that case, this whole key query interpretation is kind of ridiculous, and can maybe be replaced by inverses of the position embedding.)
