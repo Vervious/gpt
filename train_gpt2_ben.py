@@ -57,7 +57,10 @@ class CausalSelfAttention(DualModule):
         #     .view(1,1,config.block_size,config.block_size)
         # )
 
-    def forward(self, x):
+    def forward(self, x, z):
+        # x used to compute Q, K; z replaces v if VALUE_MATRIX = False
+        # z must be same dim as x
+
         B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
         # calculate query, key, value for all heads in batch and move head forward to be the batch
         # nh is "number of heads", hs is "head size", C is number of channels is nh * hs
@@ -106,7 +109,7 @@ class CausalSelfAttention(DualModule):
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
             # without value matrix: (B, nh, T, T)
-            y = y @ x.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
+            y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) # sum up the head dimension
 
         return y
@@ -148,15 +151,16 @@ class Block(DualModule):
         # x = x + self.attn(self.ln_1(x))  # reduce operation (all to all)
         # NOTE: res will generally be very large...
         # mlp2 = self.mlp2(x)
-        attn = self.attn(x)
-        mlp = self.mlp(x)
-        y = attn*mlp # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
+        attn = self.attn(x, x)
+        mlp = self.mlp(attn)
+        y = mlp
+        x = y+res
+        newres = x
+        x = self.ln(x)
+        # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
-        midx = y
-        x = y # res + y  # + self.mlp(x)  # map operation (one to one) # TODO ADD OR MULTIPLY? x + self.mlp #TODO additive attn, multiplicative mlp
-        newres = x
-        x = self.ln(x) # TODO UNCOMMENT, and then try removing res (applying attn to res)
+        midx = y # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
         # NOTE: By step 116, prev is much larger, ~2.0
         # also seems to get bigger as layer number grows...
@@ -270,7 +274,7 @@ class GPT(DualModule):
             # x, res = block.requires_grad_(True)(x, res)
             x, res, midx, y, attn_signal, mlp_signal, mlp2_signal = self.transformer.sharedblock.requires_grad_(True)(x, res, y) # TODO UNCOMMENT
 
-            x = x + pos_emb
+            # x = x +  pos_emb
             
 
             # # For now, try computing dot products in embedding space
@@ -831,10 +835,20 @@ else:
 
 ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
-VALUE_MATRIX = False
+VALUE_MATRIX = True
 
-test_name="11-axm-addposembagain-nores"
-test_description=f" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, y = self.attn(x), z=self.mlp(x)*y, x=N(z)+pos_emb, use RMSNorm, VALUEMATRIX={VALUE_MATRIX}, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}"
+test_name="11-mlponly-mlponattn-value"
+test_description=f""" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
+Setting:
+========
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+y = mlp
+x = y + res
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+======== 
+VALUEMATRIX={VALUE_MATRIX}"""
 
 # Create log and persistence directory
 log_dir = "log-ben"
@@ -1159,7 +1173,7 @@ for step in range(max_steps):
 
         rList = [round(value, 2) for value in earlyStopLayerDict_accum.tolist()]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, confloss: {conf_loss_accum.item():.4f}, targetloss: {target_loss_accum.item():.4f}, earlystop: {earlyStopNum_accum / (B*T*grad_accum_steps):.3f}, earlystopdict: {rList}, lr:{lr:.4e}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:

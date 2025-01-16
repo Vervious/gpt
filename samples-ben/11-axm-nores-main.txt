@@ -1,0 +1,97 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( evacuate:0.0002 staples:0.0002ib:0.0002 Trey:0.0002 Mandal:0.0002 stroke:0.0002 HTTP:0.0001 craw:0.0002)
+		( outraged:0.0001 Payne:0.0002 9000:0.0002916:0.0002shift:0.0002 uniquely:0.0002 Fiona:0.0002osition:0.0002)
+		(Code:0.0002 informs:0.0002 Shak:0.0002pei:0.0002manac:0.0002esome:0.0002Gall:0.0002 QU:0.0002)
+		( broker:0.0001119:0.0003�:0.0002 forming:0.0001119:0.0002A:0.0002A:0.0002 Tan:0.0002)
+		(software:0.0002 Tsukuyomi:0.0002software:0.0002 Finch:0.0002software:0.0002software:0.0002software:0.0002ologic:0.0002)
+		(ternally:0.0002 eminent:0.0001ternally:0.0002 dress:0.0002ternally:0.0002ternally:0.000277:0.0001 Bol:0.0002)
+		(Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0003)
+		( bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002)
+		(Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004)
+		( bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002)
+		(Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003)
+		( sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002)
+		( sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002)
+ sound
+------
+		( staples:0.0002ib:0.0002 Trey:0.0002 Mandal:0.0002 stroke:0.0002 HTTP:0.0001 craw:0.0002 ingrained:0.0001)
+		( Payne:0.0002 9000:0.0002916:0.0002shift:0.0002 uniquely:0.0002 Fiona:0.0002osition:0.0002 department:0.0002)
+		( informs:0.0002 Shak:0.0002pei:0.0002manac:0.0002esome:0.0002Gall:0.0002 QU:0.0002Bloom:0.0002)
+		(119:0.0003�:0.0002 forming:0.0001119:0.0002A:0.0002A:0.0002 Tan:0.0002A:0.0003)
+		( Tsukuyomi:0.0002software:0.0002 Finch:0.0002software:0.0002software:0.0002software:0.0002ologic:0.0002ologic:0.0002)
+		( eminent:0.0001ternally:0.0002 dress:0.0002ternally:0.0002ternally:0.000277:0.0001 Bol:0.0002izons:0.0002)
+		(Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0005Credit:0.0003Credit:0.0005)
+		( bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002)
+		(Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004Credit:0.0004)
+		( bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002 bonding:0.0002)
+		(Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003Credit:0.0003)
+		( sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002)
+		( sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002 sound:0.0002)
+ sound sound sound sound sound sound sound sound sound sound sound sound sound sound sound
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Petition:0.0002iform:0.0002keye:0.0002 swath:0.0002keye:0.0002 Pil:0.0002 shipments:0.0002 shipments:0.0002)
+		(!:0.0040 are:0.0029 are:0.0030,:0.0033,:0.0037,:0.0046,:0.0047,:0.0054)
+		( UCH:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002)
+		( is:0.0036 the:0.0035 the:0.0035 the:0.0036 the:0.0036 the:0.0036 the:0.0036 the:0.0036)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(.:0.0049.:0.0049.:0.0049.:0.0049.:0.0049.:0.0047.:0.0047.:0.0047)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(,:0.0048,:0.0048,:0.0048.:0.0048.:0.0048.:0.0049.:0.0049.:0.0049)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(,:0.0048,:0.0048,:0.0049,:0.0049,:0.0049,:0.0049,:0.0049,:0.0049)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(,:0.0042,:0.0043,:0.0043,:0.0045,:0.0045,:0.0045,:0.0045,:0.0045)
+		(,:0.0042,:0.0043,:0.0043,:0.0045,:0.0045,:0.0045,:0.0045,:0.0045)
+,
+------
+		(iform:0.0002keye:0.0002 swath:0.0002keye:0.0002 Pil:0.0002 shipments:0.0002 shipments:0.0002ゴ:0.0002)
+		( are:0.0029 are:0.0030,:0.0033,:0.0037,:0.0046,:0.0047,:0.0054,:0.0056)
+		( Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002 Mb:0.0002)
+		( the:0.0035 the:0.0035 the:0.0036 the:0.0036 the:0.0036 the:0.0036 the:0.0036 the:0.0035)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(.:0.0049.:0.0049.:0.0049.:0.0049.:0.0047.:0.0047.:0.0047.:0.0046)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(,:0.0048,:0.0048.:0.0048.:0.0048.:0.0049.:0.0049.:0.0049.:0.0049)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(,:0.0048,:0.0049,:0.0049,:0.0049,:0.0049,:0.0049,:0.0049,:0.0049)
+		( Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002 Leslie:0.0002)
+		(,:0.0043,:0.0043,:0.0045,:0.0045,:0.0045,:0.0045,:0.0045,:0.0046)
+		(,:0.0043,:0.0043,:0.0045,:0.0045,:0.0045,:0.0045,:0.0045,:0.0046)
+,,,,,,,,,,,,,,,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Guilty:0.0006モ:0.0028 overtake:0.0007フ:0.0024 wed:0.0006キ:0.0009モ:0.0024Ent:0.0005)
+		( the:0.0859 are:0.0791 the:0.0952,:0.1475
+:0.0635,:0.1187,:0.1104�:0.0026)
+		( Atk:0.0040 Atk:0.0037 Atk:0.0033 Atk:0.0036;;;;;;;;:0.0007 Atk:0.0036 Atk:0.0035 FUCK:0.0008)
+		(,:0.1011 the:0.1035,:0.1455 the:0.1064s:0.0210,:0.0967 the:0.0981�:0.0391)
+		( Atk:0.0045 Atk:0.0047 Atk:0.0038 Atk:0.0049 npm:0.0006 Atk:0.0047 Atk:0.0047 guiActive:0.0004)
+		( the:0.1445,:0.1040 the:0.2012,:0.0977
+:0.2451 the:0.1279,:0.1011s:0.0415)
+		( Atk:0.0053 Atk:0.0052 Atk:0.0043 Atk:0.0051 Atk:0.0011 Atk:0.0053 Atk:0.0052 Klingon:0.0003)
+		(,:0.1123 the:0.1006,:0.1914 the:0.1016,:0.1055,:0.1011 the:0.1113The:0.0247)
+		( Atk:0.0046 Atk:0.0047フ:0.0034 Atk:0.0050 }}:0.0005 Atk:0.0049 Atk:0.0051ating:0.0002)
+		( the:0.1094.:0.0796 the:0.2080.:0.0786The:0.0287 the:0.0801.:0.0903s:0.0236)
+		( Atk:0.0046 Atk:0.0045 Atk:0.0020 Atk:0.0048ates:0.0002 Atk:0.0047 Atk:0.0047Download:0.0003)
+		(.:0.1182 to:0.0488,:0.0708 to:0.0591.:0.0223.:0.1157 the:0.0610The:0.0298)
+		(.:0.1182 to:0.0488,:0.0708 to:0.0591.:0.0223.:0.1157 the:0.0610The:0.0298)
+The
+------
+		(モ:0.0028 overtake:0.0007フ:0.0024 wed:0.0006キ:0.0009モ:0.0024Ent:0.0005 waive:0.0007)
+		( are:0.0791 the:0.0952,:0.1475
+:0.0635,:0.1187,:0.1104�:0.0026 the:0.1060)
+		( Atk:0.0037 Atk:0.0033 Atk:0.0036;;;;;;;;:0.0007 Atk:0.0036 Atk:0.0035 FUCK:0.0008 Atk:0.0033)
+		( the:0.1035,:0.1455 the:0.1064s:0.0210,:0.0967 the:0.0981�:0.0391,:0.1494)
+		( Atk:0.0047 Atk:0.0038 Atk:0.0049 npm:0.0006 Atk:0.0047 Atk:0.0047 guiActive:0.0004 Atk:0.0039)
+		(,:0.1040 the:0.2012,:0.0977
+:0.2451 the:0.1279,:0.1011s:0.0415 the:0.2051)
+		( Atk:0.0052 Atk:0.0043 Atk:0.0051 Atk:0.0011 Atk:0.0053 Atk:0.0052 Klingon:0.0003 Atk:0.0043)
+		( the:0.1006,:0.1914 the:0.1016,:0.1055,:0.1011 the:0.1113The:0.0247,:0.1875)
+		( Atk:0.0047フ:0.0034 Atk:0.0050 }}:0.0005 Atk:0.0049 Atk:0.0051ating:0.0002フ:0.0036)
+		(.:0.0796 the:0.2080.:0.0786The:0.0287 the:0.0801.:0.0903s:0.0236 the:0.2021)
+		( Atk:0.0045 Atk:0.0020 Atk:0.0048ates:0.0002 Atk:0.0047 Atk:0.0047Download:0.0003 Atk:0.0019)
+		( to:0.0488,:0.0708 to:0.0591.:0.0223.:0.1157 the:0.0610The:0.0298,:0.0688)
+		( to:0.0488,:0.0708 to:0.0591.:0.0223.:0.1157 the:0.0610The:0.0298,:0.0688)
+, the-The, the-The, the-The, the-

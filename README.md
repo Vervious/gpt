@@ -577,11 +577,188 @@ Adjusting the input again, `y = self.attn(x), z=self.mlp(x+y)*y`
 
 So really, we want to feed in just x into the mlp. (Why?)
 
-Now, let's see what happens if we don't feed in the residual to future layers, but we do add the positional embedding back in:
+Now, let's see what happens if we don't feed in the residual to future layers, but we do add the positional embedding back in at every layer:
 
 ![loss plot](img/11-axm-addposembagain-noresi.png)
 
 Nope! The residual is clearly important for reasons other than the initial positional embedding.
 
-What if we do: `y = KQ(x) @ mlp(x)` instead?
+What if we do
 
+```
+attn = self.attn(y, y)
+mlp = self.mlp(x)
+y = attn*mlp
+x = res + y
+newres = x
+x = self.ln(x)
+```
+
+This crashes because values quickly go to infinity or zero.
+
+
+What if we do: `y = KQ(x) @ mlp(x)` instead? Well, it turns out worse. So somehow the fact that we are doing a linear combination of `x` and not `mlp(x)` is important. But note, mlp is not introduced anywhere else! (We took it away from the `attn*mlp` term.) And it still does seem to be able to learn. I.e.
+```
+mlp = self.mlp(x)
+attn = self.attn(x, mlp)
+y = attn
+x = res + y
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/11-axm-attnofzi.png)
+
+
+What if we do `y = KQ(mlp(x)) @ x`. Then, as before, it performs worse, but it is not fatal:
+```
+mlp = self.mlp(x)
+attn = self.attn(mlp, x)
+y = attn
+x = res + y
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/11-a-kqmlp.png)
+
+
+Out of curiosity, what if we get rid of mlp entirely. It turns out both of the above experiments look exactly like this one! So certainly the non-linearity is essential, but it does not show up immediately.
+```
+attn = self.attn(x, x)
+y = attn
+x = res + y
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/11-a-nomlp.png)
+
+
+What if run attn on mlp only; this is much worse than nomlp, and also much worse than self.attn(mlp,x). Of all of these experiments (without including the mlp component elsewhere), `self.attn(mlp, x)` is for some reason the best (and `self.attn(mlp, mlp)` is the worst).
+```
+mlp = self.mlp(x)
+attn = self.attn(mlp, mlp)
+y = attn
+x = res + y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-a-mlpasinput.png)
+
+
+Does it matter at all what I feed into attn?
+```
+mlp = self.mlp(x)
+attn = self.attn(mlp, x)
+y = attn*mlp
+x = res + y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-axm-mlpvalue.png)
+
+
+Directly comparing the previous to the vanilla experiment... (orange is attn(x, x))
+```
+mlp = self.mlp(x)
+attn = self.attn(x, x)
+y = attn*mlp
+x = res + y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-axm-xvalue-vs-mlp.png)
+
+
+so, yeah. I'm stumped. The best still seems to be `x = LN(res + attn(x)*mlp(x))`. For good measure, let's try feeding only attn into the mlp input: (This one should be very bad if I remember correctly)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+y = attn*mlp
+x = res + y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-axm-mlponattn.png)
+
+
+Oh hey. it's surprisingly not so bad, but it is definitely worse. When was it bad? Perhaps when it was `attn + mlp`. Let's try:
+```
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+y = attn+mlp
+x = res + y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-apm-mlponattn.png)
+
+For good measure, let's run the vanilla GPT with RMSNorm and no value matrix:
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+y = attn+mlp
+x = res + y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-apm.png)
+
+
+In general, it seems important to feed the whole `x` into the mlp and attention layers. In some sense, `x` represents an entire embedding, whereas attn and mlp perhaps generate only part of it. 
+
+Now, one last time, why is the residual so important? What happens again if I do this:
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+y = attn*mlp
+x = y
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-axm-nores.png)
+
+It doesn't work particularly well, but what happens if I turn All Layer Loss back on?
+
+![loss plot](img/11-axm-nores-alllayer.png)
+
+
+So surprisingly, removing the residual is fine if we do `attn*mlp`, as long as we have all layer loss. It does seem to converge a little slower. If we do `attn + mlp`, what happens?
+
+(todo)
+
+
+I do think that from first principles, it should be as follows (with the residual, because the mlp is allowed to be a `no-op'.). But, concretely, this doesn't work as well for some reason (maybe it converges over time?):
+```
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+y = mlp
+x = y + res
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-mlponly-mlponattn.png)
+
+
+Or, maybe even `y*res`? Nope, the loss here is stuck and doesn't change, so there is some numerical problem.
+```
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+y = mlp
+x = y * res
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-mlponly-mlponattn-times.png)
+
+
+Let's try this one again but train it longer. IT does eventually converge to the same place, I think!
+```
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+y = mlp
+x = y + res
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+![loss plot](img/11-mlponly-mlponattn-value.png)
+
+Generally, we need a way for mlp to express a `no-op`. Also, one question is why taking the attention out actually makes it train faster.
