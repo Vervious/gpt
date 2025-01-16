@@ -766,3 +766,33 @@ Generally, we need a way for mlp to express a `no-op`. Also, one question is why
 # Bringing the forward pass together
 
 One question is, how come we don't just sum together the entire context window? Well, the thing is that some tokens attend to other tokens selectively, and not others. So it could be that `[A B]` does something, but `[C B]` does not, and we should really only sum tokens together when we know it (potentially) does something. (Or, does attention compute instead whether `A` and `B` are positioned together / near each other?) (In that case, this whole key query interpretation is kind of ridiculous, and can maybe be replaced by inverses of the position embedding.)
+
+So, continuing this line of thought, if attention computes whether two tokens are positioned adjacent to each other (whcih would be a function of their *positions* only and not necessarily their semantic content, unless the two are conflated, which they may well be in natural language), then mlp should compute its *replacement*, namely, if `C = [A B]`, then MLP should learn `C`. This has the property that it describes both the inverse computation and the forward computation; i.e. if we are trying to compress the output of some computation, I think that this compression map can be learned exactly by learning `C` (i.e. learning some language for the forward computation). [Not going to lie, this is somewhat trippy.] 
+
+Importantly, it could also be that `[A B]` is a no-op, that is, it is already in its most simplified form, and so `[A B] = [A B]`. It could also be that `[A B C D E] = [A B' C D E]` is mostly a no-op, but there is some small operation. But, it seems that `[A B]` should fully replace the separate `A` and `B` from the previous layer (i.e. applying positional properties should not result in a no-op). The no-op could be implemented using a gate much like in an LSTM. Alternatively, a simple addition may be enough (not sure how to do a full replacement). So, I think, from these vague "principles", I expect the following architecture to be ideal (in terms of expressiveness, and interpretability, but not sure about optimizability):
+
+```
+x = self.attn(x, x) + x # (is this +x necessary? Or +res? Or nothing?)
+midx = x
+mlp = self.mlp(x)
+gate = sigmoid(self.mlp2(x))
+x = x*gate + mlp
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+
+The RMSNorm may not even be necessary. Is this additional mlp necessary, or can it just be learned via the embedding matrix? Is the residual previously necessary, only to allow for the implementation of no-op? (Previously, the norm of attn(x) is 10x that of mlp(x), but 1/4 of that of res.)
+
+## Experiments
+
+First, we try, without all layer loss:
+```
+x = self.attn(x, res)
+midx = x
+mlp = self.mlp(x)
+gate = sigmoid(self.mlp2(x))
+x = x*gate + mlp
+newres = x
+x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+```
+
