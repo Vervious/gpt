@@ -1083,9 +1083,102 @@ x = self.ln(x)
 ![loss plot](img/13-axm-deletion.png)
 
 
+Let's revisit vanilla attention, with indpenednet blocks, copying a bit from the original Kaprthy code. Wait, it does much better! Why?
+```
+x = x + self.attn(self.ln_1(x))
+x = x + self.mlp(self.ln_2(x))
+```
+![loss plot](img/13-baseline.png)
 
 
-TODO run axm for longer and make sure it actually stays on point with 7-test-2, or even a more standard baseline.
+Let's make sure that our multiplication schematic is still competitive when not reusing weights. Vanilla is still true. Unlike previously, this seems to be a complete no-op. (Maybe this only helps in the re-using weight regime?)
+```
+y = self.ln_1(x)
+x = x + self.attn(y)*self.mlp(y)
+```
+![loss plot](img/13-baseline-axm.png)
+
+Let's turn on the original, reusing weights.
+```
+x = x + self.attn(self.ln_1(x))
+x = x + self.mlp(self.ln_2(x))
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=4
+```
+![loss plot](img/13-baseline-reuseweights.png)
+
+Clearly reusing weight is what is wrong. So it seems like we need to probably increase the size of the mlp matrix correspondingly (from 4 to something larger, i.e. 4*NUMLAYERS to match the original number of weights) if we do decide to reuse weights.
+
+Let's turn on multiplication re-using wieghts again, just to see if munltiplication helps in the re-using weights regime. (Yes, it does improve optimization a little bit) Note that removing the value matrix in fact also improves things substantially during optimization (but is slower):
+```
+y = self.ln_1(x)
+x = x + self.attn(y)*self.mlp(y)
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=4
+```
+![loss plot](img/13-axm-reuseweights.png)
+![loss plot](img/13-axm-reuseweights-novaluecomp.png)
+
+Now, setting MLP_SCALE=4*12=48, to match the weights lost due to removal. Our hypothesis is wrong, and increasing the size of the MLP doesn't really help! 
+```
+y = self.ln_1(x)
+x = x + self.attn(y)*self.mlp(y)
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=48
+```
+![loss plot](img/13-axm-reuseweights-48mlp.png)
+
+
+To make sure, let's try `MLP_SCALE=48` for addition too. The performance impact of not reusing weights persists:
+```
+x = x + self.attn(self.ln_1(x))
+x = x + self.mlp(self.ln_2(x))
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=48
+```
+![loss plot](img/13-apm-reuseweights-48mlp.png)
+
+
+So somehow, it seems that we want to learn a different MLP for each layer. TODO
+
+
+
+Returning to the non-reusing-weights regime, what happens if we specifically have mlp negate embeddings that contribute to attention. This performs decidely worse:
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = x + self.attn(y,mlp*y)
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-axm-targetednegate.png)
+
+
+I don't understand though; isn't that mathematically equivalent to (note that this experiment, the no-value no-sharing-weights, is the best yet):
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = x + self.attn(y,y)*mlp
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-axm-novalue.png)
+
+No, they are not equivalent; the difference is that mlp also has dimension `(B, T, C)`. And when we do element-wise multiplication, in the first experiment `attn(y, mlp*y)`, each contribution is multiplied by the source token MLP weight, whereas when we do `attn(y, y)*mlp`, the final output is weighted by the destination token MLP.
+
+
 
 TODO when doing addition attention, what happens if I run mlp(x) instead of mlp(LN(attn + res))?
 

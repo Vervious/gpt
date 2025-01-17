@@ -1,62 +1,48 @@
 1: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( teammate:0.0001ille:0.0001 Clancy:0.0002onial:0.0002 softer:0.0002 rocket:0.0002ib:0.0002 Historical:0.0001)
-		(City:0.0002 kidnapping:0.0001block:0.0002VERSION:0.0002gence:0.0002 point:0.0002"></:0.0002 Historical:0.0002)
-		(City:0.0002 kidnapping:0.0001 forgiveness:0.0002VERSION:0.0002ynamic:0.0002 Nic:0.0002 Memorial:0.0002 Clancy:0.0002)
-		( Maintenance:0.0002bon:0.0002bon:0.0001 neighbors:0.0002ynamic:0.0002 Nic:0.0002 Memorial:0.0001Network:0.0002)
-		( Maintenance:0.0002bon:0.0002bon:0.0002 neighbors:0.0001 Commons:0.0001 Maintenance:0.0002 addition:0.0002Network:0.0002)
-		(Network:0.0002bon:0.0002bon:0.0002bon:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002Network:0.0002)
-		(Network:0.0002bon:0.0002 diverted:0.0002bon:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002Network:0.0002)
-		(Network:0.0002bon:0.0002 diverted:0.0002bon:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002Network:0.0002)
-		(Network:0.0002bon:0.0002 diverted:0.0002 diverted:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002bon:0.0002)
-		(Network:0.0002 reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 swore:0.0002 reviews:0.0002)
-		( nationalism:0.0002 reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 reviews:0.0002)
-		(usp:0.0002 reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002)
-		(usp:0.0002 reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002)
- diverted
+		( suffice:0.0002 suicide:0.0002 heading:0.0003 suicide:0.0002ORY:0.0003 suicide:0.0001 suicide:0.0002ORY:0.0002)
+ORY
 ------
-		(ille:0.0001 Clancy:0.0002onial:0.0002 softer:0.0002 rocket:0.0002ib:0.0002 Historical:0.0001 backstage:0.0001)
-		( kidnapping:0.0001block:0.0002VERSION:0.0002gence:0.0002 point:0.0002"></:0.0002 Historical:0.0002 IRA:0.0002)
-		( kidnapping:0.0001 forgiveness:0.0002VERSION:0.0002ynamic:0.0002 Nic:0.0002 Memorial:0.0002 Clancy:0.0002 opportun:0.0002)
-		(bon:0.0002bon:0.0001 neighbors:0.0002ynamic:0.0002 Nic:0.0002 Memorial:0.0001Network:0.0002 opportun:0.0002)
-		(bon:0.0002bon:0.0002 neighbors:0.0001 Commons:0.0001 Maintenance:0.0002 addition:0.0002Network:0.0002 opportun:0.0002)
-		(bon:0.0002bon:0.0002bon:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002Network:0.0002iley:0.0002)
-		(bon:0.0002 diverted:0.0002bon:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002Network:0.0002 addition:0.0002)
-		(bon:0.0002 diverted:0.0002bon:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002Network:0.0002 addition:0.0002)
-		(bon:0.0002 diverted:0.0002 diverted:0.0002 addition:0.0002 Maintenance:0.0002 addition:0.0002bon:0.0002 addition:0.0002)
-		( reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 swore:0.0002 reviews:0.0002 addition:0.0002)
-		( reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 reviews:0.0002 addition:0.0002)
-		( reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002)
-		( reviews:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002 diverted:0.0002)
- diverted addition reviews diverted additioniley swore addition swore addition addition addition addition addition addition
+		( suicide:0.0002 heading:0.0003 suicide:0.0002ORY:0.0003 suicide:0.0001 suicide:0.0002ORY:0.0002 mobilized:0.0002)
+ mobilizedORYORY acquire suicideJordan drought Canadatimes salary Fields Balls typh selfpackages
 50: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( Roses:0.0007 the:0.0569 the:0.0601 the:0.0869 the:0.0293 the:0.0640 the:0.0679 the:0.0845)
-		(.:0.0596 you:0.0806.:0.0752,:0.1494,:0.1348,:0.1396,:0.1221,:0.1016)
-		(.:0.0420.:0.0613.:0.0649,:0.1250,:0.1113,:0.1143,:0.0986,:0.0942)
-		( the:0.0427.:0.0542.:0.0559,:0.0947,:0.0859,:0.0894,:0.0806,:0.0801)
-		( the:0.0413.:0.0503.:0.0503,:0.0811,:0.0732,:0.0762,:0.0708,:0.0708)
-		( the:0.0410.:0.0461.:0.0476,:0.0708,:0.0649,:0.0684,:0.0649,:0.0654)
-		( the:0.0393.:0.0435.:0.0447,:0.0645,:0.0579,:0.0623,:0.0591,:0.0598)
-		( the:0.0376.:0.0417.:0.0417,:0.0588,:0.0540,:0.0566,:0.0552,:0.0559)
-		( the:0.0369.:0.0388.:0.0400,:0.0549,:0.0503,:0.0527,:0.0515,:0.0522)
-		( the:0.0352 the:0.0383.:0.0383,:0.0510,:0.0481,:0.0505,:0.0491,:0.0500)
-		( the:0.0344.:0.0366.:0.0366,:0.0488,:0.0444,:0.0483,:0.0469,:0.0479)
-		( the:0.0337 the:0.0359.:0.0359,:0.0454,:0.0425,:0.0447,:0.0447,:0.0457)
-		( the:0.0337 the:0.0359.:0.0359,:0.0454,:0.0425,:0.0447,:0.0447,:0.0457)
+		(,:0.0737,:0.0420,:0.0771 and:0.0591,:0.1152,:0.1162,:0.0312,:0.1011)
 ,
 ------
-		( the:0.0569 the:0.0601 the:0.0869 the:0.0293 the:0.0640 the:0.0679 the:0.0845 the:0.1064)
-		( you:0.0806.:0.0752,:0.1494,:0.1348,:0.1396,:0.1221,:0.1016,:0.1611)
-		(.:0.0613.:0.0649,:0.1250,:0.1113,:0.1143,:0.0986,:0.0942,:0.1260)
-		(.:0.0542.:0.0559,:0.0947,:0.0859,:0.0894,:0.0806,:0.0801,:0.1030)
-		(.:0.0503.:0.0503,:0.0811,:0.0732,:0.0762,:0.0708,:0.0708,:0.0889)
-		(.:0.0461.:0.0476,:0.0708,:0.0649,:0.0684,:0.0649,:0.0654,:0.0801)
-		(.:0.0435.:0.0447,:0.0645,:0.0579,:0.0623,:0.0591,:0.0598,:0.0737)
-		(.:0.0417.:0.0417,:0.0588,:0.0540,:0.0566,:0.0552,:0.0559,:0.0674)
-		(.:0.0388.:0.0400,:0.0549,:0.0503,:0.0527,:0.0515,:0.0522,:0.0630)
-		( the:0.0383.:0.0383,:0.0510,:0.0481,:0.0505,:0.0491,:0.0500,:0.0586)
-		(.:0.0366.:0.0366,:0.0488,:0.0444,:0.0483,:0.0469,:0.0479,:0.0562)
-		( the:0.0359.:0.0359,:0.0454,:0.0425,:0.0447,:0.0447,:0.0457,:0.0535)
-		( the:0.0359.:0.0359,:0.0454,:0.0425,:0.0447,:0.0447,:0.0457,:0.0535)
-,,,,,,,,,,,,,,,
+		(,:0.0420,:0.0771 and:0.0591,:0.1152,:0.1162,:0.0312,:0.1011 and:0.0591)
+ and, and, and, and, and, and, and, and
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.1367 a:0.1367,:0.1318 and:0.0840tery:0.0598,:0.5508 a:0.1299
+:0.3594)
+
+
+------
+		( a:0.1367,:0.1318 and:0.0840tery:0.0598,:0.5508 a:0.1299
+:0.3594The:0.0732)
+The most common types of red red red red red red red red red red
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1602 a:0.0933 and:0.2178 yellow:0.1289om:0.1514,:0.6133 a:0.0684ery:0.0913)
+ery
+------
+		( a:0.0933 and:0.2178 yellow:0.1289om:0.1514,:0.6133 a:0.0684ery:0.0913,:0.1182)
+, and are the most common cold and are cold and are cold and cold
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1025 a:0.0723,:0.1885 and:0.1924atoes:0.3281,:0.6562 red:0.0801iced:0.3262)
+iced
+------
+		( a:0.0723,:0.1885 and:0.1924atoes:0.3281,:0.6562 red:0.0801iced:0.3262,:0.1865)
+, and are iced.
+The first time of the year was the
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1309 a:0.1328,:0.2559 and:0.1523atoes:0.4668,:0.3359 a:0.0598iced:0.2129)
+iced
+------
+		( a:0.1328,:0.2559 and:0.1523atoes:0.4668,:0.3359 a:0.0598iced:0.2129,:0.1953)
+, and they are a good source of potassium.
+- Potatoes are

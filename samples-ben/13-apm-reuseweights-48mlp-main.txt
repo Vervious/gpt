@@ -1,0 +1,35 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( 301:0.0002itz:0.0002 evolutionary:0.0001 corridors:0.0002 firm:0.0002 Mankind:0.0002itz:0.0002rap:0.0002)
+rap
+------
+		(itz:0.0002 evolutionary:0.0001 corridors:0.0002 firm:0.0002 Mankind:0.0002itz:0.0002rap:0.0002Save:0.0001)
+Save Roman miniatureWoodoboobo Wenger CPUs, incub proven awaWoodanto incub
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0903 a:0.0349.:0.0435 and:0.0593.:0.0889.:0.0889 a:0.0176
+:0.0693)
+
+
+------
+		( a:0.0349.:0.0435 and:0.0593.:0.0889.:0.0889 a:0.0176
+:0.0693-:0.0457)
+-
+-
+-
+-
+-
+-
+-
+
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1602 a:0.0417,:0.1011 and:0.0908ets:0.1396,:0.1758 a:0.0605
+:0.1914)
+
+
+------
+		( a:0.0417,:0.1011 and:0.0908ets:0.1396,:0.1758 a:0.0605
+:0.1914The:0.0728)
+The most important to be a common in the most important to use of the

@@ -1,0 +1,54 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0869 are:0.1680 red:0.1289,:0.2617 Pot:0.1777atoes:0.2598 are:0.2275 :0.1680)
+ 
+------
+		( are:0.1680 red:0.1289,:0.2617 Pot:0.1777atoes:0.2598 are:0.2275 :0.1680 :0.2383)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0535.:0.0500.:0.0469 the:0.0479.:0.0530.:0.0518.:0.0488.:0.0483)
+.
+------
+		(.:0.0500.:0.0469 the:0.0479.:0.0530.:0.0518.:0.0488.:0.0483
+:0.2676)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0732 a:0.0454 and:0.1108 and:0.0776tery:0.0659,:0.6562 also:0.0645aic:0.0596)
+aic
+------
+		( a:0.0454 and:0.1108 and:0.0776tery:0.0659,:0.6562 also:0.0645aic:0.0596,:0.2021)
+, and are also used in the world.
+The most common species of
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.3047 a:0.0732 and:0.1572 and:0.0898assium:0.1240,:0.3359 a:0.0583iced:0.3105)
+iced
+------
+		( a:0.0732 and:0.1572 and:0.0898assium:0.1240,:0.3359 a:0.0583iced:0.3105 to:0.1396)
+ to the top of the world.
+The first thing is the first thing
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.3555 a:0.1328 and:0.1768 and:0.1177om:0.1816,:0.3496 a:0.1006ery:0.1777)
+ery
+------
+		( a:0.1328 and:0.1768 and:0.1177om:0.1816,:0.3496 a:0.1006ery:0.1777,:0.1235)
+, and are a very popular and popular and popular holiday.
+- The

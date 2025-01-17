@@ -1,0 +1,24 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(---------------:0.0002---------------:0.0002---------------:0.0002---------------:0.0002---------------:0.0002 Pel:0.0001 Pel:0.0001 Pel:0.0001)
+ Pel
+------
+		(---------------:0.0002---------------:0.0002---------------:0.0002---------------:0.0002 Pel:0.0001 Pel:0.0001 Pel:0.0001 Pel:0.0002)
+ Pel Pel Pel Pel Pel Pel Pel Pel Pel Pel Pel Pel Pel Pel Pel
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0352 the:0.0339 the:0.0337 the:0.0327,:0.0364,:0.0500,:0.0483,:0.0483)
+,
+------
+		( the:0.0339 the:0.0337 the:0.0327,:0.0364,:0.0500,:0.0483,:0.0483,:0.0481)
+,,,,,,,,,,,,,,,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0547 you:0.0510,:0.1621 and:0.0309ons:0.0166,:0.2500 a:0.0596
+:0.0957)
+
+
+------
+		( you:0.0510,:0.1621 and:0.0309ons:0.0166,:0.2500 a:0.0596
+:0.0957-:0.3496)
+- A most common common common common common common common common common common common common

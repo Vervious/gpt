@@ -156,11 +156,11 @@ class MLP(DualModule):
 
     def __init__(self, config):
         super().__init__()
-        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
+        self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
         # smoother ReLU, also maybe helps dead neurons empirically?
         # (should just delete dead neurons)
         self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
-        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1
     
     def forward(self, x):
@@ -184,9 +184,14 @@ class VanillaBlock(nn.Module):
         # x = x + self.attn(self.ln_1(x))
         # x = x + self.mlp(self.ln_2(x))
 
-        # AXM
+        # # AXM
+        # y = self.ln_1(x)
+        # x = x + self.attn(y)*self.mlp(y)
+
+        # Targeted AXM
         y = self.ln_1(x)
-        x = x + self.attn(y)*self.mlp(y)
+        mlp=self.mlp(y)
+        x = x + self.attn(y,y)*mlp
         return x
     
 class Block(DualModule):
@@ -253,12 +258,22 @@ class GPT(DualModule):
         sharedBlock = Block(config)
 
         if self.VANILLA:
-            self.transformer = nn.ModuleDict(dict(
-                wte = nn.Embedding(config.vocab_size, config.n_embd),
-                wpe = nn.Embedding(config.block_size, config.n_embd),
-                h = nn.ModuleList([VanillaBlock(config) for _ in range(config.n_layer)]),
-                ln_f = nn.LayerNorm(config.n_embd),
-            ))
+            if REUSE_WEIGHTS:
+                sharedBlock = VanillaBlock(config)
+
+                self.transformer = nn.ModuleDict(dict(
+                    wte = nn.Embedding(config.vocab_size, config.n_embd),
+                    wpe = nn.Embedding(config.block_size, config.n_embd),
+                    sharedblock = sharedBlock,
+                    ln_f = nn.LayerNorm(config.n_embd),
+                ))
+            else:
+                self.transformer = nn.ModuleDict(dict(
+                    wte = nn.Embedding(config.vocab_size, config.n_embd),
+                    wpe = nn.Embedding(config.block_size, config.n_embd),
+                    h = nn.ModuleList([VanillaBlock(config) for _ in range(config.n_layer)]),
+                    ln_f = nn.LayerNorm(config.n_embd),
+                ))
         else:
 
             self.transformer = nn.ModuleDict(dict(
@@ -303,8 +318,12 @@ class GPT(DualModule):
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
         x = tok_emb + pos_emb
-        for block in self.transformer.h:
-            x = block(x)
+        if REUSE_WEIGHTS:
+            for i in range(self.config.n_layer):
+                x = self.transformer.sharedblock(x)
+        else:
+            for block in self.transformer.h:
+                x = block(x)
         x = self.transformer.ln_f(x)
 
         if targets is not None:
@@ -940,17 +959,22 @@ else:
 
 ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
-VALUE_MATRIX = True
+VALUE_MATRIX = False
+MLP_SCALE = 4
+REUSE_WEIGHTS = False
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="13-baseline-axm"
-test_description=f"""Vanilla transformer, max LR 6e-4
+test_name="13-axm-novalue"
+test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
-x = x + self.attn(y)*self.mlp(y)
+mlp=self.mlp(y)
+x = x + self.attn(y,y)*mlp
 ======== 
-VALUEMATRIX={VALUE_MATRIX}"""
+VALUEMATRIX={VALUE_MATRIX}
+REUSE_WEIGHTS={REUSE_WEIGHTS}
+MLP_SCALE={MLP_SCALE}"""
 
 # Create log and persistence directory
 log_dir = "log-ben"
@@ -982,6 +1006,12 @@ def cprint(s):
     with open(superlog_file, "a") as f:
         f.write(s + "\n")
 
+def cclear():
+    print("Clearing contents of superlog")
+    with open(superlog_file, "w") as f:
+        # Clear the contents of the file
+        pass
+
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
@@ -1000,7 +1030,7 @@ hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 20000
 sample_frequency = 500
-inner_dump_frequency = 1000
+inner_dump_frequency = 500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
@@ -1014,6 +1044,7 @@ if master_process:
     bprint(f"Enable layer loss: {ALL_LAYER_LOSS}")
     bprint(f"MAX LEARNING RATE: {max_lr}")
     bprint(f"Experiment name: {test_name}")
+    bprint(f"MLPSCALE: {MLP_SCALE}")
     bprint(f"Experiment description: {test_description}")
     bprint(f"Warmup steps: {warmup_steps}")
 
@@ -1162,12 +1193,13 @@ for step in range(max_steps):
         xgen = tokens.to(device)
         sample_rng = torch.Generator(device=device)
         sample_rng.manual_seed(42 + ddp_rank) # different seed for each GPU
-        cprint(f"! {step}")
         while xgen.size(1) < max_length:
             _dump_val = False
             if xgen.size(1) < XLEN + 1:
                 _print_weights_val = True
                 if (step % inner_dump_frequency == 50):
+                    cclear()
+                    cprint(f"! {step}")
                     _dump_val = True
             else:
                 _print_weights_val = False

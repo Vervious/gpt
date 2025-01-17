@@ -1,0 +1,24 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0007 are:0.0012 red:0.0013,:0.0026 Pot:0.0004atoes:0.0008 are:0.0012 :0.0010)
+ 
+------
+		( are:0.0012 red:0.0013,:0.0026 Pot:0.0004atoes:0.0008 are:0.0012 :0.0010 :0.0006)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0659 the:0.0679 the:0.0479 a:0.0282,:0.0649,:0.0723 the:0.0879,:0.0410)
+,
+------
+		( the:0.0679 the:0.0479 a:0.0282,:0.0649,:0.0723 the:0.0879,:0.0410 the:0.0425)
+ the a the the the a the a a the a a a a a
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(::0.0698 a:0.1138,:0.1338 and:0.0840atoes:0.0386,:0.3633 a:0.0547
+:0.0698)
+
+
+------
+		( a:0.1138,:0.1338 and:0.0840atoes:0.0386,:0.3633 a:0.0547
+:0.0698-:0.1182)
+- The most common types of the most common types of the most common types
