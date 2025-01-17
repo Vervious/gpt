@@ -115,6 +115,43 @@ class CausalSelfAttention(DualModule):
         return y
 
 
+class Gate(DualModule):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        x = x.sum(dim=-1, keepdim=True) # sum over the last dimension
+        x = torch.sigmoid(x)
+        return x
+
+class MLPMatrix(DualModule):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd*config.n_embd)
+        self.c_proj.NANOGPT_SCALE_INIT = 1
+        self.n_embd = config.n_embd
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        X = self.c_proj(x).view(x.size(0), x.size(1), self.n_embd,self.n_embd)
+        # y = (mlpM @ attn.unsqueeze(-1)).squeeze(-1)
+        return X
+
 class MLP(DualModule):
 
     def __init__(self, config):
@@ -139,9 +176,9 @@ class Block(DualModule):
         super().__init__()
         self.ln = nn.RMSNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
-        self.attn2 = CausalSelfAttention(config)
+        self.gate = Gate(config)
         self.mlp = MLP(config)
-        self.mlp2 = MLP(config)
+        # self.rotator = nn.Linear(config.n_embd, config.n_embd)
     
     def forward(self, x, res, y):
         # note residual connection res
@@ -152,15 +189,16 @@ class Block(DualModule):
         # NOTE: res will generally be very large...
         # mlp2 = self.mlp2(x)
         attn = self.attn(x, x)
-        mlp = self.mlp(attn)
-        y = mlp
-        x = y+res
+        mlp = self.mlp(x)
+        midx = mlp
+        y = mlp*res
+        x = y + res + attn
         newres = x
         x = self.ln(x)
         # res + self.attn(x) # NOTE that the residual connection x is already layer normed, unlike usual transformer implementation # TODO add back residual res + . NOTE x + self.attn(x) is simply horrible (why?)... we cannot layer norm it (prev too big or too small?)
         # Maybe the layernorm just destroys relative magnitude of things...
         # NOTE, likewise LN(x) + mlp(LN(x)) doesn't work as well? The residual literally has to be untouched. 
-        midx = y # TODO UNCOMMENT, and then try removing res (applying attn to res)
+        # midx = y # TODO UNCOMMENT, and then try removing res (applying attn to res)
         # NOTE: NEXT is usually ~1.0, prev is usually < 1.0 early on.
         # NOTE: By step 116, prev is much larger, ~2.0
         # also seems to get bigger as layer number grows...
@@ -837,16 +875,17 @@ ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = False # whether LN parameters are learned
 VALUE_MATRIX = True
 
-test_name="11-mlponly-mlponattn-value"
+test_name="13-axm-deletion"
 test_description=f""" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
 Setting:
 ========
 attn = self.attn(x, x)
-mlp = self.mlp(attn)
-y = mlp
-x = y + res
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*res
+x = y + res + attn
 newres = x
-x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+x = self.ln(x)
 ======== 
 VALUEMATRIX={VALUE_MATRIX}"""
 
@@ -889,7 +928,7 @@ max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
-warmup_steps = 10
+warmup_steps = 100
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
 ENABLE_LAYER_LOSS = False
@@ -912,7 +951,7 @@ if master_process:
     bprint(f"MAX LEARNING RATE: {max_lr}")
     bprint(f"Experiment name: {test_name}")
     bprint(f"Experiment description: {test_description}")
-
+    bprint(f"Warmup steps: {warmup_steps}")
 
     with open(log_file, "a") as f:
         f.write(f"total desired batch size: {total_batch_size}\n")
@@ -935,7 +974,9 @@ torch.set_float32_matmul_precision("high")
 
 # get logits
 # Override vocab size --- to be closer to a nice power of 2, because of how kerenels/GPT work.
-model = GPT(GPTConfig(vocab_size=50304, block_size=T)) # model = GPT.from_pretrained('gpt2')
+config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
+bprint(str(config_.__dict__))
+model = GPT(config_) # model = GPT.from_pretrained('gpt2')
 # model.eval()
 model.to(device)
 if use_compile:
@@ -1121,7 +1162,7 @@ for step in range(max_steps):
     target_loss_accum = 0.0
     loss_accum_all = 0.0
     earlyStopNum_accum = 0.0
-    earlyStopLayerDict_accum = torch.zeros(12, device=device)
+    earlyStopLayerDict_accum = torch.zeros(config_.n_layer, device=device)
     for micro_step in range(grad_accum_steps):
         x, y = train_loader.next_batch()
         timesBatchUsed = train_loader.num_times_latest_batch_used()

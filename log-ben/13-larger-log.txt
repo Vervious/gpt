@@ -1,0 +1,148 @@
+Threshold: 0.1
+Enable layer loss: False
+MAX LEARNING RATE: 0.0006
+Experiment name: 13-larger
+Experiment description:  Reusing blocks, max LR 6e-4, alllayerloss=False, 
+Setting:
+========
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+======== 
+VALUEMATRIX=True
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
+num decayed parameter tensors: 9, with 51,806,208 parameters
+num non-decayed parameter tensors: 7, with 11,520 parameters
+@ 0 train 11.5801 , allloss: 11.5801, norm:1.4424, dt: 1596.57ms, tok/sec: 82095.82, flops:35.26, batch-reuse:1
+INFO nextres 0.02830136939883232 attn*mlp 0.0439453125 layernormed 1.000201940536499
+			attn_hist -0.26171875<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.20703125
+			mlp_hist -0.1357421875<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1181640625
+			x_hist -3.9949827194213867<tensor([  0.,   0.,   0.,   0., 395., 373.,   0.,   0.,   0.,   0.])>2.5962603092193604
+INFO nextres 0.028408456593751907 attn*mlp 0.0439453125 layernormed 1.0001890659332275
+			attn_hist -0.26171875<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2099609375
+			mlp_hist -0.140625<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1240234375
+			x_hist -4.16292142868042<tensor([  0.,   0.,   0.,   0., 394., 374.,   0.,   0.,   0.,   0.])>2.6123874187469482
+INFO nextres 0.028577061370015144 attn*mlp 0.0439453125 layernormed 1.0001769065856934
+			attn_hist -0.2578125<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2099609375
+			mlp_hist -0.1435546875<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.12890625
+			x_hist -4.803444862365723<tensor([  0.,   0.,   0.,   0., 392., 376.,   0.,   0.,   0.,   0.])>2.845418930053711
+INFO nextres 0.02880597673356533 attn*mlp 0.0439453125 layernormed 1.000165581703186
+			attn_hist -0.25390625<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2099609375
+			mlp_hist -0.1435546875<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1337890625
+			x_hist -5.293764114379883<tensor([  0.,   0.,   0.,   0., 390., 378.,   0.,   0.,   0.,   0.])>3.1180717945098877
+INFO nextres 0.029093509539961815 attn*mlp 0.0439453125 layernormed 1.0001559257507324
+			attn_hist -0.2470703125<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.208984375
+			mlp_hist -0.142578125<tensor([  0.,   0.,   0.,   0.,   2., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.13671875
+			x_hist -5.641646385192871<tensor([  0.,   0.,   0.,   0., 389., 379.,   0.,   0.,   0.,   0.])>3.3458497524261475
+INFO nextres 0.029437558725476265 attn*mlp 0.0439453125 layernormed 1.000148057937622
+			attn_hist -0.2412109375<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2060546875
+			mlp_hist -0.138671875<tensor([  0.,   0.,   0.,   0.,   3., 764.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1396484375
+			x_hist -5.867502212524414<tensor([  0.,   0.,   0.,   0., 387., 381.,   0.,   0.,   0.,   0.])>3.599471092224121
+INFO nextres 0.029836157336831093 attn*mlp 0.0439453125 layernormed 1.000141978263855
+			attn_hist -0.232421875<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.203125
+			mlp_hist -0.134765625<tensor([  0.,   0.,   0.,   0.,   3., 764.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.140625
+			x_hist -5.989611625671387<tensor([  0.,   0.,   0.,   0., 388., 380.,   0.,   0.,   0.,   0.])>3.8124237060546875
+INFO nextres 0.03028690069913864 attn*mlp 0.0439453125 layernormed 1.000138521194458
+			attn_hist -0.224609375<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1982421875
+			mlp_hist -0.1298828125<tensor([  0.,   0.,   0.,   0.,   3., 764.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1416015625
+			x_hist -6.034646034240723<tensor([  0.,   0.,   0.,   0., 388., 380.,   0.,   0.,   0.,   0.])>3.98417067527771
+INFO nextres 0.030787533149123192 attn*mlp 0.0439453125 layernormed 1.0001368522644043
+			attn_hist -0.2158203125<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.193359375
+			mlp_hist -0.1298828125<tensor([  0.,   0.,   0.,   0.,   2., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.142578125
+			x_hist -6.0215864181518555<tensor([  0.,   0.,   0.,   0., 388., 380.,   0.,   0.,   0.,   0.])>4.118154525756836
+INFO nextres 0.031335607171058655 attn*mlp 0.0439453125 layernormed 1.0001375675201416
+			attn_hist -0.2060546875<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1884765625
+			mlp_hist -0.1298828125<tensor([  0.,   0.,   0.,   0.,   2., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.142578125
+			x_hist -5.966459274291992<tensor([  0.,   0.,   0.,   0., 390., 378.,   0.,   0.,   0.,   0.])>4.216446399688721
+INFO nextres 0.03192944824695587 attn*mlp 0.0439453125 layernormed 1.0001400709152222
+			attn_hist -0.197265625<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1884765625
+			mlp_hist -0.1298828125<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.142578125
+			x_hist -5.881913661956787<tensor([  0.,   0.,   0.,   0., 387., 381.,   0.,   0.,   0.,   0.])>4.285282135009766
+INFO nextres 0.03256700560450554 attn*mlp 0.0439453125 layernormed 1.0001438856124878
+			attn_hist -0.1884765625<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1884765625
+			mlp_hist -0.12890625<tensor([  0.,   0.,   0.,   0.,   2., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1416015625
+			x_hist -5.77824068069458<tensor([  0.,   0.,   0.,   0., 384., 384.,   0.,   0.,   0.,   0.])>4.40683650970459
+rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.5664 are:0.3398 red:0.4121,:0.4609 Pot:0.5039atoes:0.2969 are:0.5039 :0.5039)
+		( Roses:0.5664 are:0.3398 red:0.4121,:0.4609 Pot:0.5039atoes:0.2969 are:0.5039 :0.5039)
+		( Roses:0.5508 are:0.3398 red:0.3965,:0.4609 Pot:0.5039atoes:0.2852 are:0.5039 :0.5039)
+		( Roses:0.5508 are:0.3262 red:0.3965,:0.4453 Pot:0.4902atoes:0.2852 are:0.5039 :0.4883)
+		( Roses:0.5352 are:0.3262 red:0.3828,:0.4316 Pot:0.4746atoes:0.2715 are:0.4902 :0.4883)
+		( Roses:0.5352 are:0.3125 red:0.3672,:0.4160 Pot:0.4590atoes:0.2715 are:0.4902 :0.4727)
+		( Roses:0.5195 are:0.3125 red:0.3398,:0.4004 Pot:0.4434atoes:0.2598 are:0.4746 :0.4570)
+		( Roses:0.5039 are:0.2988 red:0.3262,:0.3848 Pot:0.4277atoes:0.2480 are:0.4590 :0.4414)
+		( Roses:0.4727 are:0.2734 red:0.2988,:0.3555 Pot:0.4121atoes:0.2256 are:0.4434 :0.4277)
+		( Roses:0.4570 are:0.2617 red:0.2734,:0.3281 Pot:0.3828atoes:0.2148 are:0.4277 :0.4121)
+		( Roses:0.4277 are:0.2383 red:0.2490,:0.3008 Pot:0.3672atoes:0.2051 are:0.4141 :0.3965)
+		( Roses:0.3965 are:0.2266 red:0.2266,:0.2754 Pot:0.3398atoes:0.1855 are:0.3984 :0.3672)
+		( Roses:0.3965 are:0.2266 red:0.2266,:0.2754 Pot:0.3398atoes:0.1855 are:0.3984 :0.3672)
+ 
+------
+		( are:0.3398 red:0.4121,:0.4609 Pot:0.5039atoes:0.2969 are:0.5039 :0.5039 :0.5039)
+		( are:0.3398 red:0.4121,:0.4609 Pot:0.5039atoes:0.2969 are:0.5039 :0.5039 :0.5039)
+		( are:0.3398 red:0.3965,:0.4609 Pot:0.5039atoes:0.2852 are:0.5039 :0.5039 :0.5039)
+		( are:0.3262 red:0.3965,:0.4453 Pot:0.4902atoes:0.2852 are:0.5039 :0.4883 :0.4902)
+		( are:0.3262 red:0.3828,:0.4316 Pot:0.4746atoes:0.2715 are:0.4902 :0.4883 :0.4902)
+		( are:0.3125 red:0.3672,:0.4160 Pot:0.4590atoes:0.2715 are:0.4902 :0.4727 :0.4746)
+		( are:0.3125 red:0.3398,:0.4004 Pot:0.4434atoes:0.2598 are:0.4746 :0.4570 :0.4590)
+		( are:0.2988 red:0.3262,:0.3848 Pot:0.4277atoes:0.2480 are:0.4590 :0.4414 :0.4434)
+		( are:0.2734 red:0.2988,:0.3555 Pot:0.4121atoes:0.2256 are:0.4434 :0.4277 :0.4121)
+		( are:0.2617 red:0.2734,:0.3281 Pot:0.3828atoes:0.2148 are:0.4277 :0.4121 :0.3984)
+		( are:0.2383 red:0.2490,:0.3008 Pot:0.3672atoes:0.2051 are:0.4141 :0.3965 :0.3672)
+		( are:0.2266 red:0.2266,:0.2754 Pot:0.3398atoes:0.1855 are:0.3984 :0.3672 :0.3398)
+		( are:0.2266 red:0.2266,:0.2754 Pot:0.3398atoes:0.1855 are:0.3984 :0.3672 :0.3398)
+               
+@ 1 train 11.4553 , allloss: 11.4553, norm:3.0031, dt: 1049.33ms, tok/sec: 124910.32, flops:53.65, batch-reuse:1
+@ 2 train 10.6292 , allloss: 10.6292, norm:8.2914, dt: 471.27ms, tok/sec: 278127.83, flops:119.46, batch-reuse:1
+@ 3 train 10.1563 , allloss: 10.1563, norm:5.7735, dt: 472.28ms, tok/sec: 277529.14, flops:119.20, batch-reuse:1
+@ 4 train 9.8103 , allloss: 9.8103, norm:3.4356, dt: 470.51ms, tok/sec: 278576.71, flops:119.65, batch-reuse:1
+@ 5 train 9.5632 , allloss: 9.5632, norm:2.4360, dt: 473.27ms, tok/sec: 276949.07, flops:118.95, batch-reuse:1
+@ 6 train 9.2327 , allloss: 9.2327, norm:2.1423, dt: 473.18ms, tok/sec: 277003.77, flops:118.97, batch-reuse:1
+@ 7 train 9.0257 , allloss: 9.0257, norm:1.9616, dt: 473.46ms, tok/sec: 276840.57, flops:118.90, batch-reuse:1
+@ 8 train 8.8023 , allloss: 8.8023, norm:1.8964, dt: 472.55ms, tok/sec: 277369.24, flops:119.13, batch-reuse:1
+@ 9 train 8.5299 , allloss: 8.5299, norm:1.6890, dt: 471.55ms, tok/sec: 277959.65, flops:119.38, batch-reuse:1
+@ 10 train 8.3041 , allloss: 8.3041, norm:1.3343, dt: 471.77ms, tok/sec: 277831.53, flops:119.33, batch-reuse:1
+@ 11 train 8.1052 , allloss: 8.1052, norm:1.0895, dt: 469.25ms, tok/sec: 279320.78, flops:119.97, batch-reuse:1
+@ 12 train 7.9329 , allloss: 7.9329, norm:1.0532, dt: 469.51ms, tok/sec: 279164.90, flops:119.90, batch-reuse:1
+@ 13 train 7.8488 , allloss: 7.8488, norm:0.7671, dt: 467.91ms, tok/sec: 280119.50, flops:120.31, batch-reuse:1
+@ 14 train 7.7601 , allloss: 7.7601, norm:0.5636, dt: 468.46ms, tok/sec: 279790.75, flops:120.17, batch-reuse:1
+@ 15 train 7.7253 , allloss: 7.7253, norm:0.6175, dt: 468.54ms, tok/sec: 279743.06, flops:120.15, batch-reuse:1
+@ 16 train 7.7016 , allloss: 7.7016, norm:0.7682, dt: 469.19ms, tok/sec: 279360.38, flops:119.99, batch-reuse:1
+@ 17 train 7.7319 , allloss: 7.7319, norm:0.5150, dt: 470.37ms, tok/sec: 278659.88, flops:119.68, batch-reuse:1
+@ 18 train 7.7515 , allloss: 7.7515, norm:0.6406, dt: 470.65ms, tok/sec: 278491.33, flops:119.61, batch-reuse:1
+@ 19 train 7.6508 , allloss: 7.6508, norm:0.6016, dt: 471.95ms, tok/sec: 277723.32, flops:119.28, batch-reuse:1
+@ 20 train 7.7754 , allloss: 7.7754, norm:0.5624, dt: 472.11ms, tok/sec: 277632.58, flops:119.24, batch-reuse:1
+@ 21 train 7.7202 , allloss: 7.7202, norm:0.5348, dt: 474.88ms, tok/sec: 276008.85, flops:118.55, batch-reuse:1

@@ -785,14 +785,304 @@ The RMSNorm may not even be necessary. Is this additional mlp necessary, or can 
 
 ## Experiments
 
-First, we try, without all layer loss:
+First, we try, without all layer loss. Note that it is exceptionally important to normalize the input to the MLP, else the gradient quickly approaches NaN. During optimization, it is also important that the MLP get a piece of the real residual signal, without it being fully destroyed by attention (why?), or alternatively we use all layer loss.
 ```
-x = self.attn(x, res)
-midx = x
-mlp = self.mlp(x)
-gate = sigmoid(self.mlp2(x))
-x = x*gate + mlp
+attn = self.attn(x, x) + x
+y = self.ln(attn)
+mlp = self.mlp(y)
+midx = mlp
+y = torch.sigmoid(self.mlp2(mlp))
+x = mlp + res*(1 - y)
 newres = x
-x = RMSNorm(x, ELEMENTWISEAFFINE={ELEMENTWISEAFFINE}), 
+x = self.ln(x)
 ```
 
+Frankly, it's not clear how well the previous worked... but the curve is interesting, it certainly converges.
+
+![loss plot](img/12-gate-mlpofattn.png)
+
+
+
+Let's test vanilla architectural changes. Consider transformers as conditional summation. The hypothesis is that this should perform just as well as our usual `mlp*attn` achitecture:
+```
+class Gate(DualModule):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = x.sum(dim=-1, keepdim=True) # sum over the last dimension
+        x = torch.sigmoid(x)
+        return x
+```
+```
+attn = self.attn(x, x)
+mlp = self.gate(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+
+![loss plot](img/12-gate-axg.png)
+
+But unfortunately, it doesn't! In fact, the curve looks less nice than the prior experiment, and I'm not even sure that it converges. So we really lose a lot of expressitivity; the hypothesis is just wrong. To verify that it isn't some issue with some other part of the code, let's just run the original `mlp*attn` architecture again. It seems fine, no issues:
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+
+![loss plot](img/12-axm.png)
+
+
+I wonder how much of the gate experiment is just loss in parameters, i.e. if we add in the same number of parameters and then do a summation, does it help?  It turns out ot make no difference at all, compared to the `12-gate-axg` experiment.
+```
+class Gate(DualModule):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        x = x.sum(dim=-1, keepdim=True) # sum over the last dimension
+        x = torch.sigmoid(x)
+        return x
+```
+```
+attn = self.attn(x, x)
+mlp = self.gate(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-gate-axg-moreparams.png)
+
+
+This points to the conclusion that the mlp does not just serve as a gate; it is in fact memorizing useful information. This begs the question: is attention itself serving as a gate? No, it seems that the attention component is not just functioning as a gate. (The outcome reminds me of the outcome of removing attention entirely.)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+gate = attn.sum(dim=-1, keepdim=True)
+y = mlp*gate
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-axm-attentiongate.png)
+
+
+Let me also feed in the gate through a sigmoid to make sure we are coming to the correct conclusion. The conclusion remains unchanged:
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+gate = torch.sigmoid(attn.sum(dim=-1, keepdim=True))
+y = mlp*gate
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-axm-attentiongate-sigmoid.png)
+
+
+
+
+Let's keep trying random things. First, let's try adding attn back into the residual, in hopes that it makes optimization faster (it does not make optimization faster):
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + attn + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-scratchpad.png)
+
+
+Is this really the best version of this architecture? Let's check if giving mlp access to attn helps with anything... No, it in fact penalizes things. (wtf) Probably the more pure the residual signal, the better at first...
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x + attn)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-scratchpad-1.png)
+
+
+Let's check if giving mlp only access to attn hurts anything... (It hurts things a little bit)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(attn)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-scratchpad-2.png)
+
+
+
+TODO: original transformer basline:
+```
+attn = self.attn(x, x)
+mlp = self.mlp(self.ln(attn + res))
+midx = mlp
+y = mlp
+x = y + attn + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/12-baseline.png)
+
+
+
+Let's train a larger model just for fun (value matrix is set to True)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-larger.png)
+
+TODO train a baseline GPT-medium (copy Kaparthy code)
+
+
+Let's "rotate" the mlp before applying it (this is probably redundant, because the last layer of the MLP probably already does this). It doesn't seem to work super well, but it does converge (does it get better?) (value matrix is set to True)
+```
+attn = self.attn(x, x)
+mlp = self.rotator(self.mlp(x))
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-rotator.png)
+
+
+Let's try the rotator again but with more warmup time (from `100` from `10`). It still doesn't seem to bring any improvement. (value matrix is set to True)
+```
+attn = self.attn(x, x)
+mlp = self.rotator(self.mlp(x))
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-rotator-slowerlr.png)
+
+
+Let's set `n_embd = 1296` (and also increase warmupsteps to `100` from `10`). More embed is not substantially better! (TODO try normal transformers, is it substantially better there?) (value matrix is set to True)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-moreembd.png)
+
+
+Let's go back to `n_embd = 768` (and also increase warmupsteps to `100` from `10`). Optimization is a little slower but it ends up in the same place. (value matrix is set to True)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-axm-100warmup.png)
+
+
+Let me try to reproduce axm again... wait, why is it different? (value matrix is set to True) (Warmup steps `10`).
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-axm-scratchpad.png)
+
+
+Maybe I have to turn off the value matrix... Indeed it was because of the value matrix. (Warmup steps `10`). Yes this is closer (discrepancy may be due to RMSNorm, I forget now.)
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-axm-novalue.png)
+
+
+
+Let's send warmup steps back to `100` and turn the value matrix back on just for faster training.  What happens if we use x instead of res? It is simply a lost cause, optimization-wise, even with learning rate set to 1/4 of the usual (`1.5e-4` instaed of `6e-4`.) (It may eventually converge to the same place, I think, eventually? But I don't have enough patience to find out.) **TODO: why is this harder to optimize?**
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + x
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-axm-experiment.png)
+
+
+I suspect that the mlp is deleting "semantic dimensions" of note (but this only works if dimensions align...). Does the size of mlp output scale with the size of the residual that we are trying to attenuate? What if we try to help it along, directly have it attenuate res (hopefully), and add attn separately? There appears to be no tangible benefit.
+```
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*res
+x = y + res + attn
+newres = x
+x = self.ln(x)
+```
+![loss plot](img/13-axm-deletion.png)
+
+
+
+
+TODO run axm for longer and make sure it actually stays on point with 7-test-2, or even a more standard baseline.

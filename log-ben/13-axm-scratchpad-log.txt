@@ -1,0 +1,752 @@
+Threshold: 0.1
+Enable layer loss: False
+MAX LEARNING RATE: 0.0006
+Experiment name: 13-axm-scratchpad
+Experiment description:  Reusing blocks, max LR 6e-4, alllayerloss=False, 
+Setting:
+========
+attn = self.attn(x, x)
+mlp = self.mlp(x)
+midx = mlp
+y = mlp*attn
+x = y + res
+newres = x
+x = self.ln(x)
+======== 
+VALUEMATRIX=True
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
+num decayed parameter tensors: 8, with 51,216,384 parameters
+num non-decayed parameter tensors: 6, with 10,752 parameters
+@ 0 train 11.5343 , allloss: 11.5343, norm:2.3231, dt: 1558.47ms, tok/sec: 84102.82, flops:35.82, batch-reuse:1
+INFO nextres 0.02847384288907051 attn*mlp 0.0771484375 layernormed 0.9998580813407898
+			attn_hist -0.2490234375<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.208984375
+			mlp_hist -0.216796875<tensor([  0.,   0.,   0.,   0.,  38., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2080078125
+			x_hist -3.3047242164611816<tensor([  0.,   0.,   0.,   0., 385., 383.,   0.,   0.,   0.,   0.])>3.391296863555908
+INFO nextres 0.028820224106311798 attn*mlp 0.07763671875 layernormed 0.999869704246521
+			attn_hist -0.25390625<tensor([  0.,   0.,   0.,   0.,   1., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.220703125
+			mlp_hist -0.2119140625<tensor([  0.,   0.,   0.,   0.,  40., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.208984375
+			x_hist -3.27516508102417<tensor([  0.,   0.,   0.,   0., 391., 377.,   0.,   0.,   0.,   0.])>3.5057008266448975
+INFO nextres 0.02938269078731537 attn*mlp 0.07763671875 layernormed 0.9998820424079895
+			attn_hist -0.2470703125<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.22265625
+			mlp_hist -0.234375<tensor([  0.,   0.,   0.,   0.,  41., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2080078125
+			x_hist -3.1479761600494385<tensor([  0.,   0.,   0.,   0., 391., 377.,   0.,   0.,   0.,   0.])>3.5093185901641846
+INFO nextres 0.030138928443193436 attn*mlp 0.07763671875 layernormed 0.999896228313446
+			attn_hist -0.2333984375<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2158203125
+			mlp_hist -0.2578125<tensor([  0.,   0.,   0.,   0.,  40., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2021484375
+			x_hist -3.097095489501953<tensor([  0.,   0.,   0.,   0., 392., 376.,   0.,   0.,   0.,   0.])>3.422046661376953
+INFO nextres 0.031069718301296234 attn*mlp 0.07763671875 layernormed 0.9999138116836548
+			attn_hist -0.21484375<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.203125
+			mlp_hist -0.267578125<tensor([  0.,   0.,   0.,   0.,  38., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2021484375
+			x_hist -3.4147114753723145<tensor([  0.,   0.,   0.,   0., 392., 376.,   0.,   0.,   0.,   0.])>3.274747371673584
+INFO nextres 0.03215966373682022 attn*mlp 0.07763671875 layernormed 0.9999362826347351
+			attn_hist -0.2021484375<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1845703125
+			mlp_hist -0.26953125<tensor([  0.,   0.,   0.,   0.,  40., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2138671875
+			x_hist -3.9618287086486816<tensor([  0.,   0.,   0.,   0., 394., 374.,   0.,   0.,   0.,   0.])>3.3496265411376953
+INFO nextres 0.03339838236570358 attn*mlp 0.078125 layernormed 0.9999641180038452
+			attn_hist -0.2138671875<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1767578125
+			mlp_hist -0.265625<tensor([  0.,   0.,   0.,   0.,  39., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2216796875
+			x_hist -4.393170356750488<tensor([  0.,   0.,   0.,   0., 388., 380.,   0.,   0.,   0.,   0.])>3.4025747776031494
+INFO nextres 0.03477717563509941 attn*mlp 0.078125 layernormed 0.9999964833259583
+			attn_hist -0.2216796875<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1796875
+			mlp_hist -0.267578125<tensor([  0.,   0.,   0.,   0.,  32., 736.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2275390625
+			x_hist -4.703046798706055<tensor([  0.,   0.,   0.,   0., 383., 385.,   0.,   0.,   0.,   0.])>3.7072980403900146
+INFO nextres 0.0362887941300869 attn*mlp 0.078125 layernormed 1.0000321865081787
+			attn_hist -0.2265625<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1796875
+			mlp_hist -0.265625<tensor([  0.,   0.,   0.,   0.,  35., 732.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2333984375
+			x_hist -4.9148736000061035<tensor([  0.,   0.,   0.,   0., 387., 381.,   0.,   0.,   0.,   0.])>4.129547595977783
+INFO nextres 0.03792732208967209 attn*mlp 0.07861328125 layernormed 1.0000698566436768
+			attn_hist -0.228515625<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1796875
+			mlp_hist -0.263671875<tensor([  0.,   0.,   0.,   0.,  37., 732.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2373046875
+			x_hist -5.039130687713623<tensor([  0.,   0.,   0.,   0., 386., 382.,   0.,   0.,   0.,   0.])>4.4948506355285645
+INFO nextres 0.03968480974435806 attn*mlp 0.07861328125 layernormed 1.000108003616333
+			attn_hist -0.228515625<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1787109375
+			mlp_hist -0.2578125<tensor([  0.,   0.,   0.,   0.,  39., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.2412109375
+			x_hist -5.102163791656494<tensor([  0.,   0.,   0.,   0., 390., 378.,   0.,   0.,   0.,   0.])>4.80968713760376
+INFO nextres 0.04155503958463669 attn*mlp 0.07861328125 layernormed 1.0001451969146729
+			attn_hist -0.2275390625<tensor([  0.,   0.,   0.,   0.,   0., 768.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.1767578125
+			mlp_hist -0.251953125<tensor([  0.,   0.,   0.,   0.,  40., 728.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.244140625
+			x_hist -5.116500377655029<tensor([  0.,   0.,   0.,   0., 386., 382.,   0.,   0.,   0.,   0.])>5.07963752746582
+rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.4590 are:0.3965 red:0.5664,:0.4297 Pot:0.5195atoes:0.3965 are:0.4727 :0.6133)
+		( Roses:0.4434 are:0.3672 red:0.5664,:0.4141 Pot:0.5195atoes:0.3828 are:0.4590 :0.5977)
+		( Roses:0.4141 are:0.3398 red:0.5352,:0.3848 Pot:0.5039atoes:0.3535 are:0.4434 :0.5664)
+		( Roses:0.3848 are:0.2988 red:0.5039,:0.3555 Pot:0.4727atoes:0.3262 are:0.4277 :0.5352)
+		( Roses:0.3262 are:0.2617 red:0.4746,:0.3145 Pot:0.4434atoes:0.2852 are:0.3828 :0.4902)
+		( Roses:0.2734 are:0.2158 red:0.4277,:0.2754 Pot:0.3965atoes:0.2373 are:0.3398 :0.4434)
+		( Roses:0.2275 are:0.1670 red:0.3672,:0.2275 Pot:0.3398atoes:0.1953 are:0.2988 :0.3828)
+		( Roses:0.1777 are:0.1279 red:0.3125,:0.1777 Pot:0.2852atoes:0.1514 are:0.2490 :0.3125)
+		( Roses:0.1289 are:0.0972 red:0.2490,:0.1436 Pot:0.2266atoes:0.1216 are:0.2051 :0.2490)
+		( Roses:0.0977 are:0.0688 red:0.1953,:0.1094 Pot:0.1758atoes:0.0923 are:0.1592 :0.1953)
+		( Roses:0.0732 are:0.0483 red:0.1504,:0.0825 Pot:0.1357atoes:0.0693 are:0.1152 :0.1436)
+		( Roses:0.0549 are:0.0337 red:0.1147,:0.0618 Pot:0.0972atoes:0.0515 are:0.0869 :0.1030)
+		( Roses:0.0549 are:0.0337 red:0.1147,:0.0618 Pot:0.0972atoes:0.0515 are:0.0869 :0.1030)
+ 
+------
+		( are:0.3965 red:0.5664,:0.4297 Pot:0.5195atoes:0.3965 are:0.4727 :0.6133 :0.5664)
+		( are:0.3672 red:0.5664,:0.4141 Pot:0.5195atoes:0.3828 are:0.4590 :0.5977 :0.5508)
+		( are:0.3398 red:0.5352,:0.3848 Pot:0.5039atoes:0.3535 are:0.4434 :0.5664 :0.5352)
+		( are:0.2988 red:0.5039,:0.3555 Pot:0.4727atoes:0.3262 are:0.4277 :0.5352 :0.5195)
+		( are:0.2617 red:0.4746,:0.3145 Pot:0.4434atoes:0.2852 are:0.3828 :0.4902 :0.4883)
+		( are:0.2158 red:0.4277,:0.2754 Pot:0.3965atoes:0.2373 are:0.3398 :0.4434 :0.4414)
+		( are:0.1670 red:0.3672,:0.2275 Pot:0.3398atoes:0.1953 are:0.2988 :0.3828 :0.3965)
+		( are:0.1279 red:0.3125,:0.1777 Pot:0.2852atoes:0.1514 are:0.2490 :0.3125 :0.3379)
+		( are:0.0972 red:0.2490,:0.1436 Pot:0.2266atoes:0.1216 are:0.2051 :0.2490 :0.2988)
+		( are:0.0688 red:0.1953,:0.1094 Pot:0.1758atoes:0.0923 are:0.1592 :0.1953 :0.2373)
+		( are:0.0483 red:0.1504,:0.0825 Pot:0.1357atoes:0.0693 are:0.1152 :0.1436 :0.1953)
+		( are:0.0337 red:0.1147,:0.0618 Pot:0.0972atoes:0.0515 are:0.0869 :0.1030 :0.1504)
+		( are:0.0337 red:0.1147,:0.0618 Pot:0.0972atoes:0.0515 are:0.0869 :0.1030 :0.1504)
+               
+@ 1 train 11.2748 , allloss: 11.2748, norm:6.8843, dt: 1019.33ms, tok/sec: 128586.03, flops:54.76, batch-reuse:1
+@ 2 train 10.5269 , allloss: 10.5269, norm:6.6492, dt: 448.34ms, tok/sec: 292348.20, flops:124.50, batch-reuse:1
+@ 3 train 10.0280 , allloss: 10.0280, norm:4.9173, dt: 447.34ms, tok/sec: 293004.01, flops:124.78, batch-reuse:1
+@ 4 train 9.7071 , allloss: 9.7071, norm:3.1451, dt: 446.88ms, tok/sec: 293304.47, flops:124.91, batch-reuse:1
+@ 5 train 9.5288 , allloss: 9.5288, norm:2.4387, dt: 447.81ms, tok/sec: 292692.96, flops:124.65, batch-reuse:1
+@ 6 train 9.2117 , allloss: 9.2117, norm:2.2794, dt: 448.66ms, tok/sec: 292143.13, flops:124.42, batch-reuse:1
+@ 7 train 8.9908 , allloss: 8.9908, norm:2.0273, dt: 449.30ms, tok/sec: 291724.72, flops:124.24, batch-reuse:1
+@ 8 train 8.7364 , allloss: 8.7364, norm:1.7986, dt: 449.15ms, tok/sec: 291824.13, flops:124.28, batch-reuse:1
+@ 9 train 8.4458 , allloss: 8.4458, norm:1.6483, dt: 448.57ms, tok/sec: 292202.60, flops:124.44, batch-reuse:1
+@ 10 train 8.2448 , allloss: 8.2448, norm:1.4769, dt: 447.16ms, tok/sec: 293122.59, flops:124.83, batch-reuse:1
+@ 11 train 8.0546 , allloss: 8.0546, norm:1.1386, dt: 449.45ms, tok/sec: 291630.47, flops:124.20, batch-reuse:1
+@ 12 train 7.8925 , allloss: 7.8925, norm:1.1214, dt: 451.18ms, tok/sec: 290508.58, flops:123.72, batch-reuse:1
+@ 13 train 7.8289 , allloss: 7.8289, norm:1.0159, dt: 451.08ms, tok/sec: 290574.76, flops:123.75, batch-reuse:1
+@ 14 train 7.7512 , allloss: 7.7512, norm:0.9976, dt: 451.01ms, tok/sec: 290621.30, flops:123.77, batch-reuse:1
+@ 15 train 7.7253 , allloss: 7.7253, norm:0.8502, dt: 447.80ms, tok/sec: 292700.90, flops:124.65, batch-reuse:1
+@ 16 train 7.6980 , allloss: 7.6980, norm:0.9085, dt: 448.18ms, tok/sec: 292456.75, flops:124.55, batch-reuse:1
+@ 17 train 7.7452 , allloss: 7.7452, norm:0.7046, dt: 453.23ms, tok/sec: 289193.41, flops:123.16, batch-reuse:1
+@ 18 train 7.7554 , allloss: 7.7554, norm:0.6138, dt: 457.29ms, tok/sec: 286628.38, flops:122.07, batch-reuse:1
+@ 19 train 7.6528 , allloss: 7.6528, norm:0.8188, dt: 456.28ms, tok/sec: 287264.16, flops:122.34, batch-reuse:1
+@ 20 train 7.7650 , allloss: 7.7650, norm:0.7087, dt: 449.22ms, tok/sec: 291773.64, flops:124.26, batch-reuse:1
+@ 21 train 7.7183 , allloss: 7.7183, norm:0.5718, dt: 451.84ms, tok/sec: 290086.87, flops:123.54, batch-reuse:1
+@ 22 train 7.6861 , allloss: 7.6861, norm:0.4548, dt: 452.98ms, tok/sec: 289358.11, flops:123.23, batch-reuse:1
+@ 23 train 7.9075 , allloss: 7.9075, norm:0.8092, dt: 452.59ms, tok/sec: 289603.22, flops:123.33, batch-reuse:1
+@ 24 train 7.8485 , allloss: 7.8485, norm:0.5243, dt: 453.84ms, tok/sec: 288804.49, flops:122.99, batch-reuse:1
+@ 25 train 7.6182 , allloss: 7.6182, norm:0.4653, dt: 453.06ms, tok/sec: 289304.36, flops:123.21, batch-reuse:1
+@ 26 train 7.7523 , allloss: 7.7523, norm:0.5522, dt: 452.51ms, tok/sec: 289655.40, flops:123.36, batch-reuse:1
+@ 27 train 7.7245 , allloss: 7.7245, norm:0.5654, dt: 452.58ms, tok/sec: 289609.32, flops:123.34, batch-reuse:1
+@ 28 train 7.7453 , allloss: 7.7453, norm:0.3632, dt: 451.45ms, tok/sec: 290335.67, flops:123.65, batch-reuse:1
+@ 29 train 7.8031 , allloss: 7.8031, norm:0.3731, dt: 452.66ms, tok/sec: 289558.68, flops:123.31, batch-reuse:1
+@ 30 train 7.7003 , allloss: 7.7003, norm:0.3963, dt: 452.10ms, tok/sec: 289915.84, flops:123.47, batch-reuse:1
+@ 31 train 7.7596 , allloss: 7.7596, norm:0.3549, dt: 448.67ms, tok/sec: 292136.30, flops:124.41, batch-reuse:1
+@ 32 train 7.7538 , allloss: 7.7538, norm:0.5872, dt: 448.16ms, tok/sec: 292468.11, flops:124.55, batch-reuse:1
+@ 33 train 7.6907 , allloss: 7.6907, norm:1.9351, dt: 448.78ms, tok/sec: 292064.13, flops:124.38, batch-reuse:1
+@ 34 train 7.7150 , allloss: 7.7150, norm:39.3233, dt: 449.62ms, tok/sec: 291514.18, flops:124.15, batch-reuse:1
+@ 35 train 7.6855 , allloss: 7.6855, norm:3.2925, dt: 449.95ms, tok/sec: 291302.87, flops:124.06, batch-reuse:1
+@ 36 train 7.6870 , allloss: 7.6870, norm:19.1178, dt: 448.41ms, tok/sec: 292305.14, flops:124.48, batch-reuse:1
+@ 37 train 7.7317 , allloss: 7.7317, norm:2.7116, dt: 447.87ms, tok/sec: 292655.56, flops:124.63, batch-reuse:1
+@ 38 train 7.6676 , allloss: 7.6676, norm:32.2460, dt: 449.61ms, tok/sec: 291522.84, flops:124.15, batch-reuse:1
+@ 39 train 7.7287 , allloss: 7.7287, norm:0.4547, dt: 452.47ms, tok/sec: 289679.82, flops:123.37, batch-reuse:1
+@ 40 train 7.7478 , allloss: 7.7478, norm:0.3714, dt: 451.64ms, tok/sec: 290212.60, flops:123.59, batch-reuse:1
+@ 41 train 7.7138 , allloss: 7.7138, norm:0.4251, dt: 455.16ms, tok/sec: 287970.33, flops:122.64, batch-reuse:1
+@ 42 train 7.6941 , allloss: 7.6941, norm:0.3410, dt: 454.89ms, tok/sec: 288138.47, flops:122.71, batch-reuse:1
+@ 43 train 7.7059 , allloss: 7.7059, norm:0.4191, dt: 455.64ms, tok/sec: 287665.50, flops:122.51, batch-reuse:1
+@ 44 train 7.7025 , allloss: 7.7025, norm:2.6423, dt: 457.24ms, tok/sec: 286656.48, flops:122.08, batch-reuse:1
+@ 45 train 7.6251 , allloss: 7.6251, norm:0.4587, dt: 456.12ms, tok/sec: 287364.77, flops:122.38, batch-reuse:1
+@ 46 train 7.6628 , allloss: 7.6628, norm:0.5084, dt: 456.90ms, tok/sec: 286871.13, flops:122.17, batch-reuse:1
+@ 47 train 7.6041 , allloss: 7.6041, norm:0.8058, dt: 456.36ms, tok/sec: 287209.39, flops:122.31, batch-reuse:1
+@ 48 train 7.6162 , allloss: 7.6162, norm:2.3872, dt: 456.43ms, tok/sec: 287167.53, flops:122.30, batch-reuse:1
+@ 49 train 7.6424 , allloss: 7.6424, norm:0.7523, dt: 455.88ms, tok/sec: 287512.20, flops:122.44, batch-reuse:1
+INFO nextres 1.7177996635437012 attn*mlp 1.515625 layernormed 1.000505805015564
+			attn_hist -0.5625<tensor([  0.,   0.,   0.,   0.,  83., 684.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>0.68359375
+			mlp_hist -4.125<tensor([  0.,   0.,   0.,   0., 338., 430.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>3.578125
+			x_hist -6.108708381652832<tensor([  0.,   0.,   0.,   0., 367., 401.,   0.,   0.,   0.,   0.])>5.52804708480835
+INFO nextres 9.665410041809082 attn*mlp 2.5 layernormed 1.0006024837493896
+			attn_hist -5.1875<tensor([  0.,   0.,   0.,   0., 346., 422.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>5.59375
+			mlp_hist -5.46875<tensor([  0.,   0.,   0.,   0., 336., 432.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>4.125
+			x_hist -6.683712482452393<tensor([  0.,   0.,   0.,   0., 364., 404.,   0.,   0.,   0.,   0.])>4.834004878997803
+INFO nextres 21.06793785095215 attn*mlp 2.65625 layernormed 1.0006150007247925
+			attn_hist -6.875<tensor([  0.,   0.,   0.,   0., 356., 412.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.34375
+			mlp_hist -7.8125<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.1875
+			x_hist -6.4915289878845215<tensor([  0.,   0.,   0.,   0., 368., 400.,   0.,   0.,   0.,   0.])>4.81002140045166
+INFO nextres 32.59324645996094 attn*mlp 2.65625 layernormed 1.0006159543991089
+			attn_hist -6.90625<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.40625
+			mlp_hist -7.84375<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.21875
+			x_hist -6.448782444000244<tensor([  0.,   0.,   0.,   0., 371., 397.,   0.,   0.,   0.,   0.])>4.801177501678467
+INFO nextres 44.11210250854492 attn*mlp 2.65625 layernormed 1.0006163120269775
+			attn_hist -6.9375<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.40625
+			mlp_hist -7.84375<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.21875
+			x_hist -6.421162128448486<tensor([  0.,   0.,   0.,   0., 370., 398.,   0.,   0.,   0.,   0.])>4.798336505889893
+INFO nextres 55.633060455322266 attn*mlp 2.65625 layernormed 1.000616431236267
+			attn_hist -6.9375<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.4375
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 346., 422.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.4123711585998535<tensor([  0.,   0.,   0.,   0., 369., 399.,   0.,   0.,   0.,   0.])>4.798671722412109
+INFO nextres 67.1565933227539 attn*mlp 2.65625 layernormed 1.0006165504455566
+			attn_hist -6.9375<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.4375
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.4039435386657715<tensor([  0.,   0.,   0.,   0., 371., 397.,   0.,   0.,   0.,   0.])>4.796761989593506
+INFO nextres 78.68524169921875 attn*mlp 2.65625 layernormed 1.0006165504455566
+			attn_hist -6.96875<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.4375
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.395959854125977<tensor([  0.,   0.,   0.,   0., 371., 397.,   0.,   0.,   0.,   0.])>4.802210330963135
+INFO nextres 90.21723937988281 attn*mlp 2.671875 layernormed 1.0006166696548462
+			attn_hist -6.96875<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.4375
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.3879008293151855<tensor([  0.,   0.,   0.,   0., 371., 397.,   0.,   0.,   0.,   0.])>4.804538249969482
+INFO nextres 101.75444793701172 attn*mlp 2.65625 layernormed 1.0006166696548462
+			attn_hist -6.96875<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.46875
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 348., 420.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.38415002822876<tensor([  0.,   0.,   0.,   0., 372., 396.,   0.,   0.,   0.,   0.])>4.805715084075928
+INFO nextres 113.29588317871094 attn*mlp 2.65625 layernormed 1.0006167888641357
+			attn_hist -6.96875<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.46875
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 346., 422.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.38021183013916<tensor([  0.,   0.,   0.,   0., 373., 395.,   0.,   0.,   0.,   0.])>4.808765411376953
+INFO nextres 124.83955383300781 attn*mlp 2.671875 layernormed 1.0006167888641357
+			attn_hist -6.96875<tensor([  0.,   0.,   0.,   0., 354., 414.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>7.46875
+			mlp_hist -7.875<tensor([  0.,   0.,   0.,   0., 346., 422.,   0.,   0.,   0.,   0.],
+       dtype=torch.bfloat16)>6.25
+			x_hist -6.376493453979492<tensor([  0.,   0.,   0.,   0., 372., 396.,   0.,   0.,   0.,   0.])>4.810827732086182
+rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0211 the:0.0405 the:0.0496 the:0.0476 the:0.0508,:0.0527 the:0.0503 the:0.0483)
+		(,:0.0674 the:0.0459.:0.0493 the:0.0488.:0.0559,:0.0615 the:0.0486.:0.0498)
+		(,:0.0593 the:0.0454.:0.0488 the:0.0500.:0.0542,:0.0576 the:0.0498.:0.0510)
+		(,:0.0574 the:0.0466.:0.0503.:0.0500.:0.0542,:0.0544 the:0.0496.:0.0522)
+		(,:0.0557 the:0.0466.:0.0500.:0.0500.:0.0542,:0.0527 the:0.0493.:0.0522)
+		(,:0.0542.:0.0464.:0.0500.:0.0498.:0.0542,:0.0527 the:0.0491.:0.0522)
+		(,:0.0525.:0.0464.:0.0498.:0.0513.:0.0542,:0.0510.:0.0491.:0.0520)
+		(,:0.0525 the:0.0476.:0.0513.:0.0513.:0.0527,:0.0513.:0.0491.:0.0520)
+		(.:0.0527 the:0.0476.:0.0513.:0.0513.:0.0527.:0.0513.:0.0491.:0.0520)
+		(.:0.0527 the:0.0476.:0.0513.:0.0513.:0.0527.:0.0513 the:0.0503.:0.0520)
+		(.:0.0527 the:0.0476.:0.0510.:0.0513.:0.0527.:0.0513 the:0.0503.:0.0520)
+		(.:0.0527.:0.0474.:0.0510.:0.0513.:0.0527.:0.0513.:0.0500.:0.0520)
+		(.:0.0527.:0.0474.:0.0510.:0.0513.:0.0527.:0.0513.:0.0500.:0.0520)
+.
+------
+		( the:0.0405 the:0.0496 the:0.0476 the:0.0508,:0.0527 the:0.0503 the:0.0483
+:0.1230)
+		( the:0.0459.:0.0493 the:0.0488.:0.0559,:0.0615 the:0.0486.:0.0498
+:0.1143)
+		( the:0.0454.:0.0488 the:0.0500.:0.0542,:0.0576 the:0.0498.:0.0510
+:0.1123)
+		( the:0.0466.:0.0503.:0.0500.:0.0542,:0.0544 the:0.0496.:0.0522
+:0.1094)
+		( the:0.0466.:0.0500.:0.0500.:0.0542,:0.0527 the:0.0493.:0.0522
+:0.1099)
+		(.:0.0464.:0.0500.:0.0498.:0.0542,:0.0527 the:0.0491.:0.0522
+:0.1099)
+		(.:0.0464.:0.0498.:0.0513.:0.0542,:0.0510.:0.0491.:0.0520
+:0.1074)
+		( the:0.0476.:0.0513.:0.0513.:0.0527,:0.0513.:0.0491.:0.0520
+:0.1074)
+		( the:0.0476.:0.0513.:0.0513.:0.0527.:0.0513.:0.0491.:0.0520
+:0.1074)
+		( the:0.0476.:0.0513.:0.0513.:0.0527.:0.0513 the:0.0503.:0.0520
+:0.1074)
+		( the:0.0476.:0.0510.:0.0513.:0.0527.:0.0513 the:0.0503.:0.0520
+:0.1074)
+		(.:0.0474.:0.0510.:0.0513.:0.0527.:0.0513.:0.0500.:0.0520
+:0.1074)
+		(.:0.0474.:0.0510.:0.0513.:0.0527.:0.0513.:0.0500.:0.0520
+:0.1074)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@ 50 train 7.7282 , allloss: 7.7282, norm:0.6549, dt: 937.61ms, tok/sec: 139793.60, flops:59.53, batch-reuse:1
+@ 51 train 7.7838 , allloss: 7.7838, norm:0.8992, dt: 453.20ms, tok/sec: 289212.58, flops:123.17, batch-reuse:1
+@ 52 train 7.6194 , allloss: 7.6194, norm:6.9280, dt: 452.78ms, tok/sec: 289485.34, flops:123.28, batch-reuse:1
+@ 53 train 7.5843 , allloss: 7.5843, norm:0.5519, dt: 453.04ms, tok/sec: 289316.99, flops:123.21, batch-reuse:1
+@ 54 train 7.6786 , allloss: 7.6786, norm:0.5778, dt: 453.11ms, tok/sec: 289274.37, flops:123.19, batch-reuse:1
+@ 55 train 7.7296 , allloss: 7.7296, norm:1.8381, dt: 451.99ms, tok/sec: 289985.73, flops:123.50, batch-reuse:1
+@ 56 train 7.5661 , allloss: 7.5661, norm:0.7103, dt: 452.50ms, tok/sec: 289660.74, flops:123.36, batch-reuse:1
+@ 57 train 7.4915 , allloss: 7.4915, norm:0.7076, dt: 451.36ms, tok/sec: 290391.34, flops:123.67, batch-reuse:1
+@ 58 train 7.5547 , allloss: 7.5547, norm:1.0873, dt: 452.97ms, tok/sec: 289364.05, flops:123.23, batch-reuse:1
+@ 59 train 7.3643 , allloss: 7.3643, norm:3.3737, dt: 453.30ms, tok/sec: 289149.30, flops:123.14, batch-reuse:1
+@ 60 train 7.5491 , allloss: 7.5491, norm:0.8743, dt: 451.32ms, tok/sec: 290421.10, flops:123.68, batch-reuse:1
+@ 61 train 7.5103 , allloss: 7.5103, norm:0.8677, dt: 450.61ms, tok/sec: 290874.71, flops:123.88, batch-reuse:1
+@ 62 train 7.5074 , allloss: 7.5074, norm:1.3060, dt: 451.51ms, tok/sec: 290297.19, flops:123.63, batch-reuse:1
+@ 63 train 7.5260 , allloss: 7.5260, norm:1.0540, dt: 453.57ms, tok/sec: 288981.35, flops:123.07, batch-reuse:1
+@ 64 train 7.4680 , allloss: 7.4680, norm:0.4254, dt: 454.47ms, tok/sec: 288403.45, flops:122.82, batch-reuse:1
+@ 65 train 7.5735 , allloss: 7.5735, norm:0.8008, dt: 453.77ms, tok/sec: 288851.23, flops:123.01, batch-reuse:1
+@ 66 train 7.5709 , allloss: 7.5709, norm:0.5079, dt: 454.84ms, tok/sec: 288173.97, flops:122.73, batch-reuse:1
+@ 67 train 7.4581 , allloss: 7.4581, norm:1.0823, dt: 455.60ms, tok/sec: 287692.45, flops:122.52, batch-reuse:1
+@ 68 train 7.5081 , allloss: 7.5081, norm:0.6768, dt: 450.48ms, tok/sec: 290960.92, flops:123.91, batch-reuse:1
+@ 69 train 7.3974 , allloss: 7.3974, norm:0.5682, dt: 451.96ms, tok/sec: 290007.76, flops:123.51, batch-reuse:1
+@ 70 train 7.4016 , allloss: 7.4016, norm:0.5712, dt: 451.50ms, tok/sec: 290305.62, flops:123.63, batch-reuse:1
+@ 71 train 7.3784 , allloss: 7.3784, norm:0.8051, dt: 450.09ms, tok/sec: 291215.23, flops:124.02, batch-reuse:1
+@ 72 train 7.4126 , allloss: 7.4126, norm:0.6259, dt: 448.37ms, tok/sec: 292328.30, flops:124.49, batch-reuse:1
+@ 73 train 7.4979 , allloss: 7.4979, norm:0.6276, dt: 452.44ms, tok/sec: 289701.35, flops:123.38, batch-reuse:1
+@ 74 train 7.4331 , allloss: 7.4331, norm:0.6120, dt: 452.58ms, tok/sec: 289613.59, flops:123.34, batch-reuse:1
+@ 75 train 8.0681 , allloss: 8.0681, norm:1.1114, dt: 452.13ms, tok/sec: 289898.87, flops:123.46, batch-reuse:1
+@ 76 train 7.3985 , allloss: 7.3985, norm:1.0320, dt: 452.59ms, tok/sec: 289604.13, flops:123.33, batch-reuse:1
+@ 77 train 8.2137 , allloss: 8.2137, norm:2.2908, dt: 451.70ms, tok/sec: 290173.07, flops:123.58, batch-reuse:1
+@ 78 train 7.7544 , allloss: 7.7544, norm:1.2511, dt: 451.85ms, tok/sec: 290081.51, flops:123.54, batch-reuse:1
+@ 79 train 7.2841 , allloss: 7.2841, norm:0.5196, dt: 451.30ms, tok/sec: 290434.14, flops:123.69, batch-reuse:1
+@ 80 train 7.3313 , allloss: 7.3313, norm:0.6648, dt: 451.67ms, tok/sec: 290195.90, flops:123.59, batch-reuse:1
+@ 81 train 7.3445 , allloss: 7.3445, norm:0.9116, dt: 452.12ms, tok/sec: 289904.53, flops:123.46, batch-reuse:1
+@ 82 train 7.3130 , allloss: 7.3130, norm:0.4655, dt: 451.64ms, tok/sec: 290214.59, flops:123.59, batch-reuse:1
+@ 83 train 7.2906 , allloss: 7.2906, norm:0.4937, dt: 450.80ms, tok/sec: 290751.95, flops:123.82, batch-reuse:1
+@ 84 train 7.3512 , allloss: 7.3512, norm:0.5194, dt: 451.95ms, tok/sec: 290011.43, flops:123.51, batch-reuse:1
+@ 85 train 7.2791 , allloss: 7.2791, norm:0.4037, dt: 451.24ms, tok/sec: 290468.05, flops:123.70, batch-reuse:1
+@ 86 train 7.2314 , allloss: 7.2314, norm:0.6316, dt: 452.10ms, tok/sec: 289915.23, flops:123.47, batch-reuse:1
+@ 87 train 7.3454 , allloss: 7.3454, norm:0.7818, dt: 451.33ms, tok/sec: 290409.75, flops:123.68, batch-reuse:1
+@ 88 train 7.2601 , allloss: 7.2601, norm:0.6990, dt: 452.00ms, tok/sec: 289983.13, flops:123.50, batch-reuse:1
+@ 89 train 7.2074 , allloss: 7.2074, norm:0.5948, dt: 452.48ms, tok/sec: 289677.38, flops:123.37, batch-reuse:1
+@ 90 train 7.2878 , allloss: 7.2878, norm:3.5632, dt: 452.32ms, tok/sec: 289774.79, flops:123.41, batch-reuse:1
+@ 91 train 7.2117 , allloss: 7.2117, norm:0.9091, dt: 450.93ms, tok/sec: 290669.39, flops:123.79, batch-reuse:1
+@ 92 train 7.1908 , allloss: 7.1908, norm:1.5367, dt: 452.16ms, tok/sec: 289877.78, flops:123.45, batch-reuse:1
+@ 93 train 7.1816 , allloss: 7.1816, norm:1.7800, dt: 452.12ms, tok/sec: 289907.59, flops:123.46, batch-reuse:1
+@ 94 train 7.4654 , allloss: 7.4654, norm:1.1084, dt: 451.21ms, tok/sec: 290488.93, flops:123.71, batch-reuse:1
+@ 95 train 7.1812 , allloss: 7.1812, norm:0.7774, dt: 450.42ms, tok/sec: 291000.65, flops:123.93, batch-reuse:1
+@ 96 train 7.0745 , allloss: 7.0745, norm:0.7415, dt: 450.66ms, tok/sec: 290845.62, flops:123.86, batch-reuse:1
+@ 97 train 7.1187 , allloss: 7.1187, norm:17.2921, dt: 449.89ms, tok/sec: 291339.92, flops:124.07, batch-reuse:1
+@ 98 train 7.2130 , allloss: 7.2130, norm:8.2404, dt: 450.90ms, tok/sec: 290688.30, flops:123.80, batch-reuse:1
+@ 99 train 7.1770 , allloss: 7.1770, norm:2.1253, dt: 450.26ms, tok/sec: 291100.35, flops:123.97, batch-reuse:1
+@ 100 train 7.1392 , allloss: 7.1392, norm:293.9655, dt: 452.05ms, tok/sec: 289953.15, flops:123.48, batch-reuse:1
+@ 101 train 7.0263 , allloss: 7.0263, norm:1.6798, dt: 451.85ms, tok/sec: 290079.07, flops:123.54, batch-reuse:1
+@ 102 train 7.0805 , allloss: 7.0805, norm:0.7970, dt: 450.83ms, tok/sec: 290735.65, flops:123.82, batch-reuse:1
+@ 103 train 7.0848 , allloss: 7.0848, norm:0.9311, dt: 450.28ms, tok/sec: 291090.79, flops:123.97, batch-reuse:1
+@ 104 train 7.1494 , allloss: 7.1494, norm:2.2647, dt: 450.34ms, tok/sec: 291052.42, flops:123.95, batch-reuse:1
+@ 105 train 7.1506 , allloss: 7.1506, norm:15.9580, dt: 450.34ms, tok/sec: 291050.72, flops:123.95, batch-reuse:1
+@ 106 train 7.0848 , allloss: 7.0848, norm:2.9917, dt: 450.39ms, tok/sec: 291018.52, flops:123.94, batch-reuse:1
+@ 107 train 7.0803 , allloss: 7.0803, norm:2.6333, dt: 452.25ms, tok/sec: 289820.01, flops:123.43, batch-reuse:1
+@ 108 train 7.0680 , allloss: 7.0680, norm:2.5246, dt: 452.32ms, tok/sec: 289774.03, flops:123.41, batch-reuse:1
+@ 109 train 7.0208 , allloss: 7.0208, norm:4.4655, dt: 453.22ms, tok/sec: 289203.76, flops:123.16, batch-reuse:1
+@ 110 train 7.0535 , allloss: 7.0535, norm:0.9372, dt: 454.07ms, tok/sec: 288663.31, flops:122.93, batch-reuse:1
+@ 111 train 7.0482 , allloss: 7.0482, norm:5.4885, dt: 455.24ms, tok/sec: 287916.49, flops:122.62, batch-reuse:1
+@ 112 train 7.1033 , allloss: 7.1033, norm:1.2947, dt: 454.98ms, tok/sec: 288082.00, flops:122.69, batch-reuse:1
+@ 113 train 7.0145 , allloss: 7.0145, norm:2.8891, dt: 454.89ms, tok/sec: 288137.41, flops:122.71, batch-reuse:1
+@ 114 train 7.0188 , allloss: 7.0188, norm:4.0883, dt: 453.59ms, tok/sec: 288965.10, flops:123.06, batch-reuse:1
+@ 115 train 7.0007 , allloss: 7.0007, norm:2.9670, dt: 450.99ms, tok/sec: 290634.05, flops:123.77, batch-reuse:1
+@ 116 train 6.9758 , allloss: 6.9758, norm:1.0672, dt: 451.62ms, tok/sec: 290227.30, flops:123.60, batch-reuse:1
+@ 117 train 6.9468 , allloss: 6.9468, norm:2.2127, dt: 451.31ms, tok/sec: 290423.09, flops:123.68, batch-reuse:1
+@ 118 train 6.9909 , allloss: 6.9909, norm:3.8104, dt: 454.94ms, tok/sec: 288108.27, flops:122.70, batch-reuse:1
+@ 119 train 6.9842 , allloss: 6.9842, norm:6.8521, dt: 457.01ms, tok/sec: 286800.79, flops:122.14, batch-reuse:1
+@ 120 train 7.1734 , allloss: 7.1734, norm:1.6579, dt: 456.92ms, tok/sec: 286860.65, flops:122.17, batch-reuse:1
+@ 121 train 7.1753 , allloss: 7.1753, norm:1.4219, dt: 453.97ms, tok/sec: 288723.95, flops:122.96, batch-reuse:1
+@ 122 train 7.0812 , allloss: 7.0812, norm:0.9495, dt: 454.41ms, tok/sec: 288443.85, flops:122.84, batch-reuse:1
+@ 123 train 6.9730 , allloss: 6.9730, norm:2.7003, dt: 453.88ms, tok/sec: 288779.92, flops:122.98, batch-reuse:1
+@ 124 train 7.0169 , allloss: 7.0169, norm:4.2167, dt: 453.22ms, tok/sec: 289203.61, flops:123.16, batch-reuse:1
+@ 125 train 7.0406 , allloss: 7.0406, norm:1.0434, dt: 450.52ms, tok/sec: 290932.59, flops:123.90, batch-reuse:1
+@ 126 train 7.0153 , allloss: 7.0153, norm:0.7103, dt: 451.78ms, tok/sec: 290125.14, flops:123.56, batch-reuse:1
+@ 127 train 6.9163 , allloss: 6.9163, norm:1.3450, dt: 449.90ms, tok/sec: 291334.67, flops:124.07, batch-reuse:1
+@ 128 train 6.8714 , allloss: 6.8714, norm:0.5133, dt: 451.32ms, tok/sec: 290417.26, flops:123.68, batch-reuse:1
+@ 129 train 7.0788 , allloss: 7.0788, norm:0.7854, dt: 453.64ms, tok/sec: 288936.24, flops:123.05, batch-reuse:1
+@ 130 train 6.9894 , allloss: 6.9894, norm:1.0412, dt: 453.80ms, tok/sec: 288829.22, flops:123.00, batch-reuse:1
+@ 131 train 6.9522 , allloss: 6.9522, norm:0.4867, dt: 453.34ms, tok/sec: 289125.73, flops:123.13, batch-reuse:1
+@ 132 train 7.0061 , allloss: 7.0061, norm:0.8290, dt: 456.02ms, tok/sec: 287425.92, flops:122.41, batch-reuse:1
+@ 133 train 6.9014 , allloss: 6.9014, norm:1.5749, dt: 453.85ms, tok/sec: 288801.91, flops:122.99, batch-reuse:1
+@ 134 train 6.9560 , allloss: 6.9560, norm:0.8833, dt: 454.19ms, tok/sec: 288582.40, flops:122.90, batch-reuse:1
+@ 135 train 6.8351 , allloss: 6.8351, norm:0.6885, dt: 453.88ms, tok/sec: 288779.16, flops:122.98, batch-reuse:1
+@ 136 train 6.8723 , allloss: 6.8723, norm:0.4636, dt: 452.64ms, tok/sec: 289574.69, flops:123.32, batch-reuse:1
+@ 137 train 6.7686 , allloss: 6.7686, norm:0.4491, dt: 451.87ms, tok/sec: 290063.30, flops:123.53, batch-reuse:1
+@ 138 train 6.7628 , allloss: 6.7628, norm:0.4643, dt: 454.06ms, tok/sec: 288667.56, flops:122.94, batch-reuse:1
+@ 139 train 6.7355 , allloss: 6.7355, norm:0.7365, dt: 453.19ms, tok/sec: 289218.67, flops:123.17, batch-reuse:1
+@ 140 train 6.7440 , allloss: 6.7440, norm:0.9978, dt: 453.33ms, tok/sec: 289134.71, flops:123.13, batch-reuse:1
+@ 141 train 6.7321 , allloss: 6.7321, norm:0.4489, dt: 453.24ms, tok/sec: 289187.18, flops:123.16, batch-reuse:1
+@ 142 train 6.8478 , allloss: 6.8478, norm:0.4932, dt: 453.95ms, tok/sec: 288736.99, flops:122.96, batch-reuse:1
+@ 143 train 6.7817 , allloss: 6.7817, norm:0.3914, dt: 453.26ms, tok/sec: 289173.34, flops:123.15, batch-reuse:1
+@ 144 train 6.7498 , allloss: 6.7498, norm:0.6230, dt: 451.53ms, tok/sec: 290282.47, flops:123.62, batch-reuse:1
+@ 145 train 6.7243 , allloss: 6.7243, norm:0.3675, dt: 450.70ms, tok/sec: 290818.24, flops:123.85, batch-reuse:1
+@ 146 train 6.8765 , allloss: 6.8765, norm:0.4188, dt: 451.77ms, tok/sec: 290128.05, flops:123.56, batch-reuse:1
+@ 147 train 6.7250 , allloss: 6.7250, norm:0.3724, dt: 451.87ms, tok/sec: 290068.50, flops:123.53, batch-reuse:1
+@ 148 train 6.6930 , allloss: 6.6930, norm:0.3638, dt: 451.59ms, tok/sec: 290246.30, flops:123.61, batch-reuse:1
+@ 149 train 6.5686 , allloss: 6.5686, norm:0.3496, dt: 452.27ms, tok/sec: 289806.26, flops:123.42, batch-reuse:1
+@ 150 train 6.7868 , allloss: 6.7868, norm:0.3244, dt: 451.94ms, tok/sec: 290018.47, flops:123.51, batch-reuse:1
+@ 151 train 6.5818 , allloss: 6.5818, norm:0.3009, dt: 452.70ms, tok/sec: 289533.21, flops:123.30, batch-reuse:1
+@ 152 train 6.5682 , allloss: 6.5682, norm:0.4835, dt: 453.17ms, tok/sec: 289233.73, flops:123.18, batch-reuse:1
+@ 153 train 6.5470 , allloss: 6.5470, norm:0.3708, dt: 455.28ms, tok/sec: 287892.07, flops:122.61, batch-reuse:1
+@ 154 train 6.6301 , allloss: 6.6301, norm:0.3248, dt: 456.52ms, tok/sec: 287110.69, flops:122.27, batch-reuse:1
+@ 155 train 6.7696 , allloss: 6.7696, norm:0.2727, dt: 457.95ms, tok/sec: 286213.69, flops:121.89, batch-reuse:1
+@ 156 train 6.6001 , allloss: 6.6001, norm:0.3853, dt: 455.05ms, tok/sec: 288037.63, flops:122.67, batch-reuse:1
+@ 157 train 6.7071 , allloss: 6.7071, norm:0.4480, dt: 453.46ms, tok/sec: 289047.90, flops:123.10, batch-reuse:1
+@ 158 train 6.6586 , allloss: 6.6586, norm:0.4103, dt: 450.06ms, tok/sec: 291231.58, flops:124.03, batch-reuse:1
+@ 159 train 6.6938 , allloss: 6.6938, norm:0.4386, dt: 452.41ms, tok/sec: 289719.36, flops:123.38, batch-reuse:1
+@ 160 train 6.5858 , allloss: 6.5858, norm:0.5028, dt: 452.47ms, tok/sec: 289681.04, flops:123.37, batch-reuse:1
+@ 161 train 6.5742 , allloss: 6.5742, norm:0.3592, dt: 452.46ms, tok/sec: 289686.08, flops:123.37, batch-reuse:1
+@ 162 train 6.6972 , allloss: 6.6972, norm:0.3989, dt: 452.43ms, tok/sec: 289704.55, flops:123.38, batch-reuse:1
+@ 163 train 6.5852 , allloss: 6.5852, norm:0.3501, dt: 452.99ms, tok/sec: 289350.80, flops:123.23, batch-reuse:1
+@ 164 train 6.4895 , allloss: 6.4895, norm:0.3584, dt: 456.02ms, tok/sec: 287424.41, flops:122.41, batch-reuse:1
+@ 165 train 6.6091 , allloss: 6.6091, norm:0.4599, dt: 456.39ms, tok/sec: 287190.63, flops:122.31, batch-reuse:1
+@ 166 train 6.5561 , allloss: 6.5561, norm:1.5749, dt: 450.57ms, tok/sec: 290903.18, flops:123.89, batch-reuse:1
+@ 167 train 6.5837 , allloss: 6.5837, norm:0.4418, dt: 447.87ms, tok/sec: 292656.81, flops:124.63, batch-reuse:1
+@ 168 train 6.4636 , allloss: 6.4636, norm:0.4014, dt: 448.80ms, tok/sec: 292051.56, flops:124.38, batch-reuse:1
+@ 169 train 6.5092 , allloss: 6.5092, norm:0.3611, dt: 450.25ms, tok/sec: 291108.83, flops:123.98, batch-reuse:1
+@ 170 train 6.4874 , allloss: 6.4874, norm:0.3320, dt: 450.36ms, tok/sec: 291038.86, flops:123.95, batch-reuse:1
+@ 171 train 6.4585 , allloss: 6.4585, norm:0.3392, dt: 452.30ms, tok/sec: 289790.07, flops:123.41, batch-reuse:1
+@ 172 train 6.5105 , allloss: 6.5105, norm:0.3718, dt: 454.72ms, tok/sec: 288247.55, flops:122.76, batch-reuse:1
+@ 173 train 6.4747 , allloss: 6.4747, norm:0.5358, dt: 453.56ms, tok/sec: 288983.02, flops:123.07, batch-reuse:1
+@ 174 train 6.6210 , allloss: 6.6210, norm:0.3131, dt: 452.71ms, tok/sec: 289525.43, flops:123.30, batch-reuse:1
+@ 175 train 6.5604 , allloss: 6.5604, norm:1.3138, dt: 452.15ms, tok/sec: 289882.97, flops:123.45, batch-reuse:1
+@ 176 train 6.5387 , allloss: 6.5387, norm:0.6519, dt: 453.42ms, tok/sec: 289077.08, flops:123.11, batch-reuse:1
+@ 177 train 6.4884 , allloss: 6.4884, norm:0.5387, dt: 452.92ms, tok/sec: 289394.67, flops:123.25, batch-reuse:1
+@ 178 train 6.5263 , allloss: 6.5263, norm:0.4020, dt: 453.04ms, tok/sec: 289316.84, flops:123.21, batch-reuse:1
+@ 179 train 6.3790 , allloss: 6.3790, norm:0.5509, dt: 451.58ms, tok/sec: 290251.36, flops:123.61, batch-reuse:1
+@ 180 train 6.5312 , allloss: 6.5312, norm:0.4810, dt: 450.39ms, tok/sec: 291020.06, flops:123.94, batch-reuse:1
+@ 181 train 6.4423 , allloss: 6.4423, norm:0.4872, dt: 450.33ms, tok/sec: 291058.27, flops:123.95, batch-reuse:1
+@ 182 train 6.4826 , allloss: 6.4826, norm:0.2789, dt: 451.20ms, tok/sec: 290494.15, flops:123.71, batch-reuse:1
+@ 183 train 6.4353 , allloss: 6.4353, norm:0.3482, dt: 451.31ms, tok/sec: 290427.24, flops:123.68, batch-reuse:1
+@ 184 train 6.3239 , allloss: 6.3239, norm:0.3435, dt: 451.23ms, tok/sec: 290479.87, flops:123.71, batch-reuse:1
+@ 185 train 6.3581 , allloss: 6.3581, norm:0.3909, dt: 454.10ms, tok/sec: 288641.18, flops:122.92, batch-reuse:1
+@ 186 train 6.5264 , allloss: 6.5264, norm:0.3508, dt: 453.52ms, tok/sec: 289009.91, flops:123.08, batch-reuse:1
+@ 187 train 6.6634 , allloss: 6.6634, norm:0.4773, dt: 450.53ms, tok/sec: 290926.89, flops:123.90, batch-reuse:1
+@ 188 train 6.4903 , allloss: 6.4903, norm:0.3418, dt: 452.43ms, tok/sec: 289704.40, flops:123.38, batch-reuse:1
+@ 189 train 6.6052 , allloss: 6.6052, norm:0.4446, dt: 453.76ms, tok/sec: 288854.57, flops:123.02, batch-reuse:1
+@ 190 train 6.5563 , allloss: 6.5563, norm:0.3027, dt: 453.83ms, tok/sec: 288813.90, flops:123.00, batch-reuse:1
+@ 191 train 6.5334 , allloss: 6.5334, norm:0.4442, dt: 453.18ms, tok/sec: 289224.15, flops:123.17, batch-reuse:1
+@ 192 train 6.5837 , allloss: 6.5837, norm:0.3431, dt: 453.51ms, tok/sec: 289015.69, flops:123.08, batch-reuse:1
+@ 193 train 6.4676 , allloss: 6.4676, norm:0.4717, dt: 451.68ms, tok/sec: 290187.63, flops:123.58, batch-reuse:1
+@ 194 train 6.6051 , allloss: 6.6051, norm:0.4098, dt: 454.30ms, tok/sec: 288511.97, flops:122.87, batch-reuse:1
+@ 195 train 6.5582 , allloss: 6.5582, norm:0.4042, dt: 454.80ms, tok/sec: 288197.99, flops:122.74, batch-reuse:1
+@ 196 train 6.4430 , allloss: 6.4430, norm:0.4268, dt: 452.88ms, tok/sec: 289419.50, flops:123.26, batch-reuse:1
+@ 197 train 6.4566 , allloss: 6.4566, norm:0.3827, dt: 452.08ms, tok/sec: 289934.19, flops:123.47, batch-reuse:1
+@ 198 train 6.4305 , allloss: 6.4305, norm:0.3933, dt: 453.31ms, tok/sec: 289142.16, flops:123.14, batch-reuse:1
+@ 199 train 6.5215 , allloss: 6.5215, norm:0.4149, dt: 449.56ms, tok/sec: 291555.31, flops:124.17, batch-reuse:1
+@ 200 train 6.5349 , allloss: 6.5349, norm:0.3848, dt: 448.86ms, tok/sec: 292010.45, flops:124.36, batch-reuse:1
+@ 201 train 6.4681 , allloss: 6.4681, norm:0.4331, dt: 449.31ms, tok/sec: 291716.20, flops:124.23, batch-reuse:1
+@ 202 train 6.5451 , allloss: 6.5451, norm:0.3284, dt: 449.51ms, tok/sec: 291587.32, flops:124.18, batch-reuse:1
+@ 203 train 6.5023 , allloss: 6.5023, norm:0.4206, dt: 450.74ms, tok/sec: 290795.62, flops:123.84, batch-reuse:1
+@ 204 train 6.4889 , allloss: 6.4889, norm:0.3863, dt: 450.89ms, tok/sec: 290693.68, flops:123.80, batch-reuse:1
+@ 205 train 6.4633 , allloss: 6.4633, norm:0.3473, dt: 451.47ms, tok/sec: 290320.34, flops:123.64, batch-reuse:1
+@ 206 train 6.5011 , allloss: 6.5011, norm:0.3803, dt: 450.71ms, tok/sec: 290815.47, flops:123.85, batch-reuse:1
+@ 207 train 6.3906 , allloss: 6.3906, norm:0.3498, dt: 450.92ms, tok/sec: 290674.47, flops:123.79, batch-reuse:1
+@ 208 train 6.4559 , allloss: 6.4559, norm:0.3867, dt: 450.43ms, tok/sec: 290995.72, flops:123.93, batch-reuse:1
+@ 209 train 6.5022 , allloss: 6.5022, norm:0.3355, dt: 451.33ms, tok/sec: 290412.51, flops:123.68, batch-reuse:1
+@ 210 train 6.4685 , allloss: 6.4685, norm:0.2785, dt: 450.14ms, tok/sec: 291183.30, flops:124.01, batch-reuse:1
+@ 211 train 6.3800 , allloss: 6.3800, norm:0.3729, dt: 451.09ms, tok/sec: 290566.62, flops:123.74, batch-reuse:1
+@ 212 train 6.4507 , allloss: 6.4507, norm:0.4344, dt: 450.08ms, tok/sec: 291222.32, flops:124.02, batch-reuse:1
+@ 213 train 6.3793 , allloss: 6.3793, norm:0.3739, dt: 451.14ms, tok/sec: 290537.29, flops:123.73, batch-reuse:1
+@ 214 train 6.4103 , allloss: 6.4103, norm:0.4081, dt: 457.19ms, tok/sec: 286692.80, flops:122.09, batch-reuse:1
+@ 215 train 6.3132 , allloss: 6.3132, norm:0.3373, dt: 459.17ms, tok/sec: 285453.09, flops:121.57, batch-reuse:1
+@ 216 train 6.3116 , allloss: 6.3116, norm:0.3233, dt: 459.09ms, tok/sec: 285504.53, flops:121.59, batch-reuse:1
+@ 217 train 6.4020 , allloss: 6.4020, norm:0.3259, dt: 459.25ms, tok/sec: 285403.00, flops:121.55, batch-reuse:1
+@ 218 train 6.3268 , allloss: 6.3268, norm:0.3514, dt: 456.40ms, tok/sec: 287184.18, flops:122.30, batch-reuse:1
+@ 219 train 6.5138 , allloss: 6.5138, norm:0.3759, dt: 452.68ms, tok/sec: 289545.10, flops:123.31, batch-reuse:1
+@ 220 train 6.4265 , allloss: 6.4265, norm:0.3522, dt: 453.24ms, tok/sec: 289188.09, flops:123.16, batch-reuse:1
+@ 221 train 6.3646 , allloss: 6.3646, norm:0.5618, dt: 453.47ms, tok/sec: 289041.98, flops:123.09, batch-reuse:1
+@ 222 train 6.3501 , allloss: 6.3501, norm:0.3369, dt: 450.04ms, tok/sec: 291242.07, flops:124.03, batch-reuse:1
+@ 223 train 6.3872 , allloss: 6.3872, norm:0.3086, dt: 451.07ms, tok/sec: 290579.98, flops:123.75, batch-reuse:1
+@ 224 train 6.3034 , allloss: 6.3034, norm:0.4138, dt: 450.30ms, tok/sec: 291078.15, flops:123.96, batch-reuse:1
+@ 225 train 6.3709 , allloss: 6.3709, norm:0.3388, dt: 451.94ms, tok/sec: 290021.07, flops:123.51, batch-reuse:1
+@ 226 train 6.3993 , allloss: 6.3993, norm:0.3239, dt: 455.14ms, tok/sec: 287982.85, flops:122.64, batch-reuse:1
+@ 227 train 6.3808 , allloss: 6.3808, norm:0.3349, dt: 457.76ms, tok/sec: 286332.05, flops:121.94, batch-reuse:1
+@ 228 train 6.3648 , allloss: 6.3648, norm:0.2955, dt: 460.19ms, tok/sec: 284818.50, flops:121.30, batch-reuse:1
+@ 229 train 6.4101 , allloss: 6.4101, norm:0.2682, dt: 457.16ms, tok/sec: 286712.09, flops:122.10, batch-reuse:1
+@ 230 train 6.3924 , allloss: 6.3924, norm:0.3470, dt: 455.09ms, tok/sec: 288014.69, flops:122.66, batch-reuse:1
+@ 231 train 6.3122 , allloss: 6.3122, norm:0.2715, dt: 454.75ms, tok/sec: 288230.93, flops:122.75, batch-reuse:1
+@ 232 train 6.2979 , allloss: 6.2979, norm:0.3074, dt: 456.28ms, tok/sec: 287265.21, flops:122.34, batch-reuse:1
+@ 233 train 6.3784 , allloss: 6.3784, norm:0.3569, dt: 456.05ms, tok/sec: 287406.98, flops:122.40, batch-reuse:1
+@ 234 train 6.1972 , allloss: 6.1972, norm:0.3801, dt: 452.61ms, tok/sec: 289589.18, flops:123.33, batch-reuse:1
+@ 235 train 6.3630 , allloss: 6.3630, norm:0.6379, dt: 456.35ms, tok/sec: 287218.99, flops:122.32, batch-reuse:1
+@ 236 train 6.2477 , allloss: 6.2477, norm:0.6699, dt: 453.41ms, tok/sec: 289080.58, flops:123.11, batch-reuse:1
+@ 237 train 6.3250 , allloss: 6.3250, norm:0.3310, dt: 453.46ms, tok/sec: 289046.23, flops:123.10, batch-reuse:1
+@ 238 train 6.2870 , allloss: 6.2870, norm:0.3984, dt: 452.00ms, tok/sec: 289984.50, flops:123.50, batch-reuse:1
+@ 239 train 6.2876 , allloss: 6.2876, norm:0.3420, dt: 453.37ms, tok/sec: 289106.27, flops:123.12, batch-reuse:1
+@ 240 train 6.3458 , allloss: 6.3458, norm:0.4155, dt: 453.58ms, tok/sec: 288972.09, flops:123.07, batch-reuse:1
+@ 241 train 6.3194 , allloss: 6.3194, norm:0.2863, dt: 454.29ms, tok/sec: 288518.79, flops:122.87, batch-reuse:1
+@ 242 train 6.3039 , allloss: 6.3039, norm:0.3823, dt: 452.08ms, tok/sec: 289934.04, flops:123.47, batch-reuse:1
+@ 243 train 6.1846 , allloss: 6.1846, norm:0.2865, dt: 452.23ms, tok/sec: 289835.75, flops:123.43, batch-reuse:1
+@ 244 train 6.3497 , allloss: 6.3497, norm:0.3694, dt: 454.56ms, tok/sec: 288346.73, flops:122.80, batch-reuse:1
+@ 245 train 6.1419 , allloss: 6.1419, norm:0.4561, dt: 451.56ms, tok/sec: 290264.85, flops:123.62, batch-reuse:1
+@ 246 train 6.4082 , allloss: 6.4082, norm:0.4394, dt: 451.31ms, tok/sec: 290424.93, flops:123.68, batch-reuse:1
+@ 247 train 6.2785 , allloss: 6.2785, norm:0.3317, dt: 452.12ms, tok/sec: 289903.46, flops:123.46, batch-reuse:1
+@ 248 train 6.2372 , allloss: 6.2372, norm:0.4552, dt: 453.04ms, tok/sec: 289319.74, flops:123.21, batch-reuse:1
+@ 249 train 6.2171 , allloss: 6.2171, norm:0.4191, dt: 453.15ms, tok/sec: 289244.23, flops:123.18, batch-reuse:1
+@ 250 train 6.2613 , allloss: 6.2613, norm:0.3680, dt: 451.44ms, tok/sec: 290339.65, flops:123.65, batch-reuse:1
+@ 251 train 6.1969 , allloss: 6.1969, norm:0.4877, dt: 451.99ms, tok/sec: 289988.33, flops:123.50, batch-reuse:1
+@ 252 train 6.3316 , allloss: 6.3316, norm:0.3304, dt: 450.77ms, tok/sec: 290773.94, flops:123.83, batch-reuse:1
+@ 253 train 6.2145 , allloss: 6.2145, norm:0.3912, dt: 452.37ms, tok/sec: 289747.15, flops:123.40, batch-reuse:1
+@ 254 train 6.1456 , allloss: 6.1456, norm:0.3454, dt: 449.94ms, tok/sec: 291312.44, flops:124.06, batch-reuse:1
+@ 255 train 6.1607 , allloss: 6.1607, norm:0.3811, dt: 452.24ms, tok/sec: 289829.03, flops:123.43, batch-reuse:1
+@ 256 train 6.2211 , allloss: 6.2211, norm:0.4175, dt: 453.17ms, tok/sec: 289233.73, flops:123.18, batch-reuse:1
+@ 257 train 6.2295 , allloss: 6.2295, norm:0.4036, dt: 452.89ms, tok/sec: 289409.90, flops:123.25, batch-reuse:1
+@ 258 train 6.1641 , allloss: 6.1641, norm:0.3537, dt: 454.12ms, tok/sec: 288627.39, flops:122.92, batch-reuse:1
+@ 259 train 6.1897 , allloss: 6.1897, norm:0.3226, dt: 454.34ms, tok/sec: 288491.53, flops:122.86, batch-reuse:1
+@ 260 train 6.2599 , allloss: 6.2599, norm:0.3959, dt: 451.90ms, tok/sec: 290043.41, flops:123.52, batch-reuse:1
+@ 261 train 6.2225 , allloss: 6.2225, norm:0.4731, dt: 452.84ms, tok/sec: 289445.56, flops:123.27, batch-reuse:1
+@ 262 train 6.2882 , allloss: 6.2882, norm:0.3386, dt: 451.43ms, tok/sec: 290349.47, flops:123.65, batch-reuse:1
+@ 263 train 6.2250 , allloss: 6.2250, norm:0.5681, dt: 448.96ms, tok/sec: 291946.10, flops:124.33, batch-reuse:1
+@ 264 train 6.1908 , allloss: 6.1908, norm:0.5241, dt: 449.93ms, tok/sec: 291318.16, flops:124.06, batch-reuse:1
+@ 265 train 6.2125 , allloss: 6.2125, norm:0.6788, dt: 452.89ms, tok/sec: 289412.34, flops:123.25, batch-reuse:1
+@ 266 train 6.1434 , allloss: 6.1434, norm:0.3009, dt: 453.96ms, tok/sec: 288727.74, flops:122.96, batch-reuse:1
+@ 267 train 6.1950 , allloss: 6.1950, norm:0.4485, dt: 454.09ms, tok/sec: 288649.52, flops:122.93, batch-reuse:1
+@ 268 train 6.2526 , allloss: 6.2526, norm:0.3670, dt: 450.79ms, tok/sec: 290761.33, flops:123.83, batch-reuse:1
+@ 269 train 6.2000 , allloss: 6.2000, norm:0.3658, dt: 450.60ms, tok/sec: 290885.17, flops:123.88, batch-reuse:1
+@ 270 train 6.2821 , allloss: 6.2821, norm:0.4332, dt: 451.51ms, tok/sec: 290299.18, flops:123.63, batch-reuse:1
+@ 271 train 6.1439 , allloss: 6.1439, norm:0.3477, dt: 451.58ms, tok/sec: 290249.98, flops:123.61, batch-reuse:1
+@ 272 train 6.1798 , allloss: 6.1798, norm:0.4037, dt: 451.60ms, tok/sec: 290240.63, flops:123.61, batch-reuse:1
+@ 273 train 6.2644 , allloss: 6.2644, norm:0.8338, dt: 450.62ms, tok/sec: 290867.47, flops:123.87, batch-reuse:1
+@ 274 train 6.1908 , allloss: 6.1908, norm:0.4255, dt: 452.70ms, tok/sec: 289535.19, flops:123.30, batch-reuse:1
+@ 275 train 6.1635 , allloss: 6.1635, norm:0.3219, dt: 450.85ms, tok/sec: 290724.12, flops:123.81, batch-reuse:1
+@ 276 train 6.1485 , allloss: 6.1485, norm:0.3812, dt: 449.76ms, tok/sec: 291423.32, flops:124.11, batch-reuse:1
+@ 277 train 5.9999 , allloss: 5.9999, norm:0.3926, dt: 450.12ms, tok/sec: 291191.16, flops:124.01, batch-reuse:1
+@ 278 train 6.1538 , allloss: 6.1538, norm:0.4173, dt: 451.73ms, tok/sec: 290158.68, flops:123.57, batch-reuse:1
+@ 279 train 6.0554 , allloss: 6.0554, norm:0.2997, dt: 455.12ms, tok/sec: 287994.77, flops:122.65, batch-reuse:1
+@ 280 train 6.1929 , allloss: 6.1929, norm:0.4262, dt: 453.78ms, tok/sec: 288843.79, flops:123.01, batch-reuse:1
+@ 281 train 6.0797 , allloss: 6.0797, norm:0.3427, dt: 450.81ms, tok/sec: 290747.02, flops:123.82, batch-reuse:1
+@ 282 train 6.0600 , allloss: 6.0600, norm:0.3671, dt: 450.33ms, tok/sec: 291055.19, flops:123.95, batch-reuse:1
+@ 283 train 6.0191 , allloss: 6.0191, norm:0.3587, dt: 449.81ms, tok/sec: 291392.12, flops:124.10, batch-reuse:1
+@ 284 train 6.0975 , allloss: 6.0975, norm:0.3212, dt: 450.53ms, tok/sec: 290927.81, flops:123.90, batch-reuse:1
+@ 285 train 6.1175 , allloss: 6.1175, norm:0.4252, dt: 453.21ms, tok/sec: 289209.08, flops:123.17, batch-reuse:1
+@ 286 train 6.0854 , allloss: 6.0854, norm:0.3606, dt: 454.07ms, tok/sec: 288661.04, flops:122.93, batch-reuse:1
+@ 287 train 6.1213 , allloss: 6.1213, norm:0.3456, dt: 451.64ms, tok/sec: 290215.05, flops:123.59, batch-reuse:1
+@ 288 train 6.0752 , allloss: 6.0752, norm:0.4197, dt: 452.97ms, tok/sec: 289361.77, flops:123.23, batch-reuse:1
+@ 289 train 6.0775 , allloss: 6.0775, norm:0.3574, dt: 452.40ms, tok/sec: 289728.52, flops:123.39, batch-reuse:1
+@ 290 train 6.0944 , allloss: 6.0944, norm:0.3686, dt: 453.58ms, tok/sec: 288972.85, flops:123.07, batch-reuse:1
+@ 291 train 5.9789 , allloss: 5.9789, norm:0.3355, dt: 453.19ms, tok/sec: 289222.63, flops:123.17, batch-reuse:1
+@ 292 train 6.0198 , allloss: 6.0198, norm:0.3360, dt: 453.88ms, tok/sec: 288783.10, flops:122.98, batch-reuse:1
+@ 293 train 6.0792 , allloss: 6.0792, norm:0.3281, dt: 450.21ms, tok/sec: 291134.72, flops:123.99, batch-reuse:1
+@ 294 train 6.0680 , allloss: 6.0680, norm:0.3256, dt: 453.42ms, tok/sec: 289074.65, flops:123.11, batch-reuse:1
+@ 295 train 6.0748 , allloss: 6.0748, norm:0.3466, dt: 453.20ms, tok/sec: 289212.28, flops:123.17, batch-reuse:1
+@ 296 train 5.9710 , allloss: 5.9710, norm:0.3670, dt: 454.43ms, tok/sec: 288432.20, flops:122.84, batch-reuse:1
+@ 297 train 5.9640 , allloss: 5.9640, norm:0.4165, dt: 453.16ms, tok/sec: 289241.19, flops:123.18, batch-reuse:1
+@ 298 train 6.0193 , allloss: 6.0193, norm:0.3045, dt: 454.24ms, tok/sec: 288553.62, flops:122.89, batch-reuse:1
+@ 299 train 6.0139 , allloss: 6.0139, norm:0.3053, dt: 453.45ms, tok/sec: 289053.22, flops:123.10, batch-reuse:1
+@ 300 train 5.9939 , allloss: 5.9939, norm:0.3474, dt: 453.81ms, tok/sec: 288823.00, flops:123.00, batch-reuse:1
+@ 301 train 6.1404 , allloss: 6.1404, norm:0.4006, dt: 452.24ms, tok/sec: 289825.21, flops:123.43, batch-reuse:1
+@ 302 train 5.9770 , allloss: 5.9770, norm:0.4314, dt: 448.66ms, tok/sec: 292140.80, flops:124.41, batch-reuse:1
+@ 303 train 6.0145 , allloss: 6.0145, norm:0.3820, dt: 450.43ms, tok/sec: 290995.42, flops:123.93, batch-reuse:1
+@ 304 train 5.9593 , allloss: 5.9593, norm:0.5025, dt: 448.47ms, tok/sec: 292264.27, flops:124.47, batch-reuse:1
+@ 305 train 5.9352 , allloss: 5.9352, norm:0.4324, dt: 447.29ms, tok/sec: 293038.53, flops:124.80, batch-reuse:1
+@ 306 train 5.9599 , allloss: 5.9599, norm:0.7203, dt: 449.52ms, tok/sec: 291585.31, flops:124.18, batch-reuse:1
+@ 307 train 6.1193 , allloss: 6.1193, norm:0.8478, dt: 450.18ms, tok/sec: 291155.69, flops:124.00, batch-reuse:1
+@ 308 train 5.9670 , allloss: 5.9670, norm:0.5751, dt: 450.07ms, tok/sec: 291228.65, flops:124.03, batch-reuse:1
+@ 309 train 5.9979 , allloss: 5.9979, norm:0.4637, dt: 451.38ms, tok/sec: 290381.67, flops:123.67, batch-reuse:1
+@ 310 train 6.0525 , allloss: 6.0525, norm:0.4879, dt: 451.37ms, tok/sec: 290389.96, flops:123.67, batch-reuse:1
+@ 311 train 6.0860 , allloss: 6.0860, norm:0.4085, dt: 453.53ms, tok/sec: 289002.32, flops:123.08, batch-reuse:1
+@ 312 train 6.1122 , allloss: 6.1122, norm:0.4763, dt: 453.95ms, tok/sec: 288736.24, flops:122.96, batch-reuse:1
+@ 313 train 5.9484 , allloss: 5.9484, norm:0.3395, dt: 452.32ms, tok/sec: 289778.31, flops:123.41, batch-reuse:1
+@ 314 train 5.9488 , allloss: 5.9488, norm:0.3640, dt: 450.85ms, tok/sec: 290720.58, flops:123.81, batch-reuse:1
+@ 315 train 5.9508 , allloss: 5.9508, norm:0.3987, dt: 453.46ms, tok/sec: 289049.27, flops:123.10, batch-reuse:1
+@ 316 train 5.9794 , allloss: 5.9794, norm:0.3383, dt: 452.78ms, tok/sec: 289482.44, flops:123.28, batch-reuse:1
+@ 317 train 6.0197 , allloss: 6.0197, norm:0.3601, dt: 450.96ms, tok/sec: 290653.10, flops:123.78, batch-reuse:1
+@ 318 train 5.8945 , allloss: 5.8945, norm:0.2939, dt: 451.97ms, tok/sec: 290001.48, flops:123.50, batch-reuse:1
+@ 319 train 5.8514 , allloss: 5.8514, norm:0.3910, dt: 452.14ms, tok/sec: 289891.53, flops:123.46, batch-reuse:1
+@ 320 train 5.9474 , allloss: 5.9474, norm:0.3570, dt: 451.63ms, tok/sec: 290221.02, flops:123.60, batch-reuse:1
+@ 321 train 5.9675 , allloss: 5.9675, norm:0.3080, dt: 450.64ms, tok/sec: 290858.55, flops:123.87, batch-reuse:1
+@ 322 train 5.8653 , allloss: 5.8653, norm:0.3157, dt: 452.30ms, tok/sec: 289787.47, flops:123.41, batch-reuse:1
+@ 323 train 5.9659 , allloss: 5.9659, norm:0.3406, dt: 451.55ms, tok/sec: 290272.05, flops:123.62, batch-reuse:1
+@ 324 train 5.8507 , allloss: 5.8507, norm:0.3608, dt: 450.95ms, tok/sec: 290657.41, flops:123.78, batch-reuse:1
+@ 325 train 5.8704 , allloss: 5.8704, norm:0.3200, dt: 450.63ms, tok/sec: 290866.55, flops:123.87, batch-reuse:1
+@ 326 train 5.9562 , allloss: 5.9562, norm:0.3475, dt: 452.05ms, tok/sec: 289949.63, flops:123.48, batch-reuse:1
+@ 327 train 5.9584 , allloss: 5.9584, norm:0.3668, dt: 451.38ms, tok/sec: 290381.52, flops:123.67, batch-reuse:1
+@ 328 train 5.9275 , allloss: 5.9275, norm:0.5033, dt: 451.58ms, tok/sec: 290250.90, flops:123.61, batch-reuse:1
+@ 329 train 5.8811 , allloss: 5.8811, norm:0.4880, dt: 452.25ms, tok/sec: 289823.37, flops:123.43, batch-reuse:1
+@ 330 train 5.8851 , allloss: 5.8851, norm:0.5454, dt: 451.94ms, tok/sec: 290021.53, flops:123.51, batch-reuse:1
+@ 331 train 5.8471 , allloss: 5.8471, norm:0.4669, dt: 452.11ms, tok/sec: 289911.41, flops:123.47, batch-reuse:1
+@ 332 train 5.7986 , allloss: 5.7986, norm:0.4066, dt: 453.78ms, tok/sec: 288845.77, flops:123.01, batch-reuse:1
+@ 333 train 5.8854 , allloss: 5.8854, norm:0.4568, dt: 455.51ms, tok/sec: 287747.26, flops:122.54, batch-reuse:1
+@ 334 train 5.8106 , allloss: 5.8106, norm:0.4666, dt: 455.28ms, tok/sec: 287896.29, flops:122.61, batch-reuse:1
+@ 335 train 5.7714 , allloss: 5.7714, norm:0.4047, dt: 455.07ms, tok/sec: 288025.70, flops:122.66, batch-reuse:1
+@ 336 train 5.8498 , allloss: 5.8498, norm:0.5189, dt: 452.64ms, tok/sec: 289574.23, flops:123.32, batch-reuse:1
+@ 337 train 5.8090 , allloss: 5.8090, norm:0.3804, dt: 450.00ms, tok/sec: 291271.23, flops:124.04, batch-reuse:1
+@ 338 train 5.7974 , allloss: 5.7974, norm:0.4444, dt: 450.35ms, tok/sec: 291045.64, flops:123.95, batch-reuse:1
+@ 339 train 5.8815 , allloss: 5.8815, norm:0.4002, dt: 452.73ms, tok/sec: 289516.28, flops:123.30, batch-reuse:1
+@ 340 train 5.8448 , allloss: 5.8448, norm:0.4133, dt: 452.71ms, tok/sec: 289526.20, flops:123.30, batch-reuse:1
+@ 341 train 5.7926 , allloss: 5.7926, norm:0.4220, dt: 453.54ms, tok/sec: 288994.87, flops:123.07, batch-reuse:1
+@ 342 train 5.7194 , allloss: 5.7194, norm:0.4169, dt: 453.22ms, tok/sec: 289202.69, flops:123.16, batch-reuse:1
+@ 343 train 5.8029 , allloss: 5.8029, norm:0.3830, dt: 450.90ms, tok/sec: 290689.99, flops:123.80, batch-reuse:1
+@ 344 train 5.7643 , allloss: 5.7643, norm:0.4903, dt: 450.96ms, tok/sec: 290652.80, flops:123.78, batch-reuse:1
+@ 345 train 5.7369 , allloss: 5.7369, norm:0.3910, dt: 449.57ms, tok/sec: 291548.97, flops:124.16, batch-reuse:1
+@ 346 train 5.8091 , allloss: 5.8091, norm:0.4473, dt: 450.20ms, tok/sec: 291139.50, flops:123.99, batch-reuse:1
+@ 347 train 5.7948 , allloss: 5.7948, norm:0.3670, dt: 451.36ms, tok/sec: 290394.10, flops:123.67, batch-reuse:1
+@ 348 train 5.8027 , allloss: 5.8027, norm:0.4572, dt: 448.58ms, tok/sec: 292193.13, flops:124.44, batch-reuse:1
+@ 349 train 5.8346 , allloss: 5.8346, norm:0.4149, dt: 448.98ms, tok/sec: 291929.97, flops:124.32, batch-reuse:1
+@ 350 train 5.8302 , allloss: 5.8302, norm:0.3929, dt: 448.39ms, tok/sec: 292316.33, flops:124.49, batch-reuse:1
+@ 351 train 5.8278 , allloss: 5.8278, norm:0.4934, dt: 450.97ms, tok/sec: 290646.65, flops:123.78, batch-reuse:1
+@ 352 train 5.8393 , allloss: 5.8393, norm:0.5338, dt: 449.60ms, tok/sec: 291527.63, flops:124.15, batch-reuse:1
+@ 353 train 5.8045 , allloss: 5.8045, norm:0.5631, dt: 448.65ms, tok/sec: 292148.87, flops:124.42, batch-reuse:1
+@ 354 train 5.7868 , allloss: 5.7868, norm:0.6081, dt: 451.38ms, tok/sec: 290381.98, flops:123.67, batch-reuse:1
+@ 355 train 5.7696 , allloss: 5.7696, norm:0.6082, dt: 451.28ms, tok/sec: 290444.42, flops:123.69, batch-reuse:1
+@ 356 train 5.8197 , allloss: 5.8197, norm:0.7021, dt: 452.04ms, tok/sec: 289955.90, flops:123.48, batch-reuse:1
+@ 357 train 5.8205 , allloss: 5.8205, norm:0.4953, dt: 453.43ms, tok/sec: 289069.33, flops:123.11, batch-reuse:1
+@ 358 train 5.7675 , allloss: 5.7675, norm:0.5044, dt: 451.36ms, tok/sec: 290390.88, flops:123.67, batch-reuse:1
+@ 359 train 5.9280 , allloss: 5.9280, norm:0.6278, dt: 450.39ms, tok/sec: 291020.68, flops:123.94, batch-reuse:1
+@ 360 train 5.7952 , allloss: 5.7952, norm:0.6188, dt: 450.03ms, tok/sec: 291252.72, flops:124.04, batch-reuse:1
+@ 361 train 5.7972 , allloss: 5.7972, norm:0.5731, dt: 449.82ms, tok/sec: 291389.49, flops:124.09, batch-reuse:1
+@ 362 train 5.7482 , allloss: 5.7482, norm:0.5935, dt: 449.49ms, tok/sec: 291603.71, flops:124.19, batch-reuse:1
+@ 363 train 5.7624 , allloss: 5.7624, norm:0.4334, dt: 450.50ms, tok/sec: 290950.29, flops:123.91, batch-reuse:1
+@ 364 train 5.7750 , allloss: 5.7750, norm:0.5870, dt: 451.43ms, tok/sec: 290349.78, flops:123.65, batch-reuse:1
+@ 365 train 5.7532 , allloss: 5.7532, norm:0.4944, dt: 451.11ms, tok/sec: 290557.25, flops:123.74, batch-reuse:1
+@ 366 train 5.8535 , allloss: 5.8535, norm:0.5505, dt: 450.38ms, tok/sec: 291023.45, flops:123.94, batch-reuse:1
+@ 367 train 5.7102 , allloss: 5.7102, norm:0.3901, dt: 450.85ms, tok/sec: 290724.58, flops:123.81, batch-reuse:1
+@ 368 train 5.8310 , allloss: 5.8310, norm:0.5521, dt: 451.51ms, tok/sec: 290298.72, flops:123.63, batch-reuse:1
+@ 369 train 5.7249 , allloss: 5.7249, norm:0.4304, dt: 455.50ms, tok/sec: 287756.15, flops:122.55, batch-reuse:1
+@ 370 train 5.8957 , allloss: 5.8957, norm:0.5115, dt: 459.27ms, tok/sec: 285393.81, flops:121.54, batch-reuse:1
+@ 371 train 5.8409 , allloss: 5.8409, norm:0.3998, dt: 462.30ms, tok/sec: 283524.26, flops:120.74, batch-reuse:1
+@ 372 train 5.8945 , allloss: 5.8945, norm:0.4156, dt: 454.12ms, tok/sec: 288628.76, flops:122.92, batch-reuse:1
+@ 373 train 5.8286 , allloss: 5.8286, norm:0.4326, dt: 454.98ms, tok/sec: 288082.61, flops:122.69, batch-reuse:1
+@ 374 train 5.8581 , allloss: 5.8581, norm:0.3932, dt: 453.77ms, tok/sec: 288850.02, flops:123.01, batch-reuse:1
+@ 375 train 5.9541 , allloss: 5.9541, norm:0.4333, dt: 449.35ms, tok/sec: 291694.69, flops:124.22, batch-reuse:1
+@ 376 train 5.9923 , allloss: 5.9923, norm:0.5280, dt: 449.34ms, tok/sec: 291696.24, flops:124.23, batch-reuse:1
+@ 377 train 5.8797 , allloss: 5.8797, norm:0.4628, dt: 450.11ms, tok/sec: 291200.88, flops:124.01, batch-reuse:1
+@ 378 train 5.8418 , allloss: 5.8418, norm:0.5957, dt: 449.67ms, tok/sec: 291485.13, flops:124.14, batch-reuse:1
+@ 379 train 5.9528 , allloss: 5.9528, norm:0.5002, dt: 450.67ms, tok/sec: 290839.16, flops:123.86, batch-reuse:1
+@ 380 train 5.9770 , allloss: 5.9770, norm:0.5760, dt: 451.16ms, tok/sec: 290521.62, flops:123.72, batch-reuse:1
+@ 381 train 5.8853 , allloss: 5.8853, norm:0.4986, dt: 450.06ms, tok/sec: 291233.28, flops:124.03, batch-reuse:1
+@ 382 train 5.8558 , allloss: 5.8558, norm:0.5197, dt: 449.20ms, tok/sec: 291789.44, flops:124.26, batch-reuse:1
+@ 383 train 5.8699 , allloss: 5.8699, norm:0.5426, dt: 449.16ms, tok/sec: 291812.83, flops:124.27, batch-reuse:1
+@ 384 train 5.8140 , allloss: 5.8140, norm:0.4231, dt: 449.69ms, tok/sec: 291472.14, flops:124.13, batch-reuse:1
+@ 385 train 5.8065 , allloss: 5.8065, norm:0.4236, dt: 448.83ms, tok/sec: 292029.53, flops:124.37, batch-reuse:1
+@ 386 train 5.9142 , allloss: 5.9142, norm:0.4636, dt: 448.45ms, tok/sec: 292276.86, flops:124.47, batch-reuse:1
+@ 387 train 5.8482 , allloss: 5.8482, norm:0.4734, dt: 448.20ms, tok/sec: 292438.86, flops:124.54, batch-reuse:1
+@ 388 train 5.7390 , allloss: 5.7390, norm:0.4905, dt: 447.70ms, tok/sec: 292768.87, flops:124.68, batch-reuse:1
+@ 389 train 5.7981 , allloss: 5.7981, norm:0.4039, dt: 447.67ms, tok/sec: 292788.82, flops:124.69, batch-reuse:1
+@ 390 train 5.8573 , allloss: 5.8573, norm:0.5018, dt: 448.98ms, tok/sec: 291932.45, flops:124.33, batch-reuse:1
+@ 391 train 5.7748 , allloss: 5.7748, norm:0.3803, dt: 447.99ms, tok/sec: 292574.73, flops:124.60, batch-reuse:1
+@ 392 train 5.9112 , allloss: 5.9112, norm:0.6354, dt: 448.62ms, tok/sec: 292164.09, flops:124.42, batch-reuse:1
+@ 393 train 5.8276 , allloss: 5.8276, norm:0.7168, dt: 452.46ms, tok/sec: 289687.76, flops:123.37, batch-reuse:1
+@ 394 train 5.7988 , allloss: 5.7988, norm:0.6379, dt: 455.64ms, tok/sec: 287667.91, flops:122.51, batch-reuse:1
+@ 395 train 5.8473 , allloss: 5.8473, norm:0.6872, dt: 450.10ms, tok/sec: 291206.28, flops:124.02, batch-reuse:1
+@ 396 train 5.7450 , allloss: 5.7450, norm:0.5487, dt: 450.12ms, tok/sec: 291191.01, flops:124.01, batch-reuse:1
+@ 397 train 5.8693 , allloss: 5.8693, norm:0.5556, dt: 449.52ms, tok/sec: 291585.31, flops:124.18, batch-reuse:1
+@ 398 train 5.8299 , allloss: 5.8299, norm:0.4389, dt: 450.04ms, tok/sec: 291247.93, flops:124.03, batch-reuse:1
+@ 399 train 5.8350 , allloss: 5.8350, norm:0.4419, dt: 450.18ms, tok/sec: 291154.77, flops:123.99, batch-reuse:1
+@ 400 train 5.8789 , allloss: 5.8789, norm:0.5882, dt: 449.79ms, tok/sec: 291405.86, flops:124.10, batch-reuse:1
+@ 401 train 5.8091 , allloss: 5.8091, norm:0.5826, dt: 451.22ms, tok/sec: 290481.71, flops:123.71, batch-reuse:1
+@ 402 train 5.8039 , allloss: 5.8039, norm:0.5672, dt: 449.10ms, tok/sec: 291857.60, flops:124.29, batch-reuse:1
+@ 403 train 5.8561 , allloss: 5.8561, norm:0.4581, dt: 448.96ms, tok/sec: 291947.49, flops:124.33, batch-reuse:1
+@ 404 train 5.7491 , allloss: 5.7491, norm:0.5490, dt: 451.12ms, tok/sec: 290550.18, flops:123.74, batch-reuse:1
+@ 405 train 5.7935 , allloss: 5.7935, norm:0.4438, dt: 450.71ms, tok/sec: 290814.85, flops:123.85, batch-reuse:1
+@ 406 train 5.7791 , allloss: 5.7791, norm:0.5038, dt: 449.84ms, tok/sec: 291374.20, flops:124.09, batch-reuse:1
+@ 407 train 5.7725 , allloss: 5.7725, norm:0.4941, dt: 449.99ms, tok/sec: 291280.49, flops:124.05, batch-reuse:1
+@ 408 train 5.7620 , allloss: 5.7620, norm:0.4346, dt: 451.11ms, tok/sec: 290553.56, flops:123.74, batch-reuse:1
+@ 409 train 5.7122 , allloss: 5.7122, norm:0.4792, dt: 449.74ms, tok/sec: 291438.92, flops:124.12, batch-reuse:1
+@ 410 train 5.7777 , allloss: 5.7777, norm:0.5030, dt: 454.29ms, tok/sec: 288518.33, flops:122.87, batch-reuse:1
+@ 411 train 5.8062 , allloss: 5.8062, norm:0.5058, dt: 454.13ms, tok/sec: 288620.12, flops:122.92, batch-reuse:1
+@ 412 train 5.8023 , allloss: 5.8023, norm:0.5116, dt: 454.51ms, tok/sec: 288381.21, flops:122.81, batch-reuse:1
+@ 413 train 5.4515 , allloss: 5.4515, norm:0.7333, dt: 453.52ms, tok/sec: 289009.91, flops:123.08, batch-reuse:1
+@ 414 train 5.7390 , allloss: 5.7390, norm:0.5751, dt: 452.03ms, tok/sec: 289963.55, flops:123.49, batch-reuse:1
+@ 415 train 5.6988 , allloss: 5.6988, norm:0.5220, dt: 452.36ms, tok/sec: 289754.48, flops:123.40, batch-reuse:1
+@ 416 train 5.8223 , allloss: 5.8223, norm:0.5365, dt: 455.86ms, tok/sec: 287528.29, flops:122.45, batch-reuse:1
+@ 417 train 5.7172 , allloss: 5.7172, norm:0.4278, dt: 456.43ms, tok/sec: 287165.73, flops:122.30, batch-reuse:1
+@ 418 train 5.7916 , allloss: 5.7916, norm:0.4073, dt: 452.35ms, tok/sec: 289758.76, flops:123.40, batch-reuse:1
+@ 419 train 5.7224 , allloss: 5.7224, norm:0.4826, dt: 450.79ms, tok/sec: 290763.79, flops:123.83, batch-reuse:1
+@ 420 train 5.6962 , allloss: 5.6962, norm:0.5101, dt: 451.99ms, tok/sec: 289991.08, flops:123.50, batch-reuse:1
+@ 421 train 5.7959 , allloss: 5.7959, norm:0.5416, dt: 451.06ms, tok/sec: 290589.19, flops:123.75, batch-reuse:1
+@ 422 train 5.7261 , allloss: 5.7261, norm:0.5080, dt: 451.84ms, tok/sec: 290084.12, flops:123.54, batch-reuse:1
+@ 423 train 5.6788 , allloss: 5.6788, norm:0.4390, dt: 452.05ms, tok/sec: 289950.55, flops:123.48, batch-reuse:1
+@ 424 train 5.7441 , allloss: 5.7441, norm:0.4395, dt: 451.72ms, tok/sec: 290164.96, flops:123.57, batch-reuse:1
+@ 425 train 5.7615 , allloss: 5.7615, norm:0.4808, dt: 451.26ms, tok/sec: 290455.78, flops:123.70, batch-reuse:1
+@ 426 train 5.6306 , allloss: 5.6306, norm:0.5999, dt: 450.39ms, tok/sec: 291019.14, flops:123.94, batch-reuse:1
+@ 427 train 5.7001 , allloss: 5.7001, norm:0.5279, dt: 450.40ms, tok/sec: 291014.98, flops:123.94, batch-reuse:1
+@ 428 train 5.6531 , allloss: 5.6531, norm:0.5883, dt: 451.83ms, tok/sec: 290094.22, flops:123.54, batch-reuse:1
+@ 429 train 5.6262 , allloss: 5.6262, norm:0.4983, dt: 449.58ms, tok/sec: 291542.78, flops:124.16, batch-reuse:1
+@ 430 train 5.7003 , allloss: 5.7003, norm:0.5144, dt: 449.37ms, tok/sec: 291679.68, flops:124.22, batch-reuse:1
+@ 431 train 5.6869 , allloss: 5.6869, norm:0.5543, dt: 449.13ms, tok/sec: 291833.43, flops:124.28, batch-reuse:1
+@ 432 train 5.7559 , allloss: 5.7559, norm:0.3971, dt: 450.28ms, tok/sec: 291089.71, flops:123.97, batch-reuse:1
+@ 433 train 5.6975 , allloss: 5.6975, norm:0.4186, dt: 449.84ms, tok/sec: 291375.59, flops:124.09, batch-reuse:1
+@ 434 train 5.7193 , allloss: 5.7193, norm:0.4092, dt: 448.53ms, tok/sec: 292227.14, flops:124.45, batch-reuse:1
+@ 435 train 5.6033 , allloss: 5.6033, norm:0.4364, dt: 448.41ms, tok/sec: 292303.74, flops:124.48, batch-reuse:1
+@ 436 train 5.7830 , allloss: 5.7830, norm:0.4305, dt: 449.01ms, tok/sec: 291915.87, flops:124.32, batch-reuse:1
+@ 437 train 5.6367 , allloss: 5.6367, norm:0.4080, dt: 449.02ms, tok/sec: 291906.41, flops:124.31, batch-reuse:1
+@ 438 train 5.6707 , allloss: 5.6707, norm:0.5248, dt: 448.16ms, tok/sec: 292468.73, flops:124.55, batch-reuse:1
+@ 439 train 5.6002 , allloss: 5.6002, norm:0.4190, dt: 447.56ms, tok/sec: 292857.92, flops:124.72, batch-reuse:1
+@ 440 train 5.5885 , allloss: 5.5885, norm:0.5510, dt: 448.61ms, tok/sec: 292170.61, flops:124.43, batch-reuse:1
+@ 441 train 5.6876 , allloss: 5.6876, norm:0.5230, dt: 450.34ms, tok/sec: 291050.11, flops:123.95, batch-reuse:1
+@ 442 train 5.7013 , allloss: 5.7013, norm:0.4355, dt: 449.18ms, tok/sec: 291801.21, flops:124.27, batch-reuse:1
+@ 443 train 5.6884 , allloss: 5.6884, norm:0.4841, dt: 448.10ms, tok/sec: 292504.83, flops:124.57, batch-reuse:1
+@ 444 train 5.6740 , allloss: 5.6740, norm:0.5926, dt: 449.34ms, tok/sec: 291701.65, flops:124.23, batch-reuse:1
+@ 445 train 5.6277 , allloss: 5.6277, norm:0.6758, dt: 449.56ms, tok/sec: 291556.08, flops:124.17, batch-reuse:1
+@ 446 train 5.5867 , allloss: 5.5867, norm:0.5552, dt: 450.13ms, tok/sec: 291189.47, flops:124.01, batch-reuse:1
+@ 447 train 5.6457 , allloss: 5.6457, norm:0.4569, dt: 450.33ms, tok/sec: 291058.43, flops:123.95, batch-reuse:1
+@ 448 train 5.5983 , allloss: 5.5983, norm:0.5667, dt: 449.13ms, tok/sec: 291834.05, flops:124.28, batch-reuse:1
+@ 449 train 5.6292 , allloss: 5.6292, norm:0.5586, dt: 450.57ms, tok/sec: 290900.56, flops:123.89, batch-reuse:1
+@ 450 train 5.6321 , allloss: 5.6321, norm:0.4727, dt: 450.35ms, tok/sec: 291043.48, flops:123.95, batch-reuse:1
+@ 451 train 5.6171 , allloss: 5.6171, norm:0.4997, dt: 449.05ms, tok/sec: 291886.27, flops:124.31, batch-reuse:1
+@ 452 train 5.5844 , allloss: 5.5844, norm:0.5179, dt: 449.69ms, tok/sec: 291468.75, flops:124.13, batch-reuse:1
+@ 453 train 5.5966 , allloss: 5.5966, norm:0.5178, dt: 454.04ms, tok/sec: 288676.35, flops:122.94, batch-reuse:1
+@ 454 train 5.6495 , allloss: 5.6495, norm:0.4824, dt: 452.13ms, tok/sec: 289898.41, flops:123.46, batch-reuse:1
+@ 455 train 5.6091 , allloss: 5.6091, norm:0.5142, dt: 452.61ms, tok/sec: 289589.33, flops:123.33, batch-reuse:1
+@ 456 train 5.6852 , allloss: 5.6852, norm:0.6134, dt: 452.68ms, tok/sec: 289543.88, flops:123.31, batch-reuse:1
+@ 457 train 5.6940 , allloss: 5.6940, norm:0.5317, dt: 453.04ms, tok/sec: 289315.02, flops:123.21, batch-reuse:1
+@ 458 train 5.6947 , allloss: 5.6947, norm:0.5719, dt: 455.29ms, tok/sec: 287888.15, flops:122.60, batch-reuse:1
+@ 459 train 5.6154 , allloss: 5.6154, norm:0.4997, dt: 449.37ms, tok/sec: 291679.52, flops:124.22, batch-reuse:1
+@ 460 train 5.6172 , allloss: 5.6172, norm:0.5986, dt: 448.00ms, tok/sec: 292570.06, flops:124.60, batch-reuse:1
+@ 461 train 5.5997 , allloss: 5.5997, norm:0.6714, dt: 449.15ms, tok/sec: 291821.50, flops:124.28, batch-reuse:1
+@ 462 train 5.7192 , allloss: 5.7192, norm:0.7079, dt: 449.11ms, tok/sec: 291848.77, flops:124.29, batch-reuse:1
+@ 463 train 5.6462 , allloss: 5.6462, norm:0.4343, dt: 450.44ms, tok/sec: 290983.40, flops:123.92, batch-reuse:1
+@ 464 train 5.6177 , allloss: 5.6177, norm:0.6606, dt: 449.78ms, tok/sec: 291411.27, flops:124.10, batch-reuse:1
+@ 465 train 5.5541 , allloss: 5.5541, norm:0.4237, dt: 449.21ms, tok/sec: 291781.08, flops:124.26, batch-reuse:1
+@ 466 train 5.6870 , allloss: 5.6870, norm:0.8454, dt: 449.98ms, tok/sec: 291285.43, flops:124.05, batch-reuse:1
+@ 467 train 5.5555 , allloss: 5.5555, norm:0.8751, dt: 450.10ms, tok/sec: 291209.06, flops:124.02, batch-reuse:1
+@ 468 train 5.5370 , allloss: 5.5370, norm:0.6124, dt: 450.82ms, tok/sec: 290740.11, flops:123.82, batch-reuse:1
+@ 469 train 5.5227 , allloss: 5.5227, norm:0.4563, dt: 450.12ms, tok/sec: 291193.63, flops:124.01, batch-reuse:1
+@ 470 train 5.6079 , allloss: 5.6079, norm:0.5695, dt: 449.92ms, tok/sec: 291321.86, flops:124.07, batch-reuse:1
+@ 471 train 5.5239 , allloss: 5.5239, norm:0.4144, dt: 449.36ms, tok/sec: 291687.72, flops:124.22, batch-reuse:1
+@ 472 train 5.6223 , allloss: 5.6223, norm:0.5708, dt: 449.47ms, tok/sec: 291614.85, flops:124.19, batch-reuse:1
+@ 473 train 5.5552 , allloss: 5.5552, norm:0.4505, dt: 449.35ms, tok/sec: 291694.84, flops:124.22, batch-reuse:1
+@ 474 train 5.4946 , allloss: 5.4946, norm:0.4857, dt: 449.14ms, tok/sec: 291828.16, flops:124.28, batch-reuse:1
+@ 475 train 5.5171 , allloss: 5.5171, norm:0.4492, dt: 448.78ms, tok/sec: 292062.89, flops:124.38, batch-reuse:1
+@ 476 train 5.5284 , allloss: 5.5284, norm:0.4913, dt: 448.62ms, tok/sec: 292169.83, flops:124.43, batch-reuse:1
+@ 477 train 5.6009 , allloss: 5.6009, norm:0.5012, dt: 449.86ms, tok/sec: 291363.70, flops:124.08, batch-reuse:1
+@ 478 train 5.5051 , allloss: 5.5051, norm:0.4274, dt: 449.69ms, tok/sec: 291474.00, flops:124.13, batch-reuse:1
+@ 479 train 5.5807 , allloss: 5.5807, norm:0.4659, dt: 450.11ms, tok/sec: 291198.10, flops:124.01, batch-reuse:1
+@ 480 train 5.4576 , allloss: 5.4576, norm:0.4636, dt: 450.03ms, tok/sec: 291252.72, flops:124.04, batch-reuse:1
+@ 481 train 5.5534 , allloss: 5.5534, norm:0.5713, dt: 451.23ms, tok/sec: 290478.18, flops:123.71, batch-reuse:1
+@ 482 train 5.5148 , allloss: 5.5148, norm:0.6066, dt: 450.96ms, tok/sec: 290648.03, flops:123.78, batch-reuse:1
+@ 483 train 5.6178 , allloss: 5.6178, norm:0.5218, dt: 449.83ms, tok/sec: 291381.92, flops:124.09, batch-reuse:1
+@ 484 train 5.4373 , allloss: 5.4373, norm:0.6318, dt: 450.01ms, tok/sec: 291264.14, flops:124.04, batch-reuse:1
+@ 485 train 5.4023 , allloss: 5.4023, norm:0.4791, dt: 452.69ms, tok/sec: 289542.36, flops:123.31, batch-reuse:1
+@ 486 train 5.5706 , allloss: 5.5706, norm:0.4613, dt: 453.19ms, tok/sec: 289223.08, flops:123.17, batch-reuse:1
+@ 487 train 5.4680 , allloss: 5.4680, norm:0.5401, dt: 453.33ms, tok/sec: 289130.14, flops:123.13, batch-reuse:1
+@ 488 train 5.4351 , allloss: 5.4351, norm:0.5840, dt: 453.16ms, tok/sec: 289239.82, flops:123.18, batch-reuse:1
+@ 489 train 5.4619 , allloss: 5.4619, norm:0.3955, dt: 453.26ms, tok/sec: 289179.27, flops:123.15, batch-reuse:1
+@ 490 train 5.5785 , allloss: 5.5785, norm:0.5645, dt: 448.68ms, tok/sec: 292126.52, flops:124.41, batch-reuse:1
+@ 491 train 5.5656 , allloss: 5.5656, norm:0.5072, dt: 448.48ms, tok/sec: 292258.21, flops:124.46, batch-reuse:1
+@ 492 train 5.5842 , allloss: 5.5842, norm:0.7107, dt: 449.84ms, tok/sec: 291373.12, flops:124.09, batch-reuse:1
+@ 493 train 5.5100 , allloss: 5.5100, norm:0.5311, dt: 449.18ms, tok/sec: 291800.75, flops:124.27, batch-reuse:1
+@ 494 train 5.5092 , allloss: 5.5092, norm:0.5079, dt: 450.06ms, tok/sec: 291234.20, flops:124.03, batch-reuse:1
