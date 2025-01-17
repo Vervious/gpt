@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -15,19 +10,13 @@ x = x + self.mlp(self.ln_2(x))
 ======== 
 VALUEMATRIX=True
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 98, with 121,344 parameters
-using fused AdamW: True
-[rank0]:[W117 13:44:21.908719051 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 11.0312 , allloss: 11.0312, norm:16.1330, dt: 1519.78ms, tok/sec: 86244.05, flops:75.54, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
@@ -2068,9 +2057,7 @@ iced
 @ 1997 train 3.8646 , allloss: 3.8646, norm:0.3948, dt: 453.80ms, tok/sec: 288833.78, flops:252.99, batch-reuse:1
 @ 1998 train 3.8239 , allloss: 3.8239, norm:0.4352, dt: 454.84ms, tok/sec: 288170.79, flops:252.41, batch-reuse:1
 @ 1999 train 3.7523 , allloss: 3.7523, norm:0.3738, dt: 454.65ms, tok/sec: 288293.35, flops:252.52, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9160
+@ 2000 val 3.9160
 @ 2000 train 3.8344 , allloss: 3.8344, norm:0.4241, dt: 883.15ms, tok/sec: 148413.42, flops:130.00, batch-reuse:1
 @ 2001 train 3.9013 , allloss: 3.9013, norm:0.4169, dt: 457.89ms, tok/sec: 286253.92, flops:250.73, batch-reuse:1
 @ 2002 train 3.8759 , allloss: 3.8759, norm:0.3944, dt: 456.71ms, tok/sec: 286990.78, flops:251.38, batch-reuse:1

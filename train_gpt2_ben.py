@@ -57,7 +57,7 @@ class CausalSelfAttention(DualModule):
         #     .view(1,1,config.block_size,config.block_size)
         # )
 
-    def forward(self, x, z):
+    def forward(self, x, z=None):
         # x used to compute Q, K; z replaces v if VALUE_MATRIX = False
         # z must be same dim as x
 
@@ -66,7 +66,7 @@ class CausalSelfAttention(DualModule):
         # nh is "number of heads", hs is "head size", C is number of channels is nh * hs
         # e.g. GPT2 (124M), n_head = 12, hs = 64, nh*hs=C=768 channels
         # each token emits three vectors query, key, value
-        if VALUE_MATRIX:
+        if VALUE_MATRIX or z is None:
             qkv = self.c_attn(x)
             q,k,v = qkv.split(self.n_embd, dim=2)
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
@@ -102,7 +102,7 @@ class CausalSelfAttention(DualModule):
         # Just have Pytorch use FlashAttention for us. #TODO NVM
         y = F.scaled_dot_product_attention(q, k, v, is_causal=True)  
 
-        if VALUE_MATRIX:
+        if VALUE_MATRIX or z is None:
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
             # (B, T, n_embd)
             # output projection
@@ -170,6 +170,25 @@ class MLP(DualModule):
         return x
 
 
+class VanillaBlock(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.ln_1 = nn.LayerNorm(config.n_embd)
+        self.attn = CausalSelfAttention(config)
+        self.ln_2 = nn.LayerNorm(config.n_embd)
+        self.mlp = MLP(config)
+
+    def forward(self, x):
+        # # VANILLA
+        # x = x + self.attn(self.ln_1(x))
+        # x = x + self.mlp(self.ln_2(x))
+
+        # AXM
+        y = self.ln_1(x)
+        x = x + self.attn(y)*self.mlp(y)
+        return x
+    
 class Block(DualModule):
 
     def __init__(self, config):
@@ -229,20 +248,30 @@ class GPT(DualModule):
     def __init__(self, config):
         super().__init__()
         self.config = config
+        self.VANILLA = True
 
         sharedBlock = Block(config)
 
-        self.transformer = nn.ModuleDict(dict(
-            # weights of token embedding
-            wte = nn.Embedding(config.vocab_size, config.n_embd),
-            # weights of position embedding
-            wpe = nn.Embedding(config.block_size, config.n_embd),
-            # h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]), #  COMMEZNT
-            sharedblock = sharedBlock, # NOTE: this does not seem to degrade performance at least early in the training process
-            # weights of layer normalization
-            ln_f = sharedBlock.ln, # nn.LayerNorm(config.n_embd),
-            # NOTE we share ALL layer norms which may not be necessarily wise
-        ))
+        if self.VANILLA:
+            self.transformer = nn.ModuleDict(dict(
+                wte = nn.Embedding(config.vocab_size, config.n_embd),
+                wpe = nn.Embedding(config.block_size, config.n_embd),
+                h = nn.ModuleList([VanillaBlock(config) for _ in range(config.n_layer)]),
+                ln_f = nn.LayerNorm(config.n_embd),
+            ))
+        else:
+
+            self.transformer = nn.ModuleDict(dict(
+                # weights of token embedding
+                wte = nn.Embedding(config.vocab_size, config.n_embd),
+                # weights of position embedding
+                wpe = nn.Embedding(config.block_size, config.n_embd),
+                # h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]), #  COMMEZNT
+                sharedblock = sharedBlock, # NOTE: this does not seem to degrade performance at least early in the training process
+                # weights of layer normalization
+                ln_f = sharedBlock.ln, # nn.LayerNorm(config.n_embd),
+                # NOTE we share ALL layer norms which may not be necessarily wise
+            ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
         # weight sharing scheme
@@ -264,7 +293,44 @@ class GPT(DualModule):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
+    def vanillaforward(self, idx, targets=None):
+        device = idx.device
+        b, t = idx.size()
+        assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
+        pos = torch.arange(0, t, dtype=torch.long, device=device) # shape (t)
+
+        # forward the GPT model itself
+        tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
+        pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
+        x = tok_emb + pos_emb
+        for block in self.transformer.h:
+            x = block(x)
+        x = self.transformer.ln_f(x)
+
+        if targets is not None:
+            # if we are given some desired targets also calculate the loss
+            logits = self.lm_head(x)
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
+        else:
+            # inference-time mini-optimization: only forward the lm_head on the very last position
+            # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
+            logits = self.lm_head(x)
+            loss = None
+
+        return logits, loss
+
     def forward(self, idx, targets=None, all_logits=False, print_weights=False, dump_val=False):
+        if self.VANILLA:
+            zero = torch.tensor(0.0, device=idx.device)
+            earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
+
+            vanillalogits, vanillaloss = self.vanillaforward(idx, targets)
+
+            if all_logits:
+                return [vanillalogits], vanillaloss, vanillaloss, zero, zero, 0.0,earlyStopLayerDict
+            else:
+                return vanillalogits, vanillaloss, vanillaloss, zero, zero, 0.0,earlyStopLayerDict
+
         # idx is token indices
         # idx is of shape (B, T)
         B,T = idx.size()
@@ -873,20 +939,16 @@ else:
 # ===================
 
 ALL_LAYER_LOSS = False
-ELEMENTWISEAFFINE = False # whether LN parameters are learned
+ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 
-test_name="13-axm-deletion"
-test_description=f""" Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
+# Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
+test_name="13-baseline-axm"
+test_description=f"""Vanilla transformer, max LR 6e-4
 Setting:
 ========
-attn = self.attn(x, x)
-mlp = self.mlp(x)
-midx = mlp
-y = mlp*res
-x = y + res + attn
-newres = x
-x = self.ln(x)
+y = self.ln_1(x)
+x = x + self.attn(y)*self.mlp(y)
 ======== 
 VALUEMATRIX={VALUE_MATRIX}"""
 

@@ -1,0 +1,63 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(iterator:0.0002hiro:0.0002 tunnel:0.0002ructure:0.0002errors:0.0002409:0.0002 created:0.0002 completion:0.0002)
+ completion
+------
+		(hiro:0.0002 tunnel:0.0002ructure:0.0002errors:0.0002409:0.0002 created:0.0002 completion:0.0002 completion:0.0004)
+ completion completion completion completion completion completion completion completion completion completion completion completion completion completion completion
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0732 the:0.0369 to:0.1206 and:0.0664.:0.0845.:0.0957 the:0.0342-:0.0825)
+-
+------
+		( the:0.0369 to:0.1206 and:0.0664.:0.0845.:0.0957 the:0.0342-:0.0825The:0.0172)
+The first to the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0664 a:0.1016,:0.0835 and:0.0581atoes:0.1533,:0.4570 a:0.0811
+:0.1118)
+
+
+------
+		( a:0.1016,:0.0835 and:0.0581atoes:0.1533,:0.4570 a:0.0811
+:0.1118The:0.0767)
+The most common types of the most common types of the most common types of
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1230 a:0.0801,:0.2197 but:0.0703assium:0.1807,:0.4160 red:0.0776iced:0.2793)
+iced
+------
+		( a:0.0801,:0.2197 but:0.0703assium:0.1807,:0.4160 red:0.0776iced:0.2793,:0.1973)
+, and are a great source of food.
+The following are some of
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1592 a:0.0703,:0.2061 and:0.1240om:0.2793 are:0.3926 red:0.0620iced:0.6484)
+iced
+------
+		( a:0.0703,:0.2061 and:0.1240om:0.2793 are:0.3926 red:0.0620iced:0.6484 with:0.1592)
+ with a sweet, sweet, sweet, sweet, sweet, sweet, sweet
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0986 a:0.1328,:0.2188 and:0.0884atoes:0.3613 are:0.6914 a:0.0762iced:0.5469)
+iced
+------
+		( a:0.1328,:0.2188 and:0.0884atoes:0.3613 are:0.6914 a:0.0762iced:0.5469,:0.1914)
+, and you can see the flowers in the spring.
+The flowers are
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1719 a:0.1211,:0.2041 green:0.0674ty:0.2217 are:0.6758 red:0.1162iced:0.6523)
+iced
+------
+		( a:0.1211,:0.2041 green:0.0674ty:0.2217 are:0.6758 red:0.1162iced:0.6523,:0.3301)
+, Potatoes are iced, Potatoes are iced, Potatoes
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1465 a:0.1270,:0.3281 and:0.0957atoes:0.2236 are:0.5195 a:0.0962iced:0.3457)
+iced
+------
+		( a:0.1270,:0.3281 and:0.0957atoes:0.2236 are:0.5195 a:0.0962iced:0.3457,:0.3535)
+, and the sweet taste is sweet.
+The sweet taste is sweet and
