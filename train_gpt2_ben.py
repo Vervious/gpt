@@ -264,7 +264,7 @@ class GPT(DualModule):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None, all_logits=False, print_weights=False):
+    def forward(self, idx, targets=None, all_logits=False, print_weights=False, dump_val=False):
         # idx is token indices
         # idx is of shape (B, T)
         B,T = idx.size()
@@ -357,13 +357,14 @@ class GPT(DualModule):
                     x_hist = torch.histc(x_, bins=10, min=-50, max=50)
 
                     bprint(f"\t\t\tattn_hist {as_min}<{attn_hist}>{as_max}\n\t\t\tmlp_hist {ml_min}<{mlp_hist}>{ml_max}\n\t\t\tx_hist {x_min}<{x_hist}>{x_max}")
-                    cprint(f"\t@ {i}")
-                    cprint(f"\t\t# {as_.tolist()}")
-                    cprint(f"\t\t$ {ml_.tolist()}")
-                    cprint(f"\t\t% {(ml_*as_).tolist()}")
-                    cprint(f"\t\t^ {x_.tolist()}")
-                    cprint(f"\t\t& {res_.tolist()}")
-                    cprint(f"\t\t* {ml2_.tolist()}")
+                    if dump_val:
+                        cprint(f"\t@ {i}")
+                        cprint(f"\t\t# {as_.tolist()}")
+                        cprint(f"\t\t$ {ml_.tolist()}")
+                        cprint(f"\t\t% {(ml_*as_).tolist()}")
+                        cprint(f"\t\t^ {x_.tolist()}")
+                        cprint(f"\t\t& {res_.tolist()}")
+                        cprint(f"\t\t* {ml2_.tolist()}")
                 # if print_weights:
                 #     _batch_0_target = _target_embd[:,-7:,:] #(B, 7, vocab_size?)
                 #     _probs = F.softmax(_batch_0_target, dim=-1) #(B, 7, vocab_size?)
@@ -937,6 +938,7 @@ hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 20000
 sample_frequency = 500
+inner_dump_frequency = 1000
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
 grad_accum_steps = total_batch_size // (B*T * ddp_world_size) # 4; so each batch split into 4 mini batches
@@ -1100,14 +1102,17 @@ for step in range(max_steps):
         sample_rng.manual_seed(42 + ddp_rank) # different seed for each GPU
         cprint(f"! {step}")
         while xgen.size(1) < max_length:
+            _dump_val = False
             if xgen.size(1) < XLEN + 1:
                 _print_weights_val = True
+                if (step % inner_dump_frequency == 50):
+                    _dump_val = True
             else:
                 _print_weights_val = False
             # forward the model to get the logits
             with torch.no_grad():
                 with torch.autocast(device_type=device, dtype=torch.bfloat16):
-                    logits, _, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val) # (B, T, vocab_size)
+                    logits, _, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val, dump_val=_dump_val) # (B, T, vocab_size)
 
                 if xgen.size(1) < XLEN + 2:
 

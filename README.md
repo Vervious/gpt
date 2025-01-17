@@ -1086,3 +1086,7 @@ x = self.ln(x)
 
 
 TODO run axm for longer and make sure it actually stays on point with 7-test-2, or even a more standard baseline.
+
+TODO when doing addition attention, what happens if I run mlp(x) instead of mlp(LN(attn + res))?
+
+TODO is mlp allowing us to attenuate res? I.e. deletion instead of replacement?
