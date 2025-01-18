@@ -1,0 +1,72 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.4414 are:0.4434 red:0.6406,:0.3262 Pot:0.2383atoes:0.3008 are:0.4902 :0.3672)
+ 
+------
+		( are:0.4434 red:0.6406,:0.3262 Pot:0.2383atoes:0.3008 are:0.4902 :0.3672 :0.2852)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0374.:0.0287.:0.0317,:0.0325,:0.0342,:0.0352,:0.0322.:0.0302)
+.
+------
+		(.:0.0287.:0.0317,:0.0325,:0.0342,:0.0352,:0.0322.:0.0302
+:0.1787)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1631 a:0.0732 and:0.2354 but:0.0569 and:0.0212,:0.2754 a:0.0796
+:0.1553)
+
+
+------
+		( a:0.0732 and:0.2354 but:0.0569 and:0.0212,:0.2754 a:0.0796
+:0.1553-:0.0938)
+- The most common types of different types of different types of different types of
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1299 a:0.1348 and:0.2031 yellow:0.1162om:0.1406,:0.3203 a:0.1250iced:0.1865)
+iced
+------
+		( a:0.1348 and:0.2031 yellow:0.1162om:0.1406,:0.3203 a:0.1250iced:0.1865,:0.1396)
+, and you can eat a lot of vegetables.
+- You can eat
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1074 a:0.0615,:0.2109 yellow:0.0718atoes:0.3164,:0.2910 a:0.0747iced:0.6680)
+iced
+------
+		( a:0.0615,:0.2109 yellow:0.0718atoes:0.3164,:0.2910 a:0.0747iced:0.6680 and:0.1123)
+ and dried.
+- The leaves are red, and the leaves are red
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1104 a:0.1260 and:0.1807 blue:0.0654om:0.2871 are:0.6055 red:0.0488iced:0.5234)
+iced
+------
+		( a:0.1260 and:0.1807 blue:0.0654om:0.2871 are:0.6055 red:0.0488iced:0.5234,:0.3184)
+, and the seeds are very good for the heart.
+The seeds are
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1011 a:0.1162,:0.1250 and:0.0688ent:0.1846 are:0.5000 red:0.1279iced:0.5977)
+iced
+------
+		( a:0.1162,:0.1250 and:0.0688ent:0.1846 are:0.5000 red:0.1279iced:0.5977,:0.1963)
+, and the flowers are red.
+- The flowers are red, and

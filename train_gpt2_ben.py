@@ -26,6 +26,34 @@ class DualModule(nn.Module):
         super(DualModule, self).__init__()
 
 
+class SigmoidAttention(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        assert config.n_embd % config.n_head == 0
+        # key, query, value projections for all heads, but in a batch
+        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
+        self.n_head = config.n_head
+        self.n_embd = config.n_embd
+        # flash attention make GPU go brrrrr but support is only in PyTorch >= 2.0
+        self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).view(1, 1, config.block_size, config.block_size))
+
+    def forward(self, x, z):
+        B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
+
+        # calculate query, key, values for all heads in batch and move head forward to be the batch dim
+        q, k, v  = self.c_attn(x).split(self.n_embd, dim=2)
+        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+        v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+
+        # manual implementation of attention
+        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
+        att = att.masked_fill(self.bias[:,:,:T,:T] == 0, float('-inf'))
+        att = F.sigmoid(att) + torch.eye(T, device=x.device) #broadcasts, .view(1, 1, T, T) # (B, nh, T, T)
+        y = att @ z.unsqueeze(1) # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, n_embd)
+        y = y.sum(dim=1) # sum up the head dimension
+        return y
 
 # The general idea:
 # input stream is not tokens, but embedded tokens
@@ -188,10 +216,10 @@ class VanillaBlock(nn.Module):
         # y = self.ln_1(x)
         # x = x + self.attn(y)*self.mlp(y)
 
-        # Targeted AXM
         y = self.ln_1(x)
-        mlp=self.mlp(y)
-        x = x + self.attn(y,y)*mlp
+        newemb = self.attn(y)
+        mlp=self.mlp(self.ln_2(newemb))
+        x = mlp*newemb + x
         return x
     
 class Block(DualModule):
@@ -959,18 +987,19 @@ else:
 
 ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
-VALUE_MATRIX = False
+VALUE_MATRIX = True
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="13-axm-novalue"
+test_name="13-complicated-3"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
-mlp=self.mlp(y)
-x = x + self.attn(y,y)*mlp
+newemb = self.attn(y)
+mlp=self.mlp(self.ln_2(newemb))
+x = mlp*newemb + x
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}

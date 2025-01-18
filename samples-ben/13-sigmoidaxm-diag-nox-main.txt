@@ -1,0 +1,14 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( phenomen:0.0001mod:0.0002orically:0.0002 adequately:0.0002 adequately:0.0001 VW:0.0001 upkeep:0.0002 adequately:0.0002)
+ adequately
+------
+		(mod:0.0002orically:0.0002 adequately:0.0002 adequately:0.0001 VW:0.0001 upkeep:0.0002 adequately:0.0002 ey:0.0002)
+ eyodan enrollitating pharmac Presence comprehens sentient Fuel etcborder Frances girlfriend desktop arenas
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0330,:0.0339,:0.0352,:0.0352,:0.0364,:0.0364,:0.0364,:0.0376)
+,
+------
+		(,:0.0339,:0.0352,:0.0352,:0.0364,:0.0364,:0.0364,:0.0376,:0.0376)
+,,,,,,,,,,,,,,,

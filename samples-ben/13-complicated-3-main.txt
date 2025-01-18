@@ -1,0 +1,7 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.5977 are:0.5391 red:0.2148,:0.4883 Pot:0.5391atoes:0.2617 are:0.6133 :0.5508)
+ 
+------
+		( are:0.5391 red:0.2148,:0.4883 Pot:0.5391atoes:0.2617 are:0.6133 :0.5508 :0.5039)
+               

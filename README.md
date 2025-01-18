@@ -1178,6 +1178,123 @@ MLP_SCALE=4
 
 No, they are not equivalent; the difference is that mlp also has dimension `(B, T, C)`. And when we do element-wise multiplication, in the first experiment `attn(y, mlp*y)`, each contribution is multiplied by the source token MLP weight, whereas when we do `attn(y, y)*mlp`, the final output is weighted by the destination token MLP.
 
+Now let's try: (TODO try putting second LN bak in and running attn on output of mlp). ONe hypothesis is that MLP exists exclusively to ``negate'' certain priveleged dimensions of the residual, and maybe htis architecture would facilitate that. But clearly, it does not facilitate it, it seems to be a long-term penalty:
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = x + mlp*x + self.attn(y,y)
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-r+rxm+a.png)
+
+
+Orthogonally, I would like to get of the residual. Ideally, `attn(x)` can learn to replace it, but the problem is that it runs itself through a softmax, so the weight of the identity will always decrease. We need to allow the weight of the original to stay the same (i.e. in computation, we need to allow union in addition to replacement, and replacement is handled by the MLP). Can we avoid running the attn through softmax? (This doesn't work)
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = 2*self.attn(y,y)*mlp
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-2axm.png)
+
+
+Let's try running attention through a sigmoid instead (It deosn't work)
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = self.sigmoidattn(y,y)*mlp
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-sigmoidaxm.png)
+
+
+Adding x back: it seems anyways extremely important, that self.attn always picks "the best ones to combine" (maybe to prevent too much information pollution). Otherwise, there seems not to be any incentive not to send every weight to be equal to 1: (TODO what if we set every weight to be 1)
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = self.sigmoidattn(y,y)*mlp+x
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-sigmoidaxm+x.png)
+
+
+Just for fun, just force the attention diagonal to always be 1 (keeping sigmoid):
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = self.sigmoiddiagattn(y,y)*mlp+x
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-sigmoidaxm-diag.jpg)
+
+Removing the `+x`:
+```
+y = self.ln_1(x)
+mlp=self.mlp(y)
+x = self.sigmoiddiagattn(y,y)*mlp
+======== 
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-sigmoidaxm-diag-nox.jpg)
+
+
+Alright now, switching gears entirely back to something more complicated. This is my best blind guess at an architecture currently. The outcome is that it converges to the same place but is decidely slower to optimize in the very beginning:
+```
+y = self.ln_1(x)
+newemb = self.attn(y) + x
+mlp=self.mlp(self.ln_2(newemb))
+x = mlp*newemb + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-complicated.jpg)
+
+
+Does delaying the input of mlp by a layer change anything at all? It optimizes faster, but then seems to fail and get worse later, even decongealing after step 4000. So input delay to MLP doesn't matter and maybe it in fact hurts, but maybe ensuring there is a large residual component to multiply into mlp helps with optimization early on but maybe not later? (So mlp maybe isn't attenuating x? I'm thoroughly confused.)
+```
+y = self.ln_1(x)
+newemb = self.attn(y) + x
+mlp=self.mlp(y)
+x = mlp*newemb + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-complicated-2.jpg)
+
+
+Another experiment
+```
+y = self.ln_1(x)
+newemb = self.attn(y)
+mlp=self.mlp(self.ln_2(newemb))
+x = mlp*newemb + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-complicated-3.jpg)
 
 
 TODO when doing addition attention, what happens if I run mlp(x) instead of mlp(LN(attn + res))?

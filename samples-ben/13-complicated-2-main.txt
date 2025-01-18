@@ -1,0 +1,104 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.2871 are:0.4727 red:0.3125,:0.2490 Pot:0.2734atoes:0.4902 are:0.4902 :0.2734)
+ 
+------
+		( are:0.4727 red:0.3125,:0.2490 Pot:0.2734atoes:0.4902 are:0.4902 :0.2734 :0.3672)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0510 the:0.0693.:0.0457 and:0.1426,:0.0679.:0.0522 the:0.0669.:0.0334)
+.
+------
+		( the:0.0693.:0.0457 and:0.1426,:0.0679.:0.0522 the:0.0669.:0.0334
+:0.3145)
+
+-
+-
+-
+-
+-
+-
+-
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1094 a:0.1611,:0.2021 and:0.0698om:0.1406,:0.5000 a:0.0398 :0.1504)
+ 
+------
+		( a:0.1611,:0.2021 and:0.0698om:0.1406,:0.5000 a:0.0398 :0.1504 :0.3398)
+               
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2500 the:0.0747 and:0.2295 yellow:0.1289tery:0.1318 are:0.2598 a:0.0508vern:0.1050)
+vern
+------
+		( the:0.0747 and:0.2295 yellow:0.1289tery:0.1318 are:0.2598 a:0.0508vern:0.1050acular:0.7109)
+acular, and are usually used for cooking.
+The most common form of
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0796 a:0.1191,:0.2168 and:0.1738atoes:0.3457 are:0.3164 a:0.0664iced:0.4746)
+iced
+------
+		( a:0.1191,:0.2168 and:0.1738atoes:0.3457 are:0.3164 a:0.0664iced:0.4746,:0.1338)
+, and are very sweet. They are also a good source of vitamin A
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( and:0.1299 a:0.0796,:0.4160 and:0.0684atoes:0.7344 are:0.4355 very:0.0515iced:0.4160)
+iced
+------
+		( a:0.0796,:0.4160 and:0.0684atoes:0.7344 are:0.4355 very:0.0515iced:0.4160,:0.3125)
+, and they are very good for you!
+- The flowers are very
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1660 a:0.1748,:0.3496 white:0.0718ty:0.3301 are:0.4082 a:0.0684iced:0.5039)
+iced
+------
+		( a:0.1748,:0.3496 white:0.0718ty:0.3301 are:0.4082 a:0.0684iced:0.5039,:0.3418)
+, and they are a good choice.
+The first thing to do is
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1787 a:0.1021,:0.2617 yellow:0.1387ty:0.1494 are:0.5039 green:0.1143iced:0.1670)
+iced
+------
+		( a:0.1021,:0.2617 yellow:0.1387ty:0.1494 are:0.5039 green:0.1143iced:0.1670,:0.3438)
+, and the beans are green.
+The beans are green, and the
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1826 a:0.1206,:0.4609 yellow:0.0977ty:0.6484,:0.3711 yellow:0.0908iced:0.0962)
+iced
+------
+		( a:0.1206,:0.4609 yellow:0.0977ty:0.6484,:0.3711 yellow:0.0908iced:0.0962,:0.2598)
+, and the fruits are yellow.
+The first fruits were the fruits of
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1338 a:0.1553,:0.4219 and:0.0835assium:0.1094 are:0.3828 red:0.1533iced:0.5742)
+iced
+------
+		( a:0.1553,:0.4219 and:0.0835assium:0.1094 are:0.3828 red:0.1533iced:0.5742,:0.5547)
+, and the flowers are green.
+The flowers are green, and the
+4550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0771 a:0.0762.:0.0742 and:0.1807 to:0.1118,:0.2109 a:0.1206
+:0.0386)
+
+
+------
+		( a:0.0762.:0.0742 and:0.1807 to:0.1118,:0.2109 a:0.1206
+:0.0386The:0.0752)
+The first is the first to the other.
+The first is the first
+5050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( of:0.0732 a:0.0557iscovered:0.3184 in:0.0603om:0.1670,:0.3867,:0.0811urn:0.0845)
+urn
+------
+		( a:0.0557iscovered:0.3184 in:0.0603om:0.1670,:0.3867,:0.0811urn:0.0845,:0.3438)
+, and the seeds are not.
+- The seeds are planted in the

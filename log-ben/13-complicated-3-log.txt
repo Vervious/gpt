@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -20,19 +15,13 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 98, with 121,344 parameters
-using fused AdamW: True
-[rank0]:[W118 17:31:05.281486525 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 11.5996 , allloss: 11.5996, norm:1.4327, dt: 1549.09ms, tok/sec: 84612.16, flops:74.11, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------

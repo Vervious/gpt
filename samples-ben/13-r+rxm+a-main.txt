@@ -1,0 +1,46 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(A:0.2363A:0.2148A:0.1943A:0.1758A:0.1582A:0.1426A:0.1279A:0.1211)
+A
+------
+		(A:0.2148A:0.1943A:0.1758A:0.1582A:0.1426A:0.1279A:0.1211A:0.1211)
+AAAAAAAAAAAAAAA
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0233.:0.0288.:0.0332,:0.0430,:0.0427,:0.0449,:0.0408,:0.0415)
+,
+------
+		(.:0.0288.:0.0332,:0.0430,:0.0427,:0.0449,:0.0408,:0.0415,:0.0569)
+,,,,,,,,,,,,,,,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0894 a:0.0903,:0.1079 and:0.0864om:0.0693,:0.3203 also:0.0554ery:0.2256)
+ery
+------
+		( a:0.0903,:0.1079 and:0.0864om:0.0693,:0.3203 also:0.0554ery:0.2256,:0.2295)
+, and are a great way to get a great way to get a great
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0742 a:0.0952 and:0.1670 red:0.1602om:0.4180,:0.5938 a:0.0806ery:0.1226)
+ery
+------
+		( a:0.0952 and:0.1670 red:0.1602om:0.4180,:0.5938 a:0.0806ery:0.1226,:0.1484)
+, and they are a great source of vitamin D, which is a great
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1230 a:0.1582,:0.1543 and:0.1318atoes:0.4316,:0.5703 a:0.1592iced:0.2988)
+iced
+------
+		( a:0.1582,:0.1543 and:0.1318atoes:0.4316,:0.5703 a:0.1592iced:0.2988 and:0.1670)
+ and are a great way to get a sense of smell.
+The first
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1016 a:0.0767s:0.0659 and:0.1455atoes:0.6602,:0.5898 a:0.0747ery:0.3477)
+ery
+------
+		( a:0.0767s:0.0659 and:0.1455atoes:0.6602,:0.5898 a:0.0747ery:0.3477,:0.1914)
+, and potatoes.
+The first thing you should know about Roses is that

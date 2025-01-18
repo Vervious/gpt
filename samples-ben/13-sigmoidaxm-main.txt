@@ -1,0 +1,21 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( unveiling:0.0002 Java:0.0002 Proof:0.0002 hang:0.0002@:0.0001 Mons:0.0001ForgeModLoader:0.0002 ecological:0.0002)
+ ecological
+------
+		( Java:0.0002 Proof:0.0002 hang:0.0002@:0.0001 Mons:0.0001ForgeModLoader:0.0002 ecological:0.0002raviolet:0.0001)
+ravioletHAHAHAHA specifying j terms accountingmit17 decodingRoadmit Shal ShalBronraged
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327)
+.
+------
+		(.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327.:0.0327)
+...............
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396)
+,
+------
+		(,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396,:0.0396)
+,,,,,,,,,,,,,,,

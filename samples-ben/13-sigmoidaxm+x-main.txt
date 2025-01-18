@@ -1,0 +1,38 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Winners:0.0002 Aberdeen:0.0002occ:0.0001 route:0.0002 ward:0.0002 implants:0.0002)--:0.0002 Gren:0.0003)
+ Gren
+------
+		( Aberdeen:0.0002occ:0.0001 route:0.0002 ward:0.0002 implants:0.0002)--:0.0002 Gren:0.0003Filter:0.0002)
+Filter Veilarr carp crownessim prod contender Gren inquest Firstly inquest earning MIarr
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0630 the:0.0286.:0.0457 and:0.0752,:0.0752.:0.0693 the:0.0242.:0.0598)
+.
+------
+		( the:0.0286.:0.0457 and:0.0752,:0.0752.:0.0693 the:0.0242.:0.0598
+:0.2334)
+
+-
+-
+-
+-
+-
+-
+-
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1670 a:0.0752,:0.1099 and:0.0459om:0.0874,:0.3555 a:0.0776ery:0.1562)
+ery
+------
+		( a:0.0752,:0.1099 and:0.0459om:0.0874,:0.3555 a:0.0776ery:0.1562,:0.1494)
+, and other types of the most common types of the most common types of
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1621 a:0.1768 and:0.1216 and:0.0767om:0.2832,:0.3965 a:0.1309ery:0.1807)
+ery
+------
+		( a:0.1768 and:0.1216 and:0.0767om:0.2832,:0.3965 a:0.1309ery:0.1807,:0.1553)
+, and are the most common in the world.
+The most common form
