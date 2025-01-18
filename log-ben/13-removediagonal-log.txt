@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -20,19 +15,13 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 98, with 121,344 parameters
-using fused AdamW: True
-[rank0]:[W118 22:32:59.472410396 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 11.4608 , allloss: 11.4608, norm:2.0404, dt: 1659.37ms, tok/sec: 78989.24, flops:69.19, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
@@ -90,7 +79,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 9.4633 , allloss: 9.4633, norm:2.1136, dt: 594.29ms, tok/sec: 220552.25, flops:193.18, batch-reuse:1
 @ 48 train 9.3882 , allloss: 9.3882, norm:2.2272, dt: 593.93ms, tok/sec: 220686.65, flops:193.30, batch-reuse:1
 @ 49 train 9.3345 , allloss: 9.3345, norm:2.1281, dt: 593.68ms, tok/sec: 220777.13, flops:193.38, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( re:0.0003 are:0.0032 red:0.0014,:0.0298 a:0.0002 accomplish:0.0003 are:0.0045 :0.0018)
@@ -598,7 +586,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 547 train 5.4478 , allloss: 5.4478, norm:0.4267, dt: 594.79ms, tok/sec: 220367.48, flops:193.02, batch-reuse:1
 @ 548 train 5.4114 , allloss: 5.4114, norm:0.4093, dt: 593.68ms, tok/sec: 220779.17, flops:193.38, batch-reuse:1
 @ 549 train 5.3481 , allloss: 5.3481, norm:0.6161, dt: 594.35ms, tok/sec: 220530.22, flops:193.17, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(
@@ -1110,7 +1097,6 @@ The most common in the most common in the most common in the most common
 @ 1047 train 4.8548 , allloss: 4.8548, norm:0.4781, dt: 594.11ms, tok/sec: 220620.58, flops:193.24, batch-reuse:1
 @ 1048 train 4.8784 , allloss: 4.8784, norm:0.4863, dt: 596.01ms, tok/sec: 219915.52, flops:192.63, batch-reuse:1
 @ 1049 train 4.8086 , allloss: 4.8086, norm:0.4411, dt: 595.24ms, tok/sec: 220201.71, flops:192.88, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(
@@ -1620,7 +1606,6 @@ _____
 @ 1547 train 4.6770 , allloss: 4.6770, norm:0.7902, dt: 596.00ms, tok/sec: 219918.42, flops:192.63, batch-reuse:1
 @ 1548 train 4.7594 , allloss: 4.7594, norm:0.6657, dt: 596.11ms, tok/sec: 219877.08, flops:192.59, batch-reuse:1
 @ 1549 train 4.7073 , allloss: 4.7073, norm:0.5577, dt: 596.03ms, tok/sec: 219908.22, flops:192.62, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(
@@ -2080,9 +2065,7 @@ thyosaurs, and are found in the same colors.
 @ 1997 train 4.2641 , allloss: 4.2641, norm:0.5507, dt: 594.77ms, tok/sec: 220374.72, flops:193.03, batch-reuse:1
 @ 1998 train 4.2477 , allloss: 4.2477, norm:0.5088, dt: 595.53ms, tok/sec: 220092.31, flops:192.78, batch-reuse:1
 @ 1999 train 4.1656 , allloss: 4.1656, norm:0.4957, dt: 595.19ms, tok/sec: 220217.24, flops:192.89, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 4.3533
+@ 2000 val 4.3533
 @ 2000 train 4.2632 , allloss: 4.2632, norm:0.4562, dt: 1077.66ms, tok/sec: 121626.96, flops:106.53, batch-reuse:1
 @ 2001 train 4.3366 , allloss: 4.3366, norm:0.4997, dt: 595.06ms, tok/sec: 220268.59, flops:192.94, batch-reuse:1
 @ 2002 train 4.3353 , allloss: 4.3353, norm:0.5639, dt: 594.86ms, tok/sec: 220341.07, flops:193.00, batch-reuse:1
@@ -2133,7 +2116,6 @@ validation loss: 4.3533
 @ 2047 train 4.3728 , allloss: 4.3728, norm:0.6047, dt: 595.21ms, tok/sec: 220211.68, flops:192.89, batch-reuse:1
 @ 2048 train 4.3548 , allloss: 4.3548, norm:0.5553, dt: 595.89ms, tok/sec: 219958.28, flops:192.66, batch-reuse:1
 @ 2049 train 4.4450 , allloss: 4.4450, norm:0.5479, dt: 595.58ms, tok/sec: 220073.90, flops:192.77, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2197 a:0.1021,:0.1475 white:0.0889atoes:0.4902 are:0.4395 a:0.0569iced:0.2129)
@@ -2642,7 +2624,6 @@ The most common
 @ 2547 train 4.2285 , allloss: 4.2285, norm:0.6018, dt: 595.31ms, tok/sec: 220172.52, flops:192.85, batch-reuse:1
 @ 2548 train 4.3115 , allloss: 4.3115, norm:0.7335, dt: 595.68ms, tok/sec: 220038.22, flops:192.73, batch-reuse:1
 @ 2549 train 4.3186 , allloss: 4.3186, norm:0.6818, dt: 595.06ms, tok/sec: 220268.06, flops:192.94, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2041 a:0.0835,:0.1543 green:0.1216atoes:0.1211 are:0.3047 red:0.1157iced:0.4473)
@@ -3150,7 +3131,6 @@ iced
 @ 3047 train 4.1589 , allloss: 4.1589, norm:0.5985, dt: 594.80ms, tok/sec: 220364.21, flops:193.02, batch-reuse:1
 @ 3048 train 4.0589 , allloss: 4.0589, norm:0.5304, dt: 595.20ms, tok/sec: 220213.80, flops:192.89, batch-reuse:1
 @ 3049 train 4.2851 , allloss: 4.2851, norm:0.5234, dt: 594.95ms, tok/sec: 220308.66, flops:192.97, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.1670 a:0.0549,:0.1030 yellow:0.0967atoes:0.2715 are:0.1924 red:0.0549_____:0.1992)
@@ -3660,7 +3640,6 @@ The
 @ 3547 train 4.0265 , allloss: 4.0265, norm:0.6000, dt: 595.72ms, tok/sec: 220021.05, flops:192.72, batch-reuse:1
 @ 3548 train 4.0097 , allloss: 4.0097, norm:0.4865, dt: 595.01ms, tok/sec: 220285.80, flops:192.95, batch-reuse:1
 @ 3549 train 3.9977 , allloss: 3.9977, norm:0.5272, dt: 595.59ms, tok/sec: 220071.43, flops:192.76, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.1533 a:0.0884,:0.2520 white:0.0713y:0.1328 are:0.4355 red:0.0566iced:0.3672)
@@ -4119,9 +4098,7 @@ iced
 @ 3997 train 3.9434 , allloss: 3.9434, norm:0.5150, dt: 595.36ms, tok/sec: 220156.65, flops:192.84, batch-reuse:1
 @ 3998 train 3.9162 , allloss: 3.9162, norm:0.5381, dt: 595.40ms, tok/sec: 220140.69, flops:192.82, batch-reuse:1
 @ 3999 train 3.9716 , allloss: 3.9716, norm:0.5166, dt: 595.91ms, tok/sec: 219952.21, flops:192.66, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9445
+@ 4000 val 3.9445
 @ 4000 train 3.9733 , allloss: 3.9733, norm:0.5368, dt: 912.07ms, tok/sec: 143708.45, flops:125.88, batch-reuse:1
 @ 4001 train 3.8738 , allloss: 3.8738, norm:0.5325, dt: 595.79ms, tok/sec: 219997.89, flops:192.70, batch-reuse:1
 @ 4002 train 3.9329 , allloss: 3.9329, norm:0.6096, dt: 595.71ms, tok/sec: 220025.28, flops:192.72, batch-reuse:1
@@ -4172,7 +4149,6 @@ validation loss: 3.9445
 @ 4047 train 3.9486 , allloss: 3.9486, norm:0.4930, dt: 595.20ms, tok/sec: 220215.30, flops:192.89, batch-reuse:1
 @ 4048 train 3.8624 , allloss: 3.8624, norm:0.5538, dt: 595.47ms, tok/sec: 220113.81, flops:192.80, batch-reuse:1
 @ 4049 train 3.8082 , allloss: 3.8082, norm:0.5528, dt: 595.91ms, tok/sec: 219951.68, flops:192.66, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.1406 a:0.1099,:0.2197 green:0.0835atoes:0.1836 are:0.5430 green:0.0728iced:0.7617)
@@ -4681,7 +4657,6 @@ iced
 @ 4547 train 3.9790 , allloss: 3.9790, norm:0.5974, dt: 595.85ms, tok/sec: 219974.30, flops:192.68, batch-reuse:1
 @ 4548 train 3.9877 , allloss: 3.9877, norm:0.5183, dt: 595.74ms, tok/sec: 220013.65, flops:192.71, batch-reuse:1
 @ 4549 train 3.8823 , allloss: 3.8823, norm:0.5170, dt: 594.86ms, tok/sec: 220341.07, flops:193.00, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2148 a:0.1064,:0.2520 and:0.0854atoes:0.7656 are:0.3164 red:0.0879iced:0.7461)
@@ -5059,60 +5034,3 @@ iced
 @ 4917 train 3.8394 , allloss: 3.8394, norm:0.5202, dt: 595.20ms, tok/sec: 220216.00, flops:192.89, batch-reuse:1
 @ 4918 train 3.8396 , allloss: 3.8396, norm:0.5656, dt: 596.51ms, tok/sec: 219732.43, flops:192.47, batch-reuse:1
 @ 4919 train 3.8633 , allloss: 3.8633, norm:0.5551, dt: 597.06ms, tok/sec: 219530.70, flops:192.29, batch-reuse:1
-W0118 23:22:12.083000 6182 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0118 23:22:12.084000 6182 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 6262 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1307, in <module>
-[rank0]:     timesBatchUsed = train_loader.num_times_latest_batch_used()
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1654, in forward
-[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1470, in _run_ddp_forward
-[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 379, in forward
-[rank0]:     if self.VANILLA:
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 359, in vanillaforward
-[rank0]:     for i in range(self.config.n_layer):
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 225, in forward
-[rank0]:     # y = self.ln_1(x)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 135, in forward
-[rank0]:     # Just have Pytorch use FlashAttention for us. #TODO NVM
-[rank0]: KeyboardInterrupt
-[rank0]:[W118 23:22:12.351766919 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 6182 got signal: 2

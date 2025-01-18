@@ -1283,7 +1283,7 @@ MLP_SCALE=4
 ![loss plot](img/13-complicated-2.jpg)
 
 
-Another experiment
+Another experiment. Note that here, I forgot to pass the residual into mlp. It doesn't realy converge to the same spot...
 ```
 y = self.ln_1(x)
 newemb = self.attn(y)
@@ -1297,6 +1297,131 @@ MLP_SCALE=4
 ![loss plot](img/13-complicated-3.jpg)
 
 
-TODO when doing addition attention, what happens if I run mlp(x) instead of mlp(LN(attn + res))?
+Let's feed the residual back in. Compared to the first "complicated" experiment, here mlp only multiplies `self.attn(y)`, and not `x`; it is worse than the first complicated experiment. Compared to the `axm` experiments, here mlp additionally gets an un-attenuated attn component as input, which is clearly a penalty. So for some reason, it is is important to explicitly attenuate only the attention component, and not the residual.
+```
+y = self.ln_1(x)
+newemb = self.attn(y)
+mlp=self.mlp(self.ln_2(newemb + x))
+x = mlp*newemb + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-complicated-4.jpg)
+
+Experiment 5:
+```
+y = self.ln_1(x)
+newemb = self.attn(y)
+mlp=self.mlp(self.ln_2(newemb))
+x = mlp*(newemb + x) + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-complicated-5.jpg)
+
+Experiment 6:
+```
+y = self.ln_1(x)
+newemb = self.attn(y)
+mlp=self.mlp(self.ln_2(newemb))
+x = mlp*(x) + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-complicated-6.jpg)
+
+
+The takeaways: (Experiment 2) `mlp(x) * (self.attn(x) + x)` seems to optimize faster than (Experiment 1) `mlp(self.attn(x)+x) * (self.attn(x) + x)` at first, but later it really fails. (Experiment 3) `mlp(self.attn(x)) * (self.attn(x))` only is atrocious, worse than both. (Experiment 4) `mlp(self.attn(x)+x) * (self.attn(x))` is overall just slightly worse than Experiment 1, thouguh has a tiny optimization bump in the very beginning... (Experiment 5) `mlp(self.attn(x)) * (self.attn(x) + x)` optimizes slowly at the beginning, and doesn't look like it will converge to a good place (TODO run for longer)... (Experiment 6) `mlp(self.attn(x)) * (x)` is more stable than 5 but is even worse worse than Experiment 3. All are worse than (13-baseline-axm)  `mlp(x) * self.attn(x)`.
+
+Takeaways: MLP needs to see the residual, not just attention. It doesn't care about the current attention component at all. It also shouldn't multiply the residual itself (and it should multiply attention only) -- it converges faster but really odd things happen later down the road...
+
+
+## More Semantics
+
+
+Let's remove the 1s from the diagonal of attention. The motivation here is, we are already copying x, there is no need to copy it again (but wait, what if there is no application to do, i.e. it is not near anything. I suspect this will not do as well. Instead, we should do the next experiment.) 
+```
+self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
+========
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp=self.mlp(y)
+x = mlp*attn + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-removediagonal.jpg)
+
+
+Now, we use the usual attention causality (lower triangular mask = True), but when summing things up, we omit the value contribution from the identity token (so the mlp(x) does not apply/multiply on it). This also requires turning the value matrix off...
+```
+y = y*self.nodiagonal[:,:,T,T] # delete the self contribution
+========
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp=self.mlp(y)
+x = mlp*attn + x
+========
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/13-nosumidentity.jpg)
+
+
+
+TODO when doing addition attention, what happens if I run `mlp(x)` instead of `mlp(LN(attn + res))`?
 
 TODO is mlp allowing us to attenuate res? I.e. deletion instead of replacement?
+
+
+## Takeaways so far
+
+Attention as positional applicator, should be allowed to no-op. It essentially computes `neighbors(x)`
+
+`MLP(x) * y `applies `x` to `y = neighbors(x)` in a way specified by `x`. The result is added to the computation graph (`x`).
+
+I.e. imagine left application (mirroring traditional visualizations of combinator calculus, so below, x is called on y)
+
+```
+        ?
+    y       x
+        prevy   prevx
+            ppy     ppx
+                pppy    pppx
+```
+
+What about multiple arguments? I.e. traditionally
+```
+        ?
+     ?      z
+  ?     y  
+S   x
+```
+reduces to
+```
+      ?
+  ?       ?
+x  y    x   z
+```
+Here, we have something like
+```
+    ?
+z       ?
+    y      ?
+        x     S
+```
+and what maybe happens is that x is just added to the residual, and so is y, while they wait for the final argument, and then finally `MLP(S+x+y)*z + (S+x+y)` computes the application (But in this case why do we need to add `S+x+y` back to the residual?)
+
+
+## Reusing Weights
+
+Our goal is to figure out how to re-use weights, since that seems to be a central tenet of my computational theory.

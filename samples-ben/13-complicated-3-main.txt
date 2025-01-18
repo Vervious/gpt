@@ -5,3 +5,76 @@
 ------
 		( are:0.5391 red:0.2148,:0.4883 Pot:0.5391atoes:0.2617 are:0.6133 :0.5508 :0.5039)
                
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1006,:0.0747.:0.0840,:0.0664,:0.0898,:0.0947,:0.0693,:0.0835)
+,
+------
+		(,:0.0747.:0.0840,:0.0664,:0.0898,:0.0947,:0.0693,:0.0835,:0.0625)
+,,,,,,,,,,,,,,,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.1250 a:0.1050,:0.1133 and:0.0625atoes:0.0532,:0.4395 a:0.0579
+:0.0291)
+
+
+------
+		( a:0.1050,:0.1133 and:0.0625atoes:0.0532,:0.4395 a:0.0579
+:0.0291The:0.0747)
+The most popular in the most popular in the world. The most popular is
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1748 the:0.0771,:0.1611 and:0.1445om:0.0879,:0.4199 a:0.0718em:0.0659)
+em
+------
+		( the:0.0771,:0.1611 and:0.1445om:0.0879,:0.4199 a:0.0718em:0.0659at:0.0530)
+at, and are the most popular in the world.
+The most popular
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1777 a:0.1157 and:0.1543 but:0.1455atoes:0.1436,:0.3594 a:0.1191iced:0.1484)
+iced
+------
+		( a:0.1157 and:0.1543 but:0.1455atoes:0.1436,:0.3594 a:0.1191iced:0.1484 with:0.1650)
+ with a white, and they are a good source of vitamin C.
+
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1963 a:0.0605 and:0.1699 but:0.1426atoes:0.7305 are:0.3223 a:0.0825ery:0.1777)
+ery
+------
+		( a:0.0605 and:0.1699 but:0.1426atoes:0.7305 are:0.3223 a:0.0825ery:0.1777,:0.1924)
+, and are very good for the health of the plants.
+The best
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1992 the:0.1021,:0.3379 and:0.1133ty:0.2422,:0.4141 a:0.0928ery:0.4609)
+ery
+------
+		( the:0.1021,:0.3379 and:0.1133ty:0.2422,:0.4141 a:0.0928ery:0.4609,:0.2617)
+, and the fruit is a fruit.
+The fruit is a fruit that
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1992 the:0.0542,:0.3340 yellow:0.1104atoes:0.2246 are:0.2832 a:0.0618vern:0.3008)
+vern
+------
+		( the:0.0542,:0.3340 yellow:0.1104atoes:0.2246 are:0.2832 a:0.0618vern:0.3008acular:0.9805)
+acular.
+The most common type of potato is the potato. The potato
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1133 the:0.1187,:0.2832 yellow:0.0864assium:0.1177,:0.3574 a:0.0801ich:0.1196)
+ich
+------
+		( the:0.1187,:0.2832 yellow:0.0864assium:0.1177,:0.3574 a:0.0801ich:0.1196thy:0.0967)
+thyos, and the plant is the most important plant in the world.
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2539 a:0.1709,:0.3945 and:0.0776assium:0.3535 are:0.5977 a:0.0981iced:0.3145)
+iced
+------
+		( a:0.1709,:0.3945 and:0.0776assium:0.3535 are:0.5977 a:0.0981iced:0.3145,:0.2070)
+, and the flowers are ripe.
+The flowers are a mixture of the

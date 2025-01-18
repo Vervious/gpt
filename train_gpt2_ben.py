@@ -84,6 +84,11 @@ class CausalSelfAttention(DualModule):
         #     torch.ones(config.block_size, config.block_size))
         #     .view(1,1,config.block_size,config.block_size)
         # )
+        # self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
+
+        self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
+        # ^ 0s on diagonal, 1 everywhere else
+
 
     def forward(self, x, z=None):
         # x used to compute Q, K; z replaces v if VALUE_MATRIX = False
@@ -130,6 +135,9 @@ class CausalSelfAttention(DualModule):
         # Just have Pytorch use FlashAttention for us. #TODO NVM
         y = F.scaled_dot_product_attention(q, k, v, is_causal=True)  
 
+        # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
+        # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
+
         if VALUE_MATRIX or z is None:
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
             # (B, T, n_embd)
@@ -137,6 +145,7 @@ class CausalSelfAttention(DualModule):
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
             # without value matrix: (B, nh, T, T)
+            y = y*self.nodiagonal[:,:,T,T] # delete the self contribution
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) # sum up the head dimension
 
@@ -219,7 +228,7 @@ class VanillaBlock(nn.Module):
         y = self.ln_1(x)
         newemb = self.attn(y)
         mlp=self.mlp(self.ln_2(newemb))
-        x = mlp*newemb + x
+        x = mlp*(x) + x
         return x
     
 class Block(DualModule):
@@ -987,19 +996,21 @@ else:
 
 ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
-VALUE_MATRIX = True
+VALUE_MATRIX = False
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="13-complicated-3"
+test_name="13-removediagonal"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
+y = y*self.nodiagonal[:,:,T,T] # delete the self contribution
+========
 y = self.ln_1(x)
-newemb = self.attn(y)
-mlp=self.mlp(self.ln_2(newemb))
-x = mlp*newemb + x
+attn = self.attn(y)
+mlp=self.mlp(y)
+x = mlp*attn + x
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
