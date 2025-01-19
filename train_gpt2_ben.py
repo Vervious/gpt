@@ -86,8 +86,9 @@ class CausalSelfAttention(DualModule):
         # )
         # self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
 
-        # self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
-        # ^ 0s on diagonal, 1 everywhere else
+        if DELETE_SELF_CONTRIBUTION:
+            self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
+            # ^ 0s on diagonal, 1 everywhere else
 
 
     def forward(self, x, z=None):
@@ -100,13 +101,18 @@ class CausalSelfAttention(DualModule):
         # e.g. GPT2 (124M), n_head = 12, hs = 64, nh*hs=C=768 channels
         # each token emits three vectors query, key, value
         if VALUE_MATRIX or z is None:
-            qkv = self.c_attn(x)
+            qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
             q,k,v = qkv.split(self.n_embd, dim=2)
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+            if DELETE_SELF_CONTRIBUTION:
+                v2 = v
+                v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
+      
         else:
             qk = self.c_attn(x)
             q,k = qk.split(self.n_embd, dim=2)
             v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
+            # v = z.unsqueeze(1) # (B, 1, T, C)
 
         # treat heads as batches
         k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
@@ -139,13 +145,20 @@ class CausalSelfAttention(DualModule):
         # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
 
         if VALUE_MATRIX or z is None:
+            
+            if DELETE_SELF_CONTRIBUTION:
+                y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
+                y = y @ v2
+
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
+
             # (B, T, n_embd)
             # output projection
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
-            # without value matrix: (B, nh, T, T)
-            # y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
+            if DELETE_SELF_CONTRIBUTION:
+                # without value matrix: (B, nh, T, T)
+                y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) # sum up the head dimension
 
@@ -226,9 +239,9 @@ class VanillaBlock(nn.Module):
         # x = x + self.attn(y)*self.mlp(y)
 
         y = self.ln_1(x)
-        attn = self.attn(y)
+        attn = self.attn(y,y)
         mlp = self.mlp(y)
-        x = mlp*(attn+y) + x
+        x = mlp*attn + x
         return x
     
 class Block(DualModule):
@@ -999,20 +1012,22 @@ ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
+DELETE_SELF_CONTRIBUTION = True
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-complicated-2"
+test_name="14-zerodiagonal-addback-2"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
 attn = self.attn(y)
 mlp = self.mlp(y)
-x = mlp*(attn+y) + x
+x = mlp*attn + x
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
-MLP_SCALE={MLP_SCALE}"""
+MLP_SCALE={MLP_SCALE}
+DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}"""
 
 # Create log and persistence directory
 log_dir = "log-ben"

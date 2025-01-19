@@ -1380,7 +1380,7 @@ In any case, the takeaway is that in this architecture, it is important to run `
 
 What happens if I add a constant contribution from the identity token? I.e. `mlp(x)*(attn+x)`. That was the `13-complicated-2` experiment from above. It does amazingly in the beginning and then odd things happen. Experiment 1 `mlp(self.attn(x)+x) * (self.attn(x) + x)` does slightly less well in the beginning, but eventually seems to converge? Let me try to run this experiment again.
 
-Note in `13-complicated-2` it is `attn + x` but here it is `attn + y` (layer normed). As we found previously, it really does hurt long term performance!
+Note in `13-complicated-2` it is `attn + x` but here it is `attn + y` (layer normed). As we found previously, it really does hurt long term performance, a little bit!
 ```
 y = self.ln_1(x)
 attn = self.attn(y)
@@ -1392,6 +1392,36 @@ REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
 ![loss plot](img/14-complicated-2.jpg)
+
+
+In an ideal world, we zero out the self contribution in attention, and add in a whole unit of it afterwards:
+```
+y = self.ln_1(x)
+attn = self.zerodattn(y)
+mlp = self.mlp(y)
+x = mlp*(attn+y) + x
+========
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-zerodiagonal-addback.jpg)
+
+Note that, in general, multiplication seems slightly worse than addition.
+
+Unrelatedly, let me try to do the "DELETE_SELF_CONTRIBUTION" faster in the value matrix regime. (Our implementation is not faster.) But note that DELETE_SELF_CONTRIBUTION has no effect at all:
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp = self.mlp(y)
+x = mlp*(attn) + x
+========
+DELETE_SELF_CONTRIBUTION=True
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-zerodiagonal-addback-2.jpg)
 
 
 TODO when doing addition attention, what happens if I run `mlp(x)` instead of `mlp(LN(attn + res))`?
@@ -1435,7 +1465,9 @@ z       ?
     y      ?
         x     S
 ```
-and what maybe happens is that x is just added to the residual, and so is y, while they wait for the final argument, and then finally `MLP(S+x+y)*z + (S+x+y)` computes the application (But in this case why do we need to add `S+x+y` back to the residual? Maybe to defer it, and try again, to make optimization easier? The more times the better I guess? But then `z` should be added back in in the next layer. And it is, through the residual from the previous column.)
+and what maybe happens is that x is just added to the residual, and so is y, while they wait for the final argument, and then finally `MLP(S+x+y)*z + (S+x+y)` computes the application (But in this case why do we need to add `S+x+y` back to the residual? Maybe to defer it, and try again, to make optimization easier? The more times the better I guess? But then `z` should be added back in in the next layer. And it is, through the residual from the previous column.) Now, why might we want to do `MLP(x)*(attn(x) + x)`, instead of just `MLP(x)*attn(x)`. Well, maybe the effect of MLP in prior layers was incomplete, so we want to make sure that MLP can keep cleaning it up?
+
+I really do think we should use zero'd attention, but it is really quite too slow, and the non-zero'd version is a good approximation.
 
 
 ## Reusing Weights

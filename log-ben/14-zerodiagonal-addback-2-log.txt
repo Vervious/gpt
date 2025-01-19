@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -21,18 +16,13 @@ REUSE_WEIGHTS=False
 MLP_SCALE=4
 DELETE_SELF_CONTRIBUTION=True
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 98, with 121,344 parameters
-using fused AdamW: True
 @ 0 train 11.5728 , allloss: 11.5728, norm:1.2130, dt: 3017.60ms, tok/sec: 43435.84, flops:38.05, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
@@ -90,7 +80,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 7.4562 , allloss: 7.4562, norm:0.4281, dt: 1468.45ms, tok/sec: 89258.85, flops:78.18, batch-reuse:1
 @ 48 train 7.4543 , allloss: 7.4543, norm:0.6069, dt: 1469.12ms, tok/sec: 89217.76, flops:78.15, batch-reuse:1
 @ 49 train 7.4599 , allloss: 7.4599, norm:0.7595, dt: 1469.27ms, tok/sec: 89208.62, flops:78.14, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(,:0.0791 the:0.1211,:0.0530 and:0.0918,:0.0684.:0.0918 the:0.1011
@@ -608,7 +597,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 547 train 4.9996 , allloss: 4.9996, norm:0.4945, dt: 1469.84ms, tok/sec: 89174.14, flops:78.11, batch-reuse:1
 @ 548 train 4.9483 , allloss: 4.9483, norm:0.4751, dt: 1470.36ms, tok/sec: 89142.81, flops:78.08, batch-reuse:1
 @ 549 train 4.8699 , allloss: 4.8699, norm:0.4392, dt: 1470.62ms, tok/sec: 89126.78, flops:78.07, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(!:0.1387 a:0.1309 and:0.1250 but:0.0635atoes:0.1494,:0.4492 a:0.0801ery:0.1235)
@@ -1116,7 +1104,6 @@ ery
 @ 1047 train 4.2992 , allloss: 4.2992, norm:0.4661, dt: 1470.25ms, tok/sec: 89149.60, flops:78.09, batch-reuse:1
 @ 1048 train 4.3386 , allloss: 4.3386, norm:0.3850, dt: 1469.80ms, tok/sec: 89176.50, flops:78.11, batch-reuse:1
 @ 1049 train 4.2899 , allloss: 4.2899, norm:0.4149, dt: 1470.07ms, tok/sec: 89160.18, flops:78.10, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(!:0.1230 a:0.1309 and:0.2500 yellow:0.1182om:0.2363,:0.4258 a:0.1216iced:0.1934)
@@ -1320,32 +1307,3 @@ iced
 @ 1243 train 4.1903 , allloss: 4.1903, norm:0.3812, dt: 1470.52ms, tok/sec: 89133.21, flops:78.07, batch-reuse:1
 @ 1244 train 4.1898 , allloss: 4.1898, norm:0.3520, dt: 1470.53ms, tok/sec: 89132.39, flops:78.07, batch-reuse:1
 @ 1245 train 4.2286 , allloss: 4.2286, norm:0.3835, dt: 1470.63ms, tok/sec: 89126.69, flops:78.07, batch-reuse:1
-W0119 03:54:14.509000 11703 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0119 03:54:14.510000 11703 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 11793 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1321, in <module>
-[rank0]:     x, y = x.to(device), y.to(device)
-[rank0]: KeyboardInterrupt
-[rank0]:[W119 03:54:15.257071995 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 11703 got signal: 2

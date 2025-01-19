@@ -1,0 +1,38 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.3691 are:0.2617 red:0.3535,:0.5508 Pot:0.3262atoes:0.3262 are:0.4434 :0.3535)
+ 
+------
+		( are:0.2617 red:0.3535,:0.5508 Pot:0.3262atoes:0.3262 are:0.4434 :0.3535 :0.4141)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0791 the:0.1211,:0.0530 and:0.0918,:0.0684.:0.0918 the:0.1011
+:0.0972)
+
+
+------
+		( the:0.1211,:0.0530 and:0.0918,:0.0684.:0.0918 the:0.1011
+:0.0972-:0.1270)
+-
+-
+-
+-
+-
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1387 a:0.1309 and:0.1250 but:0.0635atoes:0.1494,:0.4492 a:0.0801ery:0.1235)
+ery
+------
+		( a:0.1309 and:0.1250 but:0.0635atoes:0.1494,:0.4492 a:0.0801ery:0.1235,:0.1572)
+, and other types of chickenpox, and other types of chickenpox,
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1230 a:0.1309 and:0.2500 yellow:0.1182om:0.2363,:0.4258 a:0.1216iced:0.1934)
+iced
+------
+		( a:0.1309 and:0.2500 yellow:0.1182om:0.2363,:0.4258 a:0.1216iced:0.1934,:0.1885)
+, and are a great way to help you to get your heart and heart

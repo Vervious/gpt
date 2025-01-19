@@ -1,0 +1,71 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( notebook:0.0002 handy:0.0002keys:0.0002 stairs:0.0002 rul:0.0002 longevity:0.0002astrous:0.0002 arg:0.0002)
+ arg
+------
+		( handy:0.0002keys:0.0002 stairs:0.0002 rul:0.0002 longevity:0.0002astrous:0.0002 arg:0.0002oxy:0.0002)
+oxy Tracker conscience lingering sharks NSW Oaks bay MLG incorporation Fanview compe probingishly
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0640 the:0.0413.:0.0571 the:0.0522,:0.0757,:0.0598 the:0.0544,:0.0322)
+,
+------
+		( the:0.0413.:0.0571 the:0.0522,:0.0757,:0.0598 the:0.0544,:0.0322 the:0.0527)
+ the
+-
+-
+-
+-
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1729 a:0.1436,:0.1060 and:0.0640om:0.0547,:0.4727 great:0.0598
+:0.0586)
+
+
+------
+		( a:0.1436,:0.1060 and:0.0640om:0.0547,:0.4727 great:0.0598
+:0.0586The:0.0535)
+The most common are the most common in the world. The most common is
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.2559 great:0.0786,:0.2617 yellow:0.1021om:0.1592,:0.4727 red:0.0718ery:0.0640)
+ery
+------
+		( great:0.0786,:0.2617 yellow:0.1021om:0.1592,:0.4727 red:0.0718ery:0.0640th:0.0505)
+th and the most common in the world.
+- The most common in
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1079 a:0.1040,:0.1904 and:0.0645atoes:0.5703,:0.4355 great:0.0723iced:0.1050)
+iced
+------
+		( a:0.1040,:0.1904 and:0.0645atoes:0.5703,:0.4355 great:0.0723iced:0.1050,:0.0659)
+, and are a great source of vitamins and minerals.
+The best way
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2148 a:0.1299,:0.1260 blue:0.0825atoes:0.3477,:0.5039 a:0.0547iced:0.3848)
+iced
+------
+		( a:0.1299,:0.1260 blue:0.0825atoes:0.3477,:0.5039 a:0.0547iced:0.3848,:0.1777)
+, and they are also used to make the most of the food.
+
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2041 a:0.1309,:0.2422 purple:0.1021atoes:0.3379,:0.3145 a:0.1035iced:0.5938)
+iced
+------
+		( a:0.1309,:0.2422 purple:0.1021atoes:0.3379,:0.3145 a:0.1035iced:0.5938,:0.1699)
+, and red.
+The red and white flowers are red, purple,
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2158 a:0.1118,:0.2559 pink:0.1074atoes:0.3672,:0.4961 green:0.0576iced:0.2559)
+iced
+------
+		( a:0.1118,:0.2559 pink:0.1074atoes:0.3672,:0.4961 green:0.0576iced:0.2559 in:0.1680)
+ in red, red, and red.
+The red and white flowers are
