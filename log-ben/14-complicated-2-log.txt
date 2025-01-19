@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -20,18 +15,13 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 98, with 121,344 parameters
-using fused AdamW: True
 @ 0 train 10.9753 , allloss: 10.9753, norm:1.7814, dt: 1524.51ms, tok/sec: 85976.27, flops:75.31, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
@@ -89,7 +79,6 @@ aughlin rally BRA gases Wilkinson isn Harbour Pros黒黒 Thomas ;ipping HusFast
 @ 47 train 7.3916 , allloss: 7.3916, norm:0.6222, dt: 462.65ms, tok/sec: 283309.33, flops:248.15, batch-reuse:1
 @ 48 train 7.3800 , allloss: 7.3800, norm:0.6391, dt: 457.20ms, tok/sec: 286683.09, flops:251.11, batch-reuse:1
 @ 49 train 7.3853 , allloss: 7.3853, norm:0.3821, dt: 460.08ms, tok/sec: 284886.69, flops:249.54, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(,:0.0820 the:0.0771,:0.0562 and:0.1030,:0.0649,:0.0615 the:0.0283.:0.0532)
@@ -606,7 +595,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 547 train 4.9243 , allloss: 4.9243, norm:0.4305, dt: 461.88ms, tok/sec: 283778.48, flops:248.57, batch-reuse:1
 @ 548 train 4.8780 , allloss: 4.8780, norm:0.3880, dt: 456.83ms, tok/sec: 286915.89, flops:251.31, batch-reuse:1
 @ 549 train 4.7912 , allloss: 4.7912, norm:0.3659, dt: 458.31ms, tok/sec: 285991.54, flops:250.50, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(!:0.1797 a:0.1484,:0.1953 and:0.1426atoes:0.1089,:0.6211 a:0.1060
@@ -1117,7 +1105,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 1047 train 4.2116 , allloss: 4.2116, norm:0.4117, dt: 461.52ms, tok/sec: 284001.60, flops:248.76, batch-reuse:1
 @ 1048 train 4.2637 , allloss: 4.2637, norm:0.3982, dt: 459.93ms, tok/sec: 284983.27, flops:249.62, batch-reuse:1
 @ 1049 train 4.2298 , allloss: 4.2298, norm:0.4130, dt: 461.62ms, tok/sec: 283939.70, flops:248.71, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( and:0.1177 a:0.1182 and:0.2354 yellow:0.1094tery:0.2109 are:0.4414 a:0.0466urch:0.1992)
@@ -1626,7 +1613,6 @@ The most
 @ 1547 train 4.1083 , allloss: 4.1083, norm:0.5288, dt: 459.39ms, tok/sec: 285316.79, flops:249.91, batch-reuse:1
 @ 1548 train 4.1967 , allloss: 4.1967, norm:0.6257, dt: 460.56ms, tok/sec: 284595.27, flops:249.28, batch-reuse:1
 @ 1549 train 4.1826 , allloss: 4.1826, norm:0.4830, dt: 461.25ms, tok/sec: 284165.72, flops:248.90, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(,:0.1787 a:0.1494 and:0.3145 and:0.1152atoes:0.5312,:0.4258 a:0.0544iced:0.4395)
@@ -2085,9 +2071,7 @@ iced
 @ 1997 train 3.8669 , allloss: 3.8669, norm:0.3996, dt: 465.71ms, tok/sec: 281443.56, flops:246.52, batch-reuse:1
 @ 1998 train 3.8169 , allloss: 3.8169, norm:0.3612, dt: 470.06ms, tok/sec: 278842.49, flops:244.24, batch-reuse:1
 @ 1999 train 3.7576 , allloss: 3.7576, norm:0.3976, dt: 462.40ms, tok/sec: 283463.16, flops:248.29, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9167
+@ 2000 val 3.9167
 @ 2000 train 3.8384 , allloss: 3.8384, norm:0.3512, dt: 840.06ms, tok/sec: 156026.46, flops:136.67, batch-reuse:1
 @ 2001 train 3.9002 , allloss: 3.9002, norm:0.3698, dt: 464.67ms, tok/sec: 282076.79, flops:247.07, batch-reuse:1
 @ 2002 train 3.8780 , allloss: 3.8780, norm:0.3990, dt: 464.25ms, tok/sec: 282329.14, flops:247.30, batch-reuse:1
@@ -2138,7 +2122,6 @@ validation loss: 3.9167
 @ 2047 train 3.9346 , allloss: 3.9346, norm:0.3905, dt: 463.99ms, tok/sec: 282486.69, flops:247.43, batch-reuse:1
 @ 2048 train 3.9221 , allloss: 3.9221, norm:0.3808, dt: 463.51ms, tok/sec: 282783.11, flops:247.69, batch-reuse:1
 @ 2049 train 4.0259 , allloss: 4.0259, norm:0.3735, dt: 462.60ms, tok/sec: 283335.32, flops:248.18, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(,:0.1436 a:0.1128 and:0.3496 and:0.0452atoes:0.6445 are:0.5078 red:0.0339iced:0.6055)
@@ -2647,7 +2630,6 @@ iced
 @ 2547 train 3.8789 , allloss: 3.8789, norm:0.3735, dt: 462.73ms, tok/sec: 283260.14, flops:248.11, batch-reuse:1
 @ 2548 train 3.9839 , allloss: 3.9839, norm:0.5119, dt: 461.63ms, tok/sec: 283934.13, flops:248.70, batch-reuse:1
 @ 2549 train 3.9685 , allloss: 3.9685, norm:0.4372, dt: 460.94ms, tok/sec: 284360.18, flops:249.07, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.1514 a:0.1230 and:0.1973 white:0.0942atoes:0.3008 are:0.4648 a:0.0728iced:0.4902)
@@ -3155,7 +3137,6 @@ iced
 @ 3047 train 3.8503 , allloss: 3.8503, norm:0.4355, dt: 462.63ms, tok/sec: 283319.41, flops:248.16, batch-reuse:1
 @ 3048 train 3.7808 , allloss: 3.7808, norm:0.4084, dt: 465.30ms, tok/sec: 281693.19, flops:246.74, batch-reuse:1
 @ 3049 train 4.0137 , allloss: 4.0137, norm:0.4488, dt: 464.33ms, tok/sec: 282284.49, flops:247.26, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(,:0.1670 a:0.1113,:0.2969 white:0.1250atoes:0.6367 are:0.5430 a:0.0664iced:0.4336)
@@ -3664,7 +3645,6 @@ The leaves are green and white.
 @ 3547 train 3.7447 , allloss: 3.7447, norm:0.3460, dt: 459.15ms, tok/sec: 285464.06, flops:250.04, batch-reuse:1
 @ 3548 train 3.7397 , allloss: 3.7397, norm:0.3505, dt: 460.54ms, tok/sec: 284604.26, flops:249.29, batch-reuse:1
 @ 3549 train 3.7259 , allloss: 3.7259, norm:0.3200, dt: 463.40ms, tok/sec: 282850.47, flops:247.75, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2451 a:0.1260,:0.4785 and:0.0889atoes:0.3516 are:0.5664 the:0.0664icky:0.1289)
@@ -4123,9 +4103,7 @@ icky
 @ 3997 train 3.7070 , allloss: 3.7070, norm:0.3375, dt: 463.63ms, tok/sec: 282708.07, flops:247.63, batch-reuse:1
 @ 3998 train 3.6660 , allloss: 3.6660, norm:0.3517, dt: 464.59ms, tok/sec: 282123.69, flops:247.12, batch-reuse:1
 @ 3999 train 3.7252 , allloss: 3.7252, norm:0.4072, dt: 465.47ms, tok/sec: 281593.35, flops:246.65, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.6947
+@ 4000 val 3.6947
 @ 4000 train 3.7277 , allloss: 3.7277, norm:0.3707, dt: 720.64ms, tok/sec: 181882.78, flops:159.31, batch-reuse:1
 @ 4001 train 3.6361 , allloss: 3.6361, norm:0.3982, dt: 458.54ms, tok/sec: 285844.18, flops:250.37, batch-reuse:1
 @ 4002 train 3.6826 , allloss: 3.6826, norm:0.3868, dt: 459.12ms, tok/sec: 285486.74, flops:250.06, batch-reuse:1
@@ -4176,7 +4154,6 @@ validation loss: 3.6947
 @ 4047 train 3.7008 , allloss: 3.7008, norm:0.3676, dt: 461.52ms, tok/sec: 283998.37, flops:248.76, batch-reuse:1
 @ 4048 train 3.6129 , allloss: 3.6129, norm:0.3765, dt: 464.35ms, tok/sec: 282271.88, flops:247.25, batch-reuse:1
 @ 4049 train 3.5670 , allloss: 3.5670, norm:0.3854, dt: 463.94ms, tok/sec: 282517.32, flops:247.46, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2061 a:0.1719,:0.3203 and:0.1104ty:0.2949 are:0.6875 the:0.0845iced:0.6016)
@@ -4685,7 +4662,6 @@ The flowers are purple, and the
 @ 4547 train 3.7401 , allloss: 3.7401, norm:0.3604, dt: 458.81ms, tok/sec: 285678.26, flops:250.23, batch-reuse:1
 @ 4548 train 3.7620 , allloss: 3.7620, norm:0.3811, dt: 458.59ms, tok/sec: 285816.68, flops:250.35, batch-reuse:1
 @ 4549 train 3.6574 , allloss: 3.6574, norm:0.3928, dt: 459.54ms, tok/sec: 285225.31, flops:249.83, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2012 a:0.1504,:0.2207 and:0.1992atoes:0.5430 are:0.7031 red:0.0923iced:0.3438)
@@ -5194,7 +5170,6 @@ iced
 @ 5047 train 3.6958 , allloss: 3.6958, norm:0.3622, dt: 464.44ms, tok/sec: 282213.77, flops:247.19, batch-reuse:1
 @ 5048 train 3.5430 , allloss: 3.5430, norm:0.3766, dt: 463.79ms, tok/sec: 282608.38, flops:247.54, batch-reuse:1
 @ 5049 train 3.6177 , allloss: 3.6177, norm:0.3820, dt: 463.23ms, tok/sec: 282950.63, flops:247.84, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(!:0.1377 a:0.0801,:0.1973 and:0.1328atoes:0.1504 are:0.6641 green:0.0737iced:0.4766)
@@ -5703,7 +5678,6 @@ The leaves are green, and the
 @ 5547 train 3.6428 , allloss: 3.6428, norm:0.4174, dt: 460.91ms, tok/sec: 284377.69, flops:249.09, batch-reuse:1
 @ 5548 train 3.5139 , allloss: 3.5139, norm:0.4087, dt: 458.87ms, tok/sec: 285638.33, flops:250.19, batch-reuse:1
 @ 5549 train 3.5525 , allloss: 3.5525, norm:0.3733, dt: 461.47ms, tok/sec: 284033.00, flops:248.79, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.2773 a:0.1436 roses:0.2070 green:0.1235atoes:0.4707 are:0.6992 red:0.1670iced:0.0957)
@@ -6162,9 +6136,7 @@ iced
 @ 5997 train 3.7008 , allloss: 3.7008, norm:0.4636, dt: 465.02ms, tok/sec: 281862.17, flops:246.89, batch-reuse:1
 @ 5998 train 3.6486 , allloss: 3.6486, norm:0.4081, dt: 463.56ms, tok/sec: 282750.97, flops:247.67, batch-reuse:1
 @ 5999 train 3.6549 , allloss: 3.6549, norm:0.3977, dt: 461.00ms, tok/sec: 284318.56, flops:249.04, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.5906
+@ 6000 val 3.5906
 @ 6000 train 3.8535 , allloss: 3.8535, norm:0.3962, dt: 718.15ms, tok/sec: 182513.67, flops:159.87, batch-reuse:1
 @ 6001 train 3.6726 , allloss: 3.6726, norm:0.4211, dt: 460.24ms, tok/sec: 284793.12, flops:249.45, batch-reuse:1
 @ 6002 train 3.7419 , allloss: 3.7419, norm:0.4442, dt: 458.89ms, tok/sec: 285630.61, flops:250.19, batch-reuse:1
@@ -6215,7 +6187,6 @@ validation loss: 3.5906
 @ 6047 train 3.6376 , allloss: 3.6376, norm:0.5379, dt: 466.60ms, tok/sec: 280906.15, flops:246.05, batch-reuse:1
 @ 6048 train 3.7038 , allloss: 3.7038, norm:0.5298, dt: 461.71ms, tok/sec: 283886.33, flops:248.66, batch-reuse:1
 @ 6049 train 3.6437 , allloss: 3.6437, norm:0.4631, dt: 458.88ms, tok/sec: 285634.77, flops:250.19, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( are:0.1138 a:0.1079 roses:0.2100 and:0.1445atoes:0.2656 are:0.5234 red:0.1299________:0.3711)
@@ -6263,38 +6234,3 @@ ________
 @ 6086 train 3.5514 , allloss: 3.5514, norm:0.5527, dt: 461.55ms, tok/sec: 283983.26, flops:248.74, batch-reuse:1
 @ 6087 train 3.6370 , allloss: 3.6370, norm:0.5405, dt: 457.67ms, tok/sec: 286387.83, flops:250.85, batch-reuse:1
 @ 6088 train 3.6280 , allloss: 3.6280, norm:0.6025, dt: 467.50ms, tok/sec: 280368.50, flops:245.58, batch-reuse:1
-W0119 00:51:23.251000 10410 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0119 00:51:23.251000 10410 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 10493 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1322, in <module>
-[rank0]:     loss.backward()
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/_tensor.py", line 648, in backward
-[rank0]:     torch.autograd.backward(
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/autograd/__init__.py", line 347, in backward
-[rank0]:     _engine_run_backward(
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/autograd/graph.py", line 823, in _engine_run_backward
-[rank0]:     return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-[rank0]: KeyboardInterrupt
-[rank0]:[W119 00:51:23.505087508 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 10410 got signal: 2

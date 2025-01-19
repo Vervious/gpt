@@ -1,0 +1,120 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(300:0.0001 relaxing:0.0002 supportive:0.0002iche:0.0002 damage:0.0002ls:0.0002 universal:0.0002 surfaces:0.0002)
+ surfaces
+------
+		( relaxing:0.0002 supportive:0.0002iche:0.0002 damage:0.0002ls:0.0002 universal:0.0002 surfaces:0.0002aughlin:0.0002)
+aughlin rally BRA gases Wilkinson isn Harbour Pros黒黒 Thomas ;ipping HusFast
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0820 the:0.0771,:0.0562 and:0.1030,:0.0649,:0.0615 the:0.0283.:0.0532)
+.
+------
+		( the:0.0771,:0.0562 and:0.1030,:0.0649,:0.0615 the:0.0283.:0.0532
+:0.3184)
+
+-
+-
+-
+-
+-
+-
+-
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1797 a:0.1484,:0.1953 and:0.1426atoes:0.1089,:0.6211 a:0.1060
+:0.1021)
+
+
+------
+		( a:0.1484,:0.1953 and:0.1426atoes:0.1089,:0.6211 a:0.1060
+:0.1021-:0.1494)
+- The most common is the most common form of the most common in the
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( and:0.1177 a:0.1182 and:0.2354 yellow:0.1094tery:0.2109 are:0.4414 a:0.0466urch:0.1992)
+urch
+------
+		( a:0.1182 and:0.2354 yellow:0.1094tery:0.2109 are:0.4414 a:0.0466urch:0.1992in:0.2988)
+in, and are the most popular fruit in the world.
+The most
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1787 a:0.1494 and:0.3145 and:0.1152atoes:0.5312,:0.4258 a:0.0544iced:0.4395)
+iced
+------
+		( a:0.1494 and:0.3145 and:0.1152atoes:0.5312,:0.4258 a:0.0544iced:0.4395,:0.1260)
+, and are used in salads.
+- The first of the first of
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1436 a:0.1128 and:0.3496 and:0.0452atoes:0.6445 are:0.5078 red:0.0339iced:0.6055)
+iced
+------
+		( a:0.1128 and:0.3496 and:0.0452atoes:0.6445 are:0.5078 red:0.0339iced:0.6055 in:0.1377)
+ in a variety of ways.
+- The first time you’ll
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1514 a:0.1230 and:0.1973 white:0.0942atoes:0.3008 are:0.4648 a:0.0728iced:0.4902)
+iced
+------
+		( a:0.1230 and:0.1973 white:0.0942atoes:0.3008 are:0.4648 a:0.0728iced:0.4902 with:0.1387)
+ with a sweet, sweet, sweet, sweet, sweet, sweet, sweet
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1670 a:0.1113,:0.2969 white:0.1250atoes:0.6367 are:0.5430 a:0.0664iced:0.4336)
+iced
+------
+		( a:0.1113,:0.2969 white:0.1250atoes:0.6367 are:0.5430 a:0.0664iced:0.4336,:0.2617)
+, and the leaves are green.
+The leaves are green and white.
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2451 a:0.1260,:0.4785 and:0.0889atoes:0.3516 are:0.5664 the:0.0664icky:0.1289)
+icky
+------
+		( a:0.1260,:0.4785 and:0.0889atoes:0.3516 are:0.5664 the:0.0664icky:0.1289,:0.4004)
+, and the leaves are white.
+- The leaves are white, and
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2061 a:0.1719,:0.3203 and:0.1104ty:0.2949 are:0.6875 the:0.0845iced:0.6016)
+iced
+------
+		( a:0.1719,:0.3203 and:0.1104ty:0.2949 are:0.6875 the:0.0845iced:0.6016,:0.2324)
+, and the flowers are red.
+The flowers are purple, and the
+4550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2012 a:0.1504,:0.2207 and:0.1992atoes:0.5430 are:0.7031 red:0.0923iced:0.3438)
+iced
+------
+		( a:0.1504,:0.2207 and:0.1992atoes:0.5430 are:0.7031 red:0.0923iced:0.3438,:0.1670)
+, and Potatoes are iced.
+- The flowers are white,
+5050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1377 a:0.0801,:0.1973 and:0.1328atoes:0.1504 are:0.6641 green:0.0737iced:0.4766)
+iced
+------
+		( a:0.0801,:0.1973 and:0.1328atoes:0.1504 are:0.6641 green:0.0737iced:0.4766,:0.1475)
+, and the leaves are green.
+The leaves are green, and the
+5550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2773 a:0.1436 roses:0.2070 green:0.1235atoes:0.4707 are:0.6992 red:0.1670iced:0.0957)
+iced
+------
+		( a:0.1436 roses:0.2070 green:0.1235atoes:0.4707 are:0.6992 red:0.1670iced:0.0957,:0.1133)
+, and Potatoes are iced.
+- Potatoes are iced
+6050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1138 a:0.1079 roses:0.2100 and:0.1445atoes:0.2656 are:0.5234 red:0.1299________:0.3711)
+________
+------
+		( a:0.1079 roses:0.2100 and:0.1445atoes:0.2656 are:0.5234 red:0.1299________:0.3711,:0.1436)
+, and red peppers are ________.
+- The first thing you need

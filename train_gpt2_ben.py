@@ -86,7 +86,7 @@ class CausalSelfAttention(DualModule):
         # )
         # self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
 
-        self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
+        # self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
         # ^ 0s on diagonal, 1 everywhere else
 
 
@@ -145,7 +145,7 @@ class CausalSelfAttention(DualModule):
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
             # without value matrix: (B, nh, T, T)
-            y = y*self.nodiagonal[:,:,T,T] # delete the self contribution
+            # y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) # sum up the head dimension
 
@@ -226,9 +226,9 @@ class VanillaBlock(nn.Module):
         # x = x + self.attn(y)*self.mlp(y)
 
         y = self.ln_1(x)
-        newemb = self.attn(y)
-        mlp=self.mlp(self.ln_2(newemb))
-        x = mlp*(x) + x
+        attn = self.attn(y)
+        mlp = self.mlp(y)
+        x = mlp*(attn+y) + x
         return x
     
 class Block(DualModule):
@@ -996,21 +996,19 @@ else:
 
 ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
-VALUE_MATRIX = False
+VALUE_MATRIX = True
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="13-removediagonal"
+test_name="14-complicated-2"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
-y = y*self.nodiagonal[:,:,T,T] # delete the self contribution
-========
 y = self.ln_1(x)
 attn = self.attn(y)
-mlp=self.mlp(y)
-x = mlp*attn + x
+mlp = self.mlp(y)
+x = mlp*(attn+y) + x
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}

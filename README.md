@@ -1345,7 +1345,7 @@ Takeaways: MLP needs to see the residual, not just attention. It doesn't care ab
 ## More Semantics
 
 
-Let's remove the 1s from the diagonal of attention. The motivation here is, we are already copying x, there is no need to copy it again (but wait, what if there is no application to do, i.e. it is not near anything. I suspect this will not do as well. Instead, we should do the next experiment.) 
+Let's remove the 1s from the diagonal of attention. The motivation here is, we are already copying x, there is no need to copy it again (but wait, what if there is no application to do, i.e. it is not near anything. I suspect this will not do as well. Instead, we should do the next experiment.) (I accidentally deleted this run...)
 ```
 self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
 ========
@@ -1358,10 +1358,10 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
-![loss plot](img/13-removediagonal.jpg)
+![loss plot](img/13-nodiagonal.jpg)
 
 
-Now, we use the usual attention causality (lower triangular mask = True), but when summing things up, we omit the value contribution from the identity token (so the mlp(x) does not apply/multiply on it). This also requires turning the value matrix off...
+Now, we use the usual attention causality (lower triangular mask = True), but when summing things up, we omit the value contribution from the identity token (so the mlp(x) does not apply/multiply on it). This also requires turning the value matrix off... The result is equivalent to the one before! (What does this mean?)
 ```
 y = y*self.nodiagonal[:,:,T,T] # delete the self contribution
 ========
@@ -1374,8 +1374,24 @@ VALUEMATRIX=False
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
-![loss plot](img/13-nosumidentity.jpg)
+![loss plot](img/13-removediagonal.jpg)
 
+In any case, the takeaway is that in this architecture, it is important to run `mlp*x` as well. Maybe, because we always add the residual back to itself, `mlp*x` is performing leftover cleanup of the previous residual, over and over and over again.
+
+What happens if I add a constant contribution from the identity token? I.e. `mlp(x)*(attn+x)`. That was the `13-complicated-2` experiment from above. It does amazingly in the beginning and then odd things happen. Experiment 1 `mlp(self.attn(x)+x) * (self.attn(x) + x)` does slightly less well in the beginning, but eventually seems to converge? Let me try to run this experiment again.
+
+Note in `13-complicated-2` it is `attn + x` but here it is `attn + y` (layer normed). As we found previously, it really does hurt long term performance!
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp = self.mlp(y)
+x = mlp*(attn+y) + x
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-complicated-2.jpg)
 
 
 TODO when doing addition attention, what happens if I run `mlp(x)` instead of `mlp(LN(attn + res))`?
@@ -1419,9 +1435,11 @@ z       ?
     y      ?
         x     S
 ```
-and what maybe happens is that x is just added to the residual, and so is y, while they wait for the final argument, and then finally `MLP(S+x+y)*z + (S+x+y)` computes the application (But in this case why do we need to add `S+x+y` back to the residual?)
+and what maybe happens is that x is just added to the residual, and so is y, while they wait for the final argument, and then finally `MLP(S+x+y)*z + (S+x+y)` computes the application (But in this case why do we need to add `S+x+y` back to the residual? Maybe to defer it, and try again, to make optimization easier? The more times the better I guess? But then `z` should be added back in in the next layer. And it is, through the residual from the previous column.)
 
 
 ## Reusing Weights
 
 Our goal is to figure out how to re-use weights, since that seems to be a central tenet of my computational theory.
+
+

@@ -1,90 +1,34 @@
 1: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( Roses:0.4434 are:0.3828 red:0.2617,:0.3242 Pot:0.5078atoes:0.3262 are:0.2852 :0.3984)
+		( Roses:0.4590 are:0.4277 red:0.3984,:0.3672 Pot:0.2373atoes:0.3398 are:0.3965 :0.2988)
  
 ------
-		( are:0.3828 red:0.2617,:0.3242 Pot:0.5078atoes:0.3262 are:0.2852 :0.3984 :0.2734)
+		( are:0.4277 red:0.3984,:0.3672 Pot:0.2373atoes:0.3398 are:0.3965 :0.2988 :0.3691)
                
 50: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( re:0.0003 are:0.0032 red:0.0014,:0.0298 a:0.0002 accomplish:0.0003 are:0.0045 :0.0018)
+		( Roses:0.0013 are:0.0008 red:0.0033,:0.0049 Pot:0.0005atoes:0.0008 are:0.0040 :0.0018)
  
 ------
-		( are:0.0032 red:0.0014,:0.0298 a:0.0002 accomplish:0.0003 are:0.0045 :0.0018 :0.0009)
+		( are:0.0008 red:0.0033,:0.0049 Pot:0.0005atoes:0.0008 are:0.0040 :0.0018 :0.0017)
                
 550: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(
-:0.1226 a:0.0410ness:0.0723 but:0.0417atoes:0.1104 are:0.1729 a:0.0762
-:0.1235)
-
-
+		(.:0.1992 not:0.0388 and:0.0593 but:0.0942om:0.0811,:0.4824 a:0.0388 :0.0781)
+ 
 ------
-		( a:0.0410ness:0.0723 but:0.0417atoes:0.1104 are:0.1729 a:0.0762
-:0.1235The:0.0713)
-The most common in the most common in the most common in the most common
+		( not:0.0388 and:0.0593 but:0.0942om:0.0811,:0.4824 a:0.0388 :0.0781
+:0.1016)
+
+- A.
+- A.
+- A.
+- A
 1050: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(
-:0.1182 a:0.0464iscovered:0.2100 yellow:0.0889om:0.1748,:0.4766 also:0.0369_____:0.0903)
+		(,:0.1533 not:0.0286-:0.1299 but:0.0977om:0.4336,:0.4746 the:0.0325_____:0.1396)
 _____
 ------
-		( a:0.0464iscovered:0.2100 yellow:0.0889om:0.1748,:0.4766 also:0.0369_____:0.0903.:0.3496)
+		( not:0.0286-:0.1299 but:0.0977om:0.4336,:0.4746 the:0.0325_____:0.1396.:0.3652)
 .
-- The name of the name of the name of the name of
-1550: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		(
-:0.1094 a:0.0613,:0.1406 blue:0.1104atoes:0.2236,:0.2441 a:0.0315ich:0.2471)
-ich
-------
-		( a:0.0613,:0.1406 blue:0.1104atoes:0.2236,:0.2441 a:0.0315ich:0.2471thy:0.5156)
-thyosaurs, and are found in the same colors.
-- The colors
-2050: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		( are:0.2197 a:0.1021,:0.1475 white:0.0889atoes:0.4902 are:0.4395 a:0.0569iced:0.2129)
-iced
-------
-		( a:0.1021,:0.1475 white:0.0889atoes:0.4902 are:0.4395 a:0.0569iced:0.2129,:0.1650)
-, and are not a good source of vitamin C.
-The most common
-2550: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		( are:0.2041 a:0.0835,:0.1543 green:0.1216atoes:0.1211 are:0.3047 red:0.1157iced:0.4473)
-iced
-------
-		( a:0.0835,:0.1543 green:0.1216atoes:0.1211 are:0.3047 red:0.1157iced:0.4473,:0.1157)
-, and are red and green. They are red and green, and are
-3050: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		( are:0.1670 a:0.0549,:0.1030 yellow:0.0967atoes:0.2715 are:0.1924 red:0.0549_____:0.1992)
-_____
-------
-		( a:0.0549,:0.1030 yellow:0.0967atoes:0.2715 are:0.1924 red:0.0549_____:0.1992.:0.1289)
-.
-The flowers are red, and the flowers are red.
-The
-3550: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		( are:0.1533 a:0.0884,:0.2520 white:0.0713y:0.1328 are:0.4355 red:0.0566iced:0.3672)
-iced
-------
-		( a:0.0884,:0.2520 white:0.0713y:0.1328 are:0.4355 red:0.0566iced:0.3672 and:0.1758)
- and are not a good source of vitamin C.
-- The plant is
-4050: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		( are:0.1406 a:0.1099,:0.2197 green:0.0835atoes:0.1836 are:0.5430 green:0.0728iced:0.7617)
-iced
-------
-		( a:0.1099,:0.2197 green:0.0835atoes:0.1836 are:0.5430 green:0.0728iced:0.7617 and:0.1289)
- and planted in the garden.
-- 1. Plant in the garden.
-4550: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		( are:0.2148 a:0.1064,:0.2520 and:0.0854atoes:0.7656 are:0.3164 red:0.0879iced:0.7461)
-iced
-------
-		( a:0.1064,:0.2520 and:0.0854atoes:0.7656 are:0.3164 red:0.0879iced:0.7461 in:0.1768)
- in a variety of colors, and are also a favorite for the garden.
+The most common name for the name of the name. It is
