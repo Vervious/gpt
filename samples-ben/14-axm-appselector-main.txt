@@ -1,0 +1,25 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(516:0.0002 Finland:0.0002edom:0.0002 Continent:0.0002 enemy:0.0002 Priv:0.0002 printed:0.0002 tattoos:0.0002)
+ tattoos
+------
+		( Finland:0.0002edom:0.0002 Continent:0.0002 enemy:0.0002 Priv:0.0002 printed:0.0002 tattoos:0.0002 destiny:0.0002)
+ destiny whiskeyEntity Adin immersed biochemicalthink GiantsApr424 occupants occupants poly 530 tantal
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( in:0.0325 the:0.0469 the:0.0299 the:0.0374,:0.0588,:0.0537 the:0.0356,:0.0586)
+,
+------
+		( the:0.0469 the:0.0299 the:0.0374,:0.0588,:0.0537 the:0.0356,:0.0586 and:0.0359)
+ and the the the the first the, the the the, the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1377 the:0.0544 red:0.1611 and:0.0991les:0.0203,:0.3398 the:0.0542
+:0.0569)
+
+
+------
+		( the:0.0544 red:0.1611 and:0.0991les:0.0203,:0.3398 the:0.0542
+:0.0569-:0.1055)
+- The most common is the most common.
+- The most common is

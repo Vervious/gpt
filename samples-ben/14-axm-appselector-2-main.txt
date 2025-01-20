@@ -1,0 +1,55 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( mystery:0.0002 Rah:0.0001UTH:0.0003 guild:0.0002 distressed:0.0002 examples:0.0002 goes:0.0002 grant:0.0002)
+ grant
+------
+		( Rah:0.0001UTH:0.0003 guild:0.0002 distressed:0.0002 examples:0.0002 goes:0.0002 grant:0.0002 showcase:0.0002)
+ showcase description Evans immensely Igor Igorhap disturbed Sinai foodenser between IgorApple summarized
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0515 the:0.0498 the:0.0427 and:0.0583,:0.0532,:0.0537 the:0.0549,:0.0562)
+,
+------
+		( the:0.0498 the:0.0427 and:0.0583,:0.0532,:0.0537 the:0.0549,:0.0562 and:0.0603)
+ and the
+-
+-
+-
+-
+-
+-
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2021 a:0.0962 and:0.1924 red:0.0532om:0.1064,:0.3008 a:0.1631
+:0.2812)
+
+
+------
+		( a:0.0962 and:0.1924 red:0.0532om:0.1064,:0.3008 a:0.1631
+:0.2812-:0.1641)
+- The most common types of the most common types of the types of types
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1167 a:0.0435 and:0.1934 red:0.0684assium:0.1953 are:0.3398 a:0.0669iced:0.2559)
+iced
+------
+		( a:0.0435 and:0.1934 red:0.0684assium:0.1953 are:0.3398 a:0.0669iced:0.2559,:0.1592)
+, and are a great source of great importance.
+- The best way
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1099 a:0.0688,:0.1641 red:0.1167atoes:0.3672,:0.5352 a:0.0742iced:0.4180)
+iced
+------
+		( a:0.0688,:0.1641 red:0.1167atoes:0.3672,:0.5352 a:0.0742iced:0.4180,:0.1943)
+, and are called “sugar.”
+The first part
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1226 a:0.0708,:0.0820 blue:0.1494atoes:0.2080,:0.3223 a:0.0664iced:0.3496)
+iced
+------
+		( a:0.0708,:0.0820 blue:0.1494atoes:0.2080,:0.3223 a:0.0664iced:0.3496,:0.2188)
+, and Potatoes are also a good source of potassium.
+- Pot

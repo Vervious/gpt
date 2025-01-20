@@ -1,0 +1,14 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555)
+A
+------
+		(A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555A:0.3555)
+AAAAAAAAAAAAAAA
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0435.:0.0435.:0.0420.:0.0420.:0.0420.:0.0420.:0.0420.:0.0417)
+.
+------
+		(.:0.0435.:0.0420.:0.0420.:0.0420.:0.0420.:0.0420.:0.0417.:0.0417)
+.... the the the the the the the the the the the

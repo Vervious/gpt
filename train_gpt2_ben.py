@@ -269,13 +269,23 @@ class VanillaBlock(nn.Module):
         # m, bias = self.fatmlp(y) # (B, T, 3*C), (B,T,C)
         # M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
         # x = M + bias + x
+        metadata = {}
 
         y = self.ln_1(x)
-        attn = self.attn(y) # (B,T,C)
-        app = torch.linalg.vecdot(attn, y,dim=-1) # (B, T)
-        mlp = self.mlp(y)
-        x = mlp * attn + app * x
-        return x
+        attn = self.attn(y,y)
+        siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+        app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz # may be greater than 1
+        app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
+        m, bias = self.fatmlp(y)
+        M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+        x = (1-app) * M + app * (x + bias)
+
+        a = app.detach()
+        metadata["zero"] = (a < 0.25).sum().item()
+        metadata["neg"] = (a < -0.25).sum().item()
+        metadata["pos"] = (a > 0.25).sum().item()
+
+        return x, metadata
     
 class Block(DualModule):
 
@@ -407,6 +417,8 @@ class GPT(DualModule):
 
         logits = []
 
+        outerMetadata = {}
+
         for i in range(self.config.n_layer):
             if REUSE_WEIGHTS:
                 block = self.transformer.sharedblock
@@ -414,7 +426,7 @@ class GPT(DualModule):
                 block = self.transformer.h[i]
             if targets is not None and NEW_ALL_LAYER_LOSS:
                 # x = block(x.detach())
-                x = block(x)
+                x, metadata = block(x)
                 y = self.transformer.ln_f(x)
                 _logits = self.lm_head(y)
 
@@ -425,7 +437,9 @@ class GPT(DualModule):
 
                 loss = loss + layerloss
             else:
-                x = block(x)
+                x, metadata = block(x)
+            for key, value in metadata.items():
+                outerMetadata[key] = outerMetadata.get(key, 0) + value
         x = self.transformer.ln_f(x)
 
         if targets is not None and trueloss is None:
@@ -441,19 +455,19 @@ class GPT(DualModule):
             logits.append(_logits)
             loss = None
         
-        return logits, loss, trueloss
+        return logits, loss, trueloss, outerMetadata
 
     def forward(self, idx, targets=None, all_logits=False, print_weights=False, dump_val=False):
         if self.VANILLA:
             zero = torch.tensor(0.0, device=idx.device)
             earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
-            vanillalogits, vanillaloss, trueloss = self.vanillaforward(idx, targets)
+            vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets)
 
             if all_logits:
-                return vanillalogits, vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
+                return vanillalogits, vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
             else:
-                return vanillalogits[-1], vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
+                return vanillalogits[-1], vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
 
         # idx is token indices
         # idx is of shape (B, T)
@@ -1072,15 +1086,18 @@ MLPMAT_INNER_SIZE = 128 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-axm-appselector"
+test_name="14-axm-appselector-5"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
-attn = self.attn(y) # (B,T,C)
-app = torch.linalg.vecdot(attn, y,dim=-1) # (B, T)
-mlp = self.mlp(y)
-x = mlp * attn + app * x
+attn = self.attn(y,y)
+siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz
+app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+x = (1-app) * M + app * (x + bias)
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
@@ -1378,7 +1395,10 @@ for step in range(max_steps):
     conf_loss_accum = 0.0
     target_loss_accum = 0.0
     loss_accum_all = 0.0
-    earlyStopNum_accum = 0.0
+    zeroApp_accum = 0.0
+    negApp_accum = 0.0
+    posApp_accum = 0.0
+
     earlyStopLayerDict_accum = torch.zeros(config_.n_layer, device=device)
     for micro_step in range(grad_accum_steps):
         x, y = train_loader.next_batch()
@@ -1388,12 +1408,16 @@ for step in range(max_steps):
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            _, loss, trueloss, confLoss, targetLoss, earlyStopNum, earlyStopLayerDict = model(x, y) # NOTE: we don't actually use the logits
+            _, loss, trueloss, confLoss, targetLoss, metadata, earlyStopLayerDict = model(x, y) # NOTE: we don't actually use the logits
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps
         loss_accum_all += loss.detach()
-        earlyStopNum_accum += earlyStopNum
+
+        zeroApp_accum += metadata["zero"]
+        negApp_accum += metadata["neg"]
+        posApp_accum += metadata["pos"]
+
         conf_loss_accum += confLoss.detach() / grad_accum_steps
         target_loss_accum += targetLoss.detach() / grad_accum_steps
         earlyStopLayerDict_accum += earlyStopLayerDict.detach()
@@ -1429,9 +1453,13 @@ for step in range(max_steps):
 
         earlyStopLayerDict_accum /= (B*T*grad_accum_steps)
 
+        zeroApp_accum /= (B*T*grad_accum_steps*config_.n_layer)
+        negApp_accum /= (B*T*grad_accum_steps*config_.n_layer)
+        posApp_accum /= (B*T*grad_accum_steps*config_.n_layer)
+
         rList = [round(value, 2) for value in earlyStopLayerDict_accum.tolist()]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, norm:{norm:.4f}, dt: {dt*1000:.2f}ms, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, perc(-): {negApp_accum:.4f}, perc(0): {zeroApp_accum:.4f}, perc(+): {posApp_accum:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:

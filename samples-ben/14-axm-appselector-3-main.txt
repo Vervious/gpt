@@ -1,0 +1,35 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Depending:0.0002 Farmers:0.0002 corporation:0.0002ERT:0.0002 Claud:0.0002 Rahman:0.0002 latch:0.0002iversity:0.0001)
+iversity
+------
+		( Farmers:0.0002 corporation:0.0002ERT:0.0002 Claud:0.0002 Rahman:0.0002 latch:0.0002iversity:0.0001 ex:0.0001)
+ ex instincts Tories Lands� predecessor identifies competitors teachings copy Skehospitaliversityresults Wall
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0874 the:0.0554,:0.0776 and:0.0908.:0.0825,:0.0874 the:0.0330
+:0.2871)
+
+
+------
+		( the:0.0554,:0.0776 and:0.0908.:0.0825,:0.0874 the:0.0330
+:0.2871The:0.0496)
+The
+The
+-
+-
+-
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.1030 a:0.0884,:0.1699 and:0.0796tery:0.0859,:0.5977 a:0.0645
+:0.2002)
+
+
+------
+		( a:0.0884,:0.1699 and:0.0796tery:0.0859,:0.5977 a:0.0645
+:0.2002-:0.0659)
+- The most common types of plants are the most common types of plants that

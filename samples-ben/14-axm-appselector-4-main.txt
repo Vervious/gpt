@@ -1,0 +1,55 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Man:0.0002 stability:0.0002 constitutional:0.0002istan:0.0002DonaldTrump:0.0002 Lis:0.0002 forge:0.0002 primitive:0.0002)
+ primitive
+------
+		( stability:0.0002 constitutional:0.0002istan:0.0002DonaldTrump:0.0002 Lis:0.0002 forge:0.0002 primitive:0.0002MB:0.0002)
+MBtc unforeseen Canad MED Improvement Hospitalaque Saturday inequ forgelevel Clar Tyr Niet
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0571 a:0.0304,:0.0811 and:0.0532,:0.0300,:0.0693 a:0.0334
+:0.0977)
+
+
+------
+		( a:0.0304,:0.0811 and:0.0532,:0.0300,:0.0693 a:0.0334
+:0.0977The:0.1152)
+The
+The
+-
+- The
+- The
+- The
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1211 a:0.1484,:0.1680 and:0.1245atoes:0.1494,:0.2373 a:0.1240
+:0.2002)
+
+
+------
+		( a:0.1484,:0.1680 and:0.1245atoes:0.1494,:0.2373 a:0.1240
+:0.2002-:0.1436)
+- The most common type of plant-based plant is a plant that is
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1602 a:0.0850 and:0.1836 yellow:0.1289tery:0.1484,:0.2520 a:0.0588vern:0.1406)
+vern
+------
+		( a:0.0850 and:0.1836 yellow:0.1289tery:0.1484,:0.2520 a:0.0588vern:0.1406acular:0.5625)
+acular, but they are also known as "the most common fruit" and
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1206 a:0.0835,:0.1846 and:0.1211atoes:0.4590.:0.1641 a:0.1367iced:0.4004)
+iced
+------
+		( a:0.0835,:0.1846 and:0.1211atoes:0.4590.:0.1641 a:0.1367iced:0.4004 to:0.2197)
+ to the ground, and the ground is used for the purpose of making the
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1338 a:0.0918,:0.2490 and:0.0698atoes:0.2422 are:0.5195 white:0.0620urn:0.1060)
+urn
+------
+		( a:0.0918,:0.2490 and:0.0698atoes:0.2422 are:0.5195 white:0.0620urn:0.1060s:0.2480)
+s, and they are the most common.
+- The most common type

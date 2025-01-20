@@ -1480,7 +1480,7 @@ First, let me try a new version of all-train, where we compute a loss at every l
 x = x + self.attn(self.ln_1(x))
 x = x + self.mlp(self.ln_2(x))
 ```
-![loss plot](img/14-alltrain.png)
+![loss plot](img/14-alltrain.jpg)
 
 Evven reusing weights, it is horribe:
 
@@ -1488,7 +1488,7 @@ Evven reusing weights, it is horribe:
 x = x + self.attn(self.ln_1(x))
 x = x + self.mlp(self.ln_2(x))
 ```
-![loss plot](img/14-alltrain-reusingweights.png)
+![loss plot](img/14-alltrain-reuseweights.jpg)
 
 
 I guess it is important for backprop to be somewhat deep. Let me remove the detach(), and stop reusing weights (and interestingly, it's not any slower than with the detach(), TODO why is that?). Generally, computing loss at every layer is simply worse than computing only at one layer.
@@ -1497,7 +1497,7 @@ I guess it is important for backprop to be somewhat deep. Let me remove the deta
 x = x + self.attn(self.ln_1(x))
 x = x + self.mlp(self.ln_2(x))
 ```
-![loss plot](img/14-alltrain-deep.png)
+![loss plot](img/14-alltrain-deep.jpg)
 
 
 Let's talk about mlp matrices. Here, we map y to a (CxC)-matrix M (using the appropriate decomposition), and then directly apply M to x. Here, we use an inner matrix of size 48x48.
@@ -1513,7 +1513,7 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
-![loss plot](img/14-mlpmatrix.png)
+![loss plot](img/14-mlpmatrix.jpg)
 
 
 Let's get rid of the bias and increase the size of the inner matrix to `MLPMAT_INNER_SIZE = 128`. This isn't very good at all! The bias seems to be quite important. 
@@ -1529,7 +1529,7 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
-![loss plot](img/14-mlpmatrix-nobias-moreinner.png)
+![loss plot](img/14-mlpmatrix-nobias-moreinner.jpg)
 
 Let's add the bias back but keep `MLPMAT_INNER_SIZE = 128`. This does well. Is this because of more parameters, or due to the more expressive MLP? Why is bias so important? Maybe it allows for replacing the applicator.
 ```
@@ -1544,7 +1544,7 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
-![loss plot](img/14-mlpmatrix-moreinner.png)
+![loss plot](img/14-mlpmatrix-moreinner.jpg)
 
 One question is what happens if we keep the same size for fatmlp (i.e. are the parameters more useful for somewhere else)
 
@@ -1552,12 +1552,14 @@ One question (TODO) is how to encode multiple application? In other words, a cop
 
 Multiple applications (x + y)? Apply to same attendees? Hmm. Should really be one applicator per column. And in my opinion, a column should comprise either an applicator or an applicatee; a token shoud not able to be BOTH (unless in some parallel superposition?) (Perhaps dot product attn(x) with x to see if it is a no-op, first starting in the no-value regime).
 
-Let's try to get rid of the residual... we revert to `mlp*attn` just to make this experiment fast.
+Let's try to get rid of the residual... we revert to `mlp*attn` just to make this experiment fast. Note that sometimes the dot product is negative --- why? Note that the value matrix is set to false. Which means that other words that we are attending to have opposite embeddings of the applicator. It turns out this is completely broken (and surely the same thing is achieved just by forwarding along attn...)
 ```
 y = self.ln_1(x)
-attn = self.attn(y) # (B,T,C)
-app = torch.linalg.vecdot(attn, y,dim=-1) # (B, T)
+attn = self.attn(y, y) 
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) 
 mlp = self.mlp(y)
+# NOTE sometimes negative dot product (why?)
+app = (torch.sigmoid(app) - 0.5) * 2  # app is -1 or 1
 x = mlp * attn + app * x
 ========
 DELETE_SELF_CONTRIBUTION=False
@@ -1565,4 +1567,82 @@ VALUEMATRIX=False
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
+![loss plot](img/14-axm-appselector.jpg)
 
+
+On that note, I am curious, if attn alone is enough of a residual (answer: it is not.) The plot looks similar to if we had used y instead of attn; maybe attn is destructive because of the layer norm, not because it is an attention component. (perhaps mlp is wiping it out)
+```
+y = self.ln_1(x)
+attn = self.attn(y, y)
+mlp = self.mlp(y)
+x = mlp * attn + attn
+========
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-axm-plusattn-nores.jpg)
+
+
+We should probably normalize app... else everything probably has large dot product (and I suspect layer norm doesn't normalize it enough). (Um, what did I do) (Also, instead of sigmoid, should just use tanh)
+```
+y = self.ln_1(x)
+attn = self.attn(y, y) 
+siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1)
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz
+# print(app[-1,-1,-1].item())
+mlp = self.mlp(y)
+# NOTE sometimes negative dot product (why?)
+app = (torch.sigmoid(app) - 0.5) * 2  # app is -1 or 1
+x = mlp * attn + app * x
+========
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-axm-appselector-2.jpg)
+
+
+Trying app selection with our weird matrix conglomerate (this is exceedingly slow). It is simultatenousy promising and unpromising, and I'm not patient enough to run it all the way (should really optimize app computation if we are going to run more experiments.)
+```
+y = self.ln_1(x)
+attn = self.attn(y,y)
+siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz
+app = (torch.sigmoid(app) - 0.5) * 2  # [-1, 1]
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+x = M + app * bias + app * x
+======
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-axm-appselector-3.jpg)
+
+
+Honestly, we should also flip the app on the bias. Ideally app is 0 to 1. (Also how do we support this computation with the value matrix?) Well, this turns out to be strictly worse than `mlpmatrix-moreinner`...
+```
+y = self.ln_1(x)
+attn = self.attn(y,y)
+siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz # may be greater than 1
+app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+x = (1-app) * (M + bias) + app * x
+======
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-axm-appselector-4.jpg)
+
+
+TODO: pull app out directly from KQ matrix, I think i  have a bug somewhere.
