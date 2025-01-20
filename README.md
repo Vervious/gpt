@@ -1474,4 +1474,42 @@ I really do think we should use zero'd attention, but it is really quite too slo
 
 Our goal is to figure out how to re-use weights, since that seems to be a central tenet of my computational theory.
 
+First, let me try a new version of all-train, where we compute a loss at every layer, but only propagate the loss one layer deep each time. This works really poorly (somewhat expected, since we're not reusing weights, so how can they hope to learn anything quickly?). This shows that with poor oprimizatbility, it's hard to distinguish that from poor expressivity.
 
+```
+x = x + self.attn(self.ln_1(x))
+x = x + self.mlp(self.ln_2(x))
+```
+![loss plot](img/14-alltrain.png)
+
+Evven reusing weights, it is horribe:
+
+```
+x = x + self.attn(self.ln_1(x))
+x = x + self.mlp(self.ln_2(x))
+```
+![loss plot](img/14-alltrain-reusingweights.png)
+
+
+I guess it is important for backprop to be somewhat deep. Let me remove the detach(), and stop reusing weights (and interestingly, it's not any slower than with the detach(), TODO why is that?). Generally, computing loss at every layer is simply worse than computing only at one layer.
+
+```
+x = x + self.attn(self.ln_1(x))
+x = x + self.mlp(self.ln_2(x))
+```
+![loss plot](img/14-alltrain-deep.png)
+
+
+Let's talk about mlp matrices. Here, we map y to a (CxC)-matrix M (using the appropriate decomposition), and then directly apply M to x.
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp, bias = self.fatmlp(y)
+M = self.matrixfromparams(mlp)
+x = M @ attn + bias + x
+========
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```

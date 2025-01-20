@@ -1,0 +1,43 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.5039 are:0.3125 red:0.6562,:0.3672 Pot:0.2266atoes:0.5195 are:0.2988 :0.4746)
+ 
+------
+		( are:0.3125 red:0.6562,:0.3672 Pot:0.2266atoes:0.5195 are:0.2988 :0.4746 :0.3984)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Siri:0.0003 to:0.0269
+:0.0452 and:0.0913,:0.0864.:0.1055 the:0.0454.:0.0684)
+.
+------
+		( to:0.0269
+:0.0452 and:0.0913,:0.0864.:0.1055 the:0.0454.:0.0684
+:0.2393)
+
+-
+-
+-
+-
+-
+-
+-
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1729 a:0.1221 and:0.1934 and:0.1357atoes:0.1436,:0.4902 a:0.0786
+:0.1201)
+
+
+------
+		( a:0.1221 and:0.1934 and:0.1357atoes:0.1436,:0.4902 a:0.0786
+:0.1201The:0.0723)
+The most common types of the most common types of the most common types of
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1592 a:0.1045 and:0.1953 yellow:0.1216om:0.1074 are:0.5547 a:0.0786________:0.1709)
+________
+------
+		( a:0.1045 and:0.1953 yellow:0.1216om:0.1074 are:0.5547 a:0.0786________:0.1709__:0.2969)
+__.
+The first thing to do is to do is to do with

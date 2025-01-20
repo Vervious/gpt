@@ -1,0 +1,24 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Greatest:0.0002 licens:0.0002 Coke:0.0002 CLS:0.0002 markedly:0.0002defense:0.0002 Cookie:0.0002 bullshit:0.0002)
+ bullshit
+------
+		( licens:0.0002 Coke:0.0002 CLS:0.0002 markedly:0.0002defense:0.0002 Cookie:0.0002 bullshit:0.0002 write:0.0002)
+ write write Yelpinterpretelectionelectionunt behavingBasic touchscreenaffer economist Hi Hiancock
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0747 a:0.0364,:0.0654 and:0.0913,:0.0815,:0.0713 not:0.0386
+:0.2656)
+
+
+------
+		( a:0.0364,:0.0654 and:0.0913,:0.0815,:0.0713 not:0.0386
+:0.2656-:0.1235)
+-
+-
+-
+-
+-
+-
+-
+-

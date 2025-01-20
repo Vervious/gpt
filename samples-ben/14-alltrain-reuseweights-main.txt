@@ -1,0 +1,21 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0513 are:0.0918 red:0.1436,:0.0977 Pot:0.1030atoes:0.0771 are:0.1592 :0.1670)
+ 
+------
+		( are:0.0918 red:0.1436,:0.0977 Pot:0.1030atoes:0.0771 are:0.1592 :0.1670 :0.2373)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0383.:0.0371.:0.0383.:0.0371.:0.0383.:0.0383,:0.0371.:0.0383)
+.
+------
+		(.:0.0371.:0.0383.:0.0371.:0.0383.:0.0383,:0.0371.:0.0383,:0.0361)
+,.,.,.,.,.,.,.,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( of:0.0552 the:0.0703,:0.0850 and:0.0933 of:0.0430,:0.0874 the:0.0393vern:0.0266)
+vern
+------
+		( the:0.0703,:0.0850 and:0.0933 of:0.0430,:0.0874 the:0.0393vern:0.0266,:0.0684)
+, and the most of the most of the most of the most important to

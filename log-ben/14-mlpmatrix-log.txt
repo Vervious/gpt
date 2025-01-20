@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -26,18 +21,13 @@ MATRIX_NUM_PARAMS_MULTIPLIER=3
 MLPMAT_INNER_SIZE=48
 
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 74, with 210,173,952 parameters
 num non-decayed parameter tensors: 98, with 148,992 parameters
-using fused AdamW: True
 @ 0 train 11.0101 , allloss: 11.0101, norm:8.4430, dt: 1813.02ms, tok/sec: 72294.97, flops:101.46, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
@@ -95,7 +85,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 7.1036 , allloss: 7.1036, norm:0.5985, dt: 576.82ms, tok/sec: 227231.73, flops:318.89, batch-reuse:1
 @ 48 train 7.0906 , allloss: 7.0906, norm:0.5930, dt: 579.32ms, tok/sec: 226250.74, flops:317.51, batch-reuse:1
 @ 49 train 7.0949 , allloss: 7.0949, norm:0.7411, dt: 577.04ms, tok/sec: 227144.32, flops:318.76, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(,:0.0747 a:0.0364,:0.0654 and:0.0913,:0.0815,:0.0713 not:0.0386

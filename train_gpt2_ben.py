@@ -183,24 +183,29 @@ class Gate(DualModule):
         x = torch.sigmoid(x)
         return x
 
-class MLPMatrix(DualModule):
+class ApplyMatrixFromFewParams(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
-        # smoother ReLU, also maybe helps dead neurons empirically?
-        # (should just delete dead neurons)
-        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
-        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd*config.n_embd)
-        self.c_proj.NANOGPT_SCALE_INIT = 1
-        self.n_embd = config.n_embd
+        self.U = nn.Parameter(torch.empty(config.n_embd, MLPMAT_INNER_SIZE))
+        self.V = nn.Parameter(torch.empty(MLPMAT_INNER_SIZE, config.n_embd))
+        
+        torch.nn.init.normal_(self.U, mean=0.0, std=0.02)
+        torch.nn.init.normal_(self.V, mean=0.0, std=0.02)
     
-    def forward(self, x):
-        x = self.c_fc(x)
-        x = self.gelu(x)
-        X = self.c_proj(x).view(x.size(0), x.size(1), self.n_embd,self.n_embd)
-        # y = (mlpM @ attn.unsqueeze(-1)).squeeze(-1)
-        return X
+    def forward(self, m, attn):
+        # m has dimension (B, T, 3*C)
+        B, T, threeC = m.size()
+
+        assert MLPMAT_INNER_SIZE**2 == threeC, f"MLPMAT misconfig {MLPMAT_INNER_SIZE} {threeC}"
+        m = m.view(B, T, MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE)
+
+        attn = attn.unsqueeze(-1) # (B, T, C, 1)
+
+        # self.U @ m --> (C, 48) @ (B, T, 48, 48) = (B, T, C, 48)
+        # Above @ V --> (B, T, C, 48) @ (48, C) = (B, T, C, C)
+        # Above @ attn --> (B, T, C, C) @ (B, T, C, 1) = (B, T, C, 1)
+        return (self.U @ (m @ (self.V @ attn))).squeeze(-1)
 
 class MLP(DualModule):
 
@@ -219,15 +224,36 @@ class MLP(DualModule):
         x = self.c_proj(x)
         return x
 
+class FatMLP(DualModule):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, (1 + MATRIX_NUM_PARAMS_MULTIPLIER)*config.n_embd)
+        self.c_proj.NANOGPT_SCALE_INIT = 1
+        self.n_embd = config.n_embd
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        b, m = x.split([self.n_embd, MATRIX_NUM_PARAMS_MULTIPLIER*self.n_embd], dim=-1)
+        return m, b
+    
 
 class VanillaBlock(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        self.ln_1 = nn.LayerNorm(config.n_embd)
+        self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
-        self.ln_2 = nn.LayerNorm(config.n_embd)
-        self.mlp = MLP(config)
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+        # self.mlp = MLP(config)
+        self.fatmlp = FatMLP(config)
+        self.applymat = ApplyMatrixFromFewParams(config)
 
     def forward(self, x):
         # # VANILLA
@@ -239,9 +265,10 @@ class VanillaBlock(nn.Module):
         # x = x + self.attn(y)*self.mlp(y)
 
         y = self.ln_1(x)
-        attn = self.attn(y,y)
-        mlp = self.mlp(y)
-        x = mlp*attn + x
+        attn = self.attn(y)
+        m, bias = self.fatmlp(y) # (B, T, 3*C), (B,T,C)
+        M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+        x = M + bias + x
         return x
     
 class Block(DualModule):
@@ -315,14 +342,14 @@ class GPT(DualModule):
                     wte = nn.Embedding(config.vocab_size, config.n_embd),
                     wpe = nn.Embedding(config.block_size, config.n_embd),
                     sharedblock = sharedBlock,
-                    ln_f = nn.LayerNorm(config.n_embd),
+                    ln_f = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE),
                 ))
             else:
                 self.transformer = nn.ModuleDict(dict(
                     wte = nn.Embedding(config.vocab_size, config.n_embd),
                     wpe = nn.Embedding(config.block_size, config.n_embd),
                     h = nn.ModuleList([VanillaBlock(config) for _ in range(config.n_layer)]),
-                    ln_f = nn.LayerNorm(config.n_embd),
+                    ln_f = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE),
                 ))
         else:
 
@@ -368,37 +395,53 @@ class GPT(DualModule):
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
         x = tok_emb + pos_emb
-        if REUSE_WEIGHTS:
-            for i in range(self.config.n_layer):
-                x = self.transformer.sharedblock(x)
-        else:
-            for block in self.transformer.h:
+
+        loss = torch.tensor(0.0, device=idx.device)
+        trueloss = None
+
+        for i in range(self.config.n_layer):
+            if REUSE_WEIGHTS:
+                block = self.transformer.sharedblock
+            else:
+                block = self.transformer.h[i]
+            if targets is not None and NEW_ALL_LAYER_LOSS:
+                # x = block(x.detach())
+                x = block(x)
+                y = self.transformer.ln_f(x)
+                logits = self.lm_head(y)
+
+                layerloss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
+                trueloss = layerloss
+
+                loss = loss + layerloss
+            else:
                 x = block(x)
         x = self.transformer.ln_f(x)
 
-        if targets is not None:
+        if targets is not None and trueloss is None:
             # if we are given some desired targets also calculate the loss
             logits = self.lm_head(x)
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
-        else:
+            trueloss = loss
+        elif targets is None:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
             logits = self.lm_head(x)
             loss = None
-
-        return logits, loss
+        
+        return logits, loss, trueloss
 
     def forward(self, idx, targets=None, all_logits=False, print_weights=False, dump_val=False):
         if self.VANILLA:
             zero = torch.tensor(0.0, device=idx.device)
             earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
-            vanillalogits, vanillaloss = self.vanillaforward(idx, targets)
+            vanillalogits, vanillaloss, trueloss = self.vanillaforward(idx, targets)
 
             if all_logits:
-                return [vanillalogits], vanillaloss, vanillaloss, zero, zero, 0.0,earlyStopLayerDict
+                return [vanillalogits], vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
             else:
-                return vanillalogits, vanillaloss, vanillaloss, zero, zero, 0.0,earlyStopLayerDict
+                return vanillalogits, vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
 
         # idx is token indices
         # idx is of shape (B, T)
@@ -1007,27 +1050,37 @@ else:
 # HYPERPARAMETERS
 # ===================
 
-ALL_LAYER_LOSS = False
+NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
-DELETE_SELF_CONTRIBUTION = True
+DELETE_SELF_CONTRIBUTION = False
+MATRIX_NUM_PARAMS_MULTIPLIER = 3 # see next line
+MLPMAT_INNER_SIZE = 48 # note 48^2 = 2304 = 3*768 = 3*n_embd
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-zerodiagonal-addback-2"
+test_name="14-mlpmatrix"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
 attn = self.attn(y)
-mlp = self.mlp(y)
-x = mlp*attn + x
+mlp, bias = self.fatmlp(y)
+M = self.matrixfromparams(mlp)
+x = M @ attn + bias + x
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
 MLP_SCALE={MLP_SCALE}
-DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}"""
+DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
+NEW_ALL_LAYER_LOSS={NEW_ALL_LAYER_LOSS}
+MATRIX_NUM_PARAMS_MULTIPLIER={MATRIX_NUM_PARAMS_MULTIPLIER}
+MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
+"""
+
+
+ALL_LAYER_LOSS = False
 
 # Create log and persistence directory
 log_dir = "log-ben"
