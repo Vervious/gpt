@@ -195,9 +195,9 @@ class ApplyMatrixFromFewParams(nn.Module):
     
     def forward(self, m, attn):
         # m has dimension (B, T, 3*C)
-        B, T, threeC = m.size()
+        B, T, matnumparams = m.size()
 
-        assert MLPMAT_INNER_SIZE**2 == threeC, f"MLPMAT misconfig {MLPMAT_INNER_SIZE} {threeC}"
+        assert MLPMAT_INNER_SIZE**2 == matnumparams, f"MLPMAT misconfig {MLPMAT_INNER_SIZE} {matnumparams}"
         m = m.view(B, T, MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE)
 
         attn = attn.unsqueeze(-1) # (B, T, C, 1)
@@ -232,7 +232,7 @@ class FatMLP(DualModule):
         # smoother ReLU, also maybe helps dead neurons empirically?
         # (should just delete dead neurons)
         self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
-        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, (1 + MATRIX_NUM_PARAMS_MULTIPLIER)*config.n_embd)
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd + MATRIX_NUM_PARAMS)
         self.c_proj.NANOGPT_SCALE_INIT = 1
         self.n_embd = config.n_embd
     
@@ -240,7 +240,7 @@ class FatMLP(DualModule):
         x = self.c_fc(x)
         x = self.gelu(x)
         x = self.c_proj(x)
-        b, m = x.split([self.n_embd, MATRIX_NUM_PARAMS_MULTIPLIER*self.n_embd], dim=-1)
+        b, m = x.split([self.n_embd, MATRIX_NUM_PARAMS], dim=-1)
         return m, b
     
 
@@ -251,7 +251,7 @@ class VanillaBlock(nn.Module):
         self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
         self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
-        # self.mlp = MLP(config)
+        self.mlp = MLP(config)
         self.fatmlp = FatMLP(config)
         self.applymat = ApplyMatrixFromFewParams(config)
 
@@ -264,11 +264,17 @@ class VanillaBlock(nn.Module):
         # y = self.ln_1(x)
         # x = x + self.attn(y)*self.mlp(y)
 
+        # y = self.ln_1(x)
+        # attn = self.attn(y)
+        # m, bias = self.fatmlp(y) # (B, T, 3*C), (B,T,C)
+        # M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+        # x = M + bias + x
+
         y = self.ln_1(x)
-        attn = self.attn(y)
-        m, bias = self.fatmlp(y) # (B, T, 3*C), (B,T,C)
-        M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
-        x = M + bias + x
+        attn = self.attn(y) # (B,T,C)
+        app = torch.linalg.vecdot(attn, y,dim=-1) # (B, T)
+        mlp = self.mlp(y)
+        x = mlp * attn + app * x
         return x
     
 class Block(DualModule):
@@ -399,6 +405,8 @@ class GPT(DualModule):
         loss = torch.tensor(0.0, device=idx.device)
         trueloss = None
 
+        logits = []
+
         for i in range(self.config.n_layer):
             if REUSE_WEIGHTS:
                 block = self.transformer.sharedblock
@@ -408,10 +416,12 @@ class GPT(DualModule):
                 # x = block(x.detach())
                 x = block(x)
                 y = self.transformer.ln_f(x)
-                logits = self.lm_head(y)
+                _logits = self.lm_head(y)
 
-                layerloss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
+                layerloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
                 trueloss = layerloss
+
+                logits.append(_logits)
 
                 loss = loss + layerloss
             else:
@@ -420,13 +430,15 @@ class GPT(DualModule):
 
         if targets is not None and trueloss is None:
             # if we are given some desired targets also calculate the loss
-            logits = self.lm_head(x)
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
+            _logits = self.lm_head(x)
+            logits.append(_logits)
+            loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
             trueloss = loss
         elif targets is None:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
-            logits = self.lm_head(x)
+            _logits = self.lm_head(x)
+            logits.append(_logits)
             loss = None
         
         return logits, loss, trueloss
@@ -439,9 +451,9 @@ class GPT(DualModule):
             vanillalogits, vanillaloss, trueloss = self.vanillaforward(idx, targets)
 
             if all_logits:
-                return [vanillalogits], vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
-            else:
                 return vanillalogits, vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
+            else:
+                return vanillalogits[-1], vanillaloss, trueloss, zero, zero, 0.0,earlyStopLayerDict
 
         # idx is token indices
         # idx is of shape (B, T)
@@ -1052,30 +1064,30 @@ else:
 
 NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
-VALUE_MATRIX = True
+VALUE_MATRIX = False
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
 DELETE_SELF_CONTRIBUTION = False
-MATRIX_NUM_PARAMS_MULTIPLIER = 3 # see next line
-MLPMAT_INNER_SIZE = 48 # note 48^2 = 2304 = 3*768 = 3*n_embd
+MLPMAT_INNER_SIZE = 128 # note 48^2 = 2304 = 3*768 = 3*n_embd
+MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-mlpmatrix"
+test_name="14-axm-appselector"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
-attn = self.attn(y)
-mlp, bias = self.fatmlp(y)
-M = self.matrixfromparams(mlp)
-x = M @ attn + bias + x
+attn = self.attn(y) # (B,T,C)
+app = torch.linalg.vecdot(attn, y,dim=-1) # (B, T)
+mlp = self.mlp(y)
+x = mlp * attn + app * x
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
 MLP_SCALE={MLP_SCALE}
 DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
 NEW_ALL_LAYER_LOSS={NEW_ALL_LAYER_LOSS}
-MATRIX_NUM_PARAMS_MULTIPLIER={MATRIX_NUM_PARAMS_MULTIPLIER}
+MATRIX_NUM_PARAMS={MATRIX_NUM_PARAMS}
 MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
 """
 
@@ -1134,7 +1146,7 @@ ENABLE_LAYER_LOSS = False
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
-checkpoint_frequency = 20000
+checkpoint_frequency = 5000
 sample_frequency = 500
 inner_dump_frequency = 500
 

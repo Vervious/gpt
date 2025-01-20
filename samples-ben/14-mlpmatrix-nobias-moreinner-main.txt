@@ -1,0 +1,27 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.3535 are:0.2734 red:0.6719,:0.5977 Pot:0.2158atoes:0.4746 are:0.2061 :0.3828)
+ 
+------
+		( are:0.2734 red:0.6719,:0.5977 Pot:0.2158atoes:0.4746 are:0.2061 :0.3828 :0.3125)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1025 the:0.0432.:0.0811 and:0.0840,:0.1021,:0.1021 the:0.0515.:0.0518)
+.
+------
+		( the:0.0432.:0.0811 and:0.0840,:0.1021,:0.1021 the:0.0515.:0.0518
+:0.3320)
+
+The the the the the the the.
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1475 a:0.1006,:0.2051 and:0.1045tery:0.2930,:0.4453 a:0.1069ery:0.1035)
+ery
+------
+		( a:0.1006,:0.2051 and:0.1045tery:0.2930,:0.4453 a:0.1069ery:0.1035,:0.3301)
+, and vegetables.
+- It is a great way to keep your teeth

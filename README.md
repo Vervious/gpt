@@ -1500,7 +1500,7 @@ x = x + self.mlp(self.ln_2(x))
 ![loss plot](img/14-alltrain-deep.png)
 
 
-Let's talk about mlp matrices. Here, we map y to a (CxC)-matrix M (using the appropriate decomposition), and then directly apply M to x.
+Let's talk about mlp matrices. Here, we map y to a (CxC)-matrix M (using the appropriate decomposition), and then directly apply M to x. Here, we use an inner matrix of size 48x48.
 ```
 y = self.ln_1(x)
 attn = self.attn(y)
@@ -1513,3 +1513,56 @@ VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 ```
+![loss plot](img/14-mlpmatrix.png)
+
+
+Let's get rid of the bias and increase the size of the inner matrix to `MLPMAT_INNER_SIZE = 128`. This isn't very good at all! The bias seems to be quite important. 
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp, bias = self.fatmlp(y)
+M = self.matrixfromparams(mlp)
+x = M @ attn + x
+========
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-mlpmatrix-nobias-moreinner.png)
+
+Let's add the bias back but keep `MLPMAT_INNER_SIZE = 128`. This does well. Is this because of more parameters, or due to the more expressive MLP? Why is bias so important? Maybe it allows for replacing the applicator.
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+mlp, bias = self.fatmlp(y)
+M = self.matrixfromparams(mlp)
+x = M @ attn + bias + x
+========
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+![loss plot](img/14-mlpmatrix-moreinner.png)
+
+One question is what happens if we keep the same size for fatmlp (i.e. are the parameters more useful for somewhere else)
+
+One question (TODO) is how to encode multiple application? In other words, a copy operation.
+
+Multiple applications (x + y)? Apply to same attendees? Hmm. Should really be one applicator per column. And in my opinion, a column should comprise either an applicator or an applicatee; a token shoud not able to be BOTH (unless in some parallel superposition?) (Perhaps dot product attn(x) with x to see if it is a no-op, first starting in the no-value regime).
+
+Let's try to get rid of the residual... we revert to `mlp*attn` just to make this experiment fast.
+```
+y = self.ln_1(x)
+attn = self.attn(y) # (B,T,C)
+app = torch.linalg.vecdot(attn, y,dim=-1) # (B, T)
+mlp = self.mlp(y)
+x = mlp * attn + app * x
+========
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=False
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+```
+

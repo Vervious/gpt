@@ -22,3 +22,49 @@
 -
 -
 -
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0830 also:0.0654 and:0.2305 and:0.1289ets:0.1104,:0.6875 also:0.0977ills:0.0840)
+ills
+------
+		( also:0.0654 and:0.2305 and:0.1289ets:0.1104,:0.6875 also:0.0977ills:0.0840,:0.4238)
+, and other plants.
+- The seeds are also known as the most
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1406 a:0.0874 and:0.3535 yellow:0.1240atoes:0.1982,:0.3340 a:0.0771________:0.1494)
+________
+------
+		( a:0.0874 and:0.3535 yellow:0.1240atoes:0.1982,:0.3340 a:0.0771________:0.1494__:0.1641)
+__.
+The first thing you can do is to do is to use
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0781 a:0.0732 and:0.3301 yellow:0.1172atoes:0.6016 are:0.3438 a:0.0664iced:0.2178)
+iced
+------
+		( a:0.0732 and:0.3301 yellow:0.1172atoes:0.6016 are:0.3438 a:0.0664iced:0.2178 with:0.0820)
+ with a red, yellow, and yellow. The leaves are yellow, and
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1060 a:0.1104,:0.2451 and:0.0840atoes:0.5430 are:0.6484 yellow:0.0442iced:0.2793)
+iced
+------
+		( a:0.1104,:0.2451 and:0.0840atoes:0.5430 are:0.6484 yellow:0.0442iced:0.2793,:0.1572)
+, and potatoes are cooked.
+- Sweet potatoes are cooked, and potatoes
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2715 a:0.1157,:0.3125 pink:0.0713atoes:0.1055 are:0.4785 a:0.0420ery:0.4746)
+ery
+------
+		( a:0.1157,:0.3125 pink:0.0713atoes:0.1055 are:0.4785 a:0.0420ery:0.4746the:0.1592)
+theia, and the fruit is the fruit of the fruit.
+The
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1235 a:0.1777,:0.3945 yellow:0.1621atoes:0.3047 are:0.5781 a:0.0630iced:0.1729)
+iced
+------
+		( a:0.1777,:0.3945 yellow:0.1621atoes:0.3047 are:0.5781 a:0.0630iced:0.1729,:0.2295)
+, Potatoes are iced, Potatoes are iced, Potatoes
