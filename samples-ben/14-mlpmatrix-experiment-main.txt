@@ -1,0 +1,35 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( arrange:0.0002package:0.0001bid:0.0002 tactical:0.0001bid:0.0001 FINAL:0.0002NOTE:0.0002 the:0.0002)
+ the
+------
+		(package:0.0001bid:0.0002 tactical:0.0001bid:0.0001 FINAL:0.0002NOTE:0.0002 the:0.0002 Khalid:0.0002)
+ Khalidforce cattle screws */stract Pir the Judy surprises Actor Bullets the amazingly such
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0540 not:0.0615,:0.0918 and:0.0864,:0.0747,:0.0859 not:0.0510
+:0.2158)
+
+
+------
+		( not:0.0615,:0.0918 and:0.0864,:0.0747,:0.0859 not:0.0510
+:0.2158-:0.1885)
+-
+-
+-
+-
+-
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1162 a:0.1240 and:0.1494 and:0.0688atoes:0.1436,:0.6250 a:0.1279
+:0.0347)
+
+
+------
+		( a:0.1240 and:0.1494 and:0.0688atoes:0.1436,:0.6250 a:0.1279
+:0.0347-:0.1299)
+- It is a great way to keep your plants healthy.
+- You

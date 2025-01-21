@@ -84,11 +84,13 @@ class CausalSelfAttention(DualModule):
         #     torch.ones(config.block_size, config.block_size))
         #     .view(1,1,config.block_size,config.block_size)
         # )
+        # no zeros
         # self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
+        # print(torch.diagonal(self.mask, dim1=-2, dim2=-1).sum().item())
 
         if DELETE_SELF_CONTRIBUTION:
             self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
-            # ^ 0s on diagonal, 1 everywhere else
+        #     # ^ 0s on diagonal, 1 everywhere else
 
 
     def forward(self, x, z=None):
@@ -104,9 +106,10 @@ class CausalSelfAttention(DualModule):
             qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
             q,k,v = qkv.split(self.n_embd, dim=2)
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-            if DELETE_SELF_CONTRIBUTION:
+            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION:
                 v2 = v
                 v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
+                # TODO a faster way to get the diagonal?
       
         else:
             qk = self.c_attn(x)
@@ -144,10 +147,19 @@ class CausalSelfAttention(DualModule):
         # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
         # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
 
+        scores = None
+
         if VALUE_MATRIX or z is None:
             
             if DELETE_SELF_CONTRIBUTION:
                 y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
+
+            if MEASURE_SELF_CONTRIBUTION:
+                # y is currently attention matrix
+                scores = torch.diagonal(y, dim1=-2, dim2=-1) # (B, nh, T)
+                scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
+            
+            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION:
                 y = y @ v2
 
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
@@ -157,12 +169,15 @@ class CausalSelfAttention(DualModule):
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
             if DELETE_SELF_CONTRIBUTION:
-                # without value matrix: (B, nh, T, T)
                 y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
+            if MEASURE_SELF_CONTRIBUTION:
+                # without value matrix: (B, nh, T, T)
+                scores = torch.diagonal(y, dim1=-2, dim2=-1) # (B, nh, T)
+                scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) # sum up the head dimension
 
-        return y
+        return y, scores
 
 
 class Gate(DualModule):
@@ -254,6 +269,7 @@ class VanillaBlock(nn.Module):
         self.mlp = MLP(config)
         self.fatmlp = FatMLP(config)
         self.applymat = ApplyMatrixFromFewParams(config)
+        self.n_head = config.n_head
 
     def forward(self, x):
         # # VANILLA
@@ -271,19 +287,28 @@ class VanillaBlock(nn.Module):
         # x = M + bias + x
         metadata = {}
 
-        y = self.ln_1(x)
-        attn = self.attn(y,y)
-        siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
-        app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz # may be greater than 1
-        app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
-        m, bias = self.fatmlp(y)
-        M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
-        x = (1-app) * M + app * (x + bias)
+        # y = self.ln_1(x)
+        # attn = self.attn(y,y)
+        # siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+        # app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz # may be greater than 1
+        # app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
+        # m, bias = self.fatmlp(y)
+        # M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+        # x = M + bias + x
 
-        a = app.detach()
-        metadata["zero"] = (a < 0.25).sum().item()
-        metadata["neg"] = (a < -0.25).sum().item()
-        metadata["pos"] = (a > 0.25).sum().item()
+        # scores is (B, T, 1)
+
+        y = self.ln_1(x)
+        attn, _ = self.attn(y, y)
+        x = x + attn
+        x = x + self.mlp(self.ln_2(x))
+
+        # print(scores[-1,-1,-1])
+
+        # a = scores.detach()
+        # metadata["zero"] = (a < 8).sum().item()
+        # metadata["neg"] = (a < 1).sum().item()
+        # metadata["pos"] = (a > 8).sum().item()
 
         return x, metadata
     
@@ -1078,34 +1103,32 @@ else:
 
 NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
-VALUE_MATRIX = False
+VALUE_MATRIX = True
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
-DELETE_SELF_CONTRIBUTION = False
+MEASURE_SELF_CONTRIBUTION = False
+DELETE_SELF_CONTRIBUTION = True
 MLPMAT_INNER_SIZE = 128 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-axm-appselector-5"
+test_name="14-nodiagonal-baseline"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
-attn = self.attn(y,y)
-siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
-app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz
-app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
-m, bias = self.fatmlp(y)
-M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
-x = (1-app) * M + app * (x + bias)
+attn = self.attn(y)
+x = x + attn
+x = x + self.mlp(self.ln_2(x))
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
 MLP_SCALE={MLP_SCALE}
-DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
+MEASURE_SELF_CONTRIBUTION={MEASURE_SELF_CONTRIBUTION}
 NEW_ALL_LAYER_LOSS={NEW_ALL_LAYER_LOSS}
 MATRIX_NUM_PARAMS={MATRIX_NUM_PARAMS}
 MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
+DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
 """
 
 
@@ -1414,9 +1437,10 @@ for step in range(max_steps):
         loss_accum += trueloss.detach() / grad_accum_steps
         loss_accum_all += loss.detach()
 
-        zeroApp_accum += metadata["zero"]
-        negApp_accum += metadata["neg"]
-        posApp_accum += metadata["pos"]
+        if "zero" in metadata:
+            zeroApp_accum += metadata["zero"]
+            negApp_accum += metadata["neg"]
+            posApp_accum += metadata["pos"]
 
         conf_loss_accum += confLoss.detach() / grad_accum_steps
         target_loss_accum += targetLoss.detach() / grad_accum_steps

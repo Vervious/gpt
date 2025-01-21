@@ -1637,7 +1637,7 @@ M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
 x = (1-app) * (M + bias) + app * x
 ======
 DELETE_SELF_CONTRIBUTION=False
-VALUEMATRIX=True
+VALUEMATRIX=False
 REUSE_WEIGHTS=False
 MLP_SCALE=4
 MLPMAT_INNER_SIZE=128
@@ -1646,3 +1646,77 @@ MLPMAT_INNER_SIZE=128
 
 
 TODO: pull app out directly from KQ matrix, I think i  have a bug somewhere.
+
+
+Let's exeriment with mlpmatrix-moreinner some more. Here, we want to know why `axm` works but here we need the bias. What if we `bias x attn`.
+
+```
+y = self.ln_1(x)
+attn = self.attn(y,y)
+siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz # may be greater than 1
+app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+x = M + bias*attn + x
+======
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-mlpmatrix-bxa.jpg)
+
+
+
+Let's exeriment with mlpmatrix-moreinner some more...
+```
+y = self.ln_1(x)
+attn = self.attn(y,y)
+siz = torch.linalg.vecdot(y, y,dim=-1).unsqueeze(-1) # (B, T, 1)
+app = torch.linalg.vecdot(attn, y,dim=-1).unsqueeze(-1) / siz # may be greater than 1
+app = (torch.sigmoid(torch.abs(app)) - 0.5) * 2  # [0, 1]
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn) #(B, T, 3*C), (B, T, C) -> (B, T, C)
+x = M + bias + x
+======
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-mlpmatrix-experiment.jpg)
+
+
+I am curious what happens if we omit attn entirely from the residual stream in the vanilla architecture. It eventually does converge!  It is just slightly harder to optimize. (So clearly MLP needs to map the output of attention only.) (Note that in the log, `perc(-)` starts off near 1 and then gets smaller and smaller, closer to `0.6`; this corresponds to the number of `(B,T)` s.t. the sum of self attention scores (over the 12 heads) is less than 1. This number starts off huge, but eventually it seems that it is getting smaller; so, the overall sum is getting larger, so it is slowly learning to attend more and more to the self? Confusing.)
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+x = x + self.mlp(self.ln_2(x + attn))
+======
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/15-baseline.jpg)
+
+
+Again, let me omit the diagonal from attn, but here for vanilla transformer. It works well (but unclear if the gains are substantial, or increasing.)
+```
+y = self.ln_1(x)
+attn = self.attn(y)
+x = x + attn
+x = x + self.mlp(self.ln_2(x))
+======
+DELETE_SELF_CONTRIBUTION=False
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-nodiagonal-baseline.jpg)
+

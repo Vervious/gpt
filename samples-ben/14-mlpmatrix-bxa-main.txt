@@ -1,0 +1,47 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.1768 are:0.2852 red:0.4590,:0.2373 Pot:0.4277atoes:0.2852 are:0.3398 :0.4590)
+ 
+------
+		( are:0.2852 red:0.4590,:0.2373 Pot:0.4277atoes:0.2852 are:0.3398 :0.4590 :0.3418)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0742 the:0.0469,:0.0649 and:0.1436,:0.0693,:0.0659 the:0.0425.:0.0669)
+.
+------
+		( the:0.0469,:0.0649 and:0.1436,:0.0693,:0.0659 the:0.0425.:0.0669
+:0.2676)
+
+-
+-
+-
+-
+-
+-
+-
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0742 a:0.1377,:0.2148 but:0.0864om:0.0562,:0.4219 a:0.0898vern:0.1025)
+vern
+------
+		( a:0.1377,:0.2148 but:0.0864om:0.0562,:0.4219 a:0.0898vern:0.1025acular:0.1904)
+acular, and the most common types of pups.
+The most common
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1143 a:0.1191 and:0.1914 yellow:0.0747tery:0.1484,:0.5312 a:0.0894urch:0.1309)
+urch
+------
+		( a:0.1191 and:0.1914 yellow:0.0747tery:0.1484,:0.5312 a:0.0894urch:0.1309ins:0.4355)
+ins, and they are a great source of antioxidants.
+The most common
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.0767 a:0.1406,:0.1475 and:0.0767atoes:0.4434 are:0.6016 a:0.0996iced:0.4609)
+iced
+------
+		( a:0.1406,:0.1475 and:0.0767atoes:0.4434 are:0.6016 a:0.0996iced:0.4609,:0.1465)
+, and they are also known as the “white”.
+

@@ -1,0 +1,73 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( injury:0.0002database:0.0002 electoral:0.0002,:0.0003Aaron:0.0002 Maur:0.0002 Vas:0.0002 Base:0.0002)
+ Base
+------
+		(database:0.0002 electoral:0.0002,:0.0003Aaron:0.0002 Maur:0.0002 Vas:0.0002 Base:0.0002 resur:0.0002)
+ resureval Samsung ore solutionsRepublicans presses Silver Silver,, Silver Silver Silver Silver
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1064 the:0.0688.:0.1279 and:0.1245.:0.0928.:0.0952 not:0.0212
+:0.1074)
+
+
+------
+		( the:0.0688.:0.1279 and:0.1245.:0.0928.:0.0952 not:0.0212
+:0.1074The:0.0840)
+The the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1021 a:0.0820 and:0.1426 and:0.1221assium:0.1108,:0.4883 a:0.1143
+:0.5742)
+
+
+------
+		( a:0.0820 and:0.1426 and:0.1221assium:0.1108,:0.4883 a:0.1143
+:0.5742The:0.0928)
+The most common types of white, and white, and white, white,
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1104 a:0.1147,:0.1768 yellow:0.1465om:0.0889,:0.3262 a:0.1221urch:0.0615)
+urch
+------
+		( a:0.1147,:0.1768 yellow:0.1465om:0.0889,:0.3262 a:0.1221urch:0.0615ins:0.3574)
+ins, and they are also known as the “fib”
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1777 a:0.0732,:0.2451 but:0.1152atoes:0.4141,:0.4863 a:0.0903ery:0.1475)
+ery
+------
+		( a:0.0732,:0.2451 but:0.1152atoes:0.4141,:0.4863 a:0.0903ery:0.1475the:0.2002)
+theas, and are used as a food for the body.
+The
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1094 a:0.1118,:0.1885 but:0.1050atoes:0.1455,:0.3359 red:0.1069iced:0.3203)
+iced
+------
+		( a:0.1118,:0.1885 but:0.1050atoes:0.1455,:0.3359 red:0.1069iced:0.3203,:0.2734)
+, and Potatoes are iced, and Potatoes are iced,
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2188 a:0.1729,:0.3281 and:0.0918atoes:0.0977,:0.4844 a:0.0776ery:0.3574)
+ery
+------
+		( a:0.1729,:0.3281 and:0.0918atoes:0.0977,:0.4844 a:0.0776ery:0.3574the:0.3418)
+thema, and Potatoes are erythema.
+- 1
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1260 a:0.1885,:0.3027 yellow:0.0913atoes:0.2637,:0.6055 a:0.0645ery:0.5781)
+ery
+------
+		( a:0.1885,:0.3027 yellow:0.0913atoes:0.2637,:0.6055 a:0.0645ery:0.5781ll:0.1787)
+llium, and Potatoes are eryllium.
+- The
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2266 a:0.1494,:0.4375 and:0.1250ent:0.3926 are:0.4219 red:0.0923ich:0.2275)
+ich
+------
+		( a:0.1494,:0.4375 and:0.1250ent:0.3926 are:0.4219 red:0.0923ich:0.2275thy:0.3125)
+thyos, and the Moon is the Moon.
+- The Moon is
