@@ -1755,7 +1755,7 @@ MLPMAT_INNER_SIZE=128
 ![loss plot](img/14-nodiagonal-noattn-nomlpres.jpg)
 
 
-
+(TODO I did not run this experiment)
 And now, instead of feeding attn as input into mlp, we apply our mlp thing instead. This experiment we've run before, except now delete self contribution is true.
 ```
 y = self.ln_1(x)
@@ -1774,21 +1774,43 @@ MLPMAT_INNER_SIZE=128
 ![loss plot](img/14-nodiagonal-noattn-nomlpres.jpg)
 
 
+I am curious if the last layer of the MLP needs a bias in vanilla transformers:
+```
+========
+y = self.ln_1(x)
+attn, score = self.attn(y, y)
+x = x + attn
+x = x + self.mlp(self.ln_2(x))
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=16384
+MLPMAT_INNER_SIZE=128
+DELETE_SELF_CONTRIBUTION=False
+```
+![loss plot](img/14-nooutlinearbiasmlp.jpg)
+
 ## Principled Experiments
 
 This is how I would currently design our network. The assumption is that, if a token is not an applicator, i.e. it is not applying itself to anything, it should just be shoveled up another level / compute a no-op, because there is no application to be done. The only issue may be that of the layer norm... maybe resx should add `x` instead and not `y`. Generally we should ensure `bias` is initialized to zero, and `M` starts my computing the identity. Should M compute a basic matrix rotation, or should it compute a full blown MLP? I think it should maybe compute a full blown MLP --- currently, it doesn't, which is maybe why the residual is useful, as now we can apply the nonlinearity in the next layer. (But how do we initialize an MLP to idenitty? Is this why we need the residual? Qn: is the attention residual important? I posit that the answer is No, based on prior experiments where I fed attn directly into MLP as input and never aded it to the residual stream. E.g. `img/14-nodiagonal-noattn.jpg`).
 ```
 y = self.ln_1(x)
-attn, resx, score = self.attn(y, y)
-m, bias = self.fatmlp(y)
-M = self.applymat(m, attn)
-x = resx + M + bias
-======
-EXTRACT_SELF_CONTRIBUTION=True
-MEASURE_SELF_CONTRIBUTION=True
+attn, resx, scores = self.attn(y, y)
+hiddenBias, fParams, bParams = self.compiler(y)
+machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+x = resx + machineOutput
+======== 
 VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
-MLPMAT_INNER_SIZE=128
+MEASURE_SELF_CONTRIBUTION=True
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=True
 ```
 ![loss plot](img/16-principle-1.jpg)

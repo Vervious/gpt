@@ -5,3 +5,32 @@
 ------
 		( are:0.3125 red:0.2383,:0.2490 Pot:0.3672atoes:0.4277 are:0.3691 :0.3828 :0.4121)
                
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0728.:0.0688.:0.0708.:0.0723.:0.0728.:0.0747.:0.0471.:0.0588)
+.
+------
+		(.:0.0688.:0.0708.:0.0723.:0.0728.:0.0747.:0.0471.:0.0588.:0.0359)
+........ of of of of of of of
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1719 a:0.0304-:0.1299 and:0.1221ic:0.0139.:0.2119 a:0.0396,:0.0189)
+,
+------
+		( a:0.0304-:0.1299 and:0.1221ic:0.0139.:0.2119 a:0.0396,:0.0189 and:0.1533)
+ and the most of the most of the most of the most of the most
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1216 a:0.1001 and:0.0752 and:0.0781iv:0.0248,:0.3145 a:0.1104phthal:0.0322)
+phthal
+------
+		( a:0.1001 and:0.0752 and:0.0781iv:0.0248,:0.3145 a:0.1104phthal:0.0322m:0.0796)
+m, and other than a variety of the same time.
+The first
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( of:0.1211 a:0.0515 and:0.2070 and:0.1079om:0.0255,:0.5938 a:0.0493ery:0.0786)
+ery
+------
+		( a:0.0515 and:0.2070 and:0.1079om:0.0255,:0.5938 a:0.0493ery:0.0786,:0.1602)
+, and white, and white, and white, and white, and white

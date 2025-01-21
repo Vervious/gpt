@@ -88,7 +88,7 @@ class CausalSelfAttention(DualModule):
         # self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
         # print(torch.diagonal(self.mask, dim1=-2, dim2=-1).sum().item())
 
-        if DELETE_SELF_CONTRIBUTION:
+        if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
             self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
         #     # ^ 0s on diagonal, 1 everywhere else
 
@@ -106,7 +106,7 @@ class CausalSelfAttention(DualModule):
             qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
             q,k,v = qkv.split(self.n_embd, dim=2)
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION:
+            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 v2 = v
                 v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
                 # TODO a faster way to get the diagonal?
@@ -155,12 +155,19 @@ class CausalSelfAttention(DualModule):
                 # y is currently attention matrix
                 scores = torch.diagonal(y, dim1=-2, dim2=-1).detach() # (B, nh, T)
                 scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
+            
+            if EXTRACT_SELF_CONTRIBUTION:
+                # v2 is (B, nh, T, hs)
+                # diagonal ith location is how much ith column attends with itself
+                resx = torch.diagonal(y, dim1=-2, dim2=-1).unsqueeze(-1) * v2 # (B, nh, T, hs)
+                resx = resx.transpose(1, 2).contiguous().view(B, T, C)
+                resx = self.c_proj(resx) # (B, T, C) -> (B, T, C)
 
-            if DELETE_SELF_CONTRIBUTION:
+            if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
 
             
-            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION:
+            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 y = y @ v2
 
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
@@ -173,12 +180,18 @@ class CausalSelfAttention(DualModule):
                 # without value matrix: (B, nh, T, T)
                 scores = torch.diagonal(y, dim1=-2, dim2=-1).detach() # (B, nh, T)
                 scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
-            if DELETE_SELF_CONTRIBUTION:
+            if EXTRACT_SELF_CONTRIBUTION:
+                resx = torch.diagonal(y, dim1=-2, dim2=-1).unsqueeze(-1) * z.unsqueeze(1) # (B, nh, T, 1) * (B, 1, T, C)
+                resx = resx.sum(dim=1) / self.n_head
+            if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) / self.n_head # sum up the head dimension
 
-        return y, scores
+        if EXTRACT_SELF_CONTRIBUTION:
+            return y, resx, scores
+        else:
+            return y, scores
 
 
 class Gate(DualModule):
@@ -198,6 +211,104 @@ class Gate(DualModule):
         x = x.sum(dim=-1, keepdim=True) # sum over the last dimension
         x = torch.sigmoid(x)
         return x
+    
+class MLPFewParams(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+
+        self.inputWidth = config.n_embd
+        self.hiddenWidth = MLP_HIDDENWIDTH_INTERPRETER
+        self.gelu = nn.GELU(approximate='tanh') # consider using somehting else
+
+        # TODO: should inner matrix really be square?
+        self.fU = nn.Parameter(torch.empty(MLPMAT_INNER_SIZE, self.inputWidth))
+        self.fV = nn.Parameter(torch.empty(self.hiddenWidth, MLPMAT_INNER_SIZE))
+
+        self.bU = nn.Parameter(torch.empty(MLPMAT_INNER_SIZE, self.hiddenWidth))
+        self.bV = nn.Parameter(torch.empty(self.inputWidth, MLPMAT_INNER_SIZE))
+
+
+    def forward(self, x, front, back, hiddenBias):
+
+        B, T, paramSize = front.size()
+        B2, T2, paramSize2 = back.size()
+        B3, T3, C = x.size()
+        B4, T4, hiddenWidth = hiddenBias.size()
+
+        assert hiddenWidth == self.hiddenWidth, f"pMLPMAT wrong hidden width {hiddenWidth} {self.hiddenWidth}"
+
+        assert B == B2 and T == T2 and paramSize == paramSize2, f"Parametrized MLP misconfig {B} {T} {paramSize} {B2} {T2} {paramSize2}"
+        assert B == B3 and T == T3, f"pMLPMAT wrong x size {B} {T} {B3} {T3}"
+        assert MLPMAT_INNER_SIZE**2 == paramSize, f"pMLPMAT misconfig {MLPMAT_INNER_SIZE} {paramSize}"
+
+        compressedFront = front.view(B, T, MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE)
+        compressedBack = back.view(B, T, MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE)
+
+        x = x.unsqueeze(-1) # (B, T, C, 1)
+        # apply the forward MLP
+        x = (self.fV @ (compressedFront @ (self.fU @ x))) # (B, T, hidden_width, 1)
+        x = x + hiddenBias.unsqueeze(-1)
+        # apply gelu
+        x = self.gelu(x)
+        # apply the backward MLP
+        x = (self.bV @ (compressedBack @ (self.bU @ x))) # (B, T, inputWidth, 1)
+        x = x.squeeze(-1)
+
+        # NOTE: last layer probably doesn't need a bias, see `14-nooutlinearbiasmlp` experiment
+        return x
+
+
+class BenCompiler(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, MLP_HIDDENWIDTH_INTERPRETER + 2*MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE)
+
+        self.c_proj.NANOGPT_SCALE_INIT = 1
+        self.n_embd = config.n_embd
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        hiddenBias, fParams, bParams = x.split([MLP_HIDDENWIDTH_INTERPRETER, MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE], dim=-1)
+        return hiddenBias, fParams, bParams
+
+
+class BenBlock(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+        self.attn = CausalSelfAttention(config)
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+        self.compiler = BenCompiler(config)
+        self.execute = MLPFewParams(config)
+        self.n_head = config.n_head
+
+    def forward(self, x):
+        metadata = {}
+
+        y = self.ln_1(x)
+        attn, resx, scores = self.attn(y, y)
+        hiddenBias, fParams, bParams = self.compiler(y)
+        machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+        x = resx + machineOutput
+
+        # print(scores[-1,-1,-1])
+
+        if scores is not None:
+            a = scores.detach()
+            metadata["zero"] = (a < 5).sum().item()
+            metadata["neg"] = (a < 0.5).sum().item()
+            metadata["pos"] = (a > 5).sum().item()
+
+        return x, metadata    
 
 class ApplyMatrixFromFewParams(nn.Module):
 
@@ -231,7 +342,7 @@ class MLP(DualModule):
         # smoother ReLU, also maybe helps dead neurons empirically?
         # (should just delete dead neurons)
         self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
-        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd)
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd, bias=False)
         self.c_proj.NANOGPT_SCALE_INIT = 1
     
     def forward(self, x):
@@ -258,7 +369,9 @@ class FatMLP(DualModule):
         x = self.c_proj(x)
         b, m = x.split([self.n_embd, MATRIX_NUM_PARAMS], dim=-1)
         return m, b
-    
+
+
+
 
 class VanillaBlock(nn.Module):
 
@@ -268,8 +381,6 @@ class VanillaBlock(nn.Module):
         self.attn = CausalSelfAttention(config)
         self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.mlp = MLP(config)
-        self.fatmlp = FatMLP(config)
-        self.applymat = ApplyMatrixFromFewParams(config)
         self.n_head = config.n_head
 
     def forward(self, x):
@@ -299,16 +410,21 @@ class VanillaBlock(nn.Module):
 
         # scores is (B, T, 1)
 
+        # y = self.ln_1(x)
+        # attn, scores = self.attn(y, y)
+        # x = x + self.mlp(attn)
         y = self.ln_1(x)
         attn, scores = self.attn(y, y)
-        x = x + self.mlp(attn)
+        x = x + attn
+        x = x + self.mlp(self.ln_2(x))
 
         # print(scores[-1,-1,-1])
 
-        a = scores.detach()
-        metadata["zero"] = (a < 5).sum().item()
-        metadata["neg"] = (a < 0.5).sum().item()
-        metadata["pos"] = (a > 5).sum().item()
+        if scores is not None:
+            a = scores.detach()
+            metadata["zero"] = (a < 5).sum().item()
+            metadata["neg"] = (a < 0.5).sum().item()
+            metadata["pos"] = (a > 5).sum().item()
 
         return x, metadata
     
@@ -377,7 +493,7 @@ class GPT(DualModule):
 
         if self.VANILLA:
             if REUSE_WEIGHTS:
-                sharedBlock = VanillaBlock(config)
+                sharedBlock = BenBlock(config)
 
                 self.transformer = nn.ModuleDict(dict(
                     wte = nn.Embedding(config.vocab_size, config.n_embd),
@@ -389,7 +505,7 @@ class GPT(DualModule):
                 self.transformer = nn.ModuleDict(dict(
                     wte = nn.Embedding(config.vocab_size, config.n_embd),
                     wpe = nn.Embedding(config.block_size, config.n_embd),
-                    h = nn.ModuleList([VanillaBlock(config) for _ in range(config.n_layer)]),
+                    h = nn.ModuleList([BenBlock(config) for _ in range(config.n_layer)]),
                     ln_f = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE),
                 ))
         else:
@@ -1101,24 +1217,44 @@ else:
 # HYPERPARAMETERS
 # ===================
 
+# We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
+# Since we only have small GPUs, we'll just simulate large batches using accumulation.
+B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 1024 # sequence length # 16 # 1024
+total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
+max_steps = 300000 + 1 # How many steps do we train for
+# Implement cosine lr decay in the style of GPT-3
+max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
+min_lr = max_lr * 0.1
+warmup_steps = 100
+use_compile = False # May run into bugs
+THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
+ENABLE_LAYER_LOSS = False
+
+config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
+
 NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
+MLP_HIDDENWIDTH_INTERPRETER = config_.n_embd
 REUSE_WEIGHTS = False
 MEASURE_SELF_CONTRIBUTION = True
-DELETE_SELF_CONTRIBUTION = True
-MLPMAT_INNER_SIZE = 128 # note 48^2 = 2304 = 3*768 = 3*n_embd
+DELETE_SELF_CONTRIBUTION = False
+EXTRACT_SELF_CONTRIBUTION = True
+MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-nodiagonal-noattn-nomlpres"
+test_name="16-principle-1"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
-y = self.ln_1(x)
-attn, score = self.attn(y, y)
-x = x + self.mlp(attn)
+ y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+hiddenBias, fParams, bParams = self.compiler(y)
+machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+x = resx + machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
@@ -1128,6 +1264,7 @@ NEW_ALL_LAYER_LOSS={NEW_ALL_LAYER_LOSS}
 MATRIX_NUM_PARAMS={MATRIX_NUM_PARAMS}
 MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
 DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
+EXTRACT_SELF_CONTRIBUTION={EXTRACT_SELF_CONTRIBUTION}
 """
 
 
@@ -1169,19 +1306,6 @@ def cclear():
         # Clear the contents of the file
         pass
 
-# We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
-# Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 1024 # sequence length # 16 # 1024
-total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
-max_steps = 300000 + 1 # How many steps do we train for
-# Implement cosine lr decay in the style of GPT-3
-max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
-min_lr = max_lr * 0.1
-warmup_steps = 100
-use_compile = False # May run into bugs
-THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
-ENABLE_LAYER_LOSS = False
 
 hello_swag_frequency = 600000
 validation_frequency = 2000
@@ -1226,7 +1350,6 @@ torch.set_float32_matmul_precision("high")
 
 # get logits
 # Override vocab size --- to be closer to a nice power of 2, because of how kerenels/GPT work.
-config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 bprint(str(config_.__dict__))
 model = GPT(config_) # model = GPT.from_pretrained('gpt2')
 # model.eval()
