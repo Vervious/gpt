@@ -1712,7 +1712,7 @@ attn = self.attn(y)
 x = x + attn
 x = x + self.mlp(self.ln_2(x))
 ======
-DELETE_SELF_CONTRIBUTION=False
+DELETE_SELF_CONTRIBUTION=True
 VALUEMATRIX=True
 REUSE_WEIGHTS=False
 MLP_SCALE=4
@@ -1720,3 +1720,75 @@ MLPMAT_INNER_SIZE=128
 ```
 ![loss plot](img/14-nodiagonal-baseline.jpg)
 
+
+What if we do both, i.e. omit the diagonal, and also exclude attn from the residual? This converges, and eventually does even slightly  better than the original...
+```
+y = self.ln_1(x)
+attn, _ = self.attn(y, y)
+x = x + self.mlp(self.ln_2(x + attn))
+======
+DELETE_SELF_CONTRIBUTION=True
+MEASURE_SELF_CONTRIBUTION=True
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-nodiagonal-noattn.jpg)
+
+Note that at this point I also silently normalized the `VALUE_MATRIX=True` code to divide the sum of values by the number of heads.
+
+
+And again, what happens if we omit the residual entirely from the mlp. We have tried this before, and it takes longer to converge (but it should converge?) But this also breaks our intuition of needing to run `self.mlp(on the applicator)`. So maybe this one shouldn't converge at all. (After experiment) the results are:
+```
+y = self.ln_1(x)
+attn, scores = self.attn(y, y)
+x = x + self.mlp(attn)
+======
+DELETE_SELF_CONTRIBUTION=True
+MEASURE_SELF_CONTRIBUTION=True
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-nodiagonal-noattn-nomlpres.jpg)
+
+
+
+And now, instead of feeding attn as input into mlp, we apply our mlp thing instead. This experiment we've run before, except now delete self contribution is true.
+```
+y = self.ln_1(x)
+attn, scores = self.attn(y, y)
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn)
+x = x + M + bias
+======
+DELETE_SELF_CONTRIBUTION=True
+MEASURE_SELF_CONTRIBUTION=True
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/14-nodiagonal-noattn-nomlpres.jpg)
+
+
+## Principled Experiments
+
+This is how I would currently design our network. The assumption is that, if a token is not an applicator, i.e. it is not applying itself to anything, it should just be shoveled up another level / compute a no-op, because there is no application to be done. The only issue may be that of the layer norm... maybe resx should add `x` instead and not `y`. Generally we should ensure `bias` is initialized to zero, and `M` starts my computing the identity. Should M compute a basic matrix rotation, or should it compute a full blown MLP? I think it should maybe compute a full blown MLP --- currently, it doesn't, which is maybe why the residual is useful, as now we can apply the nonlinearity in the next layer. (But how do we initialize an MLP to idenitty? Is this why we need the residual? Qn: is the attention residual important? I posit that the answer is No, based on prior experiments where I fed attn directly into MLP as input and never aded it to the residual stream. E.g. `img/14-nodiagonal-noattn.jpg`).
+```
+y = self.ln_1(x)
+attn, resx, score = self.attn(y, y)
+m, bias = self.fatmlp(y)
+M = self.applymat(m, attn)
+x = resx + M + bias
+======
+EXTRACT_SELF_CONTRIBUTION=True
+MEASURE_SELF_CONTRIBUTION=True
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MLPMAT_INNER_SIZE=128
+```
+![loss plot](img/16-principle-1.jpg)

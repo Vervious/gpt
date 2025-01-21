@@ -151,13 +151,14 @@ class CausalSelfAttention(DualModule):
 
         if VALUE_MATRIX or z is None:
             
+            if MEASURE_SELF_CONTRIBUTION:
+                # y is currently attention matrix
+                scores = torch.diagonal(y, dim1=-2, dim2=-1).detach() # (B, nh, T)
+                scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
+
             if DELETE_SELF_CONTRIBUTION:
                 y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
 
-            if MEASURE_SELF_CONTRIBUTION:
-                # y is currently attention matrix
-                scores = torch.diagonal(y, dim1=-2, dim2=-1) # (B, nh, T)
-                scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
             
             if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION:
                 y = y @ v2
@@ -168,14 +169,14 @@ class CausalSelfAttention(DualModule):
             # output projection
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
-            if DELETE_SELF_CONTRIBUTION:
-                y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
             if MEASURE_SELF_CONTRIBUTION:
                 # without value matrix: (B, nh, T, T)
-                scores = torch.diagonal(y, dim1=-2, dim2=-1) # (B, nh, T)
+                scores = torch.diagonal(y, dim1=-2, dim2=-1).detach() # (B, nh, T)
                 scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
+            if DELETE_SELF_CONTRIBUTION:
+                y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
-            y = y.sum(dim=1) # sum up the head dimension
+            y = y.sum(dim=1) / self.n_head # sum up the head dimension
 
         return y, scores
 
@@ -299,16 +300,15 @@ class VanillaBlock(nn.Module):
         # scores is (B, T, 1)
 
         y = self.ln_1(x)
-        attn, _ = self.attn(y, y)
-        x = x + attn
-        x = x + self.mlp(self.ln_2(x))
+        attn, scores = self.attn(y, y)
+        x = x + self.mlp(attn)
 
         # print(scores[-1,-1,-1])
 
-        # a = scores.detach()
-        # metadata["zero"] = (a < 8).sum().item()
-        # metadata["neg"] = (a < 1).sum().item()
-        # metadata["pos"] = (a > 8).sum().item()
+        a = scores.detach()
+        metadata["zero"] = (a < 5).sum().item()
+        metadata["neg"] = (a < 0.5).sum().item()
+        metadata["pos"] = (a > 5).sum().item()
 
         return x, metadata
     
@@ -1106,20 +1106,19 @@ ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
 REUSE_WEIGHTS = False
-MEASURE_SELF_CONTRIBUTION = False
+MEASURE_SELF_CONTRIBUTION = True
 DELETE_SELF_CONTRIBUTION = True
 MLPMAT_INNER_SIZE = 128 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="14-nodiagonal-baseline"
+test_name="14-nodiagonal-noattn-nomlpres"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 y = self.ln_1(x)
-attn = self.attn(y)
-x = x + attn
-x = x + self.mlp(self.ln_2(x))
+attn, score = self.attn(y, y)
+x = x + self.mlp(attn)
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
@@ -1483,7 +1482,7 @@ for step in range(max_steps):
 
         rList = [round(value, 2) for value in earlyStopLayerDict_accum.tolist()]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, perc(-): {negApp_accum:.4f}, perc(0): {zeroApp_accum:.4f}, perc(+): {posApp_accum:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, perc(<0.5): {negApp_accum:.4f}, perc(<5): {zeroApp_accum:.4f}, perc(>5): {posApp_accum:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:
