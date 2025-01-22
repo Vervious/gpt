@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -30,19 +25,13 @@ DELETE_SELF_CONTRIBUTION=False
 EXTRACT_SELF_CONTRIBUTION=False
 
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 973,701,120 parameters
 num non-decayed parameter tensors: 86, with 665,088 parameters
-using fused AdamW: True
-[rank0]:[W122 20:35:50.570690066 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 10.9804 , allloss: 10.9804, dt: 4629.85ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:9.3108, tok/sec: 28310.19, flops:172.63, batch-reuse:1
 tensor([[0.1123, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.1406, 0.1270, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -196,7 +185,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 7.0965 , allloss: 7.0965, dt: 1909.56ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4644, tok/sec: 68639.95, flops:418.54, batch-reuse:1
 @ 48 train 7.0844 , allloss: 7.0844, dt: 1908.03ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.6169, tok/sec: 68694.94, flops:418.88, batch-reuse:1
 @ 49 train 7.0775 , allloss: 7.0775, dt: 1908.78ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4385, tok/sec: 68667.95, flops:418.71, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.1108, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.1416, 0.1250, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0864, 0.0986, 0.1157, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -810,7 +798,6 @@ The
 @ 547 train 5.2106 , allloss: 5.2106, dt: 1936.57ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3480, tok/sec: 67682.61, flops:412.70, batch-reuse:1
 @ 548 train 5.1713 , allloss: 5.1713, dt: 1920.38ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3471, tok/sec: 68252.99, flops:416.18, batch-reuse:1
 @ 549 train 5.0865 , allloss: 5.0865, dt: 1922.35ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3251, tok/sec: 68183.19, flops:415.76, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0232, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0806, 0.1118, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0688, 0.0874, 0.1309, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -1415,7 +1402,6 @@ The most important part of the most important species
 @ 1047 train 4.3939 , allloss: 4.3939, dt: 1909.34ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3526, tok/sec: 68647.92, flops:418.59, batch-reuse:1
 @ 1048 train 4.4361 , allloss: 4.4361, dt: 1910.49ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3453, tok/sec: 68606.38, flops:418.34, batch-reuse:1
 @ 1049 train 4.3864 , allloss: 4.3864, dt: 1912.38ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3259, tok/sec: 68538.70, flops:417.92, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0100, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0840, 0.0669, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0559, 0.2598, 0.1602, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -2019,7 +2005,6 @@ ins, and they are also called “the “The”
 @ 1547 train 4.1683 , allloss: 4.1683, dt: 1910.00ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4989, tok/sec: 68624.05, flops:418.44, batch-reuse:1
 @ 1548 train 4.2594 , allloss: 4.2594, dt: 1911.41ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.5048, tok/sec: 68573.43, flops:418.14, batch-reuse:1
 @ 1549 train 4.2455 , allloss: 4.2455, dt: 1911.27ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4072, tok/sec: 68578.33, flops:418.17, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0035, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0571, 0.1270, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.1436, 0.1504, 0.1807, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -2574,9 +2559,7 @@ The flowers are very good for
 @ 1997 train 3.8522 , allloss: 3.8522, dt: 1899.40ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2897, tok/sec: 69007.10, flops:420.78, batch-reuse:1
 @ 1998 train 3.8048 , allloss: 3.8048, dt: 1895.55ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2976, tok/sec: 69147.26, flops:421.64, batch-reuse:1
 @ 1999 train 3.7288 , allloss: 3.7288, dt: 1900.03ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2713, tok/sec: 68984.21, flops:420.64, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9015
+@ 2000 val 3.9015
 @ 2000 train 3.8211 , allloss: 3.8211, dt: 2902.97ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3273, tok/sec: 45151.01, flops:275.31, batch-reuse:1
 @ 2001 train 3.8827 , allloss: 3.8827, dt: 1900.13ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3305, tok/sec: 68980.70, flops:420.62, batch-reuse:1
 @ 2002 train 3.8648 , allloss: 3.8648, dt: 1899.13ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3528, tok/sec: 69016.86, flops:420.84, batch-reuse:1
@@ -2627,7 +2610,6 @@ validation loss: 3.9015
 @ 2047 train 3.9296 , allloss: 3.9296, dt: 1893.98ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3874, tok/sec: 69204.66, flops:421.98, batch-reuse:1
 @ 2048 train 3.9038 , allloss: 3.9038, dt: 1895.21ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3278, tok/sec: 69159.63, flops:421.71, batch-reuse:1
 @ 2049 train 4.0057 , allloss: 4.0057, dt: 1897.78ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3285, tok/sec: 69066.08, flops:421.14, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0076, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0256, 0.0503, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.2363, 0.0776, 0.1670, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -3232,7 +3214,6 @@ The flowers are blue, and the
 @ 2547 train 3.8383 , allloss: 3.8383, dt: 1895.03ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3402, tok/sec: 69166.09, flops:421.75, batch-reuse:1
 @ 2548 train 3.9392 , allloss: 3.9392, dt: 1894.67ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4311, tok/sec: 69179.51, flops:421.83, batch-reuse:1
 @ 2549 train 3.9242 , allloss: 3.9242, dt: 1889.49ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3256, tok/sec: 69368.88, flops:422.99, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0408, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.2168, 0.0532, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0265, 0.1650, 0.3301, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -3837,7 +3818,6 @@ The flowers are a rich, delicate
 @ 3047 train 3.7705 , allloss: 3.7705, dt: 1895.54ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3548, tok/sec: 69147.46, flops:421.64, batch-reuse:1
 @ 3048 train 3.6942 , allloss: 3.6942, dt: 1895.82ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3374, tok/sec: 69137.40, flops:421.57, batch-reuse:1
 @ 3049 train 3.9126 , allloss: 3.9126, dt: 1893.68ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2939, tok/sec: 69215.61, flops:422.05, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0053, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0320, 0.0233, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.1309, 0.1660, 0.4082, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -4442,7 +4422,6 @@ The seeds are green, and the
 @ 3547 train 3.6288 , allloss: 3.6288, dt: 1899.51ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2786, tok/sec: 69003.11, flops:420.76, batch-reuse:1
 @ 3548 train 3.6345 , allloss: 3.6345, dt: 1895.81ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2851, tok/sec: 69137.56, flops:421.58, batch-reuse:1
 @ 3549 train 3.6183 , allloss: 3.6183, dt: 1895.38ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2712, tok/sec: 69153.27, flops:421.67, batch-reuse:1
-Clearing contents of superlog
 tensor([[7.6599e-03, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
         [1.8750e-01, 3.5889e-02, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
         [1.5918e-01, 1.7188e-01, 2.5195e-01, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
@@ -4997,9 +4976,7 @@ The flowers are sweet, and the
 @ 3997 train 3.5798 , allloss: 3.5798, dt: 1891.21ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2684, tok/sec: 69306.00, flops:422.60, batch-reuse:1
 @ 3998 train 3.5489 , allloss: 3.5489, dt: 1895.81ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2777, tok/sec: 69137.77, flops:421.58, batch-reuse:1
 @ 3999 train 3.6083 , allloss: 3.6083, dt: 1896.97ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2954, tok/sec: 69095.43, flops:421.32, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.5629
+@ 4000 val 3.5629
 @ 4000 train 3.5962 , allloss: 3.5962, dt: 2765.25ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2694, tok/sec: 47399.73, flops:289.03, batch-reuse:1
 @ 4001 train 3.5218 , allloss: 3.5218, dt: 1894.73ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3387, tok/sec: 69176.97, flops:421.82, batch-reuse:1
 @ 4002 train 3.5595 , allloss: 3.5595, dt: 1895.57ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3001, tok/sec: 69146.49, flops:421.63, batch-reuse:1
@@ -5050,7 +5027,6 @@ validation loss: 3.5629
 @ 4047 train 3.5784 , allloss: 3.5784, dt: 1894.80ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2798, tok/sec: 69174.67, flops:421.80, batch-reuse:1
 @ 4048 train 3.4932 , allloss: 3.4932, dt: 1897.19ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3060, tok/sec: 69087.60, flops:421.27, batch-reuse:1
 @ 4049 train 3.4563 , allloss: 3.4563, dt: 1896.16ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3004, tok/sec: 69125.01, flops:421.50, batch-reuse:1
-Clearing contents of superlog
 tensor([[4.7302e-03, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
         [5.2344e-01, 1.6724e-02, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
         [1.4355e-01, 4.5410e-02, 2.8906e-01, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
@@ -5655,7 +5631,6 @@ The leaves are green, and the
 @ 4547 train 3.6009 , allloss: 3.6009, dt: 1897.51ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3274, tok/sec: 69075.96, flops:421.20, batch-reuse:1
 @ 4548 train 3.6331 , allloss: 3.6331, dt: 1896.57ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3001, tok/sec: 69110.02, flops:421.41, batch-reuse:1
 @ 4549 train 3.5150 , allloss: 3.5150, dt: 1895.30ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3432, tok/sec: 69156.39, flops:421.69, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0211, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0674, 0.0178, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.1250, 0.0913, 0.3652, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -6210,7 +6185,6 @@ The flowers are purple, and the
 @ 4997 train 3.3879 , allloss: 3.3879, dt: 1899.18ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3441, tok/sec: 69014.92, flops:420.83, batch-reuse:1
 @ 4998 train 3.4781 , allloss: 3.4781, dt: 1903.36ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3205, tok/sec: 68863.34, flops:419.90, batch-reuse:1
 @ 4999 train 3.3375 , allloss: 3.3375, dt: 1898.05ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3443, tok/sec: 69056.26, flops:421.08, batch-reuse:1
-saving model checkpoint: checkpoints-ben/model_5000.pt
 @ 5000 train 3.3838 , allloss: 3.3838, dt: 15283.00ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3067, tok/sec: 8576.33, flops:52.30, batch-reuse:1
 @ 5001 train 3.3038 , allloss: 3.3038, dt: 1888.60ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3294, tok/sec: 69401.84, flops:423.19, batch-reuse:1
 @ 5002 train 3.5407 , allloss: 3.5407, dt: 1890.84ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3542, tok/sec: 69319.52, flops:422.69, batch-reuse:1
@@ -6261,7 +6235,6 @@ saving model checkpoint: checkpoints-ben/model_5000.pt
 @ 5047 train 3.5384 , allloss: 3.5384, dt: 1891.82ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3187, tok/sec: 69283.41, flops:422.47, batch-reuse:1
 @ 5048 train 3.3925 , allloss: 3.3925, dt: 1892.22ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2760, tok/sec: 69269.00, flops:422.38, batch-reuse:1
 @ 5049 train 3.4654 , allloss: 3.4654, dt: 1893.89ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3115, tok/sec: 69207.79, flops:422.00, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0162, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0752, 0.0284, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.1943, 0.0537, 0.4590, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -6866,7 +6839,6 @@ iced
 @ 5547 train 3.4935 , allloss: 3.4935, dt: 1894.71ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3422, tok/sec: 69178.02, flops:421.82, batch-reuse:1
 @ 5548 train 3.3653 , allloss: 3.3653, dt: 1894.66ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2833, tok/sec: 69179.79, flops:421.83, batch-reuse:1
 @ 5549 train 3.3962 , allloss: 3.3962, dt: 1894.35ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3028, tok/sec: 69190.90, flops:421.90, batch-reuse:1
-Clearing contents of superlog
 tensor([[0.0225, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.2305, 0.0172, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.4336, 0.0339, 0.2109, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -7014,32 +6986,3 @@ The leaves of the rose are green
 @ 5590 train 3.5063 , allloss: 3.5063, dt: 1894.45ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2916, tok/sec: 69187.19, flops:421.88, batch-reuse:1
 @ 5591 train 3.5812 , allloss: 3.5812, dt: 1896.33ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3543, tok/sec: 69118.62, flops:421.46, batch-reuse:1
 @ 5592 train 3.4129 , allloss: 3.4129, dt: 1895.24ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2657, tok/sec: 69158.63, flops:421.70, batch-reuse:1
-W0122 23:33:54.783000 26295 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0122 23:33:54.784000 26295 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 26378 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1664, in <module>
-[rank0]:     conf_loss_accum = 0.0
-[rank0]: KeyboardInterrupt
-[rank0]:[W122 23:33:54.971523667 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 26295 got signal: 2

@@ -1836,9 +1836,46 @@ EXTRACT_SELF_CONTRIBUTION=True
 ```
 ![loss plot](img/16-principle-2.jpg)
 
-Let's initialize it differently, for attention, setting `torch.nn.init.normal_(module.weight, mean=1.0, std=stdConfig)`.
+Note that, without zero-ing the diagonal, performance is actually kind of horrible:
+```
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+hiddenBias, fParams, bParams = self.compiler(y)
+machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=True
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+```
 ![loss plot](img/16-principle-3.jpg)
 
+
+Zero'ing the diagonal... wait, it is incredible fragile. Sometimes it works sometimes it doesnt, I really have no idea what is going on:
+```
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+hiddenBias, fParams, bParams = self.compiler(y)
+machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=True
+EXTRACT_SELF_CONTRIBUTION=False
+```
+![loss plot](img/16-principle-4.jpg)
 
 Why might a machine that only executes matrix multiplications (+ bias) be as expressive as one that executes an entire MLP? I guess the matrix multiplication (+ bias) is fed into the next layer anyways, which has a mlp/nonlinearity?
 
@@ -1848,3 +1885,98 @@ Traditionally, with residual, say the desired mapping is `H(x)`, with the residu
 Also, all things considered, it seems quite reasonable to learn some function `f(x, attn)` instead, maybe by feeding it directly into `mlp(x || attn)`. If `attn` is small, perhaps we want this to return the identity, and then it is easier to directly learn `x = x + mlp(x || attn)`. But it seems like a chicken and egg; to replace `x` entirely then `mlp(x || attn)` needs to learn `-x`.
 
 An alternative is to initialize the matrix M in `M@x+b` to the identity matrix, and `b` to the 0 vector; but what about the non-linearity?
+
+
+
+Let me try just concatenating `x + mlp(LN(x) || attn(LN(x)))`. This doesn't perform that great.
+```
+(compiler just outputs y, execute outputs mlp(y || attn))
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+```
+![loss plot](img/16-principle-5.jpg)
+
+Doing due diligence, same experiment as before, but `MLP_SCALE=8`. It doesn't appear to improve the base model substantially.
+```
+(compiler just outputs y, execute outputs mlp(y || attn))
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=8
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+```
+![loss plot](img/16-principle-6.jpg)
+
+
+
+Let's try large mlp scale with vanilla transformer. Note that tit doesn't have the same impact as `14-mlpmatrix-moreinner`, but note that the latter has `700M` parameters versus our `520M` parameters.
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=32
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+```
+![loss plot](img/16-vanilla-mlpscale-32.jpg)
+
+
+Am curious how large we can go, can we get to `700M` parameters? Let's set MLP_SCALE=64, we get `973,701,120` parameters. TLDR; MLP is enough, we don't need our fancy compiler stuff. (Would it help with reusing parameters?)
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=64
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+
+```
+![loss plot](img/16-vanilla-mlpscale-64.jpg)
+
+
+What about --- rotate it, and add a bias (computed from attn)

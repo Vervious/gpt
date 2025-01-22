@@ -73,7 +73,7 @@ class CausalSelfAttention(DualModule):
             self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
         else:
             self.c_attn = nn.Linear(config.n_embd, 2 * config.n_embd)
-        self.c_attn.ATTN_SCALE_INIT = 1
+        # self.c_attn.ATTN_SCALE_INIT = 1
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
         # regularization
@@ -90,13 +90,21 @@ class CausalSelfAttention(DualModule):
         # print(torch.diagonal(self.mask, dim1=-2, dim2=-1).sum().item())
 
         if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
-            self.register_buffer("nodiagonal", (1 - torch.eye(config.block_size, config.block_size)).view(1, 1, config.block_size, config.block_size))
+            T = config.block_size
+            self.register_buffer("nodiagonal", (1 - torch.eye(T, T)).view(1, 1, T, T))
         #     # ^ 0s on diagonal, 1 everywhere else
 
 
-    def forward(self, x, z=None):
+    def forward(self, x, z=None,print_weights=False):
         # x used to compute Q, K; z replaces v if VALUE_MATRIX = False
         # z must be same dim as x
+        B, T, C = x.size()
+
+        if ATTENTION_SINK:
+            # (1, 1, C)
+            s = x.sum(dim=1, keepdim=True) / T # (B, 1, C)
+            # (B, T, C) -> (B, T+1, C)
+            x = torch.cat((s, x), dim=1) # prepend the average at the very beginning
 
         B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
         # calculate query, key, value for all heads in batch and move head forward to be the batch
@@ -106,6 +114,9 @@ class CausalSelfAttention(DualModule):
         if VALUE_MATRIX or z is None:
             qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
             q,k,v = qkv.split(self.n_embd, dim=2)
+            if ATTENTION_SINK:
+                # TODO zero out the value matrix for the dummy one
+                pass
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
             if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 v2 = v
@@ -144,6 +155,12 @@ class CausalSelfAttention(DualModule):
         
         # Just have Pytorch use FlashAttention for us. #TODO NVM
         y = F.scaled_dot_product_attention(q, k, v, is_causal=True)  
+
+        if print_weights:
+            vv = torch.eye(T, device=x.device).view(1, 1, T, T)
+            yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
+            torch.set_printoptions(linewidth=200)
+            bprint(f"{yy[-1,-1,0:8,0:8]}")
 
         # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
         # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
@@ -189,10 +206,11 @@ class CausalSelfAttention(DualModule):
             y = y @ z.unsqueeze(1) # (B, nh, T, T) @ (B, 1, T, C) -> (B, nh, T, C)
             y = y.sum(dim=1) / self.n_head # sum up the head dimension
 
-        if EXTRACT_SELF_CONTRIBUTION:
-            return y, resx, scores
+        # TODO deal with EXTRACT_SELF_CONTRIBUTION and delete, remove it if unused
+        if ATTENTION_SINK:
+            return y[:, 1:, :], None, scores[:, 1:, :] # remove the first token (average token)
         else:
-            return y, scores
+            return y[:, 1:, :], None, scores[:, 1:, :]
 
 
 class Gate(DualModule):
@@ -228,6 +246,11 @@ class MLPFewParams(nn.Module):
 
         self.bU = nn.Parameter(torch.empty(MLPMAT_INNER_SIZE, self.hiddenWidth))
         self.bV = nn.Parameter(torch.empty(self.inputWidth, MLPMAT_INNER_SIZE))
+
+        torch.nn.init.normal_(self.fU, mean=0.0, std=0.02)
+        torch.nn.init.normal_(self.fV, mean=0.0, std=0.02)
+        torch.nn.init.normal_(self.bU, mean=0.0, std=0.02)
+        torch.nn.init.normal_(self.bV, mean=0.0, std=0.02)
 
 
     def forward(self, x, front, back, hiddenBias):
@@ -279,7 +302,102 @@ class BenCompiler(nn.Module):
         x = self.c_proj(x)
         hiddenBias, fParams, bParams = x.split([MLP_HIDDENWIDTH_INTERPRETER, MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE], dim=-1)
         return hiddenBias, fParams, bParams
+    
 
+class BenCompiler2(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd + MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE)
+
+        # self.c_proj.NANOGPT_SCALE_INIT = 1
+        self.n_embd = config.n_embd
+    
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        hiddenBias, fParams = x.split([self.n_embd, MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE], dim=-1)
+        return {"bias": hiddenBias, "fparams": fParams}
+
+
+class MLPMatApply(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.U = nn.Parameter(torch.empty(config.n_embd, MLPMAT_INNER_SIZE))
+        self.V = nn.Parameter(torch.empty(MLPMAT_INNER_SIZE, config.n_embd))
+        
+        torch.nn.init.normal_(self.U, mean=0.0, std=0.02)
+        torch.nn.init.normal_(self.V, mean=0.0, std=0.02)
+    
+    def forward(self, program, attn):
+        # m has dimension (B, T, 3*C)
+        m = program["fparams"]
+        bias = program["bias"]
+        B, T, matnumparams = m.size()
+
+        assert MLPMAT_INNER_SIZE**2 == matnumparams, f"MLPMAT misconfig {MLPMAT_INNER_SIZE} {matnumparams}"
+        m = m.view(B, T, MLPMAT_INNER_SIZE, MLPMAT_INNER_SIZE)
+
+        attn = attn.unsqueeze(-1) # (B, T, C, 1)
+
+        # self.U @ m --> (C, 48) @ (B, T, 48, 48) = (B, T, C, 48)
+        # Above @ V --> (B, T, C, 48) @ (48, C) = (B, T, C, C)
+        # Above @ attn --> (B, T, C, C) @ (B, T, C, 1) = (B, T, C, 1)
+        return (self.U @ (m @ (self.V @ attn))).squeeze(-1) + bias
+
+
+class BenCompilerNoOp(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+    
+    def forward(self, x):
+        return x
+
+class MLPConcat(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd * 2, MLP_SCALE * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd, bias=False)
+        self.c_proj.NANOGPT_SCALE_INIT = 1
+    
+    def forward(self, x, attn):
+        z = torch.cat((x, attn), dim=-1) # (B, T, 2C)
+        x = self.c_fc(z)
+        x = self.gelu(x)
+        x = self.c_proj(x)
+        return x
+
+class VanillaExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
+        # smoother ReLU, also maybe helps dead neurons empirically?
+        # (should just delete dead neurons)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd, bias=False)
+        self.c_proj.NANOGPT_SCALE_INIT = 1
+
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+
+    
+    def forward(self, x, attn):
+        y = self.ln_2(x + attn)
+        y = self.c_fc(y)
+        y = self.gelu(y)
+        y = self.c_proj(y)
+        return y + attn
 
 class BenBlock(nn.Module):
 
@@ -287,19 +405,19 @@ class BenBlock(nn.Module):
         super().__init__()
         self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
-        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
-        self.compiler = BenCompiler(config)
-        self.execute = MLPFewParams(config)
         self.n_head = config.n_head
 
-    def forward(self, x):
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+
+    def forward(self, x, print_weights=False):
         metadata = {}
 
         y = self.ln_1(x)
-        attn, resx, scores = self.attn(y, y)
-        hiddenBias, fParams, bParams = self.compiler(y)
-        machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
-        x = x + machineOutput
+        attn, resx, scores = self.attn(y, y,print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        x = resx + machineOutput
 
         # print(scores[-1,-1,-1])
 
@@ -384,7 +502,7 @@ class VanillaBlock(nn.Module):
         self.mlp = MLP(config)
         self.n_head = config.n_head
 
-    def forward(self, x):
+    def forward(self, x,print_weights=False):
         # # VANILLA
         # x = x + self.attn(self.ln_1(x))
         # x = x + self.mlp(self.ln_2(x))
@@ -415,7 +533,7 @@ class VanillaBlock(nn.Module):
         # attn, scores = self.attn(y, y)
         # x = x + self.mlp(attn)
         y = self.ln_1(x)
-        attn, scores = self.attn(y, y)
+        attn, scores = self.attn(y, y,print_weights=print_weights)
         x = x + attn
         x = x + self.mlp(self.ln_2(x))
 
@@ -535,9 +653,8 @@ class GPT(DualModule):
         if isinstance(module, nn.Linear):
             stdConfig = 0.02
             if hasattr(module, 'ATTN_SCALE_INIT'):
-                stdConfig *= (2 * self.config.n_layer) ** -0.5
                 # this should make res 1
-                torch.nn.init.normal_(module.weight, mean=1.0, std=stdConfig)
+                torch.nn.init.normal_(module.weight, mean=0.0, std=stdConfig)
             else:
                 if hasattr(module, 'NANOGPT_SCALE_INIT'):
                     # 2x because we have two linears per layer: block.attn and block.mlp
@@ -548,7 +665,7 @@ class GPT(DualModule):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def vanillaforward(self, idx, targets=None):
+    def vanillaforward(self, idx, targets=None,print_weights=False):
         device = idx.device
         b, t = idx.size()
         assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
@@ -573,7 +690,7 @@ class GPT(DualModule):
                 block = self.transformer.h[i]
             if targets is not None and NEW_ALL_LAYER_LOSS:
                 # x = block(x.detach())
-                x, metadata = block(x)
+                x, metadata = block(x,print_weights=print_weights)
                 y = self.transformer.ln_f(x)
                 _logits = self.lm_head(y)
 
@@ -584,7 +701,7 @@ class GPT(DualModule):
 
                 loss = loss + layerloss
             else:
-                x, metadata = block(x)
+                x, metadata = block(x,print_weights=print_weights)
             for key, value in metadata.items():
                 outerMetadata[key] = outerMetadata.get(key, 0) + value
         x = self.transformer.ln_f(x)
@@ -609,7 +726,7 @@ class GPT(DualModule):
             zero = torch.tensor(0.0, device=idx.device)
             earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
-            vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets)
+            vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets,print_weights=print_weights)
 
             if all_logits:
                 return vanillalogits, vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
@@ -1242,24 +1359,27 @@ config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24
 NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
-MLP_SCALE = 4
+MLP_SCALE = 64
 MLP_HIDDENWIDTH_INTERPRETER = config_.n_embd
 REUSE_WEIGHTS = False
-MEASURE_SELF_CONTRIBUTION = True
+MEASURE_SELF_CONTRIBUTION = False
 DELETE_SELF_CONTRIBUTION = False
-EXTRACT_SELF_CONTRIBUTION = True
+EXTRACT_SELF_CONTRIBUTION = False # TODO UNUSED
 MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
+ATTENTION_SINK = True
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="16-principle-3"
+test_name="16-attentionsink"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
- y = self.ln_1(x)
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
 attn, resx, scores = self.attn(y, y)
-hiddenBias, fParams, bParams = self.compiler(y)
-machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
 x = x + machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
@@ -1271,6 +1391,7 @@ MATRIX_NUM_PARAMS={MATRIX_NUM_PARAMS}
 MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
 DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
 EXTRACT_SELF_CONTRIBUTION={EXTRACT_SELF_CONTRIBUTION}
+ATTENTION_SINK={ATTENTION_SINK}
 """
 
 
