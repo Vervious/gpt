@@ -1795,13 +1795,13 @@ DELETE_SELF_CONTRIBUTION=False
 
 ## Principled Experiments
 
-This is how I would currently design our network. The assumption is that, if a token is not an applicator, i.e. it is not applying itself to anything, it should just be shoveled up another level / compute a no-op, because there is no application to be done. The only issue may be that of the layer norm... maybe resx should add `x` instead and not `y`. Generally we should ensure `bias` is initialized to zero, and `M` starts my computing the identity. Should M compute a basic matrix rotation, or should it compute a full blown MLP? I think it should maybe compute a full blown MLP --- currently, it doesn't, which is maybe why the residual is useful, as now we can apply the nonlinearity in the next layer. (But how do we initialize an MLP to idenitty? Is this why we need the residual? Qn: is the attention residual important? I posit that the answer is No, based on prior experiments where I fed attn directly into MLP as input and never aded it to the residual stream. E.g. `img/14-nodiagonal-noattn.jpg`).
+This is how I would currently design our network. The assumption is that, if a token is not an applicator, i.e. it is not applying itself to anything, it should just be shoveled up another level / compute a no-op, because there is no application to be done. The only issue may be that of the layer norm... maybe resx should add `x` instead and not `y`. Generally we should ensure `bias` is initialized to zero, and `M` starts my computing the identity. Should M compute a basic matrix rotation, or should it compute a full blown MLP? I think it should maybe compute a full blown MLP --- currently, it doesn't, which is maybe why the residual is useful, as now we can apply the nonlinearity in the next layer. (But how do we initialize an MLP to idenitty? Is this why we need the residual? Qn: is the attention residual important? I posit that the answer is No, based on prior experiments where I fed attn directly into MLP as input and never aded it to the residual stream. E.g. `img/14-nodiagonal-noattn.jpg`). (Resx is broken -- need to initialize, so just use x for now) Hmmm... it's not great, it's not horrible. 
 ```
 y = self.ln_1(x)
 attn, resx, scores = self.attn(y, y)
 hiddenBias, fParams, bParams = self.compiler(y)
 machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
-x = resx + machineOutput
+x = x + machineOutput
 ======== 
 VALUEMATRIX=True
 REUSE_WEIGHTS=False
@@ -1814,3 +1814,37 @@ DELETE_SELF_CONTRIBUTION=False
 EXTRACT_SELF_CONTRIBUTION=True
 ```
 ![loss plot](img/16-principle-1.jpg)
+
+
+Does more parameters help?
+```
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+hiddenBias, fParams, bParams = self.compiler(y)
+machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=True
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=128
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=True
+```
+![loss plot](img/16-principle-2.jpg)
+
+Let's initialize it differently, for attention, setting `torch.nn.init.normal_(module.weight, mean=1.0, std=stdConfig)`.
+![loss plot](img/16-principle-3.jpg)
+
+
+Why might a machine that only executes matrix multiplications (+ bias) be as expressive as one that executes an entire MLP? I guess the matrix multiplication (+ bias) is fed into the next layer anyways, which has a mlp/nonlinearity?
+
+Traditionally, with residual, say the desired mapping is `H(x)`, with the residual, we can imagine it wanting to learn `H(x) - x`, which should not be any harder, but the idenitty `H(x) = x` is easier to learn. 
+
+
+Also, all things considered, it seems quite reasonable to learn some function `f(x, attn)` instead, maybe by feeding it directly into `mlp(x || attn)`. If `attn` is small, perhaps we want this to return the identity, and then it is easier to directly learn `x = x + mlp(x || attn)`. But it seems like a chicken and egg; to replace `x` entirely then `mlp(x || attn)` needs to learn `-x`.
+
+An alternative is to initialize the matrix M in `M@x+b` to the identity matrix, and `b` to the 0 vector; but what about the non-linearity?

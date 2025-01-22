@@ -73,6 +73,7 @@ class CausalSelfAttention(DualModule):
             self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
         else:
             self.c_attn = nn.Linear(config.n_embd, 2 * config.n_embd)
+        self.c_attn.ATTN_SCALE_INIT = 1
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
         # regularization
@@ -298,7 +299,7 @@ class BenBlock(nn.Module):
         attn, resx, scores = self.attn(y, y)
         hiddenBias, fParams, bParams = self.compiler(y)
         machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
-        x = resx + machineOutput
+        x = x + machineOutput
 
         # print(scores[-1,-1,-1])
 
@@ -533,10 +534,15 @@ class GPT(DualModule):
         # No need to change default initialization of LayerNorm
         if isinstance(module, nn.Linear):
             stdConfig = 0.02
-            if hasattr(module, 'NANOGPT_SCALE_INIT'):
-                # 2x because we have two linears per layer: block.attn and block.mlp
+            if hasattr(module, 'ATTN_SCALE_INIT'):
                 stdConfig *= (2 * self.config.n_layer) ** -0.5
-            torch.nn.init.normal_(module.weight, mean=0.0, std=stdConfig)
+                # this should make res 1
+                torch.nn.init.normal_(module.weight, mean=1.0, std=stdConfig)
+            else:
+                if hasattr(module, 'NANOGPT_SCALE_INIT'):
+                    # 2x because we have two linears per layer: block.attn and block.mlp
+                    stdConfig *= (2 * self.config.n_layer) ** -0.5
+                torch.nn.init.normal_(module.weight, mean=0.0, std=stdConfig)
             if module.bias is not None:
                 torch.nn.init.zeros_(module.bias)
         elif isinstance(module, nn.Embedding):
@@ -1246,7 +1252,7 @@ MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="16-principle-1"
+test_name="16-principle-3"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
@@ -1254,7 +1260,7 @@ Setting:
 attn, resx, scores = self.attn(y, y)
 hiddenBias, fParams, bParams = self.compiler(y)
 machineOutput = self.execute(attn, fParams, bParams, hiddenBias)
-x = resx + machineOutput
+x = x + machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
