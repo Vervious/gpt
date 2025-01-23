@@ -86,8 +86,8 @@ class CausalSelfAttention(DualModule):
         #     .view(1,1,config.block_size,config.block_size)
         # )
         # no zeros
-        if ATTENTION_SINK:
-            self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=0).bool().view(1, 1, config.block_size, config.block_size))
+        # if ATTENTION_SINK:
+        #     self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=0).bool().view(1, 1, config.block_size, config.block_size))
         # print(torch.diagonal(self.mask, dim1=-2, dim2=-1).sum().item())
 
         if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
@@ -104,9 +104,10 @@ class CausalSelfAttention(DualModule):
         if ATTENTION_SINK:
             # (1, 1, C)
             # TODO BROKEN should not sum all T words, only the ones that are not zeroed out...
-            s = x.sum(dim=1, keepdim=True) / T # (B, 1, C)
-            # (B, T, C) -> (B, T+1, C)
-            x = torch.cat((s, x), dim=1) # prepend the average at the very beginning
+            s = torch.zeros(B, 1, C, device=x.device, dtype=x.dtype) # (B, 1, C)
+
+            x = torch.cat((s, x), dim=1) 
+            # ^ (B, T, C) -> (B, T+1, C)
 
         B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
         # calculate query, key, value for all heads in batch and move head forward to be the batch
@@ -167,8 +168,12 @@ class CausalSelfAttention(DualModule):
         if print_weights:
             vv = torch.eye(T, device=x.device).view(1, 1, T, T)
             yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
-            torch.set_printoptions(linewidth=200)
+            torch.set_printoptions(linewidth=200, sci_mode=False)
             bprint(f"{yy[-1,-1,0:8,0:8]}")
+
+            rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
+            bprint(f"RAWVALUES\n{rawATT[-1,-1,0:8,0:8]}")
+            bprint(f"========")
 
         # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
         # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
@@ -199,8 +204,14 @@ class CausalSelfAttention(DualModule):
             if ATTENTION_SINK:
                 # y is (B, nh, T, hs + 1)
                 resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) # (B, T, 1)
+
+                if print_weights:
+                    bprint(f"{resw.shape}")
+                    bprint(f"RESW: {resw[-1, :, :]}")
+                resw = torch.ones(B, T, 1, device=x.device, dtype=x.dtype)
+
                 y = y[:,:,:,:-1] # remove the last column (the dummy one)
-                xcontrib = resw * x
+                
 
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
 
@@ -208,6 +219,9 @@ class CausalSelfAttention(DualModule):
             # output projection
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
+            if ATTENTION_SINK:
+                pass
+
             # TODO ATTENTION SINK NOT SUPPORTED YET
             if MEASURE_SELF_CONTRIBUTION:
                 # without value matrix: (B, nh, T, T)
@@ -225,9 +239,9 @@ class CausalSelfAttention(DualModule):
         if ATTENTION_SINK:
             if scores is not None:
                 scores = scores[:, 1:, :]
-            return y[:, 1:, :], xcontrib[:,1:,:], scores # remove the first token (average token)
+            return y[:, 1:, :], resw[:,1:,:], scores # remove the first token (average token)
         else:
-            return y, x, scores
+            return y, torch.ones(B, T, 1, device=x.device, dtype=x.dtype), scores
 
 
 class Gate(DualModule):
@@ -410,11 +424,11 @@ class VanillaExecute(nn.Module):
 
     
     def forward(self, x, attn):
-        y = self.ln_2(x + attn)
-        y = self.c_fc(y)
+        input = self.ln_2(x + attn)
+        y = self.c_fc(input)
         y = self.gelu(y)
-        y = self.c_proj(y)
-        return y + attn
+        mlp = self.c_proj(y)
+        return mlp + attn
 
 class BenBlock(nn.Module):
 
@@ -431,11 +445,12 @@ class BenBlock(nn.Module):
         metadata = {}
 
         y = self.ln_1(x)
-        attn, resx, scores = self.attn(y, y,print_weights=print_weights)
+        attn, xWeights, scores = self.attn(y, y,print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = resx + machineOutput
+        x = xWeights*x + machineOutput
 
+        # xWeights has dimension (B, T, 1)
         # print(scores[-1,-1,-1])
 
         if scores is not None:
@@ -1454,7 +1469,7 @@ def cclear():
 hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 5000
-sample_frequency = 500
+sample_frequency = 200
 inner_dump_frequency = 500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"

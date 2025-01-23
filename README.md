@@ -2007,6 +2007,8 @@ ATTENTION_SINK=True
 ![loss plot](img/16-attentionsink.jpg)
 
 
+Q: why does magnitude of the residual matter so much? Layer norming it completely destroys it...
+
 ## ON training in parallel
 
 Is training in parallel on `T` tokens fundamental? What happens is that at all but the last position, we are now awarding pass-through... perhaps carrying more information than necessary to compute the next token, but perhaps the information is useful for future tokens down the line. So this is like creating some "current understanding state" instead of next token prediction.

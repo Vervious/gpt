@@ -1,21 +1,46 @@
 1: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( Roses:0.4414 are:0.5352 red:0.4902,:0.3535 Pot:0.2256atoes:0.4277 are:0.2852 :0.2061)
- 
+		( hay:0.0001 Further:0.0002 dign:0.0002,:0.0003 Sabb:0.0002 inciner:0.0001 undead:0.0002Neigh:0.0002)
+Neigh
 ------
-		( are:0.5352 red:0.4902,:0.3535 Pot:0.2256atoes:0.4277 are:0.2852 :0.2061 :0.2148)
-               
+		( Further:0.0002 dign:0.0002,:0.0003 Sabb:0.0002 inciner:0.0001 undead:0.0002Neigh:0.0002Neigh:0.0003)
+NeighNeighNeighNeighNeighNeighNeighNeigh sweet sweet sweet sweet sweet sweet sweet
 50: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(,:0.0503,:0.0488,:0.0491,:0.0491,:0.0476,:0.0479,:0.0479,:0.0464)
-,
+		(.:0.1187 a:0.0432.:0.1338 and:0.0767.:0.0996.:0.1250 not:0.0320
+:0.3105)
+
+
 ------
-		(,:0.0476,:0.0479,:0.0479,:0.0464,:0.0466,:0.0466,:0.0466,:0.0454)
-,,,,,,,,,,,,,,,
-550: sample 0: A Poem for you! Roses are red, Potatoes are 
+		( a:0.0444.:0.1338 and:0.0767.:0.0996.:0.1250 not:0.0320
+:0.3105The:0.0618)
+The first first.
+The first the first the first the first the first
+250: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(,:0.0356,:0.0356,:0.0356,:0.0356,:0.0356,:0.0356,:0.0356,:0.0347)
-,
+		(,:0.0771 the:0.0674,:0.0393 and:0.0679,:0.0287,:0.1904 the:0.0439
+:0.0320)
+
+
 ------
-		(,:0.0356,:0.0356,:0.0356,:0.0356,:0.0347,:0.0347,:0.0347,:0.0347)
-,,,,,,,,,,,,,,,
+		( the:0.0674,:0.0393 and:0.0679,:0.0287,:0.1904 the:0.0439
+:0.0320The:0.0491)
+The first time, the first time, the first time, the first time
+450: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.0801 the:0.0854,:0.1309 and:0.1309ies:0.1660,:0.4492 a:0.0583
+:0.0737)
+
+
+------
+		( the:0.0854,:0.1309 and:0.1309ies:0.1660,:0.4531 a:0.0586
+:0.0737-:0.1191)
+- The most common types of the most common types of the most common types
+650: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1875 a:0.0952,:0.1992 white:0.1221ets:0.0820,:0.3965 a:0.0791ery:0.0913)
+ery
+------
+		( a:0.0952,:0.2090 white:0.1226ets:0.0820,:0.4023 a:0.0786ery:0.0913,:0.1138)
+, and are the most common type of bread.
+The most common type
