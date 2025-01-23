@@ -1888,7 +1888,7 @@ An alternative is to initialize the matrix M in `M@x+b` to the identity matrix, 
 
 
 
-Let me try just concatenating `x + mlp(LN(x) || attn(LN(x)))`. This doesn't perform that great.
+Let me try just concatenating `x + mlp(LN(x) || attn(LN(x)))`. This doesn't perform that great, or better, but it doesn't perform worse, because it does converge..
 ```
 (compiler just outputs y, execute outputs mlp(y || attn))
 y = self.ln_1(x)
@@ -1932,7 +1932,7 @@ EXTRACT_SELF_CONTRIBUTION=False
 
 
 
-Let's try large mlp scale with vanilla transformer. Note that tit doesn't have the same impact as `14-mlpmatrix-moreinner`, but note that the latter has `700M` parameters versus our `520M` parameters.
+Let's try large mlp scale with vanilla transformer. Note that tit doesn't have the same impact as `14-mlpmatrix-moreinner`, but note that the latter has `700M` parameters versus our `520M` parameters. This one still doesn't appear to improve the base model.
 ```
 self.compiler = BenCompilerNoOp(config)
 self.execute = VanillaExecute(config)
@@ -1983,7 +1983,11 @@ What about --- rotate it, and add a bias (computed from attn)... Anyways...
 
 ## Attention Sinks
 
-New experiment! I'm trying to figure out if we can avoid passing the entirety of res along.
+
+Q: why does magnitude of the residual matter so much? Layer norming it completely destroys it... Even halving it, completely destroys it. (I imagine that it gets smaller and smaller every step, converging to zero.)
+
+
+New experiment! I'm trying to figure out if we can avoid passing the entirety of res along. Note that all layer loss is on, and reusing weights is true. We have added a "Zero Sink" as well (todo: figure out how to make this computation more efficient, I don't know why it is so slow)
 ```
 self.compiler = BenCompilerNoOp(config)
 self.execute = VanillaExecute(config)
@@ -1991,13 +1995,13 @@ y = self.ln_1(x)
 attn, resx, scores = self.attn(y, y)
 program = self.compiler(y)
 machineOutput = self.execute(program, attn)
-x = x + machineOutput
+x = y + machineOutput
 ======== 
 VALUEMATRIX=True
-REUSE_WEIGHTS=False
+REUSE_WEIGHTS=True
 MLP_SCALE=4
 MEASURE_SELF_CONTRIBUTION=False
-NEW_ALL_LAYER_LOSS=False
+NEW_ALL_LAYER_LOSS=True
 MATRIX_NUM_PARAMS=4096
 MLPMAT_INNER_SIZE=64
 DELETE_SELF_CONTRIBUTION=False
@@ -2006,8 +2010,79 @@ ATTENTION_SINK=True
 ```
 ![loss plot](img/16-attentionsink.jpg)
 
+If we turn reusing weights off, 
+```
 
-Q: why does magnitude of the residual matter so much? Layer norming it completely destroys it... Even halving it, completely destroys it. (I imagine that it gets smaller and smaller every step, converging to zero.)
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = y + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=True
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-attentionsink-noreuse.jpg)
+
+Let me see if I can extract `resw` efficiently by commandeering a direction in the embedding dimensionality. The hope is that by  using `resw`, we can zero out the contribution from the residual (noop) completely if the attention is high enough. We keep this optimization for all future attention sink experiments: (This is not a fair comparison, because we also use `xWeights` now)
+
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights*y + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=True
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-attentionsink-noreuse-efficientresw.jpg)
+
+Now, use MLPConcat instead:
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = BenExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights*y + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=True
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-sinkgate-mlpconcat.jpg)
+
+
+What if I don't layer norm the attention before feeding it into the mlp?
 
 ## ON training in parallel
 

@@ -81,7 +81,8 @@ class CausalSelfAttention(DualModule):
         self.n_embd = config.n_embd
 
         self.cachedResW = None
-        self.cachedY = None
+        # self.cachedY = None
+
         # Don't need this once we switched to flashattention
         #  # not really a 'bias', more of a mask, following OpenAI naming
         # self.register_buffer("bias", torch.tril(
@@ -106,7 +107,7 @@ class CausalSelfAttention(DualModule):
 
         if ATTENTION_SINK:
             # (1, 1, C)
-            # TODO BROKEN should not sum all T words, only the ones that are not zeroed out...
+            # add an all zeros token to x ("Zero Sink" from literature)
             s = torch.zeros(B, 1, C, device=x.device, dtype=x.dtype) # (B, 1, C)
 
             x = torch.cat((s, x), dim=1) 
@@ -121,13 +122,16 @@ class CausalSelfAttention(DualModule):
             qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
             q,k,v = qkv.split(self.n_embd, dim=2)
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+            # NOTE: don't need the below because we are not calculating ResW
             if ATTENTION_SINK:
-                # TODO zero out the value matrix for the dummy one
-                extra_zeros = torch.zeros(B, self.n_head, T, 1, device=x.device, dtype=x.dtype)
-                v_padded = torch.cat((v, extra_zeros), dim=-1) # (B, nh, T, hs+1)
-                v_padded[:,:, 0, :] = 0 # zero out first token everywhere
-                v_padded[:, :, 0, -1] = 1
-                v = v_padded
+                # NOTE: commandeer the last dimension to hold our data (the network
+                # better not store anything useful there)
+                extra_zeros = torch.ones(C // self.n_head, device=x.device, dtype=x.dtype)
+                extra_zeros[-1] = 0
+                # v_padded = torch.cat((v, extra_zeros), dim=-1) # (B, nh, T, hs+1)
+                v = v * extra_zeros # zero out the last dimension (broadcast)
+                v[:, :, 0, :] = 0 # zero out first token everywhere
+                v[:, :, 0, -1] = 1
                 
                 
             if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
@@ -171,12 +175,12 @@ class CausalSelfAttention(DualModule):
         if print_weights:
             vv = torch.eye(T, device=x.device).view(1, 1, T, T)
             yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
-            torch.set_printoptions(linewidth=200, sci_mode=False)
-            bprint(f"{yy[-1,-1,0:8,0:8]}")
+            torch.set_printoptions(linewidth=300, sci_mode=False)
+            bprint(f"{yy[-1,-1,:,:]}")
 
             rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
-            bprint(f"RAWVALUES\n{rawATT[-1,-1,0:8,0:8]}")
-            if self.cachedY is not None:
+            bprint(f"RAWVALUES\n{rawATT[-1,-1,:,:]}")
+            if self.cachedResW is not None:
                 torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
                 bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
             bprint(f"========")
@@ -209,17 +213,17 @@ class CausalSelfAttention(DualModule):
 
             if ATTENTION_SINK:
                 # y is (B, nh, T, hs + 1)
-                resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) # (B, T, 1)
+                resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) / self.n_head # (B, T, 1)
 
                 if print_weights:
                     torch.set_printoptions(linewidth=200, sci_mode=False)
-                    bprint(f"RESW: {resw[-1, :, :]}")
-                resw = torch.ones(B, T, 1, device=x.device, dtype=x.dtype)
-                self.cachedResW = resw
-                self.cachedResW.requires_grad_(True)
-                self.cachedResW.retain_grad()
+                    bprint(f"RESW: {resw[-1, :, :]}") # last batch
+                # resw = torch.ones(B, T, 1, device=x.device, dtype=x.dtype)
+                # self.cachedResW = resw
+                # self.cachedResW.requires_grad_(True)
+                # self.cachedResW.retain_grad()
 
-                y = y[:,:,:,:-1] # remove the last column (the dummy one)
+                y = y * extra_zeros # zero out the last dimension again
 
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
 
@@ -227,10 +231,6 @@ class CausalSelfAttention(DualModule):
             # output projection
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
 
-            if ATTENTION_SINK:
-                self.cachedY = y
-                self.cachedY.requires_grad_(True)
-                self.cachedY.retain_grad()
         else:
             if ATTENTION_SINK:
                 pass
@@ -252,6 +252,7 @@ class CausalSelfAttention(DualModule):
         if ATTENTION_SINK:
             if scores is not None:
                 scores = scores[:, 1:, :]
+            # resw[:,1:,:]
             return y[:, 1:, :], resw[:,1:,:], scores # remove the first token (average token)
         else:
             return y, torch.ones(B, T, 1, device=x.device, dtype=x.dtype), scores
@@ -422,6 +423,20 @@ class MLPConcat(nn.Module):
         x = self.c_proj(x)
         return x
 
+
+class BenExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+
+    
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+
+
+
 class VanillaExecute(nn.Module):
 
     def __init__(self, config):
@@ -450,24 +465,38 @@ class BenBlock(nn.Module):
         self.ln_1 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
         self.attn = CausalSelfAttention(config)
         self.n_head = config.n_head
+        self.n_layer = config.n_layer
 
         self.compiler = BenCompilerNoOp(config)
-        self.execute = VanillaExecute(config)
+        self.execute = BenExecute(config)
 
     def forward(self, x, print_weights=False):
         metadata = {}
 
+        # stronger attention should result in machineOutput with larger norm,
+        # which should then get normalized; then learning to output a larger norm
+        # vs a smaller norm is our mechanism for gating attention
+
         y = self.ln_1(x)
-        attn, xWeights, scores = self.attn(y, y,print_weights=print_weights)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = xWeights*x + machineOutput
+        x = xWeights*y + machineOutput
 
-        if scores is not None:
-            a = scores.detach()
-            metadata["zero"] = (a < 5).sum().item()
-            metadata["neg"] = (a < 0.5).sum().item()
-            metadata["pos"] = (a > 5).sum().item()
+        # NOTE: consider running above output through a softmax
+        # xWeights is (B, T, 1)
+
+        metadata["_norm_attn"] = attn.std(dim=-1).mean() / self.n_layer #torch.linalg.norm(attn, dim=-1).mean().item()
+        metadata["_norm_y"] = y.std(dim=-1).mean() / self.n_layer # should be 1 / 12
+        metadata["_norm_x"] = x.std(dim=-1).mean() / self.n_layer
+        metadata["_norm_output"] = machineOutput.std(dim=-1).mean() / self.n_layer
+        metadata["_frac_noop"] = xWeights.mean() / self.n_layer
+
+        # if scores is not None:
+        #     a = scores.detach()
+        #     metadata["zero"] = (a < 5).sum().item()
+        #     metadata["neg"] = (a < 0.5).sum().item()
+        #     metadata["pos"] = (a > 5).sum().item()
 
         return x, metadata    
 
@@ -725,6 +754,8 @@ class GPT(DualModule):
 
         outerMetadata = {}
 
+        _x_total = x
+
         for i in range(self.config.n_layer):
             if REUSE_WEIGHTS:
                 block = self.transformer.sharedblock
@@ -733,31 +764,40 @@ class GPT(DualModule):
             if targets is not None and NEW_ALL_LAYER_LOSS:
                 # x = block(x.detach())
                 x, metadata = block(x,print_weights=print_weights)
-                y = self.transformer.ln_f(x)
-                _logits = self.lm_head(y)
 
-                layerloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
-                trueloss = layerloss
+                # NOTE: previously we computed the loss independently at each row.
+                # Now, just add in the residual. Note that the residual doesn't get passed into future layers.
+                _x_total = _x_total + x
 
-                logits.append(_logits)
+                # # NOTE: previous below
+                # y = self.transformer.ln_f(x)
+                # _logits = self.lm_head(y)
 
-                loss = loss + layerloss
+                # layerloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
+                # trueloss = layerloss
+
+                # logits.append(_logits)
+
+                # loss = loss + layerloss
             else:
                 x, metadata = block(x,print_weights=print_weights)
+                _x_total = x
+
             for key, value in metadata.items():
                 outerMetadata[key] = outerMetadata.get(key, 0) + value
-        x = self.transformer.ln_f(x)
 
         if targets is not None and trueloss is None:
             # if we are given some desired targets also calculate the loss
-            _logits = self.lm_head(x)
+            _x_total = self.transformer.ln_f(_x_total)
+            _logits = self.lm_head(_x_total)
             logits.append(_logits)
             loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
             trueloss = loss
         elif targets is None:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
-            _logits = self.lm_head(x)
+            # NOTE: during inference, instead of inferring from the total, infer only from the last layer
+            _logits = self.lm_head(self.transformer.ln_f(x))
             logits.append(_logits)
             loss = None
         
@@ -1381,6 +1421,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
+test_name="16-sinkgate-mlpconcat-nonorm"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1398,7 +1439,7 @@ ENABLE_LAYER_LOSS = False
 
 config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
-NEW_ALL_LAYER_LOSS = False
+NEW_ALL_LAYER_LOSS = True
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
@@ -1412,17 +1453,16 @@ MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 ATTENTION_SINK = True # TODO figure out how to make more efficient
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_name="16-attentionsink"
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 self.compiler = BenCompilerNoOp(config)
-self.execute = VanillaExecute(config)
+self.execute = BenExecute(config)
 y = self.ln_1(x)
-attn, resx, scores = self.attn(y, y)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
 program = self.compiler(y)
 machineOutput = self.execute(program, attn)
-x = x + machineOutput
+x = xWeights*y + machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
@@ -1479,7 +1519,7 @@ def cclear():
 hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 5000
-sample_frequency = 200
+sample_frequency = 500
 inner_dump_frequency = 500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
@@ -1709,9 +1749,7 @@ for step in range(max_steps):
     conf_loss_accum = 0.0
     target_loss_accum = 0.0
     loss_accum_all = 0.0
-    zeroApp_accum = 0.0
-    negApp_accum = 0.0
-    posApp_accum = 0.0
+    _outer_metadata = {}
 
     earlyStopLayerDict_accum = torch.zeros(config_.n_layer, device=device)
     for micro_step in range(grad_accum_steps):
@@ -1728,10 +1766,8 @@ for step in range(max_steps):
         loss_accum += trueloss.detach() / grad_accum_steps
         loss_accum_all += loss.detach()
 
-        if "zero" in metadata:
-            zeroApp_accum += metadata["zero"]
-            negApp_accum += metadata["neg"]
-            posApp_accum += metadata["pos"]
+        for k, v in metadata.items():
+            _outer_metadata[k] = _outer_metadata.get(k, 0.0) + v
 
         conf_loss_accum += confLoss.detach() / grad_accum_steps
         target_loss_accum += targetLoss.detach() / grad_accum_steps
@@ -1768,13 +1804,19 @@ for step in range(max_steps):
 
         earlyStopLayerDict_accum /= (B*T*grad_accum_steps)
 
-        zeroApp_accum /= (B*T*grad_accum_steps*config_.n_layer)
-        negApp_accum /= (B*T*grad_accum_steps*config_.n_layer)
-        posApp_accum /= (B*T*grad_accum_steps*config_.n_layer)
+
+        for k, v in _outer_metadata.items():
+            _outer_metadata[k] = _outer_metadata[k] / grad_accum_steps
 
         rList = [round(value, 2) for value in earlyStopLayerDict_accum.tolist()]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, perc(<0.5): {negApp_accum:.4f}, perc(<5): {zeroApp_accum:.4f}, perc(>5): {posApp_accum:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        normA = _outer_metadata["_norm_attn"]
+        normO = _outer_metadata["_norm_output"]
+        normX = _outer_metadata["_norm_x"]
+        normY = _outer_metadata["_norm_y"]
+        fracNoop = _outer_metadata["_frac_noop"]
+
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, fracRes: {fracNoop:.4f}, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:

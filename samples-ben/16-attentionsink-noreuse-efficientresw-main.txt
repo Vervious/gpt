@@ -1,0 +1,130 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Temp:0.0002 Lowell:0.0002 tanker:0.0002 Drama:0.0002 Synt:0.0001dit:0.0001 Powder:0.0002 compilation:0.0001)
+ compilation
+------
+		( Lowell:0.0002 tanker:0.0002 Drama:0.0002 Synt:0.0001dit:0.0001 Powder:0.0002 compilation:0.0001 muzzle:0.0002)
+ muzzleGh hypotTotal acre hypot decap hypot decap helium architectures Finding248 Finding decap
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0884
+:0.0854
+:0.0854
+:0.0854
+:0.0859
+:0.0835
+:0.0835
+:0.0835)
+
+
+------
+		(
+:0.0854
+:0.0854
+:0.0854
+:0.0859
+:0.0835
+:0.0835
+:0.0835
+:0.0835)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+250: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(;:0.0015;:0.0016;:0.0017;:0.0020;:0.0021;:0.0021;:0.0021;:0.0021)
+;
+------
+		(;:0.0016;:0.0017;:0.0020;:0.0021;:0.0021;:0.0021;:0.0021;:0.0024)
+;;;;;;;;;;;;;;;
+450: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( professor:0.0009 Pacers:0.0009 Pacers:0.0010 Abyssal:0.0011 Abyssal:0.0012 Abyssal:0.0013 Abyssal:0.0013 Abyssal:0.0014)
+ Abyssal
+------
+		( Pacers:0.0009 Pacers:0.0010 Abyssal:0.0011 Abyssal:0.0012 Abyssal:0.0013 Abyssal:0.0013 Abyssal:0.0014                :0.0014)
+                                                                                                                                                                                                                                                
+650: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(====:0.0016====:0.0019 ><:0.0020:0.0020:0.0020:0.0021:0.0022:0.0020)
+
+------
+		(====:0.0019 ><:0.0020:0.0020:0.0020:0.0021:0.0022:0.0020:0.0020)
+フフフフ
+850: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Zerg:0.0046 Zerg:0.0056 Zerg:0.0056 Zerg:0.0057 Zerg:0.0057 Zerg:0.0060 Zerg:0.0057 Zerg:0.0054)
+ Zerg
+------
+		( Zerg:0.0056 Zerg:0.0056 Zerg:0.0057 Zerg:0.0057 Zerg:0.0060 Zerg:0.0057 Zerg:0.0054 Zerg:0.0054)
+ Zerg actionGroup Zerg actionGroup Zerg actionGroup Zerg actionGroup actionGroup actionGroup actionGroup actionGroup actionGroup actionGroup actionGroup
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( disapp:0.0045 disapp:0.0039 disapp:0.0044 disapp:0.0039 disapp:0.0037 disapp:0.0042 cannabin:0.0036 disapp:0.0038)
+ disapp
+------
+		( disapp:0.0039 disapp:0.0044 disapp:0.0039 disapp:0.0037 disapp:0.0042 cannabin:0.0036 disapp:0.0038ンジ:0.0037)
+ンジンジンジンジ SetTextColor cannabin SetTextColor SetTextColor SetTextColor SetTextColorィィィ SetTextColor SetTextColor
+1250: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(ェ:0.0039ェ:0.0040ェ:0.0041 actionGroup:0.0043ェ:0.0048ティ:0.0049ティ:0.0052ティ:0.0053)
+ティ
+------
+		(ェ:0.0040ェ:0.0041 actionGroup:0.0043ェ:0.0048ティ:0.0049ティ:0.0052ティ:0.0053ティ:0.0051)
+ティティティティティティティティティティティティティティティ
+1450: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( cannabin:0.0033 cannabin:0.0038 cannabin:0.0034装:0.0041ェ:0.0047装:0.0037ェ:0.0043ェ:0.0052)
+ェ
+------
+		( cannabin:0.0038 cannabin:0.0034装:0.0041ェ:0.0047装:0.0037ェ:0.0043ェ:0.0052ェ:0.0052)
+ェェェェ装装装装装装装装装装装
+1650: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Scythe:0.0077 Scythe:0.0085 Scythe:0.0088 Scythe:0.0076 Scythe:0.0064 Scythe:0.0065 Scythe:0.0084��:0.0058)
+��
+------
+		( Scythe:0.0085 Scythe:0.0088 Scythe:0.0076 Scythe:0.0064 Scythe:0.0065 Scythe:0.0084��:0.0058��:0.0059)
+������������������������������
+1850: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( /*:0.0077 accomp:0.0088 Metroid:0.0064 Kislyak:0.0067 /*:0.0098 Mages:0.0081 Mages:0.0073��:0.0107)
+��
+------
+		( accomp:0.0088 Metroid:0.0064 Kislyak:0.0067 /*:0.0098 Mages:0.0081 Mages:0.0073��:0.0107��:0.0101)
+������������������������������
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( /*:0.0089 Miko:0.0099 Miko:0.0165ギ:0.0038 Miko:0.0096 Miko:0.0036 Miko:0.0112 Miko:0.0121)
+ Miko
+------
+		( Miko:0.0099 Miko:0.0165ギ:0.0038 Miko:0.0096 Miko:0.0036 Miko:0.0112 Miko:0.0121 Miko:0.0133)
+ Miko Miko Miko Miko Miko Miko Miko Miko Miko Miko Miko Miko Miko Miko Miko
+2250: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(¯:0.0055 Miko:0.0092 Miko:0.0125--------:0.0060--------:0.0176 Miko:0.0099 Miko:0.0112--------:0.0171)
+--------
+------
+		( Miko:0.0092 Miko:0.0125--------:0.0060--------:0.0176 Miko:0.0099 Miko:0.0112--------:0.0171--------:0.0161)
+------------------------------------------------------------------------------------------------------------------------
+2450: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(--------:0.0115イ:0.0082--------:0.0101イ:0.0085--------:0.0139 dst:0.0092 corrid:0.0033--------:0.0236)
+--------
+------
+		(イ:0.0082--------:0.0101イ:0.0085--------:0.0139 dst:0.0092 corrid:0.0033--------:0.0236--------:0.0234)
+------------------------------------------------------------------------------------------------------------------------

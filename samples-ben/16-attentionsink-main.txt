@@ -1,37 +1,55 @@
 1: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( the:0.0002 gestation:0.0002 the:0.0003,:0.0005verbs:0.0002 ACL:0.0002 the:0.0002 overhead:0.0001)
- overhead
+		( Roses:0.0544 are:0.0320 red:0.0649,:0.0486 Pot:0.0430atoes:0.0471 are:0.0417 :0.0776)
+ 
 ------
-		( gestation:0.0002 the:0.0003,:0.0005verbs:0.0002 ACL:0.0002 the:0.0002 overhead:0.0001wrong:0.0002)
-wrongococococ Richardson,,,,,,,,,,,
+		( are:0.0320 red:0.0649,:0.0486 Pot:0.0430atoes:0.0471 are:0.0417 :0.0776 :0.0381)
+               
 50: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(.:0.0840 a:0.0576.:0.0576 and:0.0703,:0.0732,:0.0972 a:0.0479
-:0.3770)
-
-
+		( the:0.0410 the:0.0413 the:0.0413 the:0.0398 the:0.0400 the:0.0400 the:0.0400 the:0.0400)
+ the
 ------
-		( a:0.0576.:0.0576 and:0.0703,:0.0732,:0.0972 a:0.0479
-:0.3770The:0.0981)
-The first a the the the the the the the the the the the the
+		( the:0.0413 the:0.0413 the:0.0400 the:0.0400 the:0.0400 the:0.0400 the:0.0400 the:0.0400)
+ the the the the the the the the the the the the the the the
 250: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(,:0.0820 a:0.0439ness:0.0427 and:0.0913il:0.0172,:0.1592 a:0.0444
-:0.0228)
-
-
+		(,:0.0216 able:0.0189.:0.0327 you:0.0579,:0.0270,:0.0391 able:0.0173.:0.0087)
+.
 ------
-		( a:0.0442ness:0.0415 and:0.0913il:0.0172,:0.1592 a:0.0444
-:0.0228-:0.0728)
-- The first time, and the first time, and the first time,
+		( able:0.0189.:0.0327 you:0.0579,:0.0270,:0.0391 able:0.0173.:0.0087
+:0.1069)
+
+The book.
+The
+The
+The
+The
+The
+
 450: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(,:0.1226 the:0.0596 and:0.2275 and:0.1064u:0.0233,:0.5234 the:0.0322
-:0.0806)
+		(
+:0.0466 to:0.0306,:0.0713 you:0.0210,:0.0732,:0.0649 in:0.0315
+:0.0674)
 
 
 ------
-		( the:0.0596 and:0.2275 and:0.1064u:0.0233,:0.5234 the:0.0322
-:0.0806-:0.1387)
-- The most common type of the most common types of the most common types
+		( to:0.0306,:0.0713 you:0.0210,:0.0732,:0.0649 in:0.0315
+:0.0674•:0.0315)
+•
+•
+•
+•
+•
+•
+•
+•
+650: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0474 the:0.0197 and:0.0796 white:0.0996entially:0.0615,:0.1104 the:0.0203ery:0.0654)
+ery
+------
+		( the:0.0197 and:0.0796 white:0.0996entially:0.0615,:0.1104 the:0.0203ery:0.0654 and:0.0415)
+ and are white and white, white and white, white and white, white
