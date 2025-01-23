@@ -2007,7 +2007,7 @@ ATTENTION_SINK=True
 ![loss plot](img/16-attentionsink.jpg)
 
 
-Q: why does magnitude of the residual matter so much? Layer norming it completely destroys it...
+Q: why does magnitude of the residual matter so much? Layer norming it completely destroys it... Even halving it, completely destroys it. (I imagine that it gets smaller and smaller every step, converging to zero.)
 
 ## ON training in parallel
 

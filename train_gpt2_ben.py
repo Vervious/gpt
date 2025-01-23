@@ -79,6 +79,9 @@ class CausalSelfAttention(DualModule):
         # regularization
         self.n_head = config.n_head
         self.n_embd = config.n_embd
+
+        self.cachedResW = None
+        self.cachedY = None
         # Don't need this once we switched to flashattention
         #  # not really a 'bias', more of a mask, following OpenAI naming
         # self.register_buffer("bias", torch.tril(
@@ -173,6 +176,9 @@ class CausalSelfAttention(DualModule):
 
             rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
             bprint(f"RAWVALUES\n{rawATT[-1,-1,0:8,0:8]}")
+            if self.cachedY is not None:
+                torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
+                bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
             bprint(f"========")
 
         # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
@@ -206,18 +212,25 @@ class CausalSelfAttention(DualModule):
                 resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) # (B, T, 1)
 
                 if print_weights:
-                    bprint(f"{resw.shape}")
+                    torch.set_printoptions(linewidth=200, sci_mode=False)
                     bprint(f"RESW: {resw[-1, :, :]}")
                 resw = torch.ones(B, T, 1, device=x.device, dtype=x.dtype)
+                self.cachedResW = resw
+                self.cachedResW.requires_grad_(True)
+                self.cachedResW.retain_grad()
 
                 y = y[:,:,:,:-1] # remove the last column (the dummy one)
-                
 
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
 
             # (B, T, n_embd)
             # output projection
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
+
+            if ATTENTION_SINK:
+                self.cachedY = y
+                self.cachedY.requires_grad_(True)
+                self.cachedY.retain_grad()
         else:
             if ATTENTION_SINK:
                 pass
@@ -449,9 +462,6 @@ class BenBlock(nn.Module):
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
         x = xWeights*x + machineOutput
-
-        # xWeights has dimension (B, T, 1)
-        # print(scores[-1,-1,-1])
 
         if scores is not None:
             a = scores.detach()
