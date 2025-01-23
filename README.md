@@ -1979,4 +1979,35 @@ EXTRACT_SELF_CONTRIBUTION=False
 ![loss plot](img/16-vanilla-mlpscale-64.jpg)
 
 
-What about --- rotate it, and add a bias (computed from attn)
+What about --- rotate it, and add a bias (computed from attn)... Anyways...
+
+## Attention Sinks
+
+New experiment! I'm trying to figure out if we can avoid passing the entirety of res along.
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, resx, scores = self.attn(y, y)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-attentionsink.jpg)
+
+
+## ON training in parallel
+
+Is training in parallel on `T` tokens fundamental? What happens is that at all but the last position, we are now awarding pass-through... perhaps carrying more information than necessary to compute the next token, but perhaps the information is useful for future tokens down the line. So this is like creating some "current understanding state" instead of next token prediction.
+

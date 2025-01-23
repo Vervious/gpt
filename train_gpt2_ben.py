@@ -86,7 +86,8 @@ class CausalSelfAttention(DualModule):
         #     .view(1,1,config.block_size,config.block_size)
         # )
         # no zeros
-        # self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=-1).bool().view(1, 1, config.block_size, config.block_size))
+        if ATTENTION_SINK:
+            self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=0).bool().view(1, 1, config.block_size, config.block_size))
         # print(torch.diagonal(self.mask, dim1=-2, dim2=-1).sum().item())
 
         if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
@@ -102,6 +103,7 @@ class CausalSelfAttention(DualModule):
 
         if ATTENTION_SINK:
             # (1, 1, C)
+            # TODO BROKEN should not sum all T words, only the ones that are not zeroed out...
             s = x.sum(dim=1, keepdim=True) / T # (B, 1, C)
             # (B, T, C) -> (B, T+1, C)
             x = torch.cat((s, x), dim=1) # prepend the average at the very beginning
@@ -114,10 +116,16 @@ class CausalSelfAttention(DualModule):
         if VALUE_MATRIX or z is None:
             qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
             q,k,v = qkv.split(self.n_embd, dim=2)
+            v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
             if ATTENTION_SINK:
                 # TODO zero out the value matrix for the dummy one
-                pass
-            v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+                extra_zeros = torch.zeros(B, self.n_head, T, 1, device=x.device, dtype=x.dtype)
+                v_padded = torch.cat((v, extra_zeros), dim=-1) # (B, nh, T, hs+1)
+                v_padded[:,:, 0, :] = 0 # zero out first token everywhere
+                v_padded[:, :, 0, -1] = 1
+                v = v_padded
+                
+                
             if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 v2 = v
                 v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
@@ -188,12 +196,19 @@ class CausalSelfAttention(DualModule):
             if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
                 y = y @ v2
 
+            if ATTENTION_SINK:
+                # y is (B, nh, T, hs + 1)
+                resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) # (B, T, 1)
+                y = y[:,:,:,:-1] # remove the last column (the dummy one)
+                xcontrib = resw * x
+
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
 
             # (B, T, n_embd)
             # output projection
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
         else:
+            # TODO ATTENTION SINK NOT SUPPORTED YET
             if MEASURE_SELF_CONTRIBUTION:
                 # without value matrix: (B, nh, T, T)
                 scores = torch.diagonal(y, dim1=-2, dim2=-1).detach() # (B, nh, T)
@@ -208,9 +223,11 @@ class CausalSelfAttention(DualModule):
 
         # TODO deal with EXTRACT_SELF_CONTRIBUTION and delete, remove it if unused
         if ATTENTION_SINK:
-            return y[:, 1:, :], None, scores[:, 1:, :] # remove the first token (average token)
+            if scores is not None:
+                scores = scores[:, 1:, :]
+            return y[:, 1:, :], xcontrib[:,1:,:], scores # remove the first token (average token)
         else:
-            return y[:, 1:, :], None, scores[:, 1:, :]
+            return y, x, scores
 
 
 class Gate(DualModule):
@@ -1359,7 +1376,7 @@ config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24
 NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
-MLP_SCALE = 64
+MLP_SCALE = 4
 MLP_HIDDENWIDTH_INTERPRETER = config_.n_embd
 REUSE_WEIGHTS = False
 MEASURE_SELF_CONTRIBUTION = False
@@ -1367,7 +1384,7 @@ DELETE_SELF_CONTRIBUTION = False
 EXTRACT_SELF_CONTRIBUTION = False # TODO UNUSED
 MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
-ATTENTION_SINK = True
+ATTENTION_SINK = True # TODO figure out how to make more efficient
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
 test_name="16-attentionsink"

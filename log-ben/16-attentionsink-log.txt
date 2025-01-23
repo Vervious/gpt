@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -31,19 +26,13 @@ EXTRACT_SELF_CONTRIBUTION=False
 ATTENTION_SINK=True
 
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 86, with 112,128 parameters
-using fused AdamW: True
-[rank0]:[W123 00:37:57.521023062 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 10.9590 , allloss: 10.9590, dt: 2960.39ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:26.4679, tok/sec: 44275.18, flops:38.78, batch-reuse:1
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5039, 0.4980, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -197,7 +186,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 7.6616 , allloss: 7.6616, dt: 1602.85ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4053, tok/sec: 81774.21, flops:71.62, batch-reuse:1
 @ 48 train 7.6738 , allloss: 7.6738, dt: 1602.89ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3947, tok/sec: 81772.42, flops:71.62, batch-reuse:1
 @ 49 train 7.6863 , allloss: 7.6863, dt: 1603.15ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3731, tok/sec: 81758.88, flops:71.61, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0061, 0.9922, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.0952, 0.3457, 0.5586, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -801,7 +789,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 547 train 7.7221 , allloss: 7.7221, dt: 1605.53ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.3548, tok/sec: 81637.96, flops:71.50, batch-reuse:1
 @ 548 train 7.7094 , allloss: 7.7094, dt: 1605.90ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2411, tok/sec: 81619.02, flops:71.49, batch-reuse:1
 @ 549 train 7.6830 , allloss: 7.6830, dt: 1605.22ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2267, tok/sec: 81653.52, flops:71.52, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
         [1.1279e-01, 8.8672e-01, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
         [3.6133e-02, 3.6719e-01, 5.9766e-01, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00, 0.0000e+00],
@@ -922,32 +909,3 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 564 train 7.6416 , allloss: 7.6416, dt: 1606.05ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.2560, tok/sec: 81611.54, flops:71.48, batch-reuse:1
 @ 565 train 7.5292 , allloss: 7.5292, dt: 1606.35ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.5836, tok/sec: 81596.28, flops:71.47, batch-reuse:1
 @ 566 train 7.7183 , allloss: 7.7183, dt: 1605.96ms, perc(<0.5): 0.0000, perc(<5): 0.0000, perc(>5): 0.0000, norm:0.4790, tok/sec: 81616.07, flops:71.48, batch-reuse:1
-W0123 00:53:09.760000 7582 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0123 00:53:09.760000 7582 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 7666 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1693, in <module>
-[rank0]:     x, y = train_loader.next_batch()
-[rank0]: KeyboardInterrupt
-[rank0]:[W123 00:53:09.964515894 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 7582 got signal: 2
