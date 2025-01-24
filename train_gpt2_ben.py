@@ -70,9 +70,9 @@ class CausalSelfAttention(DualModule):
         assert config.n_embd % config.n_head == 0
         # key, query, value batched for all heads
         if VALUE_MATRIX:
-            self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
+            self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd, bias=False)
         else:
-            self.c_attn = nn.Linear(config.n_embd, 2 * config.n_embd)
+            self.c_attn = nn.Linear(config.n_embd, 2 * config.n_embd, bias=False)
         # self.c_attn.ATTN_SCALE_INIT = 1
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
@@ -433,7 +433,7 @@ class BenExecute(nn.Module):
 
     
     def forward(self, program, attn):
-        return self.mlp(program, attn)
+        return self.mlp(program, self.ln_2(attn))
 
 
 
@@ -468,7 +468,9 @@ class BenBlock(nn.Module):
         self.n_layer = config.n_layer
 
         self.compiler = BenCompilerNoOp(config)
-        self.execute = BenExecute(config)
+        self.execute = VanillaExecute(config)
+
+        # self.mlp = MLP(config)
 
     def forward(self, x, print_weights=False):
         metadata = {}
@@ -481,7 +483,7 @@ class BenBlock(nn.Module):
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = xWeights*y + machineOutput
+        x = x + machineOutput
 
         # NOTE: consider running above output through a softmax
         # xWeights is (B, T, 1)
@@ -1421,7 +1423,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="16-sinkgate-mlpconcat-nonorm"
+test_name="16-sinkgate-debug-2"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1450,14 +1452,14 @@ DELETE_SELF_CONTRIBUTION = False
 EXTRACT_SELF_CONTRIBUTION = False # TODO UNUSED
 MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
-ATTENTION_SINK = True # TODO figure out how to make more efficient
+ATTENTION_SINK = True
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 self.compiler = BenCompilerNoOp(config)
-self.execute = BenExecute(config)
+self.execute = VanillaExecute(config)
 y = self.ln_1(x)
 attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
 program = self.compiler(y)

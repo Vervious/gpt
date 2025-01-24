@@ -2082,7 +2082,86 @@ ATTENTION_SINK=True
 ![loss plot](img/16-sinkgate-mlpconcat.jpg)
 
 
-What if I don't layer norm the attention before feeding it into the mlp?
+What if I don't layer norm the attention before feeding it into the mlp? (Otherwise same as above)
+
+![loss plot](img/16-sinkgate-mlpconcat-nonorm.jpg)
+
+Should really find a way to start with the residual with weight 1 (instead of 0)...
+
+Let's try the same sinkgate but with vanilla execution instead:
+```
+========
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights*y + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=True
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-sinkgate-vanilla-2.jpg)
+
+JUst for fun... Let me turn REUSE_WEIGHTS on and all_layer_loss off, and feed in the entire residual again. It looks almost identical to `16-sinkgate-vanilla-2`, which has reuse_weights off and all_layer_loss on and the weighted residual. (TODO: why?)
+```
+========
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-sinkgate-debug.jpg)
+
+
+Now, let's turn on reuse weights but also do the xWeights again.
+```
+========
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights*y + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=True
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+```
+![loss plot](img/16-sinkgate-debug-2.jpg)
+
+
 
 ## ON training in parallel
 

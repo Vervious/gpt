@@ -1,0 +1,66 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(driven:0.0002 flowing:0.0002 Bake:0.0002force:0.0002whose:0.0002Ground:0.0002 flowing:0.0003 Kir:0.0002)
+ Kir
+------
+		( flowing:0.0002 Bake:0.0002force:0.0002whose:0.0002Ground:0.0002 flowing:0.0003 Kir:0.0002光:0.0002)
+光 keywords HERE batted ravenanche 802 greaseTalking sperm intermitt comparisonwagen Fem Last
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0571.:0.0588.:0.0574.:0.0593.:0.0596.:0.0596.:0.0596.:0.0598)
+.
+------
+		(.:0.0588.:0.0574.:0.0593.:0.0596.:0.0596.:0.0596.:0.0598.:0.0598)
+...............
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(groupon:0.0035groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036)
+groupon
+------
+		(groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0036groupon:0.0037)
+groupongroupongroupongroupongroupongroupongroupongroupongrouponahimeahimegrouponahimegrouponahime
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(groupon:0.0041groupon:0.0044groupon:0.0042groupon:0.0042groupon:0.0042groupon:0.0044groupon:0.0044groupon:0.0040)
+groupon
+------
+		(groupon:0.0044groupon:0.0042groupon:0.0042groupon:0.0042groupon:0.0044groupon:0.0044groupon:0.0040groupon:0.0043)
+groupongroupongroupongroupongroupongroupongroupongroupongroupongroupongroupongroupongroupongroupongroupon
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.3223,:0.3242,:0.3203,:0.3164,:0.3262,:0.3242,:0.3242,:0.3223)
+,
+------
+		(,:0.3242,:0.3203,:0.3164,:0.3262,:0.3242,:0.3242,:0.3223,:0.3281)
+,,,,,,,,,,,,,,,
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1138,:0.0840,:0.0962,:0.0547,:0.0537,:0.0649,:0.0306,:0.0236)
+,
+------
+		(,:0.0840,:0.0962,:0.0547,:0.0537,:0.0649,:0.0306,:0.0236,:0.0298)
+,,,,,,,,,,,,,,,
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0525 a:0.0664,:0.0496 and:0.0159,:0.0371,:0.0737 a:0.0869ery:0.0693)
+ery
+------
+		( a:0.0664,:0.0496 and:0.0159,:0.0371,:0.0737 a:0.0869ery:0.0693thro:0.0080)
+thro ((((((((((((((
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0515 the:0.1040,:0.0859
+:0.0248ford:0.0137,:0.1240 a:0.0737vern:0.0679)
+vern
+------
+		( the:0.1040,:0.0859
+:0.0248ford:0.0137,:0.1240 a:0.0737vern:0.0679,:0.0079)
+, and, in the
+hool, is a, sweet, sweet
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1348 the:0.1758,:0.1006 and:0.0168,:0.0093,:0.1660 a:0.1152urn:0.1182)
+urn
+------
+		( the:0.1758,:0.1006 and:0.0168,:0.0093,:0.1660 a:0.1152urn:0.1182ou:0.0135)
+ourol, and the, in the, the, the, the,

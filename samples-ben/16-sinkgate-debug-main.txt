@@ -1,0 +1,47 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(outs:0.0002β:0.0001 competitions:0.0002 uniquely:0.0002 fences:0.0001 WWE:0.0001INAL:0.0002friend:0.0002)
+friend
+------
+		(β:0.0001 competitions:0.0002 uniquely:0.0002 fences:0.0001 WWE:0.0001INAL:0.0002friend:0.0002 competitions:0.0001)
+ competitions convinced convincedcondschild670 createschild loadsβ retrieveworst convincedNASARec
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1104 the:0.0491.:0.1030 and:0.1245.:0.1104.:0.1128 the:0.0713
+:0.1162)
+
+
+------
+		( the:0.0491.:0.1030 and:0.1245.:0.1104.:0.1128 the:0.0713
+:0.1162-:0.1118)
+---
+-The
+-The
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1074 a:0.0698,:0.1699 and:0.1777atoes:0.0471,:0.6523 a:0.0884
+:0.0513)
+
+
+------
+		( a:0.0698,:0.1699 and:0.1777atoes:0.0471,:0.6523 a:0.0884
+:0.0513-:0.1426)
+- The most common species of the species, and the species are the most
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1514 the:0.0767 and:0.2314 yellow:0.1064assium:0.1699,:0.4551 red:0.0625ery:0.1123)
+ery
+------
+		( the:0.0767 and:0.2314 yellow:0.1064assium:0.1699,:0.4551 red:0.0625ery:0.1123,:0.0664)
+, and they are red, and they are red, and they are red
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1377 the:0.1104 and:0.2324 and:0.1611atoes:0.2383,:0.3242 red:0.3125ery:0.1738)
+ery
+------
+		( the:0.1104 and:0.2324 and:0.1611atoes:0.2383,:0.3242 red:0.3125ery:0.1738thro:0.2715)
+throcytes, and are also erythrocytes.
+The
