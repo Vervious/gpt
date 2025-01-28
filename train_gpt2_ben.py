@@ -8,6 +8,8 @@ import tiktoken
 import time
 import hellaswag
 
+import torch.autograd as autograd
+
 def log1mexp(x: torch.Tensor) -> torch.Tensor:
     """Numerically accurate evaluation of log(1 - exp(x)) for x < 0.
     See [Maechler2012accurate]_ for details.
@@ -472,8 +474,11 @@ class BenBlock(nn.Module):
 
         # self.mlp = MLP(config)
 
-    def forward(self, x, print_weights=False):
+    def forward(self, x, print_weights=False,step=0):
         metadata = {}
+
+        if step > 2 and step < 10:
+            print_weights = False
 
         # stronger attention should result in machineOutput with larger norm,
         # which should then get normalized; then learning to output a larger norm
@@ -483,7 +488,7 @@ class BenBlock(nn.Module):
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = x + machineOutput
+        x = xWeights * x + (1-xWeights)*machineOutput
 
         # NOTE: consider running above output through a softmax
         # xWeights is (B, T, 1)
@@ -564,7 +569,6 @@ class FatMLP(DualModule):
 
 
 
-
 class VanillaBlock(nn.Module):
 
     def __init__(self, config):
@@ -608,7 +612,7 @@ class VanillaBlock(nn.Module):
         y = self.ln_1(x)
         attn, scores = self.attn(y, y,print_weights=print_weights)
         x = x + attn
-        x = x + self.mlp(self.ln_2(x))
+        x = y + self.mlp(self.ln_2(x))
 
         # print(scores[-1,-1,-1])
 
@@ -757,15 +761,27 @@ class GPT(DualModule):
         outerMetadata = {}
 
         _x_total = x
+        _xtraloss = torch.tensor(0.0, device=idx.device)
 
         for i in range(self.config.n_layer):
             if REUSE_WEIGHTS:
                 block = self.transformer.sharedblock
             else:
                 block = self.transformer.h[i]
-            if targets is not None and NEW_ALL_LAYER_LOSS:
+            if targets is not None and IDENTITY_LOSS:
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+
+                _in = x.detach()
+                # _start = self.transformer.ln_f(_in)
+                _x, _ = block(_in,print_weights=print_weights) # Do again... lol
+
+                _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
+                # _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1).mean()
+                
+            elif targets is not None and NEW_ALL_LAYER_LOSS:
                 # x = block(x.detach())
-                x, metadata = block(x,print_weights=print_weights)
+                x, metadata = block(x,print_weights=print_weights,step=i)
 
                 # NOTE: previously we computed the loss independently at each row.
                 # Now, just add in the residual. Note that the residual doesn't get passed into future layers.
@@ -782,7 +798,7 @@ class GPT(DualModule):
 
                 # loss = loss + layerloss
             else:
-                x, metadata = block(x,print_weights=print_weights)
+                x, metadata = block(x,print_weights=print_weights,step=i)
                 _x_total = x
 
             for key, value in metadata.items():
@@ -793,8 +809,8 @@ class GPT(DualModule):
             _x_total = self.transformer.ln_f(_x_total)
             _logits = self.lm_head(_x_total)
             logits.append(_logits)
-            loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
-            trueloss = loss
+            trueloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
+            loss = trueloss + _xtraloss
         elif targets is None:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
@@ -1423,7 +1439,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="16-sinkgate-debug-2"
+test_name="17-identity-test"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1432,39 +1448,41 @@ T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
+max_lr = 0.25*6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
-warmup_steps = 100
+warmup_steps = 1000 # 100
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
 ENABLE_LAYER_LOSS = False
 
 config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
-NEW_ALL_LAYER_LOSS = True
+NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
 MLP_HIDDENWIDTH_INTERPRETER = config_.n_embd
-REUSE_WEIGHTS = False
+REUSE_WEIGHTS = False # NOTE True
 MEASURE_SELF_CONTRIBUTION = False
 DELETE_SELF_CONTRIBUTION = False
 EXTRACT_SELF_CONTRIBUTION = False # TODO UNUSED
 MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 ATTENTION_SINK = True
+IDENTITY_LOSS = True
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
 test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 self.compiler = BenCompilerNoOp(config)
-self.execute = VanillaExecute(config)
+self.execute = VanillaExecute(config) 
+========
 y = self.ln_1(x)
 attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
 program = self.compiler(y)
 machineOutput = self.execute(program, attn)
-x = xWeights*y + machineOutput
+x = xWeights * x + (1-xWeights)*machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
@@ -1476,6 +1494,7 @@ MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
 DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
 EXTRACT_SELF_CONTRIBUTION={EXTRACT_SELF_CONTRIBUTION}
 ATTENTION_SINK={ATTENTION_SINK}
+IDENTITY_LOSS={IDENTITY_LOSS}
 """
 
 

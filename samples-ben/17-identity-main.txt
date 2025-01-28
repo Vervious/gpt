@@ -1,0 +1,90 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(rid:0.0003orsi:0.0002 Mario:0.0002 Hull:0.0002 treated:0.0002 01:0.0002 automatic:0.0002 one:0.0002)
+ one
+------
+		(orsi:0.0002 Mario:0.0002 Hull:0.0002 treated:0.0002 01:0.0002 automatic:0.0002 one:0.0002 one:0.0001)
+ one diagnose 01 01 Peninsula PeninsulaHuman homeownerridatomicatomicatomicatomicatomicatomic
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0107 the:0.0125.:0.0086 the:0.0225.:0.0079.:0.0086.:0.0098.:0.0098)
+.
+------
+		( the:0.0125.:0.0086 the:0.0225.:0.0079.:0.0086.:0.0098.:0.0098
+:0.2119)
+
+.
+ the.
+.
+ the.
+ the.
+ the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1426 the:0.0293.:0.0603 and:0.1128en:0.0031,:0.2734 the:0.0297
+:0.0737)
+
+
+------
+		( the:0.0293.:0.0603 and:0.1128en:0.0031,:0.2734 the:0.0297
+:0.0737-:0.0703)
+- The most common in the most common in the most common in the most
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0869 a:0.0767,:0.1299 and:0.1055om:0.0491,:0.5938 a:0.0620
+:0.0520)
+
+
+------
+		( a:0.0767,:0.1299 and:0.1055om:0.0491,:0.5938 a:0.0620
+:0.0520The:0.0762)
+The most common form of the most common form of the body.
+The
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0996 a:0.0801 and:0.1514 and:0.1201om:0.2266,:0.3203 a:0.0579ery:0.0972)
+ery
+------
+		( a:0.0801 and:0.1514 and:0.1201om:0.2266,:0.3203 a:0.0579ery:0.0972ch:0.0364)
+chids, and they are very common in the world.
+- The
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2139 a:0.0854 and:0.2051 red:0.0684atoes:0.1182 are:0.4551 red:0.0918vern:0.1040)
+vern
+------
+		( a:0.0854 and:0.2051 red:0.0684atoes:0.1182 are:0.4551 red:0.0918vern:0.1040acular:0.1807)
+acular, and they are very common.
+The best way to get your
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2617 the:0.1069,:0.1543 red:0.0869tery:0.0972,:0.2754 red:0.1157ery:0.2363)
+ery
+------
+		( the:0.1069,:0.1543 red:0.0869tery:0.0972,:0.2754 red:0.1157ery:0.2363the:0.1982)
+thema, and the red.
+- A good-looking, bright
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2451 a:0.0752,:0.1797 yellow:0.0820atoes:0.1157,:0.3887 green:0.0571vern:0.1475)
+vern
+------
+		( a:0.0752,:0.1797 yellow:0.0820atoes:0.1157,:0.3887 green:0.0571vern:0.1475acular:0.5312)
+acular, and are a variety of colors.
+The most common are the
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2773 a:0.0874,:0.3594 yellow:0.0679om:0.0938,:0.4707 a:0.0562vern:0.1660)
+vern
+------
+		( a:0.0874,:0.3594 yellow:0.0679om:0.0938,:0.4707 a:0.0562vern:0.1660al:0.2021)
+al, and the leaves are the same.
+- The leaves are the
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1357 a:0.1465,:0.2314 yellow:0.0530atoes:0.2109 are:0.3926 a:0.1377iced:0.3340)
+iced
+------
+		( a:0.1465,:0.2314 yellow:0.0530atoes:0.2109 are:0.3926 a:0.1377iced:0.3340,:0.2832)
+, and the leaves are the same.
+- The leaves are the same

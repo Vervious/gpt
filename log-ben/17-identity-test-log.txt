@@ -1,8 +1,3 @@
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.00015
@@ -33,19 +28,13 @@ ATTENTION_SINK=True
 IDENTITY_LOSS=True
 
 Warmup steps: 1000
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 50, with 124,354,560 parameters
 num non-decayed parameter tensors: 74, with 84,480 parameters
-using fused AdamW: True
-[rank0]:[W128 05:21:03.470690449 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 10.8857 , allloss: 21.5414, dt: 2979.17ms, fracRes: 0.0758, norm(attn): 0.0457, norm(output): 0.0869, norm(x): 0.0869, norm(y): 0.9995, norm:42.2157, tok/sec: 43996.19, flops:38.53, batch-reuse:1
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3867, 0.6133, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -338,7 +327,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 9.5719 , allloss: 11.5251, dt: 1249.13ms, fracRes: 0.0750, norm(attn): 0.0615, norm(output): 0.1245, norm(x): 0.1232, norm(y): 0.9999, norm:9.6720, tok/sec: 104930.99, flops:91.89, batch-reuse:1
 @ 48 train 9.5770 , allloss: 11.3681, dt: 1265.54ms, fracRes: 0.0748, norm(attn): 0.0618, norm(output): 0.1245, norm(x): 0.1241, norm(y): 0.9999, norm:8.9999, tok/sec: 103569.83, flops:90.69, batch-reuse:1
 @ 49 train 9.5906 , allloss: 11.2316, dt: 1280.48ms, fracRes: 0.0747, norm(attn): 0.0623, norm(output): 0.1260, norm(x): 0.1251, norm(y): 0.9999, norm:8.2864, tok/sec: 102361.39, flops:89.64, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3945, 0.6055, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3418, 0.4395, 0.2188, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -1081,7 +1069,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 547 train 7.5158 , allloss: 7.5229, dt: 1284.78ms, fracRes: 8.2357, norm(attn): 0.0347, norm(output): 0.2812, norm(x): 0.3877, norm(y): 1.0033, norm:0.5598, tok/sec: 102019.19, flops:89.34, batch-reuse:1
 @ 548 train 7.4924 , allloss: 7.5000, dt: 1294.65ms, fracRes: 8.2167, norm(attn): 0.0344, norm(output): 0.2812, norm(x): 0.3869, norm(y): 1.0033, norm:0.5411, tok/sec: 101241.22, flops:88.66, batch-reuse:1
 @ 549 train 7.4647 , allloss: 7.4743, dt: 1294.71ms, fracRes: 8.2164, norm(attn): 0.0332, norm(output): 0.2793, norm(x): 0.3829, norm(y): 1.0033, norm:0.5314, tok/sec: 101236.56, flops:88.65, batch-reuse:1
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    1.0000,     0.0008,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.8555,     0.0422,     0.1006,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -1826,7 +1813,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 1047 train 5.7750 , allloss: 5.7772, dt: 1295.89ms, fracRes: 8.6840, norm(attn): 0.0216, norm(output): 0.1914, norm(x): 0.1568, norm(y): 1.0070, norm:1.2355, tok/sec: 101144.31, flops:88.57, batch-reuse:1
 @ 1048 train 5.7987 , allloss: 5.8016, dt: 1266.54ms, fracRes: 8.6967, norm(attn): 0.0217, norm(output): 0.1914, norm(x): 0.1575, norm(y): 1.0070, norm:1.1266, tok/sec: 103488.63, flops:90.62, batch-reuse:1
 @ 1049 train 5.7546 , allloss: 5.7561, dt: 1266.04ms, fracRes: 8.7066, norm(attn): 0.0215, norm(output): 0.1914, norm(x): 0.1569, norm(y): 1.0071, norm:1.0575, tok/sec: 103529.38, flops:90.66, batch-reuse:1
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.9531,     0.0471,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.8242,     0.1455,     0.0312,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -2572,7 +2558,6 @@ The first of the most of the most of the most of the most of
 @ 1547 train 5.2034 , allloss: 5.2197, dt: 1298.13ms, fracRes: 8.4291, norm(attn): 0.0430, norm(output): 0.1875, norm(x): 0.1282, norm(y): 1.0105, norm:2.4293, tok/sec: 100969.50, flops:88.42, batch-reuse:1
 @ 1548 train 5.3071 , allloss: 5.3153, dt: 1258.15ms, fracRes: 8.4331, norm(attn): 0.0442, norm(output): 0.1875, norm(x): 0.1281, norm(y): 1.0105, norm:1.7882, tok/sec: 104178.25, flops:91.23, batch-reuse:1
 @ 1549 train 5.2610 , allloss: 5.2653, dt: 1262.43ms, fracRes: 8.4624, norm(attn): 0.0422, norm(output): 0.1885, norm(x): 0.1301, norm(y): 1.0107, norm:2.0606, tok/sec: 103824.83, flops:90.92, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9766, 0.0225, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.7344, 0.1465, 0.1191, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -3266,9 +3251,7 @@ The first time you will
 @ 1997 train 4.5914 , allloss: 4.5945, dt: 1265.15ms, fracRes: 8.2010, norm(attn): 0.0562, norm(output): 0.1855, norm(x): 0.1313, norm(y): 1.0123, norm:1.7087, tok/sec: 103601.55, flops:90.72, batch-reuse:1
 @ 1998 train 4.5924 , allloss: 4.5948, dt: 1270.64ms, fracRes: 8.2201, norm(attn): 0.0557, norm(output): 0.1865, norm(x): 0.1319, norm(y): 1.0124, norm:1.4223, tok/sec: 103154.03, flops:90.33, batch-reuse:1
 @ 1999 train 4.5250 , allloss: 4.5281, dt: 1276.42ms, fracRes: 8.2330, norm(attn): 0.0557, norm(output): 0.1875, norm(x): 0.1325, norm(y): 1.0125, norm:1.3513, tok/sec: 102687.29, flops:89.92, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 4.7004
+@ 2000 val 4.7004
 @ 2000 train 4.6032 , allloss: 4.6091, dt: 2007.47ms, fracRes: 8.2365, norm(attn): 0.0552, norm(output): 0.1875, norm(x): 0.1322, norm(y): 1.0124, norm:1.5854, tok/sec: 65292.10, flops:57.18, batch-reuse:1
 @ 2001 train 4.6726 , allloss: 4.6753, dt: 1277.59ms, fracRes: 8.2239, norm(attn): 0.0552, norm(output): 0.1865, norm(x): 0.1322, norm(y): 1.0124, norm:1.4437, tok/sec: 102592.85, flops:89.84, batch-reuse:1
 @ 2002 train 4.6554 , allloss: 4.6601, dt: 1281.59ms, fracRes: 8.2114, norm(attn): 0.0557, norm(output): 0.1865, norm(x): 0.1309, norm(y): 1.0123, norm:1.3320, tok/sec: 102273.11, flops:89.56, batch-reuse:1
@@ -3319,7 +3302,6 @@ validation loss: 4.7004
 @ 2047 train 4.7163 , allloss: 4.7194, dt: 1271.03ms, fracRes: 8.2247, norm(attn): 0.0576, norm(output): 0.1865, norm(x): 0.1335, norm(y): 1.0126, norm:1.4829, tok/sec: 103122.55, flops:90.30, batch-reuse:1
 @ 2048 train 4.6787 , allloss: 4.6810, dt: 1286.72ms, fracRes: 8.2158, norm(attn): 0.0579, norm(output): 0.1865, norm(x): 0.1332, norm(y): 1.0125, norm:1.3107, tok/sec: 101865.58, flops:89.20, batch-reuse:1
 @ 2049 train 4.7701 , allloss: 4.7724, dt: 1279.40ms, fracRes: 8.1929, norm(attn): 0.0576, norm(output): 0.1865, norm(x): 0.1318, norm(y): 1.0125, norm:1.3808, tok/sec: 102448.34, flops:89.71, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9453, 0.0547, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.8164, 0.1167, 0.0684, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -4063,7 +4045,6 @@ The most common is the
 @ 2547 train 4.4253 , allloss: 4.4330, dt: 1258.85ms, fracRes: 7.9941, norm(attn): 0.0708, norm(output): 0.1973, norm(x): 0.1450, norm(y): 1.0135, norm:0.9677, tok/sec: 104120.48, flops:91.18, batch-reuse:1
 @ 2548 train 4.5179 , allloss: 4.5241, dt: 1271.15ms, fracRes: 8.0195, norm(attn): 0.0708, norm(output): 0.1982, norm(x): 0.1474, norm(y): 1.0135, norm:1.4509, tok/sec: 103113.02, flops:90.29, batch-reuse:1
 @ 2549 train 4.5524 , allloss: 4.5553, dt: 1260.00ms, fracRes: 7.9884, norm(attn): 0.0718, norm(output): 0.1973, norm(x): 0.1448, norm(y): 1.0135, norm:1.3669, tok/sec: 104025.77, flops:91.09, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9414, 0.0593, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.8516, 0.0977, 0.0518, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -4807,7 +4788,6 @@ llum, and they are the most common color of the body.
 @ 3047 train 4.3252 , allloss: 4.3267, dt: 1274.44ms, fracRes: 7.8696, norm(attn): 0.0840, norm(output): 0.2051, norm(x): 0.1577, norm(y): 1.0143, norm:1.3026, tok/sec: 102846.85, flops:90.06, batch-reuse:1
 @ 3048 train 4.2272 , allloss: 4.2300, dt: 1255.51ms, fracRes: 7.8617, norm(attn): 0.0840, norm(output): 0.2051, norm(x): 0.1576, norm(y): 1.0142, norm:1.0820, tok/sec: 104397.03, flops:91.42, batch-reuse:1
 @ 3049 train 4.4607 , allloss: 4.4618, dt: 1254.93ms, fracRes: 7.8582, norm(attn): 0.0845, norm(output): 0.2041, norm(x): 0.1563, norm(y): 1.0142, norm:1.3921, tok/sec: 104446.08, flops:91.46, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9336, 0.0645, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.8594, 0.0854, 0.0537, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -5551,7 +5531,6 @@ iced
 @ 3547 train 4.1575 , allloss: 4.1591, dt: 1304.95ms, fracRes: 7.7588, norm(attn): 0.0938, norm(output): 0.2158, norm(x): 0.1674, norm(y): 1.0148, norm:1.2286, tok/sec: 100442.49, flops:87.96, batch-reuse:1
 @ 3548 train 4.1356 , allloss: 4.1401, dt: 1290.05ms, fracRes: 7.7614, norm(attn): 0.0938, norm(output): 0.2168, norm(x): 0.1677, norm(y): 1.0148, norm:0.9540, tok/sec: 101602.11, flops:88.97, batch-reuse:1
 @ 3549 train 4.1079 , allloss: 4.1091, dt: 1280.59ms, fracRes: 7.7558, norm(attn): 0.0942, norm(output): 0.2168, norm(x): 0.1680, norm(y): 1.0148, norm:0.8505, tok/sec: 102352.46, flops:89.63, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9219, 0.0781, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.8945, 0.0737, 0.0302, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -6245,9 +6224,7 @@ The most
 @ 3997 train 4.0292 , allloss: 4.0322, dt: 1294.39ms, fracRes: 7.6965, norm(attn): 0.1016, norm(output): 0.2197, norm(x): 0.1758, norm(y): 1.0154, norm:0.7559, tok/sec: 101261.23, flops:88.67, batch-reuse:1
 @ 3998 train 3.9965 , allloss: 3.9993, dt: 1292.20ms, fracRes: 7.7001, norm(attn): 0.1016, norm(output): 0.2207, norm(x): 0.1768, norm(y): 1.0155, norm:0.8609, tok/sec: 101433.08, flops:88.82, batch-reuse:1
 @ 3999 train 4.0611 , allloss: 4.0622, dt: 1293.24ms, fracRes: 7.6877, norm(attn): 0.1016, norm(output): 0.2197, norm(x): 0.1761, norm(y): 1.0154, norm:1.0147, tok/sec: 101351.73, flops:88.75, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 4.0339
+@ 4000 val 4.0339
 @ 4000 train 4.0510 , allloss: 4.0537, dt: 1855.90ms, fracRes: 7.6803, norm(attn): 0.1016, norm(output): 0.2197, norm(x): 0.1753, norm(y): 1.0154, norm:0.7938, tok/sec: 70624.63, flops:61.84, batch-reuse:1
 @ 4001 train 3.9499 , allloss: 3.9512, dt: 1280.38ms, fracRes: 7.6837, norm(attn): 0.1021, norm(output): 0.2207, norm(x): 0.1775, norm(y): 1.0154, norm:0.8493, tok/sec: 102369.57, flops:89.64, batch-reuse:1
 @ 4002 train 4.0122 , allloss: 4.0133, dt: 1295.44ms, fracRes: 7.6693, norm(attn): 0.1016, norm(output): 0.2197, norm(x): 0.1763, norm(y): 1.0153, norm:0.8153, tok/sec: 101179.41, flops:88.60, batch-reuse:1
@@ -6298,7 +6275,6 @@ validation loss: 4.0339
 @ 4047 train 4.0361 , allloss: 4.0426, dt: 1265.20ms, fracRes: 7.6825, norm(attn): 0.1025, norm(output): 0.2207, norm(x): 0.1773, norm(y): 1.0155, norm:0.7811, tok/sec: 103597.92, flops:90.72, batch-reuse:1
 @ 4048 train 3.9372 , allloss: 3.9393, dt: 1263.41ms, fracRes: 7.6799, norm(attn): 0.1021, norm(output): 0.2217, norm(x): 0.1777, norm(y): 1.0155, norm:0.8268, tok/sec: 103744.68, flops:90.85, batch-reuse:1
 @ 4049 train 3.8938 , allloss: 3.8949, dt: 1279.91ms, fracRes: 7.6765, norm(attn): 0.1030, norm(output): 0.2197, norm(x): 0.1778, norm(y): 1.0155, norm:0.8095, tok/sec: 102407.19, flops:89.68, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9414, 0.0574, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.8906, 0.0718, 0.0376, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -7042,7 +7018,6 @@ iced
 @ 4547 train 4.0240 , allloss: 4.0250, dt: 1273.36ms, fracRes: 7.6000, norm(attn): 0.1099, norm(output): 0.2334, norm(x): 0.1848, norm(y): 1.0162, norm:0.7525, tok/sec: 102933.80, flops:90.14, batch-reuse:1
 @ 4548 train 4.0294 , allloss: 4.0303, dt: 1290.48ms, fracRes: 7.6108, norm(attn): 0.1094, norm(output): 0.2334, norm(x): 0.1861, norm(y): 1.0162, norm:0.7457, tok/sec: 101568.77, flops:88.94, batch-reuse:1
 @ 4549 train 3.9361 , allloss: 3.9368, dt: 1278.88ms, fracRes: 7.6024, norm(attn): 0.1094, norm(output): 0.2314, norm(x): 0.1856, norm(y): 1.0162, norm:0.8704, tok/sec: 102489.31, flops:89.75, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9570, 0.0413, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9375, 0.0391, 0.0239, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -7735,7 +7710,6 @@ iced
 @ 4997 train 3.8036 , allloss: 3.8054, dt: 1243.23ms, fracRes: 7.5280, norm(attn): 0.1167, norm(output): 0.2373, norm(x): 0.1942, norm(y): 1.0168, norm:1.0219, tok/sec: 105428.98, flops:92.32, batch-reuse:1
 @ 4998 train 3.8709 , allloss: 3.8719, dt: 1255.02ms, fracRes: 7.5264, norm(attn): 0.1172, norm(output): 0.2363, norm(x): 0.1952, norm(y): 1.0168, norm:0.8525, tok/sec: 104438.44, flops:91.46, batch-reuse:1
 @ 4999 train 3.7488 , allloss: 3.7502, dt: 1244.52ms, fracRes: 7.5294, norm(attn): 0.1167, norm(output): 0.2373, norm(x): 0.1948, norm(y): 1.0168, norm:0.7432, tok/sec: 105319.16, flops:92.23, batch-reuse:1
-saving model checkpoint: checkpoints-ben/model_5000.pt
 @ 5000 train 3.8050 , allloss: 3.8063, dt: 2135.12ms, fracRes: 7.5357, norm(attn): 0.1172, norm(output): 0.2354, norm(x): 0.1941, norm(y): 1.0168, norm:0.9932, tok/sec: 61388.48, flops:53.76, batch-reuse:1
 @ 5001 train 3.7158 , allloss: 3.7166, dt: 1268.90ms, fracRes: 7.5385, norm(attn): 0.1167, norm(output): 0.2363, norm(x): 0.1948, norm(y): 1.0168, norm:0.7901, tok/sec: 103295.85, flops:90.45, batch-reuse:1
 @ 5002 train 3.9573 , allloss: 3.9584, dt: 1256.09ms, fracRes: 7.5191, norm(attn): 0.1162, norm(output): 0.2383, norm(x): 0.1932, norm(y): 1.0169, norm:0.8528, tok/sec: 104349.45, flops:91.38, batch-reuse:1
@@ -7786,7 +7760,6 @@ saving model checkpoint: checkpoints-ben/model_5000.pt
 @ 5047 train 3.9849 , allloss: 3.9860, dt: 1292.94ms, fracRes: 7.5120, norm(attn): 0.1167, norm(output): 0.2363, norm(x): 0.1940, norm(y): 1.0169, norm:0.7549, tok/sec: 101374.83, flops:88.77, batch-reuse:1
 @ 5048 train 3.8361 , allloss: 3.8374, dt: 1294.90ms, fracRes: 7.5131, norm(attn): 0.1172, norm(output): 0.2373, norm(x): 0.1950, norm(y): 1.0169, norm:0.9528, tok/sec: 101221.81, flops:88.64, batch-reuse:1
 @ 5049 train 3.9059 , allloss: 3.9072, dt: 1297.38ms, fracRes: 7.5264, norm(attn): 0.1172, norm(output): 0.2363, norm(x): 0.1960, norm(y): 1.0168, norm:0.8611, tok/sec: 101028.12, flops:88.47, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9609, 0.0381, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9414, 0.0339, 0.0255, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -8530,7 +8503,6 @@ iced
 @ 5547 train 3.8749 , allloss: 3.8757, dt: 1296.68ms, fracRes: 7.4762, norm(attn): 0.1245, norm(output): 0.2471, norm(x): 0.2036, norm(y): 1.0173, norm:0.7379, tok/sec: 101082.40, flops:88.52, batch-reuse:1
 @ 5548 train 3.7468 , allloss: 3.7476, dt: 1280.44ms, fracRes: 7.4821, norm(attn): 0.1240, norm(output): 0.2480, norm(x): 0.2034, norm(y): 1.0173, norm:0.7855, tok/sec: 102365.00, flops:89.64, batch-reuse:1
 @ 5549 train 3.7994 , allloss: 3.8003, dt: 1272.94ms, fracRes: 7.4747, norm(attn): 0.1240, norm(output): 0.2471, norm(x): 0.2042, norm(y): 1.0173, norm:0.7862, tok/sec: 102967.55, flops:90.17, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9609, 0.0408, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9219, 0.0405, 0.0388, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -9223,9 +9195,7 @@ iced
 @ 5997 train 3.9212 , allloss: 3.9220, dt: 1275.84ms, fracRes: 7.3986, norm(attn): 0.1309, norm(output): 0.2520, norm(x): 0.2114, norm(y): 1.0177, norm:0.6801, tok/sec: 102733.56, flops:89.96, batch-reuse:1
 @ 5998 train 3.8670 , allloss: 3.8678, dt: 1270.49ms, fracRes: 7.3874, norm(attn): 0.1289, norm(output): 0.2500, norm(x): 0.2105, norm(y): 1.0177, norm:0.6535, tok/sec: 103166.64, flops:90.34, batch-reuse:1
 @ 5999 train 3.8754 , allloss: 3.8761, dt: 1299.96ms, fracRes: 7.3959, norm(attn): 0.1299, norm(output): 0.2520, norm(x): 0.2110, norm(y): 1.0176, norm:0.6311, tok/sec: 100827.54, flops:88.29, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.8153
+@ 6000 val 3.8153
 @ 6000 train 4.0653 , allloss: 4.0659, dt: 1884.87ms, fracRes: 7.3978, norm(attn): 0.1289, norm(output): 0.2520, norm(x): 0.2099, norm(y): 1.0176, norm:0.6886, tok/sec: 69538.98, flops:60.89, batch-reuse:1
 @ 6001 train 3.8905 , allloss: 3.8912, dt: 1277.84ms, fracRes: 7.3942, norm(attn): 0.1299, norm(output): 0.2520, norm(x): 0.2104, norm(y): 1.0176, norm:0.6733, tok/sec: 102572.81, flops:89.82, batch-reuse:1
 @ 6002 train 3.9654 , allloss: 3.9668, dt: 1273.97ms, fracRes: 7.4164, norm(attn): 0.1309, norm(output): 0.2500, norm(x): 0.2104, norm(y): 1.0177, norm:0.7373, tok/sec: 102884.96, flops:90.09, batch-reuse:1
@@ -9276,7 +9246,6 @@ validation loss: 3.8153
 @ 6047 train 3.8441 , allloss: 3.8448, dt: 1269.66ms, fracRes: 7.4019, norm(attn): 0.1289, norm(output): 0.2520, norm(x): 0.2121, norm(y): 1.0178, norm:0.7676, tok/sec: 103233.84, flops:90.40, batch-reuse:1
 @ 6048 train 3.9094 , allloss: 3.9102, dt: 1268.82ms, fracRes: 7.4089, norm(attn): 0.1279, norm(output): 0.2520, norm(x): 0.2124, norm(y): 1.0180, norm:0.8788, tok/sec: 103302.34, flops:90.46, batch-reuse:1
 @ 6049 train 3.8601 , allloss: 3.8609, dt: 1274.25ms, fracRes: 7.4004, norm(attn): 0.1289, norm(output): 0.2520, norm(x): 0.2123, norm(y): 1.0179, norm:0.7375, tok/sec: 102862.03, flops:90.07, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9688, 0.0330, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9844, 0.0108, 0.0057, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -10020,7 +9989,6 @@ iced
 @ 6547 train 3.7570 , allloss: 3.7625, dt: 1250.56ms, fracRes: 7.3420, norm(attn): 0.1367, norm(output): 0.2637, norm(x): 0.2206, norm(y): 1.0183, norm:0.7598, tok/sec: 104810.52, flops:91.78, batch-reuse:1
 @ 6548 train 3.7857 , allloss: 3.7882, dt: 1264.26ms, fracRes: 7.3371, norm(attn): 0.1367, norm(output): 0.2637, norm(x): 0.2200, norm(y): 1.0184, norm:0.6559, tok/sec: 103674.48, flops:90.79, batch-reuse:1
 @ 6549 train 3.7956 , allloss: 3.7964, dt: 1263.79ms, fracRes: 7.3317, norm(attn): 0.1367, norm(output): 0.2617, norm(x): 0.2198, norm(y): 1.0183, norm:0.6614, tok/sec: 103713.29, flops:90.82, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9609, 0.0396, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9805, 0.0132, 0.0065, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -10764,7 +10732,6 @@ iced
 @ 7047 train 3.6477 , allloss: 3.6482, dt: 1278.95ms, fracRes: 7.2915, norm(attn): 0.1416, norm(output): 0.2656, norm(x): 0.2269, norm(y): 1.0187, norm:0.5901, tok/sec: 102483.99, flops:89.74, batch-reuse:1
 @ 7048 train 3.5904 , allloss: 3.5910, dt: 1273.41ms, fracRes: 7.2822, norm(attn): 0.1406, norm(output): 0.2656, norm(x): 0.2264, norm(y): 1.0186, norm:0.6261, tok/sec: 102929.75, flops:90.13, batch-reuse:1
 @ 7049 train 3.7124 , allloss: 3.7129, dt: 1274.22ms, fracRes: 7.2880, norm(attn): 0.1406, norm(output): 0.2676, norm(x): 0.2262, norm(y): 1.0187, norm:0.5967, tok/sec: 102864.65, flops:90.08, batch-reuse:1
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.9570,     0.0439,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.9727,     0.0177,     0.0110,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -11508,7 +11475,6 @@ iced
 @ 7547 train 3.7220 , allloss: 3.7226, dt: 1280.60ms, fracRes: 7.2801, norm(attn): 0.1475, norm(output): 0.2773, norm(x): 0.2377, norm(y): 1.0194, norm:0.6218, tok/sec: 102352.05, flops:89.63, batch-reuse:1
 @ 7548 train 3.7567 , allloss: 3.7582, dt: 1278.45ms, fracRes: 7.2815, norm(attn): 0.1484, norm(output): 0.2773, norm(x): 0.2382, norm(y): 1.0193, norm:0.8554, tok/sec: 102524.03, flops:89.78, batch-reuse:1
 @ 7549 train 3.7355 , allloss: 3.7361, dt: 1279.64ms, fracRes: 7.2819, norm(attn): 0.1475, norm(output): 0.2793, norm(x): 0.2390, norm(y): 1.0195, norm:0.6195, tok/sec: 102428.93, flops:89.70, batch-reuse:1
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9688, 0.0327, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9805, 0.0112, 0.0072, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -12018,62 +11984,3 @@ iced
 @ 7813 train 3.5350 , allloss: 3.5356, dt: 1261.82ms, fracRes: 7.2297, norm(attn): 0.1504, norm(output): 0.2793, norm(x): 0.2386, norm(y): 1.0193, norm:0.5696, tok/sec: 103875.62, flops:90.96, batch-reuse:1
 @ 7814 train 3.5532 , allloss: 3.5537, dt: 1238.15ms, fracRes: 7.2204, norm(attn): 0.1514, norm(output): 0.2793, norm(x): 0.2386, norm(y): 1.0192, norm:0.6170, tok/sec: 105860.91, flops:92.70, batch-reuse:1
 @ 7815 train 3.6596 , allloss: 3.6644, dt: 1255.13ms, fracRes: 7.2398, norm(attn): 0.1504, norm(output): 0.2773, norm(x): 0.2389, norm(y): 1.0193, norm:0.6876, tok/sec: 104429.32, flops:91.45, batch-reuse:1
-W0128 08:09:56.542000 8669 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0128 08:09:56.542000 8669 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 8752 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1784, in <module>
-[rank0]:     _, loss, trueloss, confLoss, targetLoss, metadata, earlyStopLayerDict = model(x, y) # NOTE: we don't actually use the logits
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1654, in forward
-[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1470, in _run_ddp_forward
-[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 829, in forward
-[rank0]:     vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets,print_weights=print_weights)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 772, in vanillaforward
-[rank0]:     x, metadata = block(x,print_weights=print_weights,step=i)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 488, in forward
-[rank0]:     attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 125, in forward
-[rank0]:     q,k,v = qkv.split(self.n_embd, dim=2)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/_tensor.py", line 1048, in split
-[rank0]:     return torch._VF.split(self, split_size, dim)  # type: ignore[attr-defined]
-[rank0]: KeyboardInterrupt
-[rank0]:[W128 08:09:56.756346741 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 8669 got signal: 2

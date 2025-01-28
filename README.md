@@ -2167,3 +2167,58 @@ ATTENTION_SINK=True
 
 Is training in parallel on `T` tokens fundamental? What happens is that at all but the last position, we are now awarding pass-through... perhaps carrying more information than necessary to compute the next token, but perhaps the information is useful for future tokens down the line. So this is like creating some "current understanding state" instead of next token prediction.
 
+## The Identity Mechanism
+
+First, we reduce the learning rate, and run the vanilla experiment
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x + machineOutput
+======== 
+max_lr = 0.25*6e-4
+min_lr = max_lr * 0.1
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=False
+```
+![loss plot](img/17-identity.jpg)
+
+
+
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config) (mlp*attn)
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = x*xWeights + machineOutput
+======== 
+max_lr = 0.25*6e-4
+min_lr = max_lr * 0.1
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
