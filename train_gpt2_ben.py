@@ -181,6 +181,10 @@ class CausalSelfAttention(DualModule):
             bprint(f"{yy[-1,-1,:,:]}")
 
             rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
+            bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
+            bprint(f"K: {k[-1, -1, -1, :]}")
+            bprint(f"Qweights\n{self.c_attn.weight[self.n_embd:2*self.n_embd, :]}")
+            bprint(f"Q: {q[-1, -1, -1, :]}")
             bprint(f"RAWVALUES\n{rawATT[-1,-1,:,:]}")
             if self.cachedResW is not None:
                 torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
@@ -488,7 +492,7 @@ class BenBlock(nn.Module):
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = xWeights * x + (1-xWeights)*machineOutput
+        x = xWeights * x + machineOutput
 
         # NOTE: consider running above output through a softmax
         # xWeights is (B, T, 1)
@@ -1439,7 +1443,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="17-identity-test"
+test_name="17-identity-test-no-1minus"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1482,7 +1486,7 @@ y = self.ln_1(x)
 attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
 program = self.compiler(y)
 machineOutput = self.execute(program, attn)
-x = xWeights * x + (1-xWeights)*machineOutput
+x = xWeights * x + machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
