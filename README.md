@@ -2197,21 +2197,19 @@ IDENTITY_LOSS=False
 ![loss plot](img/17-identity.jpg)
 
 
-
+Now, we run an experiment where we do the weighting thing again...
 ```
 self.compiler = BenCompilerNoOp(config)
-self.execute = VanillaExecute(config) (mlp*attn)
+self.execute = VanillaExecute(config) 
+========
 y = self.ln_1(x)
 attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
 program = self.compiler(y)
 machineOutput = self.execute(program, attn)
-x = x*xWeights + machineOutput
+x = xWeights * x + (1-xWeights)*machineOutput
 ======== 
-max_lr = 0.25*6e-4
-min_lr = max_lr * 0.1
-========
 VALUEMATRIX=True
-REUSE_WEIGHTS=True
+REUSE_WEIGHTS=False
 MLP_SCALE=4
 MEASURE_SELF_CONTRIBUTION=False
 NEW_ALL_LAYER_LOSS=False
@@ -2222,3 +2220,71 @@ EXTRACT_SELF_CONTRIBUTION=False
 ATTENTION_SINK=True
 IDENTITY_LOSS=True
 ```
+![loss plot](img/17-identity-test.jpg)
+
+
+
+Surprisingly, if I get rid of the `(1 - xWeights)`, things are substantially worse. I suspect that this is because the mlp component is additive? Or is the attn component itself just too large (because of the value matrix?). I suspect that it is entirely becaues of the MLP (outdominating the residual component)
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = VanillaExecute(config) 
+========
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights * x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![loss plot](img/17-identity-test-no-1minus.jpg)
+
+Now, we switch to `BenExecute`, which currently looks like
+```
+class BenExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    
+    def forward(self, program, attn):
+        return self.mlp(program, attn) # self.ln_2(attn)
+```
+Note that we do not layernorm the attn signal, in hopes that if it is attenuated, the mlp will recognize that and attenuate its own output as well.
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = BenExecute(config) 
+========
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights * x + machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+
+![loss plot](img/17-identity-test-no-1minus-mlpconcat.jpg)
+
+

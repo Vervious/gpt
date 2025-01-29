@@ -1,0 +1,84 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(blank:0.0002parency:0.0002pects:0.0002 DUP:0.0002 ribs:0.0002acid:0.0002 exploded:0.0002 Panthers:0.0002)
+ Panthers
+------
+		(parency:0.0002pects:0.0002 DUP:0.0002 ribs:0.0002acid:0.0002 exploded:0.0002 Panthers:0.0002 stream:0.0002)
+ stream lasted weave Deg distraught lastedmaster� goto LowryProtect relational Maltensibly MIL
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0096 the:0.0106,:0.0091 the:0.0136 the:0.0116.:0.0099 the:0.0128.:0.0103)
+.
+------
+		( the:0.0106,:0.0091 the:0.0136 the:0.0116.:0.0099 the:0.0128.:0.0103
+:0.1318)
+
+ the the the the, the, the the, the, the,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1533 a:0.0371,:0.0967 and:0.1621ant:0.0040,:0.2324 a:0.0311
+:0.1797)
+
+
+------
+		( a:0.0371,:0.0967 and:0.1621ant:0.0040,:0.2324 a:0.0311
+:0.1797The:0.0620)
+The first time, and the same, and the same, and the same
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0776 a:0.0420 and:0.0339 and:0.1494os:0.0227,:0.2949 a:0.0393
+:0.1416)
+
+
+------
+		( a:0.0420 and:0.0339 and:0.1494os:0.0227,:0.2949 a:0.0393
+:0.1416The:0.0947)
+The most of the same time, the same time, the same time,
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1377 the:0.1016,:0.1748 and:0.1299om:0.1006,:0.2461 the:0.0669ery:0.1187)
+ery
+------
+		( the:0.1016,:0.1748 and:0.1299om:0.1006,:0.2461 the:0.0669ery:0.1187,:0.1187)
+, and the most common species.
+The most common species of the species
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1533 a:0.1074iscovered:0.1504 and:0.0762om:0.1396,:0.3066 a:0.0903ery:0.0981)
+ery
+------
+		( a:0.1074iscovered:0.1504 and:0.0762om:0.1396,:0.3066 a:0.0903ery:0.0981,:0.1123)
+, and other animals.
+- The most common species of the species is
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1328 a:0.1514,:0.1729 and:0.0771om:0.1670,:0.2539 a:0.0830ery:0.1914)
+ery
+------
+		( a:0.1514,:0.1729 and:0.0771om:0.1670,:0.2539 a:0.0830ery:0.1914,:0.1211)
+, and the fruit is a great source of fruit.
+The fruit is
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1328 a:0.1982,:0.3320 and:0.1074.:0.1079,:0.3496 a:0.1367vern:0.0918)
+vern
+------
+		( a:0.1982,:0.3320 and:0.1074.:0.1079,:0.3496 a:0.1367vern:0.0918acular:0.4961)
+acular, and the most common of the world's most beautiful.
+The
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0791 a:0.1289,:0.2188 and:0.1230ty:0.0947,:0.4609 a:0.0986vern:0.0767)
+vern
+------
+		( a:0.1289,:0.2188 and:0.1230ty:0.0947,:0.4609 a:0.0986vern:0.0767acular:0.0908)
+acular, and they are used to make a difference.
+The first step
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.0854 a:0.1709,:0.1816 and:0.0732ts:0.0596,:0.4277 a:0.1377iced:0.1504)
+iced
+------
+		( a:0.1709,:0.1816 and:0.0732ts:0.0596,:0.4277 a:0.1377iced:0.1504,:0.1631)
+, and they are the most common types of fruits that are rich in the

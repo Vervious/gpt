@@ -439,7 +439,7 @@ class BenExecute(nn.Module):
 
     
     def forward(self, program, attn):
-        return self.mlp(program, self.ln_2(attn))
+        return self.mlp(program, attn) # self.ln_2(attn)
 
 
 
@@ -474,7 +474,7 @@ class BenBlock(nn.Module):
         self.n_layer = config.n_layer
 
         self.compiler = BenCompilerNoOp(config)
-        self.execute = VanillaExecute(config)
+        self.execute = BenExecute(config)
 
         # self.mlp = MLP(config)
 
@@ -1443,7 +1443,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="17-identity-test-no-1minus"
+test_name="17-identity-test-no-1minus-mlpconcat"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1480,7 +1480,7 @@ test_description=f"""Transformer, max LR 6e-4
 Setting:
 ========
 self.compiler = BenCompilerNoOp(config)
-self.execute = VanillaExecute(config) 
+self.execute = BenExecute(config) 
 ========
 y = self.ln_1(x)
 attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
