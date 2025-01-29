@@ -1,0 +1,28 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Franc:0.0001 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002)
+ Franc
+------
+		( Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002 Franc:0.0002)
+ Franc Franc Franc Franc Franc Franc Franc Franc Franc Franc Franc Franc Franc Franc Franc
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095)
+ the
+------
+		( the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095 the:0.0095)
+ the the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0471,:0.0486,:0.0486,:0.0486,:0.0486,:0.0486,:0.0471,:0.0471)
+,
+------
+		(,:0.0486,:0.0486,:0.0486,:0.0486,:0.0486,:0.0471,:0.0471,:0.0486)
+,,,,,,,,,,,,,,,
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405)
+ the
+------
+		( the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405 the:0.0405)
+ the the the the the the the the the the the the the the the

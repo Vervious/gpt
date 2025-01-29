@@ -1,0 +1,60 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(Lock:0.0002 monet:0.0001 Pak:0.0002 Durant:0.0002 tally:0.0002business:0.0002 800:0.0002 tour:0.0002)
+ tour
+------
+		( monet:0.0001 Pak:0.0002 Durant:0.0002 tally:0.0002business:0.0002 800:0.0002 tour:0.0002 deems:0.0002)
+ deems Mars added ccoonRankCS piv Deposit c broccoliherninspiredvered information
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0178 the:0.0173 the:0.0173 the:0.0203.:0.0167.:0.0178 the:0.0173.:0.0173)
+.
+------
+		( the:0.0173 the:0.0173 the:0.0203.:0.0167.:0.0178 the:0.0173.:0.0173
+:0.1396)
+
+ the.
+.
+.
+.
+.
+.
+.
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1719 a:0.1152,:0.0554 and:0.1689.:0.0192,:0.3105 a:0.1216
+:0.2178)
+
+
+------
+		( a:0.1152,:0.0554 and:0.1689.:0.0192,:0.3105 a:0.1216
+:0.2178The:0.0454)
+The first.
+The first.
+The first.
+The first.
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1611 not:0.0457,:0.0344 and:0.1157,:0.0216,:0.1885 the:0.0425al:0.0564)
+al
+------
+		( not:0.0457,:0.0344 and:0.1157,:0.0216,:0.1885 the:0.0425al:0.0564,:0.0583)
+, and the same, and the same, and the same, and the
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1553 not:0.0654,:0.1289 and:0.0815ent:0.0293,:0.2002 not:0.0620
+:0.1338)
+
+
+------
+		( not:0.0654,:0.1289 and:0.0815ent:0.0293,:0.2002 not:0.0620
+:0.1338-:0.0415)
+- The first time to the first time to the first time to the first
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1494 not:0.0630,:0.1631 and:0.0762ent:0.0635,:0.3789 not:0.0432ery:0.0630)
+ery
+------
+		( not:0.0630,:0.1631 and:0.0762ent:0.0635,:0.3789 not:0.0432ery:0.0630,:0.1484)
+, and blueberries.
+The most common types of the most common types

@@ -439,7 +439,7 @@ class BenExecute(nn.Module):
 
     
     def forward(self, program, attn):
-        return self.mlp(program, attn) # self.ln_2(attn)
+        return self.ln_2(self.mlp(program, attn))
 
 
 
@@ -492,10 +492,9 @@ class BenBlock(nn.Module):
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = xWeights * x + machineOutput
+        x = xWeights * x + (1 - xWeights) * machineOutput
 
-        # NOTE: consider running above output through a softmax
-        # xWeights is (B, T, 1)
+
 
         metadata["_norm_attn"] = attn.std(dim=-1).mean() / self.n_layer #torch.linalg.norm(attn, dim=-1).mean().item()
         metadata["_norm_y"] = y.std(dim=-1).mean() / self.n_layer # should be 1 / 12
@@ -780,8 +779,8 @@ class GPT(DualModule):
                 # _start = self.transformer.ln_f(_in)
                 _x, _ = block(_in,print_weights=print_weights) # Do again... lol
 
-                _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
-                # _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1).mean()
+                # _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
+                _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1).mean()
                 
             elif targets is not None and NEW_ALL_LAYER_LOSS:
                 # x = block(x.detach())
@@ -1443,7 +1442,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="17-identity-test-no-1minus-mlpconcat"
+test_name="17-yes-1minus-mlpconcat-noln-faster-2"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1452,7 +1451,7 @@ T = 1024 # sequence length # 16 # 1024
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
-max_lr = 0.25*6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
+max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
 min_lr = max_lr * 0.1
 warmup_steps = 1000 # 100
 use_compile = False # May run into bugs
@@ -1486,7 +1485,7 @@ y = self.ln_1(x)
 attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
 program = self.compiler(y)
 machineOutput = self.execute(program, attn)
-x = xWeights * x + machineOutput
+x = xWeights * x + (1-xWeights)*machineOutput
 ======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}

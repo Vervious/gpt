@@ -2288,3 +2288,48 @@ IDENTITY_LOSS=True
 ![loss plot](img/17-identity-test-no-1minus-mlpconcat.jpg)
 
 
+Next, we add the layer norm in BenExecute and the `(1-xWeights)` back in. The motivation is to hopefully increase the residual faster, and to make it easier for the attention component to zero itself out. Surprisingly, this absolutely fails.
+```
+self.compiler = BenCompilerNoOp(config)
+self.execute = BenExecute(config) 
+========
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights * x + (1-xWeights)*machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![loss](img/17-identity-test-yes-1minus-mlpconcat.jpg)
+
+Why did the previous fail? Is it because we put the layer norm back? Or is it because we added the `(1-xWeights)`? Let's remove the layer norm again from BenExecute. It works now, but note the strange time when the standard deviation of `output` went out of control:
+
+![loss](img/17-identity-test-yes-1minus-mlpconcat-noln.jpg)
+
+Let's see if this is still stable, if we return the learning rate to the original of 6e-4; also we switch from cosine similarity to a norm of the difference:
+
+![loss](img/17-yes-1minus-mlpconcat-noln-faster.jpg)
+
+
+The norm of the output in the previous experiment was very high. What if we layer norm it?
+![loss](img/17-yes-1minus-mlpconcat-noln-faster-2.jpg)
+
+
+That seems to be why. Now, it seems that mlpconcat is not very good, but in prior experiments it has usually converged to vanilla transformers, and is just slower to train. But it fits my mental model better, so let's stick with it for now, and try to up the training rate:
+
+
+
+Next steps: increase learning rate. What happens if i turn x to y?  Also, our hope was that removing residual would "clarify" signal (because that's how computation works). Do we see improvement in that regard (is perplexity the best way to measure that?).
+
+how similar 

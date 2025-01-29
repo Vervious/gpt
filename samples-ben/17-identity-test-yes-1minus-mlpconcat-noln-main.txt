@@ -1,0 +1,120 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(coins:0.0002 urinary:0.0002 outcome:0.0002 Blow:0.0002enery:0.0002odynamic:0.0002izophren:0.0002 2006:0.0002)
+ 2006
+------
+		( urinary:0.0002 outcome:0.0002 Blow:0.0002enery:0.0002odynamic:0.0002izophren:0.0002 2006:0.0002Aut:0.0002)
+AutMagnenersoka bosses Organisation Arts psy followed Montana quittingtem Morton Morton Morton
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0099,:0.0109,:0.0106 the:0.0135,:0.0106 the:0.0131 the:0.0131,:0.0106)
+,
+------
+		(,:0.0109,:0.0106 the:0.0135,:0.0106 the:0.0131 the:0.0131,:0.0106 the:0.0153)
+ the the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1631 a:0.0435 and:0.0527 and:0.1670in:0.0057,:0.1875 a:0.0386,:0.0143)
+,
+------
+		( a:0.0435 and:0.0527 and:0.1670in:0.0057,:0.1875 a:0.0386,:0.0143 and:0.1885)
+ and the same, and the same, and the same, and the same
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1147 a:0.0562ness:0.0732 and:0.1064om:0.0125.:0.2051 a:0.0356
+:0.1016)
+
+
+------
+		( a:0.0562ness:0.0732 and:0.1064om:0.0125.:0.2051 a:0.0356
+:0.1016The:0.0820)
+The most common in the most common in the most common in the same time
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1631 a:0.1289.:0.1914 and:0.1299om:0.0625,:0.4746 a:0.0923ery:0.0908)
+ery
+------
+		( a:0.1289.:0.1914 and:0.1299om:0.0625,:0.4746 a:0.0923ery:0.0908.:0.1138)
+.
+The first of the first day of the first day of the first
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1367 a:0.0869 and:0.1553 and:0.1172atoes:0.1128,:0.6992 a:0.0513ery:0.0488)
+ery
+------
+		( a:0.0869 and:0.1553 and:0.1172atoes:0.1128,:0.6992 a:0.0513ery:0.0488,:0.1055)
+, and they are also a great way to get rid of the world.
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1309 a:0.1504 and:0.1875 and:0.1152atoes:0.0513,:0.4023 a:0.1050vern:0.0679)
+vern
+------
+		( a:0.1504 and:0.1875 and:0.1152atoes:0.0513,:0.4023 a:0.1050vern:0.0679ing:0.1099)
+ing.
+The most common form of the fruit is the most common in
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1533 a:0.1260 and:0.2109 and:0.0947atoes:0.0566,:0.4922 a:0.0479
+:0.0859)
+
+
+------
+		( a:0.1260 and:0.2109 and:0.0947atoes:0.0566,:0.4922 a:0.0479
+:0.0859-:0.0962)
+- The most common name for the word "The word "The word"
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1641 the:0.1348,:0.1963 and:0.1123atoes:0.1279,:0.5430 a:0.0869iced:0.0640)
+iced
+------
+		( the:0.1348,:0.1963 and:0.1123atoes:0.1279,:0.5430 a:0.0869iced:0.0640,:0.1270)
+, and are the most common in the world.
+The most common type
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1855 a:0.1226,:0.1826 and:0.1045atoes:0.0952,:0.6836 a:0.0718iced:0.3066)
+iced
+------
+		( a:0.1226,:0.1826 and:0.1045atoes:0.0952,:0.6836 a:0.0718iced:0.3066,:0.4238)
+, and are all good for your health.
+- The best way to
+4550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1875 a:0.1475,:0.1924 white:0.0815,:0.2695,:0.3730 red:0.0420iced:0.3730)
+iced
+------
+		( a:0.1475,:0.1924 white:0.0815,:0.2695,:0.3730 red:0.0420iced:0.3730,:0.2295)
+, and are the ones you can get from the sun.
+- The
+5050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1611 a:0.1289,:0.1855 and:0.0830,:0.0967,:0.5508 green:0.0608iced:0.1621)
+iced
+------
+		( a:0.1289,:0.1855 and:0.0830,:0.0967,:0.5508 green:0.0608iced:0.1621,:0.3418)
+, and are all the colors of the sun.
+The color of the
+5550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1270 a:0.1216,:0.2871 orange:0.1123atoes:0.0757,:0.6055 a:0.0815iced:0.2754)
+iced
+------
+		( a:0.1216,:0.2871 orange:0.1123atoes:0.0757,:0.6055 a:0.0815iced:0.2754,:0.3711)
+, and are a good choice for your body.
+- The skin is
+6050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.2061 a:0.1318,:0.1865 yellow:0.1201atoes:0.3848,:0.3926 a:0.0566iced:0.3379)
+iced
+------
+		( a:0.1318,:0.1865 yellow:0.1201atoes:0.3848,:0.3926 a:0.0566iced:0.3379,:0.1846)
+, and are all green.
+- The flowers are green, and are
+6550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1631 a:0.1074,:0.3086 yellow:0.0859om:0.1177,:0.6328 a:0.0442iced:0.5430)
+iced
+------
+		( a:0.1074,:0.3086 yellow:0.0859om:0.1177,:0.6328 a:0.0442iced:0.5430,:0.4238)
+, and are not the same as the other two.
+The most common
