@@ -1,0 +1,42 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( options:0.0002 rankings:0.0002 wholly:0.0002 Jak:0.0002 websites:0.0002Critical:0.0002 Galactic:0.0002.):0.0002)
+.)
+------
+		( rankings:0.0002 wholly:0.0002 Jak:0.0002 websites:0.0002Critical:0.0002 Galactic:0.0002.):0.0002ah:0.0002)
+ahconsAgain Export scoredClimate deliveredicrobialKo invasiongar tour diarrhea Peru Response
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( proclamation:0.0002slave:0.0003 copyright:0.0002 true:0.0002 pharmaceutical:0.0002slave:0.0002 hypothesis:0.0002 hypothesis:0.0002)
+ hypothesis
+------
+		(slave:0.0003 copyright:0.0002 true:0.0002 pharmaceutical:0.0002slave:0.0002 hypothesis:0.0002 hypothesis:0.0002 ISS:0.0002)
+ ISS hypothesis formatting conspiring� conspiringmulti��multimultimultimultimulti conspiring
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( in:0.0022 in:0.0021 in:0.0020 in:0.0020 in:0.0020 in:0.0020 in:0.0019 in:0.0019)
+ in
+------
+		( in:0.0021 in:0.0020 in:0.0020 in:0.0020 in:0.0020 in:0.0019 in:0.0019 in:0.0019)
+ in in in in in in in in in in in in in in in
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344)
+ of
+------
+		( of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344 of:0.0344)
+ of of of of of of of of of of of of of of of
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758)
+ of
+------
+		( of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758 of:0.1758)
+ of of of of of of of of of of of of of of of
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0327 the:0.0327 the:0.0327 the:0.0327 the:0.0327,:0.0248 the:0.0327 the:0.0327)
+ the
+------
+		( the:0.0327 the:0.0327 the:0.0327 the:0.0327,:0.0248 the:0.0327 the:0.0327 the:0.0327)
+ the the the the the the the the the the the the the the the

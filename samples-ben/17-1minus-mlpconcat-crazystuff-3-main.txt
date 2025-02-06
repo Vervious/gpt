@@ -1,0 +1,36 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Factors:0.0002 made:0.0002 notified:0.0002payment:0.0002Credits:0.0001 Ember:0.0002 cups:0.0002 caste:0.0002)
+ caste
+------
+		( made:0.0002 notified:0.0002payment:0.0002Credits:0.0001 Ember:0.0002 cups:0.0002 caste:0.0002 Tup:0.0002)
+ Tup Sunshine Apsharing NDPdry Moff NDP overloadoxide overload overload murderousoxide NDP
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Factors:0.0002 made:0.0003 Frame:0.0002windows:0.0002 offend:0.0002 in:0.0002 hunt:0.0002 Cathy:0.0002)
+ Cathy
+------
+		( made:0.0003 Frame:0.0002windows:0.0002 offend:0.0002 in:0.0002 hunt:0.0002 Cathy:0.0002,:0.0003)
+, calactactactactact the,act the,riaact,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0008 of:0.0004 the:0.0007,:0.0015 The:0.0005 a:0.0029 a:0.0013,:0.0017)
+,
+------
+		( of:0.0004 the:0.0007,:0.0015 The:0.0005 a:0.0029 a:0.0013,:0.0017 a:0.0044)
+ a a a a a the the the the the the the the the the
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0005 of:0.0017.:0.0027.:0.0023.:0.0035 The:0.0003.:0.0033.:0.0021)
+.
+------
+		( of:0.0017.:0.0027.:0.0023.:0.0035 The:0.0003.:0.0033.:0.0021.:0.0035)
+...............
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0820.:0.0850.:0.0947.:0.0613.:0.0972.:0.1001.:0.0603.:0.0684)
+.
+------
+		(.:0.0850.:0.0947.:0.0613.:0.0972.:0.1001.:0.0603.:0.0684.:0.0718)
+...............

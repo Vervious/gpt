@@ -1,0 +1,89 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Pract:0.0003 viewpoint:0.0002 removal:0.0002 outlined:0.0002omes:0.0002 veh:0.0003 forbidden:0.0002 lawyer:0.0002)
+ lawyer
+------
+		( viewpoint:0.0002 removal:0.0002 outlined:0.0002omes:0.0002 veh:0.0003 forbidden:0.0002 lawyer:0.0002 Adolf:0.0002)
+ Adolf removal snlocationhiZelocation>) Ellison Alison diagrams comicappa Brigadeshake
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0118.:0.0119.:0.0106 the:0.0119.:0.0123.:0.0087.:0.0123 the:0.0139)
+ the
+------
+		(.:0.0119.:0.0106 the:0.0119.:0.0123.:0.0087.:0.0123 the:0.0139.:0.0109)
+.
+ the.
+.
+.
+.
+.
+.
+
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0928 a:0.0608,:0.0439 and:0.1221ing:0.0537,:0.1245 a:0.0530
+:0.2559)
+
+
+------
+		( a:0.0608,:0.0439 and:0.1221ing:0.0537,:0.1245 a:0.0530
+:0.2559-:0.1045)
+- The first- The first- The first- The first- The first
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(?:0.0559 a:0.0791-:0.0486 and:0.1162als:0.3008,:0.1309 a:0.0884
+:0.0889)
+
+
+------
+		( a:0.0791-:0.0486 and:0.1162als:0.3008,:0.1309 a:0.0884
+:0.0889-:0.0933)
+- The most common source of the most common in the world.
+-
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0957 a:0.0796 and:0.2812 and:0.1279om:0.1250,:0.3359 a:0.0596ips:0.0349)
+ips
+------
+		( a:0.0796 and:0.2812 and:0.1279om:0.1250,:0.3359 a:0.0596ips:0.0349,:0.3184)
+, and other vegetables.
+- The most common form of the world is
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1406 a:0.1670,:0.1641 white:0.0786atoes:0.0483,:0.2129 a:0.0703iced:0.2061)
+iced
+------
+		( a:0.1670,:0.1641 white:0.0786atoes:0.0483,:0.2129 a:0.0703iced:0.2061 with:0.1133)
+ with a white, white, white, white, white, white, white
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.0962 a:0.1348-:0.1035 green:0.0737assium:0.0850,:0.1523 a:0.1416iced:0.6523)
+iced
+------
+		( a:0.1348-:0.1035 green:0.0737assium:0.0850,:0.1523 a:0.1416iced:0.6523 in:0.0693)
+ in the soil.
+The seeds are a good source of nutrients, and
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( and:0.1157 a:0.1543,:0.1895 yellow:0.1387om:0.0811,:0.4473 a:0.0850iced:0.3691)
+iced
+------
+		( a:0.1543,:0.1895 yellow:0.1387om:0.0811,:0.4473 a:0.0850iced:0.3691,:0.1904)
+, and are used for the purposes of the same purpose.
+The first
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2520 a:0.1104,:0.3203 red:0.1001atoes:0.2695,:0.3223 a:0.0923ery:0.1504)
+ery
+------
+		( a:0.1104,:0.3203 red:0.1001atoes:0.2695,:0.3223 a:0.0923ery:0.1504thro:0.1426)
+throcytes, and are the most common.
+The flowers are usually
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1631 a:0.1191,:0.1982 white:0.0723atoes:0.1108 are:0.2393 a:0.1040iced:0.5742)
+iced
+------
+		( a:0.1191,:0.1982 white:0.0723atoes:0.1108 are:0.2393 a:0.1040iced:0.5742,:0.2344)
+, and the best way to get your name.
+- The best way

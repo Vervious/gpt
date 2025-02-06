@@ -1,0 +1,14 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( boldly:0.0001 Yet:0.0002 Oaks:0.0002 Cheong:0.0001 Yet:0.0001 Winnipeg:0.0002 Kappa:0.0002 Despite:0.0001)
+ Despite
+------
+		( Yet:0.0002 Oaks:0.0002 Cheong:0.0001 Yet:0.0001 Winnipeg:0.0002 Kappa:0.0002 Despite:0.0001 Innov:0.0002)
+ Innovanthrop games instrumental enchanted phoneanthropanthrop phone Innov dens Innov poorest burgeoning honor
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0039 the:0.0039 the:0.0039 the:0.0038 the:0.0038 the:0.0038 the:0.0038 the:0.0038)
+ the
+------
+		( the:0.0039 the:0.0039 the:0.0038 the:0.0038 the:0.0038 the:0.0038 the:0.0038 the:0.0038)
+ the the the the the the the the the the the the the the the

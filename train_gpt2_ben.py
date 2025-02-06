@@ -92,8 +92,19 @@ class CausalSelfAttention(DualModule):
         #     .view(1,1,config.block_size,config.block_size)
         # )
         # no zeros
-        # if ATTENTION_SINK:
-        #     self.register_buffer("mask", torch.tril(torch.ones(config.block_size, config.block_size),diagonal=0).bool().view(1, 1, config.block_size, config.block_size))
+        if ATTENTION_MASK:
+            if ATTENTION_SINK:
+                T = config.block_size + 1
+            else:
+                T = config.block_size
+# @flag attention mask
+            mask = torch.triu(torch.ones(T, T),diagonal=1)
+            mask = torch.where(mask == 1, float("-inf"), torch.tensor(0.0))
+            if ATTENTION_SINK:
+                mask[:,0] = 2*(torch.arange(0, T) + 1).log()
+            mask = mask.view(1, 1, T, T)
+            self.register_buffer("mask", mask)
+# @endflag attention mask
         # print(torch.diagonal(self.mask, dim1=-2, dim2=-1).sum().item())
 
         if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
@@ -147,6 +158,9 @@ class CausalSelfAttention(DualModule):
             v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
             # v = z.unsqueeze(1) # (B, 1, T, C)
 
+        # if print_weights:
+        #     bprint(f"Kraw: {k[-1, -1, :10]}")
+        #     bprint(f"Qraw: {q[-1, -1, :10]}")
         # treat heads as batches
         k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
@@ -172,24 +186,39 @@ class CausalSelfAttention(DualModule):
         # y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
         
         # Just have Pytorch use FlashAttention for us. #TODO NVM
-        y = F.scaled_dot_product_attention(q, k, v, is_causal=True)  
+        # y = F.scaled_dot_product_attention(q, k, v, is_causal=True)  
+        # if print_weights:
+        #     bprint(f"dtype {self.mask.dtype}")
+        #     # bprint(f"my mask: {self.mask[:,:,:T,:T]}")
+        if ATTENTION_MASK:
+            y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
+        else:
+            y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
         if print_weights:
-            vv = torch.eye(T, device=x.device).view(1, 1, T, T)
-            yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
-            torch.set_printoptions(linewidth=300, sci_mode=False)
-            bprint(f"{yy[-1,-1,:,:]}")
+            with torch.no_grad():
+                vv = torch.eye(T, device=x.device).view(1, 1, T, T)
 
-            rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
-            bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
-            bprint(f"K: {k[-1, -1, -1, :]}")
-            bprint(f"Qweights\n{self.c_attn.weight[self.n_embd:2*self.n_embd, :]}")
-            bprint(f"Q: {q[-1, -1, -1, :]}")
-            bprint(f"RAWVALUES\n{rawATT[-1,-1,:,:]}")
-            if self.cachedResW is not None:
-                torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
-                bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
-            bprint(f"========")
+                if ATTENTION_MASK:
+                    yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, attn_mask=self.mask[:,:,:T,:T])
+                else:
+                    yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
+                    
+                torch.set_printoptions(linewidth=300, sci_mode=False)
+                bprint(f"{yy[-1,-1,:,:]}")
+
+                rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
+                # bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
+                # bprint(f"K: {k[-1, -1, -1, :]}")
+                # bprint(f"Qweights\n{self.c_attn.weight[self.n_embd:2*self.n_embd, :]}")
+                # bprint(f"Q: {q[-1, -1, -1, :]}")
+                # bprint(f"RAWVALUES (nomask)\n{rawATT[-1,-1,:,:]}")
+                if ATTENTION_MASK:
+                    bprint(f"RAWVALUES (withmask)\n{rawATT[-1,-1,:,:] + self.mask[:,:,:T,:T]}")
+                if self.cachedResW is not None:
+                    torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
+                    bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
+                bprint(f"========")
 
         # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
         # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
@@ -220,6 +249,7 @@ class CausalSelfAttention(DualModule):
             if ATTENTION_SINK:
                 # y is (B, nh, T, hs + 1)
                 resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) / self.n_head # (B, T, 1)
+                # print(f"RESWMean: {resw[:, 1:, :].mean()}")
 
                 if print_weights:
                     torch.set_printoptions(linewidth=200, sci_mode=False)
@@ -430,17 +460,28 @@ class MLPConcat(nn.Module):
         return x
 
 
+class MultExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLP(config)
+
+    def forward(self, program, attn):
+        return self.mlp(program) * attn
+
+
+# @flag machine_code
 class BenExecute(nn.Module):
 
     def __init__(self, config):
         super().__init__()
         self.mlp = MLPConcat(config)
-        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
 
     
     def forward(self, program, attn):
-        return self.ln_2(self.mlp(program, attn))
-
+        return self.mlp(program, attn)
+# @endflag machine_code
 
 
 class VanillaExecute(nn.Module):
@@ -473,27 +514,33 @@ class BenBlock(nn.Module):
         self.n_head = config.n_head
         self.n_layer = config.n_layer
 
+# @flag machine_modules
         self.compiler = BenCompilerNoOp(config)
-        self.execute = BenExecute(config)
+        self.execute = VanillaExecute(config)
+# @endflag machine_modules
 
         # self.mlp = MLP(config)
 
     def forward(self, x, print_weights=False,step=0):
         metadata = {}
 
-        if step > 2 and step < 10:
+        if step > 2 and step < self.n_layer - 2:
             print_weights = False
 
         # stronger attention should result in machineOutput with larger norm,
         # which should then get normalized; then learning to output a larger norm
         # vs a smaller norm is our mechanism for gating attention
 
+        # First LN important to make sure the signal to attn does not get too small.
+        # cannot LN the output, why? 
+
+# @flag block_logic
         y = self.ln_1(x)
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        x = xWeights * x + (1 - xWeights) * machineOutput
-
+        newx = x + machineOutput
+# @endflag block_logic
 
 
         metadata["_norm_attn"] = attn.std(dim=-1).mean() / self.n_layer #torch.linalg.norm(attn, dim=-1).mean().item()
@@ -501,6 +548,8 @@ class BenBlock(nn.Module):
         metadata["_norm_x"] = x.std(dim=-1).mean() / self.n_layer
         metadata["_norm_output"] = machineOutput.std(dim=-1).mean() / self.n_layer
         metadata["_frac_noop"] = xWeights.mean() / self.n_layer
+
+        x = newx
 
         # if scores is not None:
         #     a = scores.detach()
@@ -733,8 +782,13 @@ class GPT(DualModule):
         if isinstance(module, nn.Linear):
             stdConfig = 0.02
             if hasattr(module, 'ATTN_SCALE_INIT'):
+                #module.weight shoudl have dimension n_embd * 3n_embd
                 # this should make res 1
-                torch.nn.init.normal_(module.weight, mean=0.0, std=stdConfig)
+                N = self.config.n_embd
+                torch.nn.init.normal_(module.weight[:N,:], mean=-1.0, std=stdConfig)
+                with torch.no_grad():
+                    module.weight[N:2*N,:] = -1 * module.weight[:N,:]
+                torch.nn.init.normal_(module.weight[2*N:,:], mean=0.0, std=stdConfig)
             else:
                 if hasattr(module, 'NANOGPT_SCALE_INIT'):
                     # 2x because we have two linears per layer: block.attn and block.mlp
@@ -772,16 +826,15 @@ class GPT(DualModule):
             else:
                 block = self.transformer.h[i]
             if targets is not None and IDENTITY_LOSS:
+# @flag loss_logic
                 x, metadata = block(x,print_weights=print_weights,step=i)
                 _x_total = x
-
                 _in = x.detach()
-                # _start = self.transformer.ln_f(_in)
-                _x, _ = block(_in,print_weights=print_weights) # Do again... lol
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=float('inf')).mean()
+# @endflag loss_logic
+                # _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean()) # float("inf") _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=float('inf')).mean()
 
-                # _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
-                _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1).mean()
-                
             elif targets is not None and NEW_ALL_LAYER_LOSS:
                 # x = block(x.detach())
                 x, metadata = block(x,print_weights=print_weights,step=i)
@@ -1442,62 +1495,59 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="17-yes-1minus-mlpconcat-noln-faster-2"
+test_name="18-vanilla-noabs"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 1024 # sequence length # 16 # 1024
+config_ = GPTConfig(vocab_size=50304, block_size=T, n_layer=8)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
+
+
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
-min_lr = max_lr * 0.1
-warmup_steps = 1000 # 100
+min_lr = max_lr * 0.025
+warmup_steps = 100 # 100
 use_compile = False # May run into bugs
 THRESHOLD = 0.1 # 0.1 # ln(0.9), about 90% confidence
 ENABLE_LAYER_LOSS = False
 
-config_ = GPTConfig(vocab_size=50304, block_size=T)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
 NEW_ALL_LAYER_LOSS = False
 ELEMENTWISEAFFINE = True # whether LN parameters are learned
 VALUE_MATRIX = True
 MLP_SCALE = 4
 MLP_HIDDENWIDTH_INTERPRETER = config_.n_embd
-REUSE_WEIGHTS = False # NOTE True
+REUSE_WEIGHTS = False
 MEASURE_SELF_CONTRIBUTION = False
 DELETE_SELF_CONTRIBUTION = False
 EXTRACT_SELF_CONTRIBUTION = False # TODO UNUSED
 MLPMAT_INNER_SIZE = 64 # note 48^2 = 2304 = 3*768 = 3*n_embd
 MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
-ATTENTION_SINK = True
-IDENTITY_LOSS = True
+ATTENTION_SINK = False
+ATTENTION_MASK = False
+IDENTITY_LOSS = False
+
+import observability
+flag_str = observability.extract_flagged_code()
 
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
-test_description=f"""Transformer, max LR 6e-4
+test_description=f"""```
+Transformer, max LR {max_lr} n_layer {config_.n_layer}
 Setting:
+==details======
+{flag_str}
 ========
-self.compiler = BenCompilerNoOp(config)
-self.execute = BenExecute(config) 
-========
-y = self.ln_1(x)
-attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
-program = self.compiler(y)
-machineOutput = self.execute(program, attn)
-x = xWeights * x + (1-xWeights)*machineOutput
-======== 
 VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
 MLP_SCALE={MLP_SCALE}
-MEASURE_SELF_CONTRIBUTION={MEASURE_SELF_CONTRIBUTION}
-NEW_ALL_LAYER_LOSS={NEW_ALL_LAYER_LOSS}
-MATRIX_NUM_PARAMS={MATRIX_NUM_PARAMS}
-MLPMAT_INNER_SIZE={MLPMAT_INNER_SIZE}
-DELETE_SELF_CONTRIBUTION={DELETE_SELF_CONTRIBUTION}
-EXTRACT_SELF_CONTRIBUTION={EXTRACT_SELF_CONTRIBUTION}
 ATTENTION_SINK={ATTENTION_SINK}
+ATTENTION_MASK ={ATTENTION_MASK}
 IDENTITY_LOSS={IDENTITY_LOSS}
+```
+![caption](img/{test_name}.jpg)
 """
 
 
@@ -1559,7 +1609,7 @@ if master_process:
     bprint(f"MAX LEARNING RATE: {max_lr}")
     bprint(f"Experiment name: {test_name}")
     bprint(f"MLPSCALE: {MLP_SCALE}")
-    bprint(f"Experiment description: {test_description}")
+    bprint(f"Experiment description: \n{test_description}")
     bprint(f"Warmup steps: {warmup_steps}")
 
     with open(log_file, "a") as f:
@@ -1691,7 +1741,7 @@ for step in range(max_steps):
                 f.write(f"{step} hellaswag {acc_norm:.4f}\n")
     
     # Also generate some sample text once in a while
-    if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)) or step == 1: # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
+    if (step > max_steps - 2 and (not use_compile)) or (step % sample_frequency == 50 and (not use_compile)) or step == 0 or step == 1: # > 0 and step % 100 == 0: # Like Kaparthy, I run into compilation issues
         model.eval()
         num_return_sequences = 1
         max_length = 30 # 9
@@ -1783,8 +1833,11 @@ for step in range(max_steps):
         if ddp:
             # (Kaparthy says: hope this isn't a breaking torch change, should maybe use no_sync)
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
+        _print_weights_val = False
+        if micro_step == grad_accum_steps - 1 and step == 1:
+            _print_weights_val = True
         with torch.autocast(device_type=device, dtype=torch.bfloat16):
-            _, loss, trueloss, confLoss, targetLoss, metadata, earlyStopLayerDict = model(x, y) # NOTE: we don't actually use the logits
+            _, loss, trueloss, confLoss, targetLoss, metadata, earlyStopLayerDict = model(x, y, print_weights=_print_weights_val) # NOTE: we don't actually use the logits
         # Need to scale loss by grad_accum_steps because we need to get the average loss over the entire batch (not just over mini batches)
         loss = loss / grad_accum_steps
         loss_accum += trueloss.detach() / grad_accum_steps

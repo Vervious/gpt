@@ -1,0 +1,86 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Highway:0.0002 hydraulic:0.0002arette:0.0002sided:0.0001 avalanche:0.0002 stuffing:0.0001 Figure:0.0002 Indianapolis:0.0003)
+ Indianapolis
+------
+		( hydraulic:0.0002arette:0.0002sided:0.0001 avalanche:0.0002 stuffing:0.0001 Figure:0.0002 Indianapolis:0.0003 pleasures:0.0001)
+ pleasures spriteindersinders Tos ingenuality plank playoffsduty Anglo incorrectlyiciansiciansHi
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Highway:0.0002 hydraulic:0.0002arette:0.0002 hospitality:0.0001 avalanche:0.0002 stuffing:0.0002 behaviour:0.0002 Indianapolis:0.0003)
+ Indianapolis
+------
+		( hydraulic:0.0002arette:0.0002 hospitality:0.0001 avalanche:0.0002 stuffing:0.0002 behaviour:0.0002 Indianapolis:0.0003 pleasures:0.0002)
+ pleasures sprite sprite sprite sprite sprite sprite sprite sprite sprite sprite sprite spritelabel something
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1055 a:0.0645,:0.0918 the:0.0801,:0.1074,:0.1338 not:0.0486
+:0.3711)
+
+
+------
+		( a:0.0645,:0.0918 the:0.0801,:0.1074,:0.1338 not:0.0486
+:0.3711-:0.0942)
+-
+-
+-
+-
+-
+-
+-
+-
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1689 a:0.1206 and:0.1758 and:0.1025om:0.0649,:0.6211 a:0.0918vern:0.0588)
+vern
+------
+		( a:0.1206 and:0.1758 and:0.1025om:0.0649,:0.6211 a:0.0918vern:0.0588acular:0.3066)
+acular.
+The most common types of the types of the types of the
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1377 a:0.0874 and:0.3203 yellow:0.0884,:0.1201,:0.2852 a:0.0684iced:0.2695)
+iced
+------
+		( a:0.0874 and:0.3203 yellow:0.0884,:0.1201,:0.2852 a:0.0684iced:0.2695,:0.2559)
+, and are a great way to make a good place for your home.
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1235 a:0.0947,:0.3184 and:0.1094atoes:0.3125 are:0.3418 red:0.1089iced:0.4316)
+iced
+------
+		( a:0.0947,:0.3184 and:0.1094atoes:0.3125 are:0.3418 red:0.1089iced:0.4316,:0.4102)
+, and are all the same.
+- The first thing you can do
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1318 a:0.1279,:0.1621 yellow:0.0659atoes:0.0869 are:0.4844 a:0.0708iced:0.3750)
+iced
+------
+		( a:0.1279,:0.1621 yellow:0.0659atoes:0.0869 are:0.4844 a:0.0708iced:0.3750,:0.3320)
+, and the leaves are green.
+The leaves are green, and the
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1240 the:0.0796,:0.1865 green:0.0942ting:0.1045 are:0.3379 a:0.1050iced:0.8086)
+iced
+------
+		( the:0.0796,:0.1865 green:0.0942ting:0.1045 are:0.3379 a:0.1050iced:0.8086,:0.2656)
+, and are the best.
+- Sweet, sweet, sweet, and
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1260 a:0.1089,:0.2910 yellow:0.0918om:0.1748 are:0.4336 a:0.0723ery:0.3359)
+ery
+------
+		( a:0.1089,:0.2910 yellow:0.0918om:0.1748 are:0.4336 a:0.0723ery:0.3359ll:0.3516)
+llium, and are the most common.
+The most common is the
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( for:0.1030 the:0.1050,:0.4141 and:0.0635ty:0.1250 are:0.4141 red:0.2402urn:0.1543)
+urn
+------
+		( the:0.1050,:0.4141 and:0.0635ty:0.1250 are:0.4141 red:0.2402urn:0.1543s:0.2539)
+s, and the flowers are white.
+The flower is white, and

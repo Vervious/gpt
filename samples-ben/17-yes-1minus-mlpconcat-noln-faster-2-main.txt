@@ -1,0 +1,137 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(uled:0.0002uled:0.0002 Ward:0.0002 enlisted:0.0002 Notably:0.0002 CST:0.0002 ultimately:0.0002CL:0.0002)
+CL
+------
+		(uled:0.0002 Ward:0.0002 enlisted:0.0002 Notably:0.0002 CST:0.0002 ultimately:0.0002CL:0.0002 calendar:0.0002)
+ calendar Drive executionsapultsteen ultimately function fanbase stained Lodlarge ultimatelybugvenientatibility
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100)
+.
+------
+		(.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100.:0.0100)
+...............
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1387 a:0.0723,:0.0386 and:0.0889,:0.0391,:0.1445 a:0.0505,:0.0273)
+,
+------
+		( a:0.0723,:0.0386 and:0.0889,:0.0391,:0.1445 a:0.0505,:0.0273 and:0.0864)
+ and the same, and the same of the same of the same, and
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1514 a:0.0552-:0.0635 you:0.0874in:0.0413,:0.1387 a:0.0403�:0.1079)
+�
+------
+		( a:0.0552-:0.0635 you:0.0874in:0.0413,:0.1387 a:0.0403�:0.1079�:0.8906)
+�s a lot of the most of the most of the most of the
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1699 a:0.0493,:0.1367 and:0.0972atoes:0.0713,:0.3301 a:0.0525
+:0.1260)
+
+
+------
+		( a:0.0493,:0.1367 and:0.0972atoes:0.0713,:0.3301 a:0.0525
+:0.1260The:0.1030)
+The first time is a very popular, but it is a very popular,
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1250 a:0.0728iscovered:0.3223 and:0.1309atoes:0.2354,:0.5664 a:0.1006
+:0.1650)
+
+
+------
+		( a:0.0728iscovered:0.3223 and:0.1309atoes:0.2354,:0.5664 a:0.1006
+:0.1650The:0.0312)
+The best way to do this, but you can also have to be able
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1328 the:0.1001,:0.1611 and:0.0840tery:0.1387,:0.5703 a:0.1064iced:0.2949)
+iced
+------
+		( the:0.1001,:0.1611 and:0.0840tery:0.1387,:0.5703 a:0.1064iced:0.2949 with:0.1045)
+ with a variety of dishes.
+The first thing to do is to be
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0879 the:0.0732,:0.1172 yellow:0.0977atoes:0.2871,:0.4316 the:0.0486
+:0.0986)
+
+
+------
+		( the:0.0732,:0.1172 yellow:0.0977atoes:0.2871,:0.4316 the:0.0486
+:0.0986The:0.0298)
+The most common name for the
+The name is the name of the
+
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1445 the:0.0757,:0.1865 and:0.0913atoes:0.1973,:0.4609 the:0.0645iced:0.0928)
+iced
+------
+		( the:0.0757,:0.1865 and:0.0913atoes:0.1973,:0.4609 the:0.0645iced:0.0928 with:0.2168)
+ with a few of the most common varieties of the plant.
+The plant
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1299 great:0.0962 and:0.1553 and:0.1187,:0.1289,:0.5742 a:0.0879iced:0.7148)
+iced
+------
+		( great:0.0962 and:0.1553 and:0.1187,:0.1289,:0.5742 a:0.0879iced:0.7148,:0.1523)
+, and they are also used to make a delicious snack.
+The best
+4550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0840 a:0.1147,:0.1689 and:0.0908,:0.2754,:0.4844 a:0.0791iced:0.7109)
+iced
+------
+		( a:0.1147,:0.1689 and:0.0908,:0.2754,:0.4844 a:0.0791iced:0.7109 with:0.1533)
+ with a variety of colors, and they are also used for making a variety
+5050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1797 a:0.1113iscovered:0.2256 and:0.0723atoes:0.1377 are:0.1992 a:0.1030iced:0.5547)
+iced
+------
+		( a:0.1113iscovered:0.2256 and:0.0723atoes:0.1377 are:0.1992 a:0.1030iced:0.5547 with:0.1338)
+ with a little bit of a little bit of a little bit of a little
+5550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1069 a:0.1235,:0.1631 green:0.1064,:0.0815 are:0.2754 a:0.1045iced:0.4160)
+iced
+------
+		( a:0.1235,:0.1631 green:0.1064,:0.0815 are:0.2754 a:0.1045iced:0.4160,:0.1235)
+, and are also iced.
+The flowers are a little bit more
+6050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1514 a:0.0957,:0.1279 and:0.0889assium:0.1318,:0.2393 a:0.0674iced:0.4375)
+iced
+------
+		( a:0.0957,:0.1279 and:0.0889assium:0.1318,:0.2393 a:0.0674iced:0.4375,:0.1216)
+, and the seeds are all green.
+- The seeds are the same
+6550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1133 a:0.1123,:0.2158 green:0.0781ty:0.1299,:0.3750 a:0.0669iced:0.7539)
+iced
+------
+		( a:0.1123,:0.2158 green:0.0781ty:0.1299,:0.3750 a:0.0669iced:0.7539,:0.2773)
+, and the flowers are green, and the flowers are green, and the
+7050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.1846 a:0.2676-:0.1387 yellow:0.1118,:0.0579,:0.4512 a:0.1182iced:0.2988)
+iced
+------
+		( a:0.2676-:0.1387 yellow:0.1118,:0.0579,:0.4512 a:0.1182iced:0.2988,:0.4688)
+, and the leaves are green, and the leaves are green.
+The
+7550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( are:0.2754 a:0.1445,:0.1797 green:0.2129y:0.0583 are:0.4902 green:0.1377iced:0.2969)
+iced
+------
+		( a:0.1445,:0.1797 green:0.2129y:0.0583 are:0.4902 green:0.1377iced:0.2969,:0.2832)
+, and the flowers are green.
+- The flowers are green, and

@@ -1,0 +1,25 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( sadness:0.0001 MEN:0.0002 see:0.0002 civilization:0.0002 debugger:0.0002oters:0.0002 their:0.0002 fodder:0.0002)
+ fodder
+------
+		( MEN:0.0002 see:0.0002 civilization:0.0002 debugger:0.0002oters:0.0002 their:0.0002 fodder:0.0002ahar:0.0002)
+aharugarifications RUgu bullshit music embarrassingervingthirst beginner avalanche \" 413inders
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0022.:0.0034.:0.0031.:0.0034.:0.0030.:0.0026,:0.0040.:0.0039)
+.
+------
+		(.:0.0034.:0.0031.:0.0034.:0.0030.:0.0026,:0.0040.:0.0039.:0.0029)
+.,.,,,.,.,,,,,,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0723 a:0.0221,:0.0549 and:0.0732,:0.0168.:0.1206 a:0.0262
+:0.2236)
+
+
+------
+		( a:0.0221,:0.0549 and:0.0732,:0.0168.:0.1206 a:0.0262
+:0.2236The:0.0859)
+The first to be a few.
+-based and the most of the

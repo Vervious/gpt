@@ -1,0 +1,39 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( ign:0.0002 Salem:0.0002 tribunal:0.0002 exports:0.0002 copper:0.0002 So:0.0002�:0.0001 proceeded:0.0002)
+ proceeded
+------
+		( Salem:0.0002 tribunal:0.0002 exports:0.0002 copper:0.0002 So:0.0002�:0.0001 proceeded:0.0002 imped:0.0001)
+ imped milit turnaround Fuel turnaround Construct Brooks absurdãoANC Yamato factories embraces Brooks754
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( ign:0.0002.:0.0002.:0.0003.:0.0005.:0.0008.:0.0007.:0.0005.:0.0006)
+.
+------
+		(.:0.0002.:0.0003.:0.0005.:0.0008.:0.0007.:0.0005.:0.0006,:0.0012)
+,.,...,.,.....,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0806 the:0.0630.:0.0615 the:0.0791.:0.0322,:0.1133 the:0.0718.:0.0121)
+.
+------
+		( the:0.0630.:0.0615 the:0.0791.:0.0322,:0.1133 the:0.0718.:0.0121
+:0.2061)
+
+-
+-The first.
+-based.
+-based other
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0815 the:0.0225,:0.0303 and:0.0493.:0.0109,:0.1147 in:0.0165
+:0.1089)
+
+
+------
+		( the:0.0225,:0.0303 and:0.0493.:0.0109,:0.1147 in:0.0165
+:0.1089The:0.0854)
+The first.
+The first time.
+The first time.
+The

@@ -1,0 +1,44 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( aspirin:0.0002est:0.0002 space:0.0002 winding:0.0002 winding:0.0002Getting:0.0002 Wrong:0.0001 settings:0.0002)
+ settings
+------
+		(est:0.0002 space:0.0002 winding:0.0002 winding:0.0002Getting:0.0002 Wrong:0.0001 settings:0.0002and:0.0002)
+and chap� array winding windingAm windingOffic noticeable Say publicationebra War publication
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0027 the:0.0027 the:0.0038 the:0.0032 the:0.0029 the:0.0040 the:0.0047 the:0.0044)
+ the
+------
+		( the:0.0027 the:0.0038 the:0.0032 the:0.0029 the:0.0040 the:0.0047 the:0.0044 the:0.0044)
+ the the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0143 the:0.0957.:0.0258 to:0.0527.:0.0332.:0.0483 the:0.0850.:0.0815)
+.
+------
+		( the:0.0957.:0.0258 to:0.0527.:0.0332.:0.0483 the:0.0850.:0.0815
+:0.1396)
+
+�-�-�-�-�-�-�-
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0923 a:0.1094,:0.0432 the:0.0369.:0.0337,:0.0771 a:0.0952
+:0.0439)
+
+
+------
+		( a:0.1094,:0.0432 the:0.0369.:0.0337,:0.0771 a:0.0952
+:0.0439-:0.1152)
+- The first of the first of the same of the other the other the
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1377 not:0.0850,:0.0605 and:0.0393al:0.0160,:0.1816 not:0.05541:0.0199)
+1
+------
+		( not:0.0850,:0.0605 and:0.0393al:0.0160,:0.1816 not:0.05541:0.0199.:0.1143)
+.
+-1.
+-1.
+-1.
+-

@@ -1,0 +1,30 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( timed:0.0001 ruining:0.0002 steady:0.0002TE:0.0002 poisoned:0.0002 Vegan:0.0002pas:0.0002Fs:0.0002)
+Fs
+------
+		( ruining:0.0002 steady:0.0002TE:0.0002 poisoned:0.0002 Vegan:0.0002pas:0.0002Fs:0.0002 unfit:0.0002)
+ unfit Jah Vegan Co Urs Brist whiskbernatorial Mitchellclamation Certified Scotia poisoned HUM deadlines
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0148 the:0.0143 the:0.0143 the:0.0153 the:0.0148 the:0.0143 the:0.0153 the:0.0153)
+ the
+------
+		( the:0.0143 the:0.0143 the:0.0153 the:0.0148 the:0.0143 the:0.0153 the:0.0153 the:0.0148)
+ the the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1543 a:0.1543,:0.0415 and:0.1387in:0.0111,:0.1348 a:0.1040,:0.0413)
+,
+------
+		( a:0.1543,:0.0415 and:0.1387in:0.0111,:0.1348 a:0.1040,:0.0413 and:0.1719)
+ and the most of the most of the most of the most of the most
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( you:0.0947 a:0.0669.:0.0339 you:0.1465ms:0.0133.:0.1221 a:0.0603s:0.0796)
+s
+------
+		( a:0.0669.:0.0339 you:0.1465ms:0.0133.:0.1221 a:0.0603s:0.0796.:0.0977)
+.
+I’t have to be a good.
+-t

@@ -1,0 +1,93 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0061 are:0.0029 red:0.0127,:0.0486 Pot:0.0515atoes:0.1094 are:0.0250 :0.0693)
+ 
+------
+		( are:0.0029 red:0.0127,:0.0486 Pot:0.0515atoes:0.1094 are:0.0250 :0.0693 :0.0874)
+               
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0061 are:0.0030 red:0.0127,:0.0486 Pot:0.0515atoes:0.1094 are:0.0250 :0.0688)
+ 
+------
+		( are:0.0030 red:0.0127,:0.0486 Pot:0.0515atoes:0.1094 are:0.0250 :0.0688 :0.0874)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0089 the:0.0092 the:0.0092 the:0.0092 the:0.0095 the:0.0092 the:0.0095 the:0.0095)
+ the
+------
+		( the:0.0092 the:0.0092 the:0.0092 the:0.0095 the:0.0092 the:0.0095 the:0.0095 the:0.0098)
+ the the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1299 the:0.1650,:0.0928 the:0.0928.:0.0225,:0.1396 the:0.1631.:0.0557)
+.
+------
+		( the:0.1650,:0.0928 the:0.0928.:0.0225,:0.1396 the:0.1631.:0.0557
+:0.1260)
+
+--------------
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.2930 the:0.0757,:0.1074 you:0.1147,:0.0092,:0.2373 the:0.0811
+:0.0349)
+
+
+------
+		( the:0.0757,:0.1074 you:0.1147,:0.0092,:0.2373 the:0.0811
+:0.0349The:0.1104)
+The same, and the same, and the most than the first of the
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1152 the:0.0850,:0.0640 and:0.0977om:0.0986,:0.2617 a:0.0732vern:0.0679)
+vern
+------
+		( the:0.0850,:0.0640 and:0.0977om:0.0986,:0.2617 a:0.0732vern:0.0679acular:0.1992)
+acular, and the first, and the first, and the first, and
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1187 not:0.0277iscovered:0.2158 and:0.1826atoes:0.2441,:0.3613 also:0.0518
+:0.1650)
+
+
+------
+		( not:0.0277iscovered:0.2158 and:0.1826atoes:0.2441,:0.3613 also:0.0518
+:0.1650-:0.1162)
+- The New York Times
+- "The New York Times"
+-
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1143 the:0.0825,:0.2402 and:0.0469tery:0.1992,:0.4199 a:0.0420ery:0.1768)
+ery
+------
+		( the:0.0825,:0.2402 and:0.0469tery:0.1992,:0.4199 a:0.0420ery:0.1768,:0.2139)
+, and are green, green, green, green, green, green,
+3050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2891 the:0.1064,:0.2559 yellow:0.0830tery:0.2246,:0.3418 a:0.0703
+:0.0718)
+
+
+------
+		( the:0.1064,:0.2559 yellow:0.0830tery:0.2246,:0.3418 a:0.0703
+:0.0718The:0.0530)
+The first is the first time of the year of the year.
+The
+3550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1011 the:0.1113,:0.2969 and:0.1572om:0.1113,:0.6172 a:0.1172____:0.0596)
+____
+------
+		( the:0.1113,:0.2969 and:0.1572om:0.1113,:0.6172 a:0.1172____:0.0596.:0.1250)
+.
+The first two-thirds of the world's population is the second
+4050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.2441 a:0.1309,:0.1807 and:0.1230tery:0.1143,:0.5156 a:0.1299iced:0.3848)
+iced
+------
+		( a:0.1309,:0.1807 and:0.1230tery:0.1143,:0.5156 a:0.1299iced:0.3848,:0.0942)
+, and they are sweet.
+The first thing to remember is that you

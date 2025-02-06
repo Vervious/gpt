@@ -1,0 +1,21 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(465:0.0002Kelly:0.0002Brazil:0.0002 1960:0.0002kj:0.0002 Yes:0.0002 tweaked:0.0002 Joseph:0.0002)
+ Joseph
+------
+		(Kelly:0.0002Brazil:0.0002 1960:0.0002kj:0.0002 Yes:0.0002 tweaked:0.0002 Joseph:0.0002 Prior:0.0002)
+ Prior tweakedComビ supplemental objectively airspace wires 530megaymes Yes presc fillingcape
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0113,:0.0117,:0.0117,:0.0120,:0.0120 the:0.0124,:0.0124,:0.0124)
+,
+------
+		(,:0.0117,:0.0117,:0.0120,:0.0120 the:0.0124,:0.0124,:0.0124,:0.0124)
+, the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0542,:0.0425,:0.0425,:0.0425,:0.0542,:0.0542,:0.0425,:0.0542)
+,
+------
+		(,:0.0425,:0.0425,:0.0425,:0.0542,:0.0542,:0.0425,:0.0542,:0.0425)
+,,,,,,,,,,,,,,,

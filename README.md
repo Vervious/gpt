@@ -2317,19 +2317,329 @@ Why did the previous fail? Is it because we put the layer norm back? Or is it be
 
 ![loss](img/17-identity-test-yes-1minus-mlpconcat-noln.jpg)
 
+That seems to be why. Now, it seems that mlpconcat is not very good, but in prior experiments it has usually converged to vanilla transformers, and is just slower to train. But it fits my mental model better, so let's stick with it for now, and try to up the training rate:
+
 Let's see if this is still stable, if we return the learning rate to the original of 6e-4; also we switch from cosine similarity to a norm of the difference:
 
 ![loss](img/17-yes-1minus-mlpconcat-noln-faster.jpg)
 
 
-The norm of the output in the previous experiment was very high. What if we layer norm it?
+The norm of the output in the previous experiment was very high. What if we layer norm it? It starts off bad but eventually converges. Also note the horizontal section in the beginning while we wait for `fracRes` to converge to some high number like 0.8:
+```
+class BenExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    
+    def forward(self, program, attn):
+        return self.ln_2(self.mlp(program, attn))
+```
 ![loss](img/17-yes-1minus-mlpconcat-noln-faster-2.jpg)
 
+Hmmmmm. I suspect such a program is just too complicated to learn? What happens if I push the identity loss much higher? It is rather unstable... I'm not sure it ever converges at this training rate.
+```
+_xtraloss = _xtraloss + 2*torch.linalg.norm(_x - _in, dim=-1).mean()
+```
+![loss](img/17-yes-1minus-mlpconcat-noln-faster-3.jpg)
 
-That seems to be why. Now, it seems that mlpconcat is not very good, but in prior experiments it has usually converged to vanilla transformers, and is just slower to train. But it fits my mental model better, so let's stick with it for now, and try to up the training rate:
+What happens if I switch it to the 1-norm? I also remove the layer norm wrapping the output.
+```
+_xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=1).mean()
+```
+![loss](img/17-yes-1minus-mlpconcat-noln-faster-4.jpg)
 
+
+Let's do something fun, setting `n_layer=48`, and using the infinity norm: (Note that when i use `ord=2`, it doesn't even make it past a loss of `10`. This somehow feels like an important observation, but at this point I don't know what to make of it)
+```
+_xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=float('inf')).mean()
+self.compiler = BenCompilerNoOp(config)
+self.execute = BenExecute(config) 
+========
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights * x + (1-xWeights)*machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=8
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![loss](img/17-1minus-mlpconcat-crazystuff.jpg)
+
+It's a little screwy! It seems to be getting caught when activating the effects of attention.
+Set `n_layer=12` just to speed it up a little bit, and also `newx = xWeights * y + (1 - xWeights) * machineOutput`. This is awful, which is odd, because usually layer norming `x` (`y = LN(x)`) would make the standard deviation of `x` larger, not smaller.
+
+![loss](img/17-1minus-mlpconcat-crazystuff-2.jpg)
+
+Let's try the same thing but pop the learning rate lower. Note that ord = 2, in this experiment (The outcome is horrible) (12 layers)
+```
+Experiment description: Transformer, max LR 0.00015
+self.compiler = BenCompilerNoOp(config)
+self.execute = BenExecute(config) 
+========
+y = self.ln_1(x)
+attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+program = self.compiler(y)
+machineOutput = self.execute(program, attn)
+x = xWeights * y + (1-xWeights)*machineOutput
+======== 
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=2
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![loss](img/17-1minus-mlpconcat-crazystuff-3.jpg)
+
+
+Let me try the same thing with ord = inf. It is infinitely better. (Why??) But it cannot seem to get the residual fraction to be high. (12 layers)
+
+![loss](img/17-1minus-mlpconcat-crazystuff-4.jpg)
+
+So let me swap back the x for y and set ord=2. This is pushing up the residual fraction again. But, it diverges.
+```
+Transformer, max LR 0.00015
+Setting:
+========
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+========
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = xWeights * x + (1 - xWeights) * machineOutput
+========
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+                _in = x.detach()
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=2).mean()
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=2
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![caption](img/17-1minus-mlpconcat-crazystuff-5.jpg)
+
+Same thing but ord=inf again. Still having trouble getting the residual fraction up:
+```
+Transformer, max LR 0.00015
+Setting:
+========
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+========
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = xWeights * x + (1 - xWeights) * machineOutput
+========
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+                _in = x.detach()
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=float('inf')).mean()
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=2
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![caption](img/17-1minus-mlpconcat-crazystuff-6.jpg)
+
+
+Same thing but with cosine similarity. This one is much nicer. (Similar to the y + infinite ordinality)
+```
+Transformer, max LR 0.00015
+Setting:
+========
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+========
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = xWeights * x + (1 - xWeights) * machineOutput
+========
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+                _in = x.detach()
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=2
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![caption](img/17-1minus-mlpconcat-crazystuff-7.jpg)
+
+Same thing, but MLP_SCALE back to 4.
+```
+Transformer, max LR 0.00015 n_layer 12
+Setting:
+==machine code======
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+==machine modules======
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+==block logic======
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = xWeights * x + (1 - xWeights) * machineOutput
+==loss computation======
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+                _in = x.detach()
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=True
+MLP_SCALE=4
+MEASURE_SELF_CONTRIBUTION=False
+NEW_ALL_LAYER_LOSS=False
+MATRIX_NUM_PARAMS=4096
+MLPMAT_INNER_SIZE=64
+DELETE_SELF_CONTRIBUTION=False
+EXTRACT_SELF_CONTRIBUTION=False
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![caption](img/17-1minus-mlpconcat-crazystuff-8.jpg)
+
+Reuse weights back to false. This will converge to `17-identity-test`.
+```
+Transformer, max LR 0.00015 n_layer 12
+Setting:
+==machine code======
+class BenExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+
+    
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+==machine modules======
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+==block logic======
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = xWeights * x + (1 - xWeights) * machineOutput
+==loss computation======
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+                _in = x.detach()
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![caption](img/17-1minus-mlpconcat-crazystuff-9.jpg)
+
+
+Same thing, but with higher learning rate. And n_layers to 8.
+```
+Transformer, max LR 0.0006 n_layer 8
+Setting:
+==machine code======
+class BenExecute(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+
+    
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+==machine modules======
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+==block logic======
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = xWeights * x + (1 - xWeights) * machineOutput
+==loss computation======
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+                _in = x.detach()
+                _x, _ = block(_in,print_weights=False) # Do again... lol
+                _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean())
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=True
+IDENTITY_LOSS=True
+```
+![caption](img/17-1minus-mlpconcat-crazystuff-10.jpg)
 
 
 Next steps: increase learning rate. What happens if i turn x to y?  Also, our hope was that removing residual would "clarify" signal (because that's how computation works). Do we see improvement in that regard (is perplexity the best way to measure that?).
 
-how similar 
+## Randomness Extraction
+
+First, we see whether, if we absolute-value the residual at every layer, does it change performance compared to vanilla GPT? (Yes, it does, kind of similar to reusing weights, I think. It is a consistent penalty.)
+
+![caption](img/18-vanilla-abs.jpg)
+
+Compare to (somethign is off -- why is this worse than 13-baseline?):
+![caption](img/18-vanilla-noabs.jpg)

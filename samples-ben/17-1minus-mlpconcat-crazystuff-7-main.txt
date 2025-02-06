@@ -1,0 +1,34 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( intentionally:0.0002quet:0.0002kept:0.0002 Nevada:0.0002Reilly:0.0002 rs:0.0002 Bluetooth:0.0002 trials:0.0002)
+ trials
+------
+		(quet:0.0002kept:0.0002 Nevada:0.0002Reilly:0.0002 rs:0.0002 Bluetooth:0.0002 trials:0.0002 Bluetooth:0.0002)
+ Bluetooth Amanserving physic FAM Bluetooth Bluetoothquet Bluetoothquet Bluetoothquetの� Season Byz
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0031 the:0.0032 the:0.0032 the:0.0037 the:0.0038 the:0.0042 the:0.0034 the:0.0034)
+ the
+------
+		( the:0.0032 the:0.0032 the:0.0037 the:0.0038 the:0.0042 the:0.0034 the:0.0034 the:0.0039)
+ the the the the the the the the the the the the the the the
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0461 the:0.0549,:0.0610 the:0.0275,:0.0208,:0.0669 the:0.0381,:0.0466)
+,
+------
+		( the:0.0549,:0.0610 the:0.0275,:0.0208,:0.0669 the:0.0381,:0.0466 the:0.0342)
+ the�s the
+�s the�s the�s the
+
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0918 a:0.0136.:0.0518 and:0.0464.:0.0294.:0.1309 the:0.0374.:0.0398)
+.
+------
+		( a:0.0136.:0.0518 and:0.0464.:0.0294.:0.1309 the:0.0374.:0.0398
+:0.1465)
+
+The first to the same time.
+The same.
+- The

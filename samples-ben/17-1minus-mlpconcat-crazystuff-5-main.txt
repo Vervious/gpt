@@ -1,0 +1,21 @@
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( adventures:0.0002 superhuman:0.0003topia:0.0002 Tracks:0.0002 earthquake:0.0001;}:0.0002acks:0.0002 superhuman:0.0002)
+ superhuman
+------
+		( superhuman:0.0003topia:0.0002 Tracks:0.0002 earthquake:0.0001;}:0.0002acks:0.0002 superhuman:0.0002 Mono:0.0002)
+ Monoパパ nightlyfulness 1989 Zamb Dud devotion672 courtesy neighb saturoximentary
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0008 the:0.0009,:0.0014,:0.0011,:0.0009,:0.0009,:0.0011,:0.0011)
+,
+------
+		( the:0.0009,:0.0014,:0.0011,:0.0009,:0.0009,:0.0011,:0.0011,:0.0016)
+,,,,,,,,,,,,,,,
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( the:0.0933 the:0.1309.:0.1104 the:0.1357.:0.1001.:0.0986 the:0.1074 the:0.0933)
+ the
+------
+		( the:0.1309.:0.1104 the:0.1357.:0.1001.:0.0986 the:0.1074 the:0.0933 the:0.1484)
+ the the the the the the the the the the the the the the the
