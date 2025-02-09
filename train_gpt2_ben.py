@@ -1495,7 +1495,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="18-vanilla-noabs"
+test_name="18-router"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.

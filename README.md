@@ -2641,5 +2641,21 @@ First, we see whether, if we absolute-value the residual at every layer, does it
 
 ![caption](img/18-vanilla-abs.jpg)
 
-Compare to (somethign is off -- why is this worse than 13-baseline?):
+
+Compare to (somethign is off --- why is this worse than 13-baseline?):
+
 ![caption](img/18-vanilla-noabs.jpg)
+
+We can potentially think of our network as defining, recursively, a series of "contexts" -- where a context consists of an input string (i.e. comprised of T token embeddings), and an output target (usually computed by "inverting" the network, which is implicitly done during back-propagation). Each context thus defines a "gap", which is the loss, or distance between the input and the target. In a theory of life, for instance, we can posit that "organisms" would like to fill each gap.
+
+Now, let's try to motivate the attention mechanism from this point of view. The MLP is easy to motivate: it is essentially memorizing a truth table of inputs and outputs. The issue with the MLP (and the universal approximation theorem) is that, of course, it does not scale. The attention mechanism, on the other hand, allows us to scale, in a computational way. It turns out that, by only memorizing a few things and having this "tape" or "graph structure", much like in a Turing Machine, we can simulate any computation in the world; the input embeddings then, in some sense, become the code, and the base rules become the interpreter.
+The problem is that our interpreter must remain fairly complex: the language is very high level, and very expressive in an immediate way. Yet, at the same time, we don't want to memorize too much in order to build the interpreter. I posit that MLPs both map input tokens to more expressive "program" tokens and also memorize "base building block" functions, whereas the attention component "positions" related tokens together, like a "conditional application" of function tokens to data tokens. In other words, it is some expressive variant of a combinator calculus, which is somehow the perfect trade-off between memorization and expressiveness of the language that is being interpreted (if there is a trade-off at all...)
+
+An organism then comprises an attention component ("where do I feed") and an MLP component ("what do I extract"). Conceivably, we can have an organism that feeds everywhere, but it should be out-competed by an organism that feeds selectively on topical tokens. (How do multiple attention heads build into this?) Similarly, if we have two organisms in sequence that are not attuned to the overall gap, there should be no stability and it is unlikely for any of them to fill the gap. Instead, one organism should try to fill the gap first the best it can, and the remaining gap (its output, and the target) can subsequently be filled by a second organism. (This may be the role of skip connections.)
+
+We may even posit a much more fluid network dynamics, where organisms have not only a choice of which of T tokens to feed-on, but also where they are located in the network; moreover, some organisms may be copies of each other, and perhaps this would facilitate solutions to the Prisoner's Dilemma. (As far as I can imagine, gradient descent rewards selfish behavior only, by design. Cooperation seems only to arise by accident, when organisms are not yet fully attuned? Or does cooperation arise because behavior is never fully discrete, so with 1% chance both organisms cooperate, and this eventually dominates? We can think of it being computed in superposition. But the contribution of cooperation amongst multiple organisms is going to be miniscule, and hard to discover, I'm not sure. Perhaps once loss plateaus, it too will eventually have its time to shine, no matter how small... Indeed perhaps cooperation does arise by chance. But certainly it may not arise in unstable environments.)
+
+If some organisms share code, perhaps cooperation arises faster and easier? This feels less fundamental. But in any case, let me implement some "block routing" mechanism for each layer, which sends the signal to one of n_layer organisms (and in the whole network there are only n_layer organisms) according to a softmax:
+
+
+
