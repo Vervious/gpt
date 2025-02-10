@@ -1,0 +1,28 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0099 are:0.0058 red:0.0034,:0.0112 Pot:0.0093atoes:0.0078 are:0.0040 :0.0045)
+ 
+------
+		( are:0.0058 red:0.0034,:0.0112 Pot:0.0093atoes:0.0078 are:0.0040 :0.0045 :0.0034)
+               
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0099 are:0.0056 red:0.0034,:0.0112 Pot:0.0093atoes:0.0078 are:0.0040 :0.0045)
+ 
+------
+		( are:0.0056 red:0.0034,:0.0112 Pot:0.0093atoes:0.0078 are:0.0040 :0.0045 :0.0034)
+               
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roses:0.0045 are:0.0019 red:0.0020,:0.0047 Pot:0.0031atoes:0.0029 are:0.0019 :0.0015)
+ 
+------
+		( are:0.0019 red:0.0020,:0.0047 Pot:0.0031atoes:0.0029 are:0.0019 :0.0015 :0.0012)
+               
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0048 are:0.0303 red:0.0125,:0.0266 Pot:0.0031atoes:0.0054 are:0.0320 :0.0142)
+ 
+------
+		( are:0.0303 red:0.0125,:0.0266 Pot:0.0031atoes:0.0054 are:0.0320 :0.0142 :0.0122)
+               

@@ -2637,13 +2637,78 @@ Next steps: increase learning rate. What happens if i turn x to y?  Also, our ho
 
 ## Randomness Extraction
 
-First, we see whether, if we absolute-value the residual at every layer, does it change performance compared to vanilla GPT? (Yes, it does, kind of similar to reusing weights, I think. It is a consistent penalty.)
+First, we see whether, if we absolute-value the residual at every layer, does it change performance compared to vanilla GPT? (Yes, it does, kind of similar to reusing weights, I think. It is a consistent penalty.) (Here we also used mlpconcat by accident.)
 
+```
+Transformer, max LR 0.0006 n_layer 8
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = (x + machineOutput).abs()
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
 ![caption](img/18-vanilla-abs.jpg)
 
 
-Compare to (somethign is off --- why is this worse than 13-baseline?):
 
+Compare to (somethign is off --- why is this worse than 13-baseline? Answer: because we used mlpconcat by accdient):
+
+```
+Transformer, max LR 0.0006 n_layer 8
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
 ![caption](img/18-vanilla-noabs.jpg)
 
 We can potentially think of our network as defining, recursively, a series of "contexts" -- where a context consists of an input string (i.e. comprised of T token embeddings), and an output target (usually computed by "inverting" the network, which is implicitly done during back-propagation). Each context thus defines a "gap", which is the loss, or distance between the input and the target. In a theory of life, for instance, we can posit that "organisms" would like to fill each gap.
@@ -2655,7 +2720,162 @@ An organism then comprises an attention component ("where do I feed") and an MLP
 
 We may even posit a much more fluid network dynamics, where organisms have not only a choice of which of T tokens to feed-on, but also where they are located in the network; moreover, some organisms may be copies of each other, and perhaps this would facilitate solutions to the Prisoner's Dilemma. (As far as I can imagine, gradient descent rewards selfish behavior only, by design. Cooperation seems only to arise by accident, when organisms are not yet fully attuned? Or does cooperation arise because behavior is never fully discrete, so with 1% chance both organisms cooperate, and this eventually dominates? We can think of it being computed in superposition. But the contribution of cooperation amongst multiple organisms is going to be miniscule, and hard to discover, I'm not sure. Perhaps once loss plateaus, it too will eventually have its time to shine, no matter how small... Indeed perhaps cooperation does arise by chance. But certainly it may not arise in unstable environments.)
 
-If some organisms share code, perhaps cooperation arises faster and easier? This feels less fundamental. But in any case, let me implement some "block routing" mechanism for each layer, which sends the signal to one of n_layer organisms (and in the whole network there are only n_layer organisms) according to a softmax:
+If some organisms share code, perhaps cooperation arises faster and easier? This feels less fundamental. But in any case, let me implement some "block routing" mechanism for each layer, which sends the signal to one of n_layer organisms (and in the whole network there are only n_layer organisms) according to a softmax. To start, we skip the softmax, and just apply every block at every layer. Note that this is quite bad! (Note the bug with _xtota, should see 18-router-3 instead, likely won't be better than that, probably similar.)
+
+```
+Transformer, max LR 0.0006 n_layer 8
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ network_logic
+                _finx, metadata = block(x,print_weights=print_weights,step=i)
+                for j in range(self.config.n_layer):
+                    if i == j:
+                        continue
+                    b = self.transformer.h[j]
+                    _x, _metadata = b(x,print_weights=False,step=i)
+                    _finx = _finx + _x
+                x = _finx
+                _xtotal = x
+                # x, metadata = block(x,print_weights=print_weights,step=i)
+                # _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-router.jpg)
 
 
+Now, try to learn a weighted block, i.e., depending on a layer, a block may decide not to contribute. Still no good! (We didn't backprop properly...) (Note the bug, should see 18-router-3 instead, likely won't be better than that, probably similar.)
+
+```
+Transformer, max LR 0.0006 n_layer 8
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+        newx = torch.sigmoid(self.routes[step]) * newx
+----------------
+ network_logic
+                _finx, metadata = block(x,print_weights=print_weights,step=i)
+                for j in range(self.config.n_layer):
+                    if i == j:
+                        continue
+                    b = self.transformer.h[j]
+                    _x, _metadata = b(x,print_weights=False,step=i)
+                    _finx = _finx + _x
+                x = _finx
+                _xtotal = x
+                # x, metadata = block(x,print_weights=print_weights,step=i)
+                # _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-router-2.jpg)
+
+
+What if we build a proper softmax router:
+
+```
+Transformer, max LR 0.0006 n_layer 8
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ network_logic
+                routes = F.softmax(self.router[i], dim=-1)
+                routes.requires_grad_(True)
+                routes.retain_grad()
+                x.requires_grad_(True)
+                x.retain_grad()
+                # print(f"routes grad {routes.grad}")
+                # print(f"x grad {x.grad}")
+                _finx, metadata = block(x,print_weights=print_weights,step=i)
+                _finx = routes[i] * _finx
+                for j in range(self.config.n_layer):
+                    if i == j:
+                        continue
+                    b = self.transformer.h[j]
+                    _x, _metadata = b(x,print_weights=False,step=i)
+                    _finx = _finx + routes[j] * _x
+                x = _finx
+                _x_total = x
+                metadata[f"routes_{i}"] = routes
+                # x, metadata = block(x,print_weights=print_weights,step=i)
+                # _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-router-3.jpg)
 

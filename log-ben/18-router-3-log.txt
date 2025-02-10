@@ -1,9 +1,3 @@
-YES DDP
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -67,18 +61,13 @@ IDENTITY_LOSS=False
 ![caption](img/18-router-3.jpg)
 
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 8, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 8, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 35, with 96,043,072 parameters
 num non-decayed parameter tensors: 50, with 56,832 parameters
-using fused AdamW: True
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5625, 0.4395, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3516, 0.2773, 0.3711, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -161,7 +150,6 @@ ouple
 ------
 		( staged:0.0002imate:0.0002 renters:0.0002Í:0.0001proclaimed:0.0002 crosses:0.0001ouple:0.0002 clears:0.0003)
  clears clears clears clears fishes contention contention contention contention Dress shore LIST LIST DoesnENS
-[rank0]:[W210 01:35:47.251270564 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 10.9383 , allloss: 10.9383, dt: 5607.52ms, fracRes: 1.0000, norm(attn): 0.0332, norm(output): 0.0962, norm(x): 0.1103, norm(y): 0.9992, norm:8.3081, tok/sec: 23374.34, flops:15.50, batch-reuse:1, routes_0:tensor([0.1250, 0.1250, 0.1250, 0.1250, 0.1250, 0.1250, 0.1250, 0.1250], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1250, 0.1250, 0.1250, 0.1250, 0.1250, 0.1250, 0.1250, 0.1250], device='cuda:0', grad_fn=<DivBackward0>)
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5625, 0.4395, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -334,7 +322,6 @@ tensor([[    1.0000,     0.0000,     0.0000,  ...,     0.0000,     0.0000,     0
 @ 47 train 7.3261 , allloss: 7.3261, dt: 2211.02ms, fracRes: 1.0000, norm(attn): 0.0913, norm(output): 0.3438, norm(x): 1.0214, norm(y): 0.9993, norm:0.9373, tok/sec: 59281.23, flops:39.30, batch-reuse:1, routes_0:tensor([0.1248, 0.1252, 0.1248, 0.1250, 0.1249, 0.1251, 0.1249, 0.1253], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1249, 0.1249, 0.1250, 0.1251, 0.1251, 0.1249, 0.1250, 0.1251], device='cuda:0', grad_fn=<DivBackward0>)
 @ 48 train 7.3024 , allloss: 7.3024, dt: 2242.19ms, fracRes: 1.0000, norm(attn): 0.0811, norm(output): 0.3418, norm(x): 1.0067, norm(y): 0.9993, norm:0.5774, tok/sec: 58457.20, flops:38.75, batch-reuse:1, routes_0:tensor([0.1248, 0.1253, 0.1248, 0.1250, 0.1249, 0.1252, 0.1249, 0.1253], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1249, 0.1249, 0.1250, 0.1251, 0.1251, 0.1249, 0.1250, 0.1251], device='cuda:0', grad_fn=<DivBackward0>)
 @ 49 train 7.3107 , allloss: 7.3107, dt: 2220.87ms, fracRes: 1.0000, norm(attn): 0.0859, norm(output): 0.3457, norm(x): 1.0242, norm(y): 0.9993, norm:0.6967, tok/sec: 59018.24, flops:39.12, batch-reuse:1, routes_0:tensor([0.1248, 0.1253, 0.1248, 0.1249, 0.1249, 0.1252, 0.1249, 0.1253], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1249, 0.1249, 0.1250, 0.1251, 0.1251, 0.1249, 0.1250, 0.1251], device='cuda:0', grad_fn=<DivBackward0>)
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5742, 0.4238, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3574, 0.2617, 0.3809, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -919,7 +906,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 547 train 5.1871 , allloss: 5.1871, dt: 2235.91ms, fracRes: 1.0000, norm(attn): 0.3867, norm(output): 0.5039, norm(x): 0.7843, norm(y): 1.0020, norm:0.3997, tok/sec: 58621.29, flops:38.86, batch-reuse:1, routes_0:tensor([0.1227, 0.1234, 0.1253, 0.1219, 0.1254, 0.1272, 0.1260, 0.1281], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1275, 0.1295, 0.1218, 0.1327, 0.1242, 0.1223, 0.1175, 0.1244], device='cuda:0', grad_fn=<DivBackward0>)
 @ 548 train 5.1532 , allloss: 5.1532, dt: 2276.33ms, fracRes: 1.0000, norm(attn): 0.3867, norm(output): 0.5078, norm(x): 0.7770, norm(y): 1.0020, norm:0.4221, tok/sec: 57580.52, flops:38.17, batch-reuse:1, routes_0:tensor([0.1227, 0.1234, 0.1253, 0.1219, 0.1254, 0.1272, 0.1260, 0.1281], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1275, 0.1295, 0.1218, 0.1328, 0.1242, 0.1222, 0.1175, 0.1244], device='cuda:0', grad_fn=<DivBackward0>)
 @ 549 train 5.0744 , allloss: 5.0744, dt: 2275.85ms, fracRes: 1.0000, norm(attn): 0.3887, norm(output): 0.5078, norm(x): 0.7658, norm(y): 1.0020, norm:0.3917, tok/sec: 57592.63, flops:38.18, batch-reuse:1, routes_0:tensor([0.1227, 0.1234, 0.1253, 0.1218, 0.1254, 0.1272, 0.1260, 0.1281], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1275, 0.1296, 0.1218, 0.1328, 0.1242, 0.1222, 0.1175, 0.1244], device='cuda:0', grad_fn=<DivBackward0>)
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.6250,     0.3750,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.4355,     0.2178,     0.3457,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -1502,7 +1488,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 1047 train 4.3262 , allloss: 4.3262, dt: 2278.68ms, fracRes: 1.0000, norm(attn): 0.4434, norm(output): 0.5664, norm(x): 0.6820, norm(y): 1.0070, norm:0.4405, tok/sec: 57520.95, flops:38.13, batch-reuse:1, routes_0:tensor([0.1208, 0.1220, 0.1284, 0.1121, 0.1286, 0.1253, 0.1300, 0.1328], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1257, 0.1288, 0.1103, 0.1591, 0.1285, 0.1118, 0.1048, 0.1309], device='cuda:0', grad_fn=<DivBackward0>)
 @ 1048 train 4.3796 , allloss: 4.3796, dt: 2267.05ms, fracRes: 1.0000, norm(attn): 0.4453, norm(output): 0.5664, norm(x): 0.6787, norm(y): 1.0070, norm:0.4435, tok/sec: 57816.15, flops:38.33, batch-reuse:1, routes_0:tensor([0.1207, 0.1220, 0.1283, 0.1121, 0.1286, 0.1253, 0.1300, 0.1328], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1257, 0.1288, 0.1103, 0.1592, 0.1285, 0.1118, 0.1048, 0.1309], device='cuda:0', grad_fn=<DivBackward0>)
 @ 1049 train 4.3305 , allloss: 4.3305, dt: 2283.57ms, fracRes: 1.0000, norm(attn): 0.4453, norm(output): 0.5664, norm(x): 0.6772, norm(y): 1.0069, norm:0.4178, tok/sec: 57397.90, flops:38.05, batch-reuse:1, routes_0:tensor([0.1207, 0.1220, 0.1283, 0.1121, 0.1286, 0.1253, 0.1300, 0.1328], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1257, 0.1288, 0.1103, 0.1592, 0.1285, 0.1118, 0.1048, 0.1309], device='cuda:0', grad_fn=<DivBackward0>)
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.7578,     0.2422,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.7188,     0.1641,     0.1157,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -2085,7 +2070,6 @@ ery
 @ 1547 train 4.1692 , allloss: 4.1692, dt: 2262.43ms, fracRes: 1.0000, norm(attn): 0.4961, norm(output): 0.6211, norm(x): 0.7056, norm(y): 1.0033, norm:0.4886, tok/sec: 57934.10, flops:38.41, batch-reuse:1, routes_0:tensor([0.1175, 0.1224, 0.1298, 0.1070, 0.1320, 0.1203, 0.1354, 0.1356], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1282, 0.1313, 0.1013, 0.1694, 0.1338, 0.1021, 0.0979, 0.1360], device='cuda:0', grad_fn=<DivBackward0>)
 @ 1548 train 4.2653 , allloss: 4.2653, dt: 2293.82ms, fracRes: 1.0000, norm(attn): 0.4941, norm(output): 0.6211, norm(x): 0.7160, norm(y): 1.0035, norm:0.5659, tok/sec: 57141.42, flops:37.88, batch-reuse:1, routes_0:tensor([0.1175, 0.1224, 0.1298, 0.1070, 0.1320, 0.1203, 0.1355, 0.1356], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1282, 0.1313, 0.1013, 0.1694, 0.1338, 0.1021, 0.0979, 0.1360], device='cuda:0', grad_fn=<DivBackward0>)
 @ 1549 train 4.2501 , allloss: 4.2501, dt: 2275.61ms, fracRes: 1.0000, norm(attn): 0.4980, norm(output): 0.6289, norm(x): 0.7135, norm(y): 1.0036, norm:0.4375, tok/sec: 57598.71, flops:38.18, batch-reuse:1, routes_0:tensor([0.1175, 0.1224, 0.1298, 0.1070, 0.1320, 0.1203, 0.1355, 0.1356], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1282, 0.1313, 0.1013, 0.1694, 0.1338, 0.1021, 0.0979, 0.1360], device='cuda:0', grad_fn=<DivBackward0>)
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.7266,     0.2734,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.8555,     0.0723,     0.0713,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -2619,9 +2603,7 @@ The first thing to do is
 @ 1997 train 3.8922 , allloss: 3.8922, dt: 2275.23ms, fracRes: 1.0000, norm(attn): 0.5078, norm(output): 0.6484, norm(x): 0.7247, norm(y): 0.9979, norm:0.3517, tok/sec: 57608.19, flops:38.19, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1300, 0.1068, 0.1332, 0.1168, 0.1391, 0.1362], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1287, 0.1340, 0.0957, 0.1728, 0.1389, 0.0953, 0.0935, 0.1411], device='cuda:0', grad_fn=<DivBackward0>)
 @ 1998 train 3.8459 , allloss: 3.8459, dt: 2249.00ms, fracRes: 1.0000, norm(attn): 0.5078, norm(output): 0.6445, norm(x): 0.7269, norm(y): 0.9979, norm:0.3443, tok/sec: 58280.23, flops:38.63, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1300, 0.1068, 0.1332, 0.1168, 0.1391, 0.1362], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1287, 0.1340, 0.0957, 0.1728, 0.1389, 0.0953, 0.0935, 0.1411], device='cuda:0', grad_fn=<DivBackward0>)
 @ 1999 train 3.7767 , allloss: 3.7767, dt: 2243.77ms, fracRes: 1.0000, norm(attn): 0.5039, norm(output): 0.6328, norm(x): 0.7255, norm(y): 0.9977, norm:0.3293, tok/sec: 58415.94, flops:38.72, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1300, 0.1068, 0.1332, 0.1168, 0.1391, 0.1362], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1287, 0.1340, 0.0957, 0.1728, 0.1389, 0.0952, 0.0934, 0.1411], device='cuda:0', grad_fn=<DivBackward0>)
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9392
+@ 2000 val 3.9392
 @ 2000 train 3.8551 , allloss: 3.8551, dt: 3225.10ms, fracRes: 1.0000, norm(attn): 0.5039, norm(output): 0.6328, norm(x): 0.7192, norm(y): 0.9977, norm:0.3387, tok/sec: 40641.19, flops:26.94, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1300, 0.1068, 0.1332, 0.1168, 0.1391, 0.1362], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1288, 0.1340, 0.0957, 0.1728, 0.1389, 0.0952, 0.0934, 0.1411], device='cuda:0', grad_fn=<DivBackward0>)
 @ 2001 train 3.9294 , allloss: 3.9294, dt: 2232.82ms, fracRes: 1.0000, norm(attn): 0.5039, norm(output): 0.6328, norm(x): 0.7118, norm(y): 0.9977, norm:0.3449, tok/sec: 58702.32, flops:38.91, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1300, 0.1068, 0.1332, 0.1168, 0.1391, 0.1362], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1287, 0.1340, 0.0957, 0.1728, 0.1389, 0.0952, 0.0934, 0.1411], device='cuda:0', grad_fn=<DivBackward0>)
 @ 2002 train 3.8988 , allloss: 3.8988, dt: 2267.43ms, fracRes: 1.0000, norm(attn): 0.5078, norm(output): 0.6406, norm(x): 0.7137, norm(y): 0.9972, norm:0.3179, tok/sec: 57806.52, flops:38.32, batch-reuse:1, routes_0:tensor([0.1158, 0.1222, 0.1300, 0.1068, 0.1332, 0.1168, 0.1391, 0.1362], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1287, 0.1341, 0.0957, 0.1728, 0.1389, 0.0952, 0.0934, 0.1411], device='cuda:0', grad_fn=<DivBackward0>)
@@ -2672,7 +2654,6 @@ validation loss: 3.9392
 @ 2047 train 3.9765 , allloss: 3.9765, dt: 2265.96ms, fracRes: 1.0000, norm(attn): 0.5156, norm(output): 0.6562, norm(x): 0.7281, norm(y): 0.9977, norm:0.3894, tok/sec: 57843.95, flops:38.35, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1299, 0.1070, 0.1330, 0.1166, 0.1396, 0.1359], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1289, 0.1343, 0.0950, 0.1732, 0.1392, 0.0946, 0.0930, 0.1417], device='cuda:0', grad_fn=<DivBackward0>)
 @ 2048 train 3.9529 , allloss: 3.9529, dt: 2370.11ms, fracRes: 1.0000, norm(attn): 0.5156, norm(output): 0.6562, norm(x): 0.7309, norm(y): 0.9975, norm:0.3829, tok/sec: 55302.10, flops:36.66, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1299, 0.1070, 0.1330, 0.1166, 0.1396, 0.1359], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1289, 0.1343, 0.0950, 0.1732, 0.1392, 0.0945, 0.0930, 0.1418], device='cuda:0', grad_fn=<DivBackward0>)
 @ 2049 train 4.0604 , allloss: 4.0604, dt: 2259.69ms, fracRes: 1.0000, norm(attn): 0.5156, norm(output): 0.6484, norm(x): 0.7327, norm(y): 0.9970, norm:0.3495, tok/sec: 58004.36, flops:38.45, batch-reuse:1, routes_0:tensor([0.1158, 0.1221, 0.1299, 0.1070, 0.1331, 0.1166, 0.1396, 0.1359], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1289, 0.1343, 0.0950, 0.1732, 0.1392, 0.0945, 0.0930, 0.1418], device='cuda:0', grad_fn=<DivBackward0>)
-Clearing contents of superlog
 tensor([[    1.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.8633,     0.1387,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
         [    0.9023,     0.0518,     0.0442,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000,     0.0000],
@@ -3255,7 +3236,6 @@ iced
 @ 2547 train 3.8839 , allloss: 3.8839, dt: 2243.93ms, fracRes: 1.0000, norm(attn): 0.5547, norm(output): 0.6953, norm(x): 0.7555, norm(y): 0.9892, norm:0.3364, tok/sec: 58411.72, flops:38.72, batch-reuse:1, routes_0:tensor([0.1163, 0.1212, 0.1294, 0.1101, 0.1327, 0.1137, 0.1427, 0.1340], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1281, 0.1370, 0.0901, 0.1767, 0.1440, 0.0877, 0.0889, 0.1474], device='cuda:0', grad_fn=<DivBackward0>)
 @ 2548 train 3.9703 , allloss: 3.9703, dt: 2219.19ms, fracRes: 1.0000, norm(attn): 0.5586, norm(output): 0.6914, norm(x): 0.7506, norm(y): 0.9897, norm:0.4670, tok/sec: 59063.12, flops:39.15, batch-reuse:1, routes_0:tensor([0.1163, 0.1212, 0.1294, 0.1101, 0.1327, 0.1137, 0.1427, 0.1340], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1281, 0.1370, 0.0901, 0.1767, 0.1440, 0.0877, 0.0889, 0.1474], device='cuda:0', grad_fn=<DivBackward0>)
 @ 2549 train 3.9754 , allloss: 3.9754, dt: 2278.99ms, fracRes: 1.0000, norm(attn): 0.5586, norm(output): 0.6914, norm(x): 0.7527, norm(y): 0.9894, norm:0.4099, tok/sec: 57513.29, flops:38.13, batch-reuse:1, routes_0:tensor([0.1163, 0.1212, 0.1294, 0.1101, 0.1327, 0.1137, 0.1427, 0.1340], device='cuda:0', grad_fn=<DivBackward0>)  routes_7:tensor([0.1281, 0.1370, 0.0901, 0.1767, 0.1441, 0.0877, 0.0889, 0.1474], device='cuda:0', grad_fn=<DivBackward0>)
-Clearing contents of superlog
 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.9062, 0.0947, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.8633, 0.0747, 0.0640, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],

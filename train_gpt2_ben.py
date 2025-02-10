@@ -92,12 +92,12 @@ class CausalSelfAttention(DualModule):
         #     .view(1,1,config.block_size,config.block_size)
         # )
         # no zeros
+# @flag attention mask [ATTENTION_MASK]
         if ATTENTION_MASK:
             if ATTENTION_SINK:
                 T = config.block_size + 1
             else:
                 T = config.block_size
-# @flag attention mask
             mask = torch.triu(torch.ones(T, T),diagonal=1)
             mask = torch.where(mask == 1, float("-inf"), torch.tensor(0.0))
             if ATTENTION_SINK:
@@ -472,13 +472,10 @@ class MultExecute(nn.Module):
 
 # @flag machine_code
 class BenExecute(nn.Module):
-
     def __init__(self, config):
         super().__init__()
         self.mlp = MLPConcat(config)
         # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
-
-    
     def forward(self, program, attn):
         return self.mlp(program, attn)
 # @endflag machine_code
@@ -513,7 +510,6 @@ class BenBlock(nn.Module):
         self.attn = CausalSelfAttention(config)
         self.n_head = config.n_head
         self.n_layer = config.n_layer
-
 # @flag machine_modules
         self.compiler = BenCompilerNoOp(config)
         self.execute = VanillaExecute(config)
@@ -774,6 +770,8 @@ class GPT(DualModule):
         # weight sharing scheme
         self.transformer.wte.weight = self.lm_head.weight # copies the data pointer
 
+        self.router = nn.Parameter(torch.zeros(config.n_layer, config.n_layer, dtype=torch.float32))
+
         # param initialization
         self.apply(self._init_weights) # apply iterates all submodules
     
@@ -825,8 +823,8 @@ class GPT(DualModule):
                 block = self.transformer.sharedblock
             else:
                 block = self.transformer.h[i]
+# @flag loss_logic [IDENTITY_LOSS]
             if targets is not None and IDENTITY_LOSS:
-# @flag loss_logic
                 x, metadata = block(x,print_weights=print_weights,step=i)
                 _x_total = x
                 _in = x.detach()
@@ -854,8 +852,28 @@ class GPT(DualModule):
 
                 # loss = loss + layerloss
             else:
-                x, metadata = block(x,print_weights=print_weights,step=i)
+# @flag network_logic
+                routes = F.softmax(self.router[i], dim=-1)
+                routes.requires_grad_(True)
+                routes.retain_grad()
+                x.requires_grad_(True)
+                x.retain_grad()
+                # print(f"routes grad {routes.grad}")
+                # print(f"x grad {x.grad}")
+                _finx, metadata = block(x,print_weights=print_weights,step=i)
+                _finx = routes[i] * _finx
+                for j in range(self.config.n_layer):
+                    if i == j:
+                        continue
+                    b = self.transformer.h[j]
+                    _x, _metadata = b(x,print_weights=False,step=i)
+                    _finx = _finx + routes[j] * _x
+                x = _finx
                 _x_total = x
+                metadata[f"routes_{i}"] = routes
+                # x, metadata = block(x,print_weights=print_weights,step=i)
+                # _x_total = x
+# @endflag network_logic
 
             for key, value in metadata.items():
                 outerMetadata[key] = outerMetadata.get(key, 0) + value
@@ -1466,6 +1484,7 @@ ddp = int(os.environ.get('RANK', -1)) != -1 # is this a ddp run (sketchy)
 if ddp:
     assert torch.cuda.is_available(), "torch.distributed only works with CUDA"
     init_process_group(backend='nccl')
+    print("YES DDP")
     ddp_rank = int(os.environ['RANK']) # 0 to 7
     ddp_local_rank = int(os.environ['LOCAL_RANK']) # used in multi node setting, rank of GPU on single node, 0 to 7. Unused by us?
     ddp_world_size = int(os.environ['WORLD_SIZE']) # 8 for 8 GPUs
@@ -1495,7 +1514,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="18-router"
+test_name="18-router-3"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1852,6 +1871,8 @@ for step in range(max_steps):
         # .backward() will just += the gradient
         # DDP will automatically allreduce this for us
         loss.backward()
+        # print(f"GPT BACKED LMHEAD: {model.module.lm_head.weight.grad}")
+        # print(f"GPT BACKED: {model.module.router.grad}")
         # NOTE: I want each backward call to accumulate gradient on a different layer of the network... so I can do layerwise training
         # Each time I do a forward pass, i want it to remember the gradient for most of the backward calls, but not the very next backward call...
         # When summing losses, maybe i should just use a detached version
@@ -1892,8 +1913,10 @@ for step in range(max_steps):
         normX = _outer_metadata["_norm_x"]
         normY = _outer_metadata["_norm_y"]
         fracNoop = _outer_metadata["_frac_noop"]
+        r_0 = _outer_metadata["routes_0"]
+        r_7 = _outer_metadata["routes_7"]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, fracRes: {fracNoop:.4f}, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, fracRes: {fracNoop:.4f}, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}, routes_0:{r_0}  routes_7:{r_7}") 
 
 
 if ddp:

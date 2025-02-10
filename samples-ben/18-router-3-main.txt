@@ -1,0 +1,60 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roth:0.0002 staged:0.0002imate:0.0002 renters:0.0002Í:0.0001proclaimed:0.0002 crosses:0.0001ouple:0.0002)
+ouple
+------
+		( staged:0.0002imate:0.0002 renters:0.0002Í:0.0001proclaimed:0.0002 crosses:0.0001ouple:0.0002 clears:0.0003)
+ clears clears clears clears fishes contention contention contention contention Dress shore LIST LIST DoesnENS
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( Roth:0.0002 journey:0.0002 rewrite:0.0001,:0.0002Í:0.0001proclaimed:0.0002 youths:0.0001ouple:0.0002)
+ouple
+------
+		( journey:0.0002 rewrite:0.0001,:0.0002Í:0.0001proclaimed:0.0002 youths:0.0001ouple:0.0002 clears:0.0003)
+ clears clears clears clears fishes Suppose Suppose Alam AlamMir CASE CASE CASE CASE journey
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.1021 a:0.0530.:0.0718 and:0.1416.:0.1143.:0.0894 a:0.0417.:0.0703)
+.
+------
+		( a:0.0530.:0.0718 and:0.1416.:0.1143.:0.0894 a:0.0417.:0.0703
+:0.2598)
+
+-The a a a a a a a a a a a a
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1543 the:0.0564 and:0.1777 and:0.0981an:0.0591,:0.6016 a:0.0923 :0.0339)
+ 
+------
+		( the:0.0564 and:0.1777 and:0.0981an:0.0591,:0.6016 a:0.0923 :0.0339 :0.1011)
+               
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1289 the:0.0869 and:0.2334 and:0.1309tery:0.1934 are:0.5273 red:0.0547ery:0.1157)
+ery
+------
+		( the:0.0869 and:0.2334 and:0.1309tery:0.1934 are:0.5273 red:0.0547ery:0.1157,:0.0981)
+, and are the same as the same as the same as the same as
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.0679 a:0.0996 and:0.2832 and:0.1001atoes:0.4492 are:0.2832 red:0.2285iced:0.5625)
+iced
+------
+		( a:0.0996 and:0.2832 and:0.1001atoes:0.4492 are:0.2832 red:0.2285iced:0.5625,:0.2188)
+, and the other are iced.
+The first thing to do is
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1206 a:0.1602,:0.1904 and:0.0991atoes:0.0854 are:0.6914 a:0.0967iced:0.5859)
+iced
+------
+		( a:0.1602,:0.1904 and:0.0991atoes:0.0854 are:0.6914 a:0.0967iced:0.5859,:0.2451)
+, and you can make a little bit of a little bit of a little
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(!:0.1079 a:0.1484,:0.2393 white:0.0942ty:0.2910 are:0.6094 red:0.1357iced:0.4688)
+iced
+------
+		( a:0.1484,:0.2393 white:0.0942ty:0.2910 are:0.6094 red:0.1357iced:0.4688,:0.2656)
+, and the fruit is red.
+The fruit is a fruit that is

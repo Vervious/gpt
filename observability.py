@@ -1,5 +1,6 @@
 import inspect
 import sys
+import re
 
 def extract_flagged_code():
     # Get the current script's source code
@@ -25,9 +26,16 @@ def extract_flagged_code():
         line_clean = line.strip()
         if line_clean.startswith(start_marker):
             current_name = line_clean[len(start_marker):]
+            res = re.findall(r"\[(.*?)\]", current_name)
+            if len(res) > 0:
+                flag = res[0]
+                if globals().get(flag, False):
+                    pass # flag is true, should print
+                else:
+                    continue
             flagged_code.append(current_name.rstrip('\n'))
             in_section = True
-        elif line_clean.startswith(end_marker):
+        elif line_clean.startswith(end_marker) and in_section:
             flagged_code.append("----------------")
             in_section = False
         elif in_section:
