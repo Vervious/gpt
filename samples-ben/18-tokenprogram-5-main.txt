@@ -1,0 +1,161 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( light:0.0421 India:0.0582 autobi:0.0433 hither:0.0328 overheard:0.1009 Questions:0.1778pecting:0.1281 cha:0.0599)
+
+------
+		( scalp:0.0002 �:0.0002 Practices:0.0002 recruits:0.0002 assass:0.0003eat:0.0002 machines:0.0002 format:0.0003)
+ format
+------
+		( �:0.0002 Practices:0.0002 recruits:0.0002 assass:0.0003eat:0.0002 machines:0.0002 format:0.0003blood:0.0002)
+bloodbloodbloodblood Levant circumstance circumstanceDideatangs taller Died Arthur shocked@#
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( light:0.0421 India:0.0582 autobi:0.0433 hither:0.0328 overheard:0.1012 Questions:0.1776pecting:0.1279 cha:0.0599)
+
+------
+		( scalp:0.0002 �:0.0002 Practices:0.0002big:0.0002 Pot:0.0003eat:0.0002 machines:0.0002 format:0.0002)
+ format
+------
+		( �:0.0002 Practices:0.0002big:0.0002 Pot:0.0003eat:0.0002 machines:0.0002 format:0.0002 socks:0.0002)
+ socks socks these billionaireabolic pharmacies pharmacies unreliable the the the the the the the
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( light:0.0500 India:0.0677name:0.0616 affected:0.0200 overheard:0.0782 Questions:0.1375pecting:0.0700 cha:0.0662)
+
+------
+		(.:0.0598 not:0.0361.:0.1177 and:0.0854,:0.0498,:0.0659 a:0.0359
+:0.2061)
+
+
+------
+		( not:0.0361.:0.1177 and:0.0854,:0.0498,:0.0659 a:0.0359
+:0.2061-:0.0815)
+-
+The first.
+-
+The first.
+-
+-
+300: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(ri:0.1794abetes:0.1998name:0.3454 challenges:0.0401 almost:0.0471 Scarlett:0.1160 more:0.2890 cha:0.1713)
+
+------
+		(,:0.1641 a:0.0576,:0.0737 and:0.0996er:0.0349,:0.2598 a:0.0664
+:0.1621)
+
+
+------
+		( a:0.0576,:0.0737 and:0.0996er:0.0349,:0.2598 a:0.0664
+:0.1621The:0.1221)
+The first time, and the first time, and the first time, and
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.1752ills:0.1131name:0.2534 such:0.1120 America:0.2220 Scarlett:0.3790 more:0.6548piece:0.0725)
+
+------
+		( are:0.1318 a:0.0664,:0.1592 and:0.0991tery:0.2100,:0.3809 a:0.0664
+:0.0469)
+
+
+------
+		( a:0.0664,:0.1592 and:0.0991tery:0.2100,:0.3809 a:0.0664
+:0.0469The:0.1011)
+The most common type of the most common types of the most common types of
+800: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.4299ills:0.5069name:0.4260 reason:0.1490 America:0.5618 Scarlett:0.1218 more:0.8137piece:0.2035)
+
+------
+		(,:0.1318 a:0.0757,:0.1416 yellow:0.0903om:0.2490,:0.3672 a:0.0312ery:0.1719)
+ery
+------
+		( a:0.0757,:0.1416 yellow:0.0903om:0.2490,:0.3672 a:0.0312ery:0.1719thro:0.0410)
+throscreens.
+The most common types of fruits are the most common
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.3362 (:0.3860ade:0.3782 such:0.1029 America:0.6114axies:0.1324 more:0.6896piece:0.1465)
+
+------
+		( are:0.2314 a:0.0859,:0.1914 yellow:0.0996om:0.1240 are:0.4297 brown:0.0388iced:0.1631)
+iced
+------
+		( a:0.0859,:0.1914 yellow:0.0996om:0.1240 are:0.4297 brown:0.0388iced:0.1631 in:0.1758)
+ in the garden.
+The first thing to do is to start with a
+1300: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.2010ills:0.3820ade:0.5671 such:0.1205 America:0.5390 Reserved:0.2905 more:0.6756piece:0.4197)
+
+------
+		(,:0.1602 a:0.1279 and:0.3594 and:0.1230tery:0.1069 are:0.3711 a:0.0664iced:0.2100)
+iced
+------
+		( a:0.1279 and:0.3594 and:0.1230tery:0.1069 are:0.3711 a:0.0664iced:0.2100 to:0.1543)
+ to the sun, and the sun is a great way to get the sun
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.2496 (:0.2458ade:0.6701 practice:0.0985 America:0.6142 Reserved:0.3227 more:0.3498piece:0.5257)
+
+------
+		(,:0.1069 a:0.1357,:0.2871 and:0.1191atoes:0.3340 are:0.2812 red:0.1602iced:0.6055)
+iced
+------
+		( a:0.1357,:0.2871 and:0.1191atoes:0.3340 are:0.2812 red:0.1602iced:0.6055 with:0.1157)
+ with a variety of colors, including the red, red, and red.
+1800: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.1895 (:0.2233ade:0.7866 such:0.0622 America:0.6414axies:0.2279 more:0.2843chool:0.3658)
+
+------
+		( and:0.0962 a:0.1172 and:0.2061 and:0.1328atoes:0.1157 are:0.5938 red:0.1787iced:0.3027)
+iced
+------
+		( a:0.1172 and:0.2061 and:0.1328atoes:0.1157 are:0.5938 red:0.1787iced:0.3027,:0.2031)
+, and the flowers are green.
+The flowers are green, and the
+2050: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( with:0.1658 (:0.4209ade:0.9030round:0.1135 America:0.6493axies:0.2240 more:0.3151piece:0.5175)
+
+------
+		( are:0.1689 a:0.1426,:0.2773 and:0.1328atoes:0.5039 are:0.6172 a:0.0791iced:0.5195)
+iced
+------
+		( a:0.1426,:0.2773 and:0.1328atoes:0.5039 are:0.6172 a:0.0791iced:0.5195,:0.1011)
+, and the flowers are not eaten.
+The first time you see the
+2300: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.1756 (:0.3467ade:0.8688 such:0.0920 America:0.3711casts:0.1219 more:0.2262piece:0.6043)
+
+------
+		( are:0.1621 a:0.1465,:0.2246 green:0.0708ent:0.1514 are:0.2412 a:0.0835urn:0.3457)
+urn
+------
+		( a:0.1465,:0.2246 green:0.0708ent:0.1514 are:0.2412 a:0.0835urn:0.3457s:0.3887)
+s, and the fruit is a fruit of the same color.
+-
+2550: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.1831 (:0.2496ade:0.7569 such:0.0911 America:0.2998 Survive:0.1709ym:0.4594chool:0.5106)
+
+------
+		( are:0.1582 a:0.1133,:0.3262 and:0.0757ent:0.1777 are:0.4766 a:0.0923iced:0.2949)
+iced
+------
+		( a:0.1133,:0.3262 and:0.0757ent:0.1777 are:0.4766 a:0.0923iced:0.2949,:0.1367)
+, and the fruit is a fruit.
+The fruit is a fruit that
+2800: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(::0.2157 (:0.3944ade:0.7630e:0.0632 almost:0.1461 Survive:0.2003ym:0.5743piece:0.4571)
+
+------
+		( are:0.2451 a:0.1445,:0.2695 white:0.1025ent:0.1455 are:0.4316 a:0.0977iced:0.3105)
+iced
+------
+		( a:0.1445,:0.2695 white:0.1025ent:0.1455 are:0.4316 a:0.0977iced:0.3105 together:0.3555)
+ together, and the leaves are green.
+The leaves are green, and

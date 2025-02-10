@@ -205,7 +205,7 @@ class CausalSelfAttention(DualModule):
                     yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
                     
                 torch.set_printoptions(linewidth=300, sci_mode=False)
-                bprint(f"{yy[-1,-1,:,:]}")
+                bprint(f"Attn {T} {yy[-1,-1,:,:]}") #TODO uncomment
 
                 rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
                 # bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
@@ -218,7 +218,7 @@ class CausalSelfAttention(DualModule):
                 if self.cachedResW is not None:
                     torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
                     bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
-                bprint(f"========")
+                # bprint(f"========")
 
         # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
         # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
@@ -475,7 +475,6 @@ class BenExecute(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.mlp = MLPConcat(config)
-        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
     def forward(self, program, attn):
         return self.mlp(program, attn)
 # @endflag machine_code
@@ -512,8 +511,12 @@ class BenBlock(nn.Module):
         self.n_layer = config.n_layer
 # @flag machine_modules
         self.compiler = BenCompilerNoOp(config)
-        self.execute = VanillaExecute(config)
+        self.execute = BenExecute(config)
+        self.throughput = nn.Parameter(torch.tensor(-2.0))
+        torch.nn.init.normal_(self.throughput, mean=-2.0, std=0.02)
 # @endflag machine_modules
+
+        
 
         # self.mlp = MLP(config)
 
@@ -535,7 +538,8 @@ class BenBlock(nn.Module):
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        newx = x + machineOutput
+        tr = torch.sigmoid(self.throughput)
+        newx = (1 - tr) * x + tr * machineOutput
 # @endflag block_logic
 
 
@@ -735,20 +739,26 @@ class GPT(DualModule):
 
         sharedBlock = Block(config)
 
+        if CODE_MODE:
+            self.T2 = 128
+            self.code = nn.Parameter(torch.zeros(self.T2, config.n_embd, dtype=torch.float32))
+        else:
+            self.T2 = 0
+
         if self.VANILLA:
             if REUSE_WEIGHTS:
                 sharedBlock = BenBlock(config)
 
                 self.transformer = nn.ModuleDict(dict(
                     wte = nn.Embedding(config.vocab_size, config.n_embd),
-                    wpe = nn.Embedding(config.block_size, config.n_embd),
+                    wpe = nn.Embedding(config.block_size + self.T2, config.n_embd),
                     sharedblock = sharedBlock,
                     ln_f = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE),
                 ))
             else:
                 self.transformer = nn.ModuleDict(dict(
                     wte = nn.Embedding(config.vocab_size, config.n_embd),
-                    wpe = nn.Embedding(config.block_size, config.n_embd),
+                    wpe = nn.Embedding(config.block_size + self.T2, config.n_embd),
                     h = nn.ModuleList([BenBlock(config) for _ in range(config.n_layer)]),
                     ln_f = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE),
                 ))
@@ -770,7 +780,8 @@ class GPT(DualModule):
         # weight sharing scheme
         self.transformer.wte.weight = self.lm_head.weight # copies the data pointer
 
-        self.router = nn.Parameter(torch.zeros(config.n_layer, config.n_layer, dtype=torch.float32))
+
+        # self.router = nn.Parameter(torch.zeros(config.n_layer, config.n_layer, dtype=torch.float32))
 
         # param initialization
         self.apply(self._init_weights) # apply iterates all submodules
@@ -796,15 +807,28 @@ class GPT(DualModule):
                 torch.nn.init.zeros_(module.bias)
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+# @flag init_logic CODE_MODE
+        elif isinstance(module, GPT) and CODE_MODE:
+            torch.nn.init.normal_(module.code, mean=0.0, std=5)
+# @endflag init_logic
 
     def vanillaforward(self, idx, targets=None,print_weights=False):
         device = idx.device
         b, t = idx.size()
         assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
-        pos = torch.arange(0, t, dtype=torch.long, device=device) # shape (t)
 
         # forward the GPT model itself
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
+
+# @flag code_logic CODE_MODE
+        # Now, concat our code (NOTE: shoudl we add positional embeddings)
+        if CODE_MODE:
+            code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
+            tok_emb = torch.cat((code_expanded, tok_emb), dim=1)
+# @endflag code_logic
+
+
+        pos = torch.arange(0, t + self.T2, dtype=torch.long, device=device) # shape (t)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
         x = tok_emb + pos_emb
 
@@ -814,6 +838,9 @@ class GPT(DualModule):
         logits = []
 
         outerMetadata = {}
+
+        if CODE_MODE:
+            outerMetadata["code"] = self.code
 
         _x_total = x
         _xtraloss = torch.tensor(0.0, device=idx.device)
@@ -852,28 +879,25 @@ class GPT(DualModule):
 
                 # loss = loss + layerloss
             else:
-# @flag network_logic
-                routes = F.softmax(self.router[i], dim=-1)
-                routes.requires_grad_(True)
-                routes.retain_grad()
-                x.requires_grad_(True)
-                x.retain_grad()
-                # print(f"routes grad {routes.grad}")
-                # print(f"x grad {x.grad}")
-                _finx, metadata = block(x,print_weights=print_weights,step=i)
-                _finx = routes[i] * _finx
-                for j in range(self.config.n_layer):
-                    if i == j:
-                        continue
-                    b = self.transformer.h[j]
-                    _x, _metadata = b(x,print_weights=False,step=i)
-                    _finx = _finx + routes[j] * _x
-                x = _finx
-                _x_total = x
-                metadata[f"routes_{i}"] = routes
-                # x, metadata = block(x,print_weights=print_weights,step=i)
+                # routes = F.softmax(self.router[i], dim=-1)
+                # routes.requires_grad_(True)
+                # routes.retain_grad()
+                # x.requires_grad_(True)
+                # x.retain_grad()
+                # # print(f"routes grad {routes.grad}")
+                # # print(f"x grad {x.grad}")
+                # _finx, metadata = block(x,print_weights=print_weights,step=i)
+                # _finx = routes[i] * _finx
+                # for j in range(self.config.n_layer):
+                #     if i == j:
+                #         continue
+                #     b = self.transformer.h[j]
+                #     _x, _metadata = b(x,print_weights=False,step=i)
+                #     _finx = _finx + routes[j] * _x
+                # x = _finx
                 # _x_total = x
-# @endflag network_logic
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
 
             for key, value in metadata.items():
                 outerMetadata[key] = outerMetadata.get(key, 0) + value
@@ -881,8 +905,11 @@ class GPT(DualModule):
         if targets is not None and trueloss is None:
             # if we are given some desired targets also calculate the loss
             _x_total = self.transformer.ln_f(_x_total)
+            if CODE_MODE:
+                _x_total = _x_total[:, self.T2:, :] # NOTE: remove line if no T2
             _logits = self.lm_head(_x_total)
             logits.append(_logits)
+
             trueloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
             loss = trueloss + _xtraloss
         elif targets is None:
@@ -1514,13 +1541,13 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="18-router-3"
+test_name="18-throughputgate"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
 B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
 T = 1024 # sequence length # 16 # 1024
-config_ = GPTConfig(vocab_size=50304, block_size=T, n_layer=8)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
+config_ = GPTConfig(vocab_size=50304, block_size=T, n_layer=12)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
 
 total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
@@ -1548,6 +1575,7 @@ MATRIX_NUM_PARAMS = MLPMAT_INNER_SIZE*MLPMAT_INNER_SIZE # see prev line
 ATTENTION_SINK = False
 ATTENTION_MASK = False
 IDENTITY_LOSS = False
+CODE_MODE = False
 
 import observability
 flag_str = observability.extract_flagged_code()
@@ -1565,6 +1593,7 @@ MLP_SCALE={MLP_SCALE}
 ATTENTION_SINK={ATTENTION_SINK}
 ATTENTION_MASK ={ATTENTION_MASK}
 IDENTITY_LOSS={IDENTITY_LOSS}
+CODE_MODE={CODE_MODE}
 ```
 ![caption](img/{test_name}.jpg)
 """
@@ -1612,7 +1641,7 @@ def cclear():
 hello_swag_frequency = 600000
 validation_frequency = 2000
 checkpoint_frequency = 5000
-sample_frequency = 500
+sample_frequency = 250
 inner_dump_frequency = 500
 
 assert total_batch_size % (B*T*ddp_world_size) == 0, "make sure total_batch_size is divisible by B*T*(# gpus)"
@@ -1783,6 +1812,8 @@ for step in range(max_steps):
                     cclear()
                     cprint(f"! {step}")
                     _dump_val = True
+
+                # bprint(f"Code: {model.module.code}")
             else:
                 _print_weights_val = False
             # forward the model to get the logits
@@ -1791,6 +1822,21 @@ for step in range(max_steps):
                     logits, _, _, _, _, _, _ = model(xgen[:,-T:], all_logits=True, print_weights=_print_weights_val, dump_val=_dump_val) # (B, T, vocab_size)
 
                 if xgen.size(1) < XLEN + 2:
+
+                    if xgen.size(1) < XLEN + 1 and CODE_MODE:
+                        _code = model.module.code
+                        _code_interp = model.module.lm_head(_code)
+                        # print(_code_interp.shape)
+                        printgen.extend(enc.encode("\n>>>>>>\n"))   
+                        printgen.extend(leftParens)
+                        for j in range(7, -1, -1): # 0 to 7
+                            _logit = _code_interp[-(j+1),:] #(1, vocab_size?)
+                            _probs = F.softmax(_logit, dim=-1) #(vocab_size?)
+                            # print(_logit)
+                            vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
+                            printgen.append(idxs[0].item())
+                            printgen.extend(enc.encode(f":{vals[0].item():.4f}"))
+                        printgen.extend(rightParens) 
 
                     printgen.extend(enc.encode("\n------\n"))    
                     for l in logits:
@@ -1913,10 +1959,10 @@ for step in range(max_steps):
         normX = _outer_metadata["_norm_x"]
         normY = _outer_metadata["_norm_y"]
         fracNoop = _outer_metadata["_frac_noop"]
-        r_0 = _outer_metadata["routes_0"]
-        r_7 = _outer_metadata["routes_7"]
+        # r_0 = _outer_metadata["routes_0"]
+        # r_7 = _outer_metadata["routes_7"]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, fracRes: {fracNoop:.4f}, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}, routes_0:{r_0}  routes_7:{r_7}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, fracRes: {fracNoop:.4f}, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:

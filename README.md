@@ -2637,7 +2637,7 @@ Next steps: increase learning rate. What happens if i turn x to y?  Also, our ho
 
 ## Randomness Extraction
 
-First, we see whether, if we absolute-value the residual at every layer, does it change performance compared to vanilla GPT? (Yes, it does, kind of similar to reusing weights, I think. It is a consistent penalty.) (Here we also used mlpconcat by accident.)
+First, we see whether, if we absolute-value the residual at every layer, does it change performance compared to vanilla GPT? (Yes, it does, kind of similar to reusing weights, I think. It is a consistent penalty.)
 
 ```
 Transformer, max LR 0.0006 n_layer 8
@@ -2675,7 +2675,7 @@ IDENTITY_LOSS=False
 
 
 
-Compare to (somethign is off --- why is this worse than 13-baseline? Answer: because we used mlpconcat by accdient):
+Compare to (somethign is off --- why is this worse than 13-baseline? Because we only use 8 layers instead of 12, lol.):
 
 ```
 Transformer, max LR 0.0006 n_layer 8
@@ -2878,4 +2878,236 @@ ATTENTION_MASK =False
 IDENTITY_LOSS=False
 ```
 ![caption](img/18-router-3.jpg)
+
+## Learning Programs
+
+I am curious if prepending extra "learnable tokens" (i.e. playing the function of code) might help the network scale. With 768 prepended tokens, initialized with std 1, it seems to be a noop:
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ code_logic
+        # Now, concat our code (NOTE: shoudl we add positional embeddings)
+        code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
+        tok_emb = torch.cat((code_expanded, tok_emb), dim=1)
+----------------
+ network_logic
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-tokenprogram-2.jpg)
+
+With 128 prepended tokens, initiated with std 5:
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ code_logic
+        # Now, concat our code (NOTE: shoudl we add positional embeddings)
+        code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
+        tok_emb = torch.cat((code_expanded, tok_emb), dim=1)
+----------------
+ network_logic
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-tokenprogram-3.jpg)
+
+
+Instead of prepending, what if we directly add it to the input tokens? I set std back to 0.5 because otherwise it has trouble converging... This is definitely not great.
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+        # self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ code_logic
+        # Now, concat our code (NOTE: shoudl we add positional embeddings)
+        code_expanded = self.code.unsqueeze(0)  #.expand(b, -1, -1)
+        tok_emb = tok_emb + code_expanded[:, -t:, :]
+----------------
+ network_logic
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-tokenprogram-4.jpg)
+
+Just for fun, we run the original 128-code std=5 experiment in conjunction with MLPConcat. I suspect that for these code experiments, the gradient is pretty tiny, (should just print and check) because there just isn't really any immediate point in attending to them?
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ code_logic
+        # Now, concat our code (NOTE: shoudl we add positional embeddings)
+        code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
+        tok_emb = torch.cat((code_expanded, tok_emb), dim=1)
+----------------
+ network_logic
+                x, metadata = block(x,print_weights=print_weights,step=i)
+                _x_total = x
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+```
+![caption](img/18-tokenprogram-5.jpg)
+
+
+I decided to run the signal gate design again. It doesn't perform as well, but it's not fatal; I suspect that learning in "superposition" is important (and somehow the network learns to "dwarf" earlier residuals?). TODO investigate
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_code
+class BenExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.mlp = MLPConcat(config)
+    def forward(self, program, attn):
+        return self.mlp(program, attn)
+----------------
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = BenExecute(config)
+        self.throughput = nn.Parameter(torch.tensor(-2.0))
+        torch.nn.init.normal_(self.throughput, mean=-2.0, std=0.02)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        tr = torch.sigmoid(self.throughput)
+        newx = (1 - tr) * x + tr * machineOutput
+----------------
+ init_logic CODE_MODE
+        elif isinstance(module, GPT) and CODE_MODE:
+            torch.nn.init.normal_(module.code, mean=0.0, std=5)
+----------------
+ code_logic CODE_MODE
+        # Now, concat our code (NOTE: shoudl we add positional embeddings)
+        if CODE_MODE:
+            code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
+            tok_emb = torch.cat((code_expanded, tok_emb), dim=1)
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+CODE_MODE=False
+```
+![caption](img/18-throughputgate.jpg)
 

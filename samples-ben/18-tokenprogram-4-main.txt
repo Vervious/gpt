@@ -1,0 +1,61 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( graceful:0.0001 Online:0.0001 139:0.0001urther:0.0001 knees:0.0001Mark:0.0001 drafts:0.0001 decision:0.0001)
+
+------
+		( diplom:0.0002rities:0.0002Star:0.0002 Single:0.0002 knees:0.0002 demonstr:0.0002Pub:0.0002 whom:0.0002)
+ whom
+------
+		( diplom:0.0002rities:0.0002Star:0.0002 Single:0.0002 knees:0.0002 Attend:0.0002Pub:0.0002 whom:0.0003)
+ whom whom whom whom whom whom whom whom whom whom whom whom whom whom whom
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( graceful:0.0001 Online:0.0001 139:0.0001urther:0.0001 knees:0.0001Mark:0.0001 drafts:0.0001 decision:0.0001)
+
+------
+		( diplom:0.0002rities:0.0002Star:0.0002 Administ:0.0002ner:0.0002 demonstr:0.0002Pub:0.0002 whom:0.0002)
+ whom
+------
+		( diplom:0.0002rities:0.0002 Songs:0.0002 Single:0.0002ner:0.0002 demonstr:0.0002Pub:0.0002 whom:0.0003)
+ whom whom whom whom whom whom whom whom whom whom whom whom whom whom whom
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		( graceful:0.0001 Ends:0.0001 139:0.0001aun:0.0001 reconnect:0.0001Mark:0.0001 drafts:0.0001 decision:0.0001)
+
+------
+		( the:0.0461 the:0.0461 the:0.0459 the:0.0459 the:0.0461 the:0.0461 the:0.0461 the:0.0459)
+ the
+------
+		( the:0.0461 the:0.0461 the:0.0459 the:0.0459 the:0.0461 the:0.0461 the:0.0461 the:0.0474)
+ the the the the the the the the the the the the the the the
+300: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(history:0.0001 Online:0.0001::0.0001 comic:0.0001 CLS:0.0001 SWAT:0.0001 drafts:0.0001 Yam:0.0001)
+
+------
+		( to:0.0598 the:0.0537.:0.1147.:0.0317.:0.1152.:0.0850 the:0.0259.:0.1230)
+.
+------
+		( the:0.0540 to:0.0679 the:0.0459s:0.0669 to:0.0742 and:0.0292.:0.1221 the:0.1826)
+ the be and and and and and and and, the and,, and
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(history:0.0001 Online:0.0001::0.0001 modern:0.0001 CLS:0.0001 SWAT:0.0001olicy:0.0001 whom:0.0001)
+
+------
+		( to:0.0742 can:0.0325.:0.1523.:0.0178.:0.0879,:0.1187 and:0.0378,:0.0933)
+,
+------
+		( be:0.0393.:0.1777 you:0.0547.:0.0908.:0.1338 and:0.0237,:0.0864,:0.0172)
+,
+ be and. the be and and to and. the and.
+800: sample 0: A Poem for you! Roses are red, Potatoes are 
+>>>>>>
+		(history:0.0001 Online:0.0001::0.0001 easily:0.0001zsche:0.0001 SWAT:0.0001olicy:0.0001 whom:0.0001)
+
+------
+		( to:0.1572 be:0.0811.:0.1143 and:0.0601,:0.2021,:0.1235 the:0.0608.:0.1416)
+.
+------
+		( be:0.0840.:0.1187 you:0.0603,:0.1099.:0.1113 you:0.1396.:0.0972 the:0.1807)
+ the a not,. " the the the the to, to, the
