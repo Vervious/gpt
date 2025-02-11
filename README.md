@@ -3120,3 +3120,5 @@ What if we do routing as a function of just the pre-attention token x? And then 
 
 Alternatively, if we route only the output of the attention layer, maybe we should send the output of each attention head to a different expert. This would be the opposite interpretation of the above paragraph; it would be odd if the look-ups went through together. Alternatively, we can code the previous paragraph, and then call that expert n_heads times, once for each of the attention heads. (If the attention heads compute orthogonal things, then this probably doesn't matter so much. I suspect it will usually compute orthogonal things, but we can't rule out "similar" attention pairs being placed together...)
 
+For efficiency, we can also consider projecting down the keyspace into a smaller space. (This projection matrix is perhaps shared by all of the nodes?)
+
