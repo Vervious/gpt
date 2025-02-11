@@ -3122,3 +3122,4 @@ Alternatively, if we route only the output of the attention layer, maybe we shou
 
 For efficiency, we can also consider projecting down the keyspace into a smaller space. (This projection matrix is perhaps shared by all of the nodes?)
 
+Honestly, it'd be nice to increase the learning rate for the MLP sections only, that would be nice.
