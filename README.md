@@ -3111,3 +3111,12 @@ CODE_MODE=False
 ```
 ![caption](img/18-throughputgate.jpg)
 
+
+## On Mixture of Experts
+
+I finally read about MOE properly. A few questions:
+
+What if we do routing as a function of just the pre-attention token x? And then we send in the attention into the expert. According to my principle, these lookup tables are probably best bucketed by applicator (though I imagine that having both also works).
+
+Alternatively, if we route only the output of the attention layer, maybe we should send the output of each attention head to a different expert. This would be the opposite interpretation of the above paragraph; it would be odd if the look-ups went through together. Alternativey, we can code the previous paragraph, and then call that expert n_heads times, once for each of the attention heads. (If the attention heads compute orthogonal things, then this probably doesn't matter so much.)
+
