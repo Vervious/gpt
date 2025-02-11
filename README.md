@@ -7,15 +7,16 @@
 > - Is the architecture theoretically motivated, and do we have reason to believe that it is a "best" learning algorithm? 
 
 
-> [!TAKEAWAYS] 
+> [!TIP] 
 > Here are some observations that I thought are interesting:
+> - GPT is magic and feels almost perfect.
 > - The output of `attn` may not need to be put into the residual. As long as it is fed as input into the `mlp`, the network still performs as well (at least at this scale), albeit slightly slower to train.
 > - The structure of GPT reminds me almost of an advanced combinator calculus. If I had to prove the expressivity of the architecture, I would start there.
 > - The `mlp` component in particular is quite flexible; it can be replaced by many fun variants, described below.
 > - We can learn to "gate" between passing the entire residual, or a combination of the residual and block output, or exclusively the block output; however, this doesn't improve perplexity and also increases training time.
 
 
-> [!TIP] 
+> [!IMPORTANT] 
 > I started this project without much background knowledge of the literature (as a cryptographer by training). The documentation for many experiments is also very loose, since it was not indended to be shared publicly. Many early experiments are not documented at all. Many of the observations may seem easy or, alternatively, surprising. On later perusal of the literature, most have been discovered already.
 
 
@@ -40,26 +41,26 @@ Setup:
 
 ## Notes
 
-We start off by computing an additional loss at every layer, and then later appending it to the final loss.
+#### Early Experiments
 
-I suspect that additional noise will make training much worse... imagine a cryptographic notion, where I (the student) cannot distinguish between a correct answer and an incorrect answer, then of course, I cannot learn! Or, perhaps it takes many more samples for me to distinguish, then I will need substantially many more samples to learn, and perhaps this is compounded over time (not sure how the compounding works). So really, if we do introduce additional sources of loss, we should ensure that it is not noisy...
+Lost to time.
 
-Let's say we introduce some RL notion, then it had better not be noisy. A data point should only "count" if it is "highly likely" to be correct. Perhaps we should only make it count if the model itself is highly confident in its assessment, and also penalize confident assessments somehow (or perhaps we don't need to do this, because it is already penalized via the ground truth training data: if it is confidently wrong, then it pushes down the score of the true correct answer, which pushes up the loss).
+#### Computing different losses on a layer-by-layer basis
 
-How do we distinguish between positive and negative assessments? Well, in a conversation, say I say something normal, and you reply with something completely out of left field, or completely wrong. Perhaps, in response, I should be exacerbated, or not know what to say? There is no longer a right answer in response to your "random response" (is there?). So perhaps if I am very confident in my reply, this is strong positive feedback. If I am not very confident in my reply at all, then there is no feedback (as opposed to strong negative feedback) because I don't want to introduce too much noise into the learning mechanism. 
+*Hypothesis*: One of my early motivations was to somehow make the model "self-consistent". That is, putting on an RL hat, perhaps we can interpret subsequent layers as giving "feedback" to earlier layers (in retrospect, this turns out to be a bad way of reasoning about it). In any case, imagine a world where a block wants to output a signal such that the subsequent block minimizes its "surprise" (i.e. `-log(1 - Pr[max])`).
 
-So, `block_loss = -log(1 - pr[max])` (the lower the confidence, the closer the block_loss is to 0; the higher the confidence, the more negative the block_loss (so when added to the loss, the loss gets lower, which is "good").). (Or, do we want a good effect on loss. Negative here is good?) (Shouldn't we want some sort of negative feedback? Negative feedback perhaps only comes from the environment, and not from self learning. But i don't see why that has to be the case...)
+*Notes in retrospect*: This probably makes more sense to do on a token-by-token basis, not a layer-by-layer basis. Here, I am conflating the language itself, and the computation. (Yes, this experiment fails.)
 
-Hmm, it still doesn't work very well. I don't see fundamental problems yet. Perhaps one fundamental problem is that the confidence is being pushed very high on early layers, with no bearing on the final layer that outputs. Then, we should maybe sample as soon as the confidence is high enough.
+We start off by computing an additional loss at every layer, and then later appending it to the final loss. Setting `block_loss = -log(1 - pr[max])` (the lower the confidence, the closer the block_loss is to 0; the higher the confidence, the more negative the block_loss (so when added to the loss, the loss gets lower, which is "good").). Special care is taken to compute the "evaluator" block under `torch.no_grad`.
+
+It doesn't work very well at all! (*Notes in retrospect:* Graph lost to time.) One observed problem is that the confidence is being pushed very high on early layers, with no bearing on the final layer that outputs. Then, we could maybe investigate some early termination technique that samples from the embeddings as soon as the confidence is high enough.
 
 
-### Notes
-
-##### 1-noise
+#### 1-noise
 
 The issue is that the block_loss was only slightly normalized (i.e. for each layer, -1 * crossentropy / n_layers), but this is still very noisy, so learning is not very good.
 
-##### 2-test
+#### 2-test
 
 In this one, we set `losses += _block_loss / self.config.n_layer`, where `_block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))` and then `_block_loss = torch.log(1 - torch.exp(-1*_block_loss))`, namely it is positive feedback only. As we can see, it doesn't ever get to good training error, but better than noise.
 
