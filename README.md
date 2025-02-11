@@ -1,4 +1,24 @@
-# gpt
+# Hacking on GPT
+
+> [!NOTE]
+> This is an ongoing documentation of my exploration of the GPT (2) architecture. The primary goal is to answer the following questions:
+> - Why does it work?
+> - Can we do better?
+> - Is the architecture theoretically motivated, and do we have reason to believe that it is a "best" learning algorithm? 
+
+
+> [!TAKEAWAYS] 
+> Here are some observations that I thought are interesting:
+> - The output of `attn` may not need to be put into the residual. As long as it is fed as input into the `mlp`, the network still performs as well (at least at this scale), albeit slightly slower to train.
+> - The structure of GPT reminds me almost of an advanced combinator calculus. If I had to prove the expressivity of the architecture, I would start there.
+> - The `mlp` component in particular is quite flexible; it can be replaced by many fun variants, described below. 
+
+
+> [!TIP] 
+> I started this project without much background knowledge of the literature (as a cryptographer by training). The documentation for many experiments is also very loose, since I did not intend to share this document initially. Many early experiments are not documented at all. Many of the observations may seem easy or, alternatively, surprising. On later perusal of the literature, most have been discovered already.
+
+
+### Useful commands
 
 
 ```torchrun --standalone --nproc_per_node=1 train_gpt2_ben.py```
@@ -6,8 +26,6 @@
 ```pip freeze -l > requirements.txt```
 
 ```source setup.sh```
-
-```screen -dm bash -c 'torchrun --standalone --nproc_per_node=1 train_gpt2.py > log/screen.txt 2>&1'```
 
 ```screen -dm bash -c 'torchrun --standalone --nproc_per_node=8 train_gpt2.py > log/screen.txt 2>&1'```
 
