@@ -5,6 +5,7 @@
 > - Why does it work?
 > - Can we do better?
 > - Is the architecture theoretically motivated, and do we have reason to believe that it is a "best" learning algorithm? 
+>
 > Experiments are generally run at a tiny scale (`n_embd = 768`, `n_layer = 12`, `T = 1024`, varying batch size, 30M-100M parameters) on a single A100, H100, or GH200. Even at this scale, transformers are magic enough.
 
 
