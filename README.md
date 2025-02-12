@@ -22,6 +22,8 @@
 
 ### Useful commands
 
+> [!NOTE]
+> *Retroactive Note*. Throughout, I will be adding informative retroactive notes, trying to explain and contextualize old experiments (if I remember them).
 
 ```torchrun --standalone --nproc_per_node=1 train_gpt2_ben.py```
 
@@ -159,7 +161,7 @@ What if we reward tokens that are equal to the next token in the previous layer?
 ##### 8-experiments
 
 > [!NOTE]
-> *Retroactive Note*. A few experiments are lost, and at some point I started experimenting with multiple copies of the attn and mlp layers. Throughout, `all layer loss' refers to evaluating the output of each layer against the target in addition to the usual loss; later, we will see that this is both slower and slightly counterproductive (but the results should still generalize to the usual notion of loss). Initially, I thought all layer loss would help with signal propagation and lessen the need for residuals (indeed it does).
+> *Retroactive Note*. A few experiments are lost, and at some point I started experimenting with multiple copies of the attn and mlp layers, as well as element-wise multiplication instead of addition. Throughout, `all layer loss' refers to evaluating the output of each layer against the target in addition to the usual loss; later, we will see that this is both slower and slightly counterproductive (but the results should still generalize to the usual notion of loss). Initially, I thought all layer loss would help with signal propagation and lessen the need for residuals (indeed it does).
 
 <!-- Note that here, x at first has already had a LayerNorm applied, whereas `res` refers to the actual skip (so `x = LayerNorm(res)`).  -->
 
@@ -201,8 +203,9 @@ What if we reward tokens that are equal to the next token in the previous layer?
 >
 > Also, note that the performance of `attn()*mlp()` is even more comparible to GPT if every block reuses weights, which is a regime that I was initially fascinated with (and forgot to turn off in my experiments).
 
+*Hypothesis*: On seeing the surprising efficacy of multiplying the attention signal into the mlp signal, let's try other combinations. [Experiments lost.] 
 
-The problem with `x = res*attn2(x) + attn(x), x = x + mlp(LN(x))` seems to be that the residuals are blowing up the more we train it. Same with `res*attn2(x) + attn(x), x * mlp2(LN(x)) + mlp(LN(x))`. (All Layer Loss). We see residuals like
+The problem with `x = x*attn2(LN(x)) + attn(LN(x)), x = x + mlp(LN(x))` seems to be that the residuals are blowing up the more we train it. Same with `x = x*attn2(LN(x)) + attn(LN(x)), x = x * mlp2(LN(x)) + mlp(LN(x))`. (All Layer Loss). We see residuals like
 
 ```SIZE COMPARISON prev 2.5294246673583984 next 1.1539545059204102
 SIZE COMPARISON prev 2.8568525314331055 next 1.1331876516342163
@@ -218,8 +221,11 @@ SIZE COMPARISON prev 40300.05078125 next 1.133501410484314
 SIZE COMPARISON prev 216047.5625 next 1.1349073648452759
 ```
 
+> [!NOTE]
+> *Retroactive Note*. I believe `next` refers to output residual fed through a layer norm, and `prev` directly refers to the size of the input residual. Each row corresponds with a layer.
+
 For something like
-`x = x + self.attn(x)  x = x + self.mlp(self.ln_2(x))` (all layer loss) (note, using x instead of res) we see residuals like
+`x = LN(x) + self.attn(LN(x))  x = x + self.mlp(LN(x))` (all layer loss) (note, using LN(x) instead of the residual) we see residuals magnitudes like
 
 ```
 SIZE COMPARISON prev 18.42753028869629 next 0.8354735374450684
@@ -236,7 +242,11 @@ SIZE COMPARISON prev 12.930171966552734 next 0.8329458236694336
 SIZE COMPARISON prev 12.92995834350586 next 0.832942008972168
 ```
 
-For vanilla GPT (as usual shared weights), all layer loss, we see by step 1100 (slowly shrinking over more steps)
+
+> [!NOTE]
+> *Retroactive Note*. Note the unhealthy obsession with shared weights between blocks, and "all layer loss". Eventually I will come to the conclusion that weights should not be shared, if only because it mimics a world with a much fatter MLP, which I currently think is the best way to scale.
+
+For comparison, using vanilla GPT (but with shared weights), and all layer loss, we see by step 1100 (it is also slowly shrinking over more steps)
 
 ```
 SIZE COMPARISON prev 0.8780975341796875 next 1.1142359972000122
@@ -286,7 +296,13 @@ SIZE COMPARISON prev 22.627168655395508 mid 22.428388595581055 next 1.1217448711
 SIZE COMPARISON prev 38.77415466308594 mid 38.57970428466797 next 1.1223392486572266
 ```
 
-Next, we see if layernorm learnable scale/shift parameters are actualy necessary. Probably not! For res + attn(x), without learnable parameters, by step 499:
+> [!NOTE]
+> *Retroactive Note*. I forget what mid stands for, it's probably the magnitude of `x + attn(LN(x))` or something similar.
+
+
+*Detour*: We briefly check if LayerNorm's learnable scale/shift parameters are actualy necessary. 
+
+The answer is, probably not! For `x = x + attn(LN(x)), x = x + MLP(LN(x))`, without learnable parameters, by step 499: [Note, graph is lost and needs to be regenerated]
 
 ```
 SIZE COMPARISON prev 1.3563252687454224 mid 0.4865388572216034 next 1.0006482601165771
@@ -303,8 +319,9 @@ SIZE COMPARISON prev 6.860944747924805 mid 6.455946922302246 next 1.000651597976
 SIZE COMPARISON prev 7.435906887054443 mid 7.033243179321289 next 1.0006515979766846
 ```
 
+*Hypothesis*: Maybe `attn(LN(x))` need not be fed additively into the input of the MLP; perhaps element-wise multiplicative-ness is enough.
 
-If we use res*attn(x), weirdly (and as previously seen), the residuals blow up. For LN without learnable parameters (everylayer loss, shared weights), by step 3800:
+If we use `x = x*attn(LN(x)), x = x + MLP(LN(x))`, as previously seen, the residuals blow up. For LN without learnable parameters (everylayer loss, shared weights), by step 3800:
 
 ```
 SIZE COMPARISON prev 0.9520694017410278 mid 0.05660898983478546 next 1.0006455183029175
@@ -321,33 +338,44 @@ SIZE COMPARISON prev 13287474.0 mid 13287474.0 next 1.0006515979766846
 SIZE COMPARISON prev 117777120.0 mid 117777120.0 next 1.0006515979766846
 ```
 
-Perhaps this means that attn(x) outputs very small numbers, and they are trying to compensate... generally very confusing.
+Perhaps this means that attn(x) outputs very small numbers, and they are trying to compensate; generally the outcome is very confusing.
 
+> [!NOTE]
+> *Retroactive Note*. Throughout, I was rather perturbed by the fact that we could not feed the skip connections through a LayerNorm... what difference could it possibly make? (It clearly makes a big difference.) In retrospect, it certainly attenuates the effect of any loss computed relative to early layers via skip connections.
 
-I wonder if res + attn(ln(res)) is at heart performing a "substitutition" into res. And x + mlp(ln(x)) evaluates an if statement and... maybe it should be
+*Hypothesis*:
+I wonder if `x = x + attn(ln(x))` is at heart performing a "substitution" into the residual / outbound signal. And `x + mlp(ln(x))` evaluates an if statement and essentially does a dictionary lookup. Maybe a better algorithm should be
 
-```y = res + attn(ln(res))
-x = x + mlp(ln(y))
+```
+y = x + attn(ln(x))
+x = ln(x) + mlp(ln(y))
 ```
 
-and we don't add y back in?
+noticing here that we don't add y back in, i.e. it does not contribute to the residual signal?
 
-Well, it turns out this sucks, similarly to x = x + attn(x):
+Well, it turns out this performs poorly at first, similarly to `x = ln(x) + attn(ln(x))`:
 
 ![loss plot](img/10-resescapei.png)
 
 What about
 
-```y = res + attn(ln(res))
-x = res + mlp(ln(y))
+```
+y = x + attn(ln(x))
+x = x + mlp(ln(y))
 ```
 
-well:
+The performance seems truly worse: 
 
 ![loss plot](img/10-x-escapei.png)
 
+so it is really quite important that the logits directly get the output of the attention layer (instead of solely feeding `x + attn(ln(x))` into the mlp and never feeding `attn(ln(x))` to the output).
 
-(performance seems truly worse) so it is really quite important that the logits directly get the output of the attention layer (instead of solely feeding the attention layer into the mlp and then the output).
+> [!NOTE]
+> *Retroactive Note*. But note that doing `x = x + attn(ln(x))*mlp(ln(x))` or `x = x + mlp(ln(x) || attn(ln(x)))` seems to do just fine. Also, I run a similar experiment later where `x = x + mlp(ln(x + attn(ln(x))))` -- without reusing weights -- and it seems to converge just fine (see `15-baseline`). So it's not clear what the story is here.
+
+
+> [!NOTE]
+> *Retroactive Note*. From this point on, retroactive sanitization still in progress!
 
 Note that for double attention `res*attn2(x) + attn(x), x + mlp(LN(x))`, the residuals still blow up:
 
@@ -1771,6 +1799,7 @@ MLPMAT_INNER_SIZE=128
 
 I am curious what happens if we omit attn entirely from the residual stream in the vanilla architecture. It eventually does converge!  It is just slightly harder to optimize. (So clearly MLP needs to map the output of attention only.) (Note that in the log, `perc(-)` starts off near 1 and then gets smaller and smaller, closer to `0.6`; this corresponds to the number of `(B,T)` s.t. the sum of self attention scores (over the 12 heads) is less than 1. This number starts off huge, but eventually it seems that it is getting smaller; so, the overall sum is getting larger, so it is slowly learning to attend more and more to the self? Confusing.)
 ```
+Experiment Name: 15-baseline
 y = self.ln_1(x)
 attn = self.attn(y)
 x = x + self.mlp(self.ln_2(x + attn))
@@ -3202,3 +3231,17 @@ Alternatively, if we route only the output of the attention layer, maybe we shou
 For efficiency, we can also consider projecting down the keyspace into a smaller space. (This projection matrix is perhaps shared by all of the nodes?)
 
 Honestly, it'd be nice to increase the learning rate for the MLP sections only, that would be nice.
+
+> [!NOTE]
+> *Retroactive Note 2/25* . I suspect we can reuse attention weights, but not reuse MLP weights. One question: If scaling transformers boils down to making the MLP as big as possible, assuming that the positional features of the language are limited in nature, then how come we don't train another model to "learn" the MLP truth table? Here, the inputs would be the applicator `x`, the attention output `attn(x)`, and the output would be some replacement. Does the current recursive structure already do this sublearning problem?
+> 
+> I suspect that the answer is no, it does not already do this sublearning problem. The language of this inner learning problem is fundamentally different: different tokens (i.e. the bits corresponding to `x | attn(x)`, instead of language tokens), and thus a different interpreter. It is computation in an entirely different language.
+>
+> One fun experiment could be to train an inner LLM on this inner language. But I can see why an MLP is sufficient as an approximator.
+>
+> It also begs the question: why not tokenize the original text into smaller tokens?  It is not obvious to be that the resulting language would be simpler, since the "code" (i.e. the true input) is still the same, so the interpreter must have same overall complexity. In some sense, it may have increased complexity, if the input representation is less efficient (i.e. not a nice encoding, spending lots of bits on rare words). Imagine if the vocab size decreases, I imagine that this is a trade-off between the mlp size (smaller), and the attention complexity / depth of computation (because positionally, different tokens may end up in much more various associations than before, i.e. a character attending to every character of its word).
+
+
+## Other Notes
+
+It would be nice to somehow emphasize "High Importance" datapoints; i.e. predicting the next "and" or "the" or "or" is far less important/impactful than predicting the next "Yes" or mathematical formula. Despite the difference in impact, the loss penalizes both of them the same way. Many errors in the former category come from fundamental entropy of the source text, whereas errors in the latter category are true errors.
