@@ -165,7 +165,41 @@ What if we reward tokens that are equal to the next token in the previous layer?
 
 
 > [!NOTE]
-> *Retroactive Note*. At some point here, I realized by accident that doing `x = x + attn(LN(x)) * mlp(LN(x))` converges faster than the standard architecture, though the perplexity is a bit worse.
+> *Retroactive Note*. At some point here, I realized by accident that doing `x = x + attn(LN(x)) * mlp(LN(x))` converges faster than the standard architecture, though the perplexity is a bit worse. For good measure, I retroactively ran the following comparison (the purple here is 8 layers instead of 12):
+> ```
+> Transformer, max LR 0.0006 n_layer 12
+> Setting:
+> ==details======
+>  machine_code
+> class MultExecute(nn.Module):
+>     def __init__(self, config):
+>         super().__init__()
+>         self.mlp = MLP(config)
+>     def forward(self, program, attn):
+>         return self.mlp(program) * attn
+> ----------------
+>  machine_modules
+>         self.compiler = BenCompilerNoOp(config)
+>         self.execute = MultExecute(config)
+> ----------------
+>  block_logic
+>         y = self.ln_1(x)
+>         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+>         program = self.compiler(y)
+>         machineOutput = self.execute(program, attn)
+>         newx = x + machineOutput
+> ========
+> VALUEMATRIX=True
+> REUSE_WEIGHTS=False
+> MLP_SCALE=4
+> ATTENTION_SINK=False
+> ATTENTION_MASK =False
+> IDENTITY_LOSS=False
+> CODE_MODE=False
+> ```
+> ![caption](img/18-axm.jpg)
+>
+> Also, note that the performance of `attn()*mlp()` is even more comparible to GPT if every block reuses weights, which is a regime that I was initially fascinated with (and forgot to turn off in my experiments).
 
 
 The problem with `x = res*attn2(x) + attn(x), x = x + mlp(LN(x))` seems to be that the residuals are blowing up the more we train it. Same with `res*attn2(x) + attn(x), x * mlp2(LN(x)) + mlp(LN(x))`. (All Layer Loss). We see residuals like

@@ -511,9 +511,10 @@ class BenBlock(nn.Module):
 # @flag machine_modules
         self.compiler = BenCompilerNoOp(config)
         self.execute = MultExecute(config)
-        self.throughput = nn.Parameter(torch.tensor(-2.0))
-        torch.nn.init.normal_(self.throughput, mean=-2.0, std=0.02)
 # @endflag machine_modules
+
+        # self.throughput = nn.Parameter(torch.tensor(-2.0))
+        # torch.nn.init.normal_(self.throughput, mean=-2.0, std=0.02)
 
         
 
@@ -537,8 +538,7 @@ class BenBlock(nn.Module):
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(y)
         machineOutput = self.execute(program, attn)
-        tr = torch.sigmoid(self.throughput)
-        newx = (1 - tr) * x + tr * machineOutput
+        newx = x + machineOutput
 # @endflag block_logic
 
 
@@ -806,7 +806,7 @@ class GPT(DualModule):
                 torch.nn.init.zeros_(module.bias)
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
-# @flag init_logic CODE_MODE
+# @flag init_logic [CODE_MODE]
         elif isinstance(module, GPT) and CODE_MODE:
             torch.nn.init.normal_(module.code, mean=0.0, std=5)
 # @endflag init_logic
@@ -819,7 +819,7 @@ class GPT(DualModule):
         # forward the GPT model itself
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
 
-# @flag code_logic CODE_MODE
+# @flag code_logic [CODE_MODE]
         # Now, concat our code (NOTE: shoudl we add positional embeddings)
         if CODE_MODE:
             code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
