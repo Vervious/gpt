@@ -202,6 +202,8 @@ What if we reward tokens that are equal to the next token in the previous layer?
 > ![caption](img/18-axm.jpg)
 >
 > Also, note that the performance of `attn()*mlp()` is even more comparible to GPT if every block reuses weights, which is a regime that I was initially fascinated with (and forgot to turn off in some early experiments).
+>
+> Let me emphasize, even in retrospect, how *odd* it is that `x = x + mlp(ln(x))*attn(ln(x))` works so well (at least at this scale, and this early in the training process). It really messes with my intuition for interpreting these networks, and may be a clue into how these networks work.
 
 *Hypothesis*: On seeing the surprising efficacy of multiplying the attention signal into the mlp signal, let's try other combinations. [Experiments lost.] 
 
