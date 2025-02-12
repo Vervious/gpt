@@ -583,7 +583,7 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 It seems to be the best yet.
 
 > [!NOTE]
-> *Retroactive Note 2/25*. Important caveat: these experiments are still in the "reusing weights" regime, i.e., the entire block is reused in every layer. This architecture is somewhat worse when we don't reuse weights. For why I reuse weights, see the earlier comment on combinator calculuses.
+> *Retroactive Note 2/25*. Important caveat: these experiments are still in the "reusing weights" regime, i.e., the entire block is reused in every layer. This architecture is somewhat worse when we don't reuse weights. For why I was reusing weights here, see the earlier comment on combinator calculuses. At some point we do stop reusing weights, thankfully, because it's unclear how much results in this regime generalize.
 
 #### Other designs
 
