@@ -585,15 +585,17 @@ It seems to be the best yet.
 > [!NOTE]
 > *Retroactive Note 2/25*. Important caveat: these experiments are still in the "reusing weights" regime, i.e., the entire block is reused in every layer. This architecture is somewhat worse when we don't reuse weights. For why I reuse weights, see the earlier comment on combinator calculuses.
 
+#### Other designs
 
 
-> [!NOTE]
-> *Retroactive Note 2/25*. From this point on, retroactive sanitization still in progress!
+*Question*: What happens if we only feed in `attn(x) + mlp(x)` into the attn and mlp components of the next layer, and not the res? Namely, `y = attn(ln(x)) + mlp(ln(x)), x = x + attn(prev_y) + mlp(prev_y)`. (This one crashes).
 
-What happens if we only feed in `attn(x) + mlp(x)` into the attn and mlp components of the next layer, and not the res? (This one crashes).
+#### On the Value Matrix
 
-What happens if we remove the value matrix, and instead just use the identity matrix, and them sum together the output of all of the heads?
+*Hypothesis*: I suspect the value matrix isn't necessary, and is perhaps just an optimization (it doesn't fit into my interpretability intuition). What happens if we remove the value matrix, and instead just use the identity matrix, and them sum together the output of all of the heads?
 
+
+It is almost as good, but definitely not as good (I wonder if because we got rid of that one projection matrix):
 
 ![loss plot](img/10-resmlp-single-axm-novaluei.png)
 
@@ -625,41 +627,49 @@ INFO nextres 20.741458892822266 attn*mlp 7.100666046142578 layernormed 1.0006517
 	 attn_hist -34.3125<tensor([ 21., 186., 411., 108.,  38.,   4.])>50.625 mlp_hist -5.34375<tensor([ 23., 328., 159.,  73.,  66., 120.], dtype=torch.bfloat16)>8.1875
 ```
 
-It is almost as good, but definitely not as good (I wonder if because we got rid of that one projection matrix).
 
 
-
-Recall that in combinator calculuses, we need to be able to (1) copy arguments (inverting this operation is kind of the point of compression / learning a computation) and (2) apply arguments to each other (programmability). When inverting, I suspect it is just pattern match replacement (is this the MLP). Magnitude is somehow important for the encoding. Attention combines tokens into single embeddings? Is this some manifestation of programmability. Or, is everything truly in the forward direction. Attention takes a weighted sum of prior tokens.
-
-Somehow, addition feels like an application / one-step evaluation / perhaps it refers to the depth of the tree, and each embedding dimension is like a possible subtree at each level. Or does attention give tree structure.
-
-Somehow, a sequence of embeddings represents code. The attention component learns how individual tokens (read subtrees) programmatically act on other tokens (other subtrees). (But what is this value matrix?) Note that addition does not distinguish between left and right subtrees, or have an order, so how do we deal with it...  
+> [!NOTE]
+> *Retroactive Note 2/25*. This experiment seems worth re-running. I recall concluding that the value matrix is unnecessary, though it does speed up the forward pass at no cost to the perplexity. 
 
 
-General framework:
+#### Some sketchy thoughts on the combinator calculus idea
+
+Recall that in combinator calculi, we need to be able to (1) copy arguments (inverting this operation is kind of the point of compression / learning a computation) and (2) apply arguments to each other (programmability). When inverting, I suspect it is just pattern match replacement (is this the MLP?). Also, we observe that magnitude is somehow important for the encoding. Is it true that Attention combines tokens into single embeddings? Is this some manifestation of the programmability notion? There is this other thought I had, where I thought learning should be about learning to invert a computation graph, but here, structurally, everything seems arranged along the forward direction, and not about learning inverses. (For a long time, I thought that perhaps the MLP is learning "inverse mappings" of outputs to their inputs, under some ground truth function `f`. Perhaps this is still true, or perhaps computation backwards can still be described as computation forwards, or, gradient descent does everything for us.) Attention takes a weighted sum of prior tokens.
+
+Somehow, addition feels like an application / one-step evaluation / perhaps it refers to the depth of the tree, and each embedding dimension is like a possible subtree at each level. But more likely, perhaps attention gives the tree structure.
+
+
+> [!NOTE]
+> *Retroactive Note 2/25*. I'm not really sure what I was saying above, but I do think that attention specifies how tokens are arranged relative to each other, much like expressions arranged in a tree. And the MLP specifies the outcome of applying a token `x` to adjacent siblings `attn(x)`.
+
+Somehow, a sequence of embeddings represents code. The attention component learns how individual tokens (read subtrees) programmatically act on other tokens (other subtrees). (But how do we interpret the value matrix?) Note that addition does not distinguish between left and right subtrees, or have an order, so how come it works?  
+
+
+In any case, here's a general hand-wavy framework:
 - Backprop performs memorization of substitution rules.
 - regularization through LN limits "how much" we can memorize (limiting standard deviation).
 - forward pass performs the actual computation.
 
-Try again:
+Let's try again:
 - the embedding itself encodes things like its position in the tree... and also its subtree... which is itself a sum of embeddings... (how is this possible? We only give it a 1D positional embedding.)
 - The MLP maps nodes (i.e. subtrees) to compressed inverses.
 - Attention then joins more nodes together as appropriate. (Why not join all nodes together? Well, maybe MLP cannot distinguish such a big sum? It shouldn't actually matter..., MLP should be able to distinguish. So why?) (If we sum everything together at every T, then the MLP triggers for every location T.) So somehow, we want the MLP to trigger selectively and in the right order.
 
-But how come the MLP can't pick out specific patterns by itself? Why does it need the attention... what does element-wise multiplication mean, between two embeddings? A masked embedding? Attention is the mask (does it generate only boolean outputs)? MLP is the mask? why do we need to mask  the output of the mlp? What does magnitude of embedding mean?
+*Lots of Questions:* How come the MLP can't pick out specific patterns by itself? Why does it need the attention... what does element-wise multiplication mean, between two embeddings? (i.e. why does `attn(x)*mlp(x)` work.) A masked embedding? Attention is the mask (does it generate only boolean outputs)? MLP is the mask? why do we need to mask the output of the mlp? What does magnitude of embedding mean?
 
-An embedding does not see its sibling trees. Attention computes (given the embeddings) which  other nodes each on acts on / is connected to, outputting a parent node (the sum of the child nodes). The MLP layer takes as input an embedding (subtree) and inverts it (ideally to something more compressed). But the result is added on. Why is it added on? It should instead replace the embedding (but maybe not the whole thing, of only a subtree was inverted?)
+*Some Potential Answers/Ideas:* An embedding does not see its sibling trees. Attention computes (given the embeddings) which  other nodes each on acts on / is connected to, outputting a parent node (the sum of the child nodes). The MLP layer takes as input an embedding (subtree) and inverts it (ideally to something more compressed, or closer to the output). But the result is added on. Why is it added on? It should instead replace the embedding (but maybe not the whole thing, if only a subtree was inverted?)
 
 
-Question:
-
-what happens if i backprop every layer, but only propagate the gradient one layer
-
-termination when it no longer updates / when it converges
-
+*Other Ideas*:
+Try to do termination when it no longer updates / when it converges.
 
 
 ## On Backprop
+
+
+> [!NOTE]
+> *Retroactive Note 2/25*. Everything below has not been retroactively reviewed yet!
 
 Note that the all_layer generally does seem slightly worse. For instance:
 
