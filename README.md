@@ -665,33 +665,37 @@ Let's try again:
 Try to do termination when it no longer updates / when it converges.
 
 
-## On Backprop
+#### Getting rid of All Layer Loss
 
 
-> [!NOTE]
-> *Retroactive Note 2/25*. Everything below has not been retroactively commented on yet!
 
-Note that the all_layer generally does seem slightly worse. For instance:
+Note that tacking on the "all layer loss" generally does seem slightly worse, and it also takes forever to train. So there isn't any reason to do it if we have skip connections. The magnitude of the MLP output, however, is smaller under an all layer loss. A comparison of (true) loss:
 
-```testname = "10-resmlp-single-axm-novalue-copy-alllayer"
+```
+testname = "10-resmlp-single-axm-novalue-copy-alllayer"
 basename = "10-resmlp-single-axm-novalue"
 ```
 
 ![loss plot](img/10-resmlp-single-axm-novalue-copy-alllayeri.png)
 
-With all-layer loss, the mlp size does seem smaller, and the graphs seemed more centered.
 
-Let us now try it without deep propagation, i.e. all layer but only propagating the gradient one step:
+#### RMSNorm
 
-
-## RMSNorm
-
-Now, going bak to single layer loss, using the axm architecture, what does it look like with RMSNorm?
+Now, going bak to single layer loss, using the axm architecture, what does it look like with RMSNorm? Answer, it is pretty similar. (Graph is lost.)
 
 
-## On MLP
+### On the Multi-Layer Perceptron component
 
-One hypothesis is that the MLP performs a copy of the embedding in a memorized location, i.e. it rotates it, or adds a positional embedding (and maybe this is why the residual is important?)
+> [!NOTE]
+> *Retrospective Note 2/25*. This series of experiments starts digging into modifications to how we use the MLP, and later, replacing the MLP itself with alternative designs.
+
+
+*Hypothesis*: Maybe the MLP performs a copy of the embedding in a memorized location, i.e. it rotates it, or adds a positional embedding (and maybe this is why the residual is important? To make it easy to copy?)
+
+
+> [!NOTE]
+> *Retrospective Note 2/25*. Everything below has not been retroactively commented on yet!
+
 
 Try MLP(x+LN(y))
 
