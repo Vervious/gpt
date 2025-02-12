@@ -244,7 +244,9 @@ SIZE COMPARISON prev 12.92995834350586 next 0.832942008972168
 
 
 > [!NOTE]
-> *Retroactive Note*. Note the unhealthy obsession with shared weights between blocks, and "all layer loss". Eventually I will come to the conclusion that weights should not be shared, if only because it mimics a world with a much fatter MLP, which I currently think is the best way to scale.
+> *Retroactive Note 2/25*. Note the unhealthy obsession with shared weights between blocks, and "all layer loss". Eventually I will come to the conclusion that weights should not be shared, if only because it mimics a world with a much fatter MLP, which I currently think is the best way to scale.
+>
+> I thought shared weights were useful because they better fit this "combinator calculus" mode of thinking that I had (and still have). There, the combinators don't change, only the tokens and how they are arranged. I suspect that, however, in reality, for a language as expressive as English, different combinators will often be applied at every level; so while, in an ideal world, yes everyone should have the same mlp matrix, in a practical world, it makes sense to optimize the size of the mlp matrix, and distribute knowledge across combinators tailored to specific contexts (i.e. layers). 
 
 For comparison, using vanilla GPT (but with shared weights), and all layer loss, we see by step 1100 (it is also slowly shrinking over more steps)
 
@@ -297,7 +299,7 @@ SIZE COMPARISON prev 38.77415466308594 mid 38.57970428466797 next 1.122339248657
 ```
 
 > [!NOTE]
-> *Retroactive Note*. I forget what mid stands for, it's probably the magnitude of `x + attn(LN(x))` or something similar.
+> *Retroactive Note 2/25*. I forget what mid stands for, it's probably the magnitude of `x + attn(LN(x))` or something similar.
 
 
 *Detour*: We briefly check if LayerNorm's learnable scale/shift parameters are actualy necessary. 
@@ -341,7 +343,7 @@ SIZE COMPARISON prev 117777120.0 mid 117777120.0 next 1.0006515979766846
 Perhaps this means that attn(x) outputs very small numbers, and they are trying to compensate; generally the outcome is very confusing.
 
 > [!NOTE]
-> *Retroactive Note*. Throughout, I was rather perturbed by the fact that we could not feed the skip connections through a LayerNorm... what difference could it possibly make? (It clearly makes a big difference.) In retrospect, it certainly attenuates the effect of any loss computed relative to early layers via skip connections.
+> *Retroactive Note 2/25*. Throughout, I was rather perturbed by the fact that we could not feed the skip connections through a LayerNorm... what difference could it possibly make? (It clearly makes a big difference.) In retrospect, it certainly attenuates the effect of any loss computed relative to early layers via skip connections.
 
 *Hypothesis*:
 I wonder if `x = x + attn(ln(x))` is at heart performing a "substitution" into the residual / outbound signal. And `x + mlp(ln(x))` evaluates an if statement and essentially does a dictionary lookup. Maybe a better algorithm should be
@@ -371,13 +373,10 @@ The performance seems truly worse:
 so it is really quite important that the logits directly get the output of the attention layer (instead of solely feeding `x + attn(ln(x))` into the mlp and never feeding `attn(ln(x))` to the output).
 
 > [!NOTE]
-> *Retroactive Note*. But note that doing `x = x + attn(ln(x))*mlp(ln(x))` or `x = x + mlp(ln(x) || attn(ln(x)))` seems to do just fine. Also, I run a similar experiment later where `x = x + mlp(ln(x + attn(ln(x))))` -- without reusing weights -- and it seems to converge just fine (see `15-baseline`). So it's not clear what the story is here.
+> *Retroactive Note 2/25*. But note that doing `x = x + attn(ln(x))*mlp(ln(x))` or `x = x + mlp(ln(x) || attn(ln(x)))` seems to do just fine. Also, I run a similar experiment later where `x = x + mlp(ln(x + attn(ln(x))))` --- without reusing weights --- and it seems to converge just fine (see `15-baseline`). So it's not clear what the story is here.
 
 
-> [!NOTE]
-> *Retroactive Note*. From this point on, retroactive sanitization still in progress!
-
-Note that for double attention `res*attn2(x) + attn(x), x + mlp(LN(x))`, the residuals still blow up:
+Note that for double attention `x = x*attn2(ln(x)) + attn(ln(x)), x = x + mlp(ln(x))`, the residuals still blow up:
 
 ```
 @ 949 train 5.2751 , allloss: 64.1261, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9999e-04, norm:7.9968, dt: 1769.77ms, tok/sec: 74061.71, flops:30.47, batch-reuse:1
@@ -395,7 +394,7 @@ SIZE COMPARISON prev 27626.546875 next 1.1076771020889282
 SIZE COMPARISON prev 138020.09375 next 1.1078872680664062
 ```
 
-For `res + attn(x), x * mlp(LN(x))`, it still blows up, but a little slower:
+For `x = x + attn(ln(x)), x = x * mlp(ln(x))`, it still blows up, but a little slower:
 
 ```
 @ 949 train 5.3970 , allloss: 65.0632, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9999e-04, norm:8.4142, dt: 1606.70ms, tok/sec: 81578.15, flops:35.93, batch-reuse:1
@@ -426,11 +425,13 @@ SIZE COMPARISON prev 4965097.5 mid 489250.53125 next 1.0006515979766846
 SIZE COMPARISON prev 50753656.0 mid 4965097.5 next 1.0006515979766846
 SIZE COMPARISON prev 521954624.0 mid 50753656.0 next 1.0006515979766846
 ```
+#### Feeding in residual directly into mlp without attn first
 
-What about
+*Experiment*: What about
 
-```y = res + attn(ln(res))
-x = y + mlp(ln(res))
+```
+y = x + attn(ln(x))
+x = y + mlp(ln(x))
 ```
 
 i.e. how important is it that the output of attention gets fed into the MLP? It turns out, this works surprisingly well; i.e. attention and MLP both seem to be additive, *independent* components:
@@ -453,21 +454,19 @@ SIZE COMPARISON prev 8.572383880615234 mid 8.07198715209961 next 1.0006515979766
 SIZE COMPARISON prev 9.231319427490234 mid 8.7335205078125 next 1.0006515979766846
 ```
 
-Note that the above doesn't matter if we change the order of mlp and attn, namely
-
-```y = res + mlp(ln(res))
-x = y + attn(ln(res))
-```
-
-is equivalent.
-
-What happens if we remove the "all layer loss", and compute loss as per the usual method?
+*Question*: What happens if we remove the "all layer loss", and compute loss as per the usual method?
 
 ![loss plot](img/10-resmlp-singlei.png)
 
 It is in fact, better; the all layer loss is utterly useless.
 
-But note that the std does not blow up as much, weirdly:
+
+
+> [!NOTE]
+> *Retroactive Note 2/25*. Finally, hopefully these old experiments stop using this "all_layer_loss", which had the additional property of 3x-ing the training time.
+
+
+But note that the standard deviation of the signal does not blow up as much, weirdly:
 
 ```
 @ 4399 train 3.7913 , allloss: 3.7913, confloss: 0.0000, targetloss: 0.0000, earlystop: 0.000, earlystopdict: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], lr:5.9971e-04, norm:0.6440, dt: 411.78ms, tok/sec: 318308.01, flops:140.18, batch-reuse:1
@@ -485,7 +484,9 @@ SIZE COMPARISON prev 3.425197124481201 mid 3.1695663928985596 next 1.00065124034
 SIZE COMPARISON prev 3.9492619037628174 mid 3.533745765686035 next 1.0006513595581055
 ```
 
-What happens if we 2x the attention component?
+#### Weighting the `attn(x)` component more
+
+What happens if we `2x` the attention component, i.e. `x = x + 2*attn(ln(x)) + mlp(ln(x))`?
 
 ![loss plot](img/10-resmlp-single-2xi.png)
 
@@ -505,7 +506,7 @@ SIZE COMPARISON prev 3.112057685852051 mid 2.8377723693847656 next 1.00065112113
 SIZE COMPARISON prev 3.612070083618164 mid 3.259913444519043 next 1.0006513595581055
 ```
 
-It is worse... why? But it eventually converges, so it doesn't really matter. What if we 0.5x it?
+It is worse... why? But it eventually converges, so it doesn't really matter. What if we `0.5x` it?
 
 ![loss plot](img/10-resmlp-single-halfxi.png)
 
@@ -528,7 +529,7 @@ SIZE COMPARISON prev 2.007704973220825 mid 1.845852017402649 next 1.000650405883
 SIZE COMPARISON prev 2.3220303058624268 mid 2.0987911224365234 next 1.0006507635116577
 ```
 
-It is identical... So it seems that attention is not particularly useful for early gains; it's really the MLP that matters. If we skip out on attention completely:
+It is identical... So it seems that attention is not particularly useful for early gains; it's really the MLP that matters. If we skip out on attention completely, i.e. `x = x + mlp(ln(x))`:
 
 ![loss plot](img/10-resmlp-single-noattni.png)
 
@@ -549,10 +550,16 @@ SIZE COMPARISON prev 7.458611965179443 mid 6.788667678833008 next 1.000651597976
 SIZE COMPARISON prev 8.18480110168457 mid 7.458611965179443 next 1.0006517171859741
 ```
 
-It is worse! Whew. Our efforts are validted. But note that the residual still grows... Here, prev is the size of newres, x is the size of ln(prev), and mid is the size of prevres (as opposed to prevres + attn). So MLP is definitely adding a component (perhaps over and over again). 
+It is worse! Whew. Our efforts are validated. But note that the residual still grows... Here, prev is the size of newres (i.e. the output), x is the size of `ln(prev)` (i.e. layernorm of the output), and mid is the size of prevres (as opposed to prevres + attn) (i.e. `mid = x`, the input). So MLP is definitely adding a component in terms of magnitude growth (perhaps over and over again). 
 
 
-What happens (for fun) if we do `y = res  + self.attn(x)*self.mlp(x)`:
+> [!NOTE]
+> *Retroactive Note 2/25*. Apologies for the strange names, they are artifacts of earlier experiments, when I decided to compute a final LayerNorm within the block, for some reason.
+
+
+#### Back to multiplying `attn(x)*mlp(x)`
+
+*Question*: What happens (for fun) if we do `x = x  + self.attn(ln(x))*self.mlp(ln(x))`:
 
 ![loss plot](img/10-resmlp-single-attnxmlpi.png)
 
@@ -574,6 +581,14 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 ```
 
 It seems to be the best yet.
+
+> [!NOTE]
+> *Retroactive Note 2/25*. Important caveat: these experiments are still in the "reusing weights" regime, i.e., the entire block is reused in every layer. This architecture is somewhat worse when we don't reuse weights. For why I reuse weights, see the earlier comment on combinator calculuses.
+
+
+
+> [!NOTE]
+> *Retroactive Note 2/25*. From this point on, retroactive sanitization still in progress!
 
 What happens if we only feed in `attn(x) + mlp(x)` into the attn and mlp components of the next layer, and not the res? (This one crashes).
 
