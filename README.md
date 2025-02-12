@@ -112,7 +112,7 @@ loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
 
 Result: 
 
-![loss plot](img/5-test.png)
+<img src="img/5-test.png" alt="loss plot" width="50%"/>
 
 (Strangely linear, but also outputs "the" a hundred times. On further debugging, penalizing confidence appears to cause this behavior. Why?)
 
