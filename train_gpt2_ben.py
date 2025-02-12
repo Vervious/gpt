@@ -459,7 +459,7 @@ class MLPConcat(nn.Module):
         x = self.c_proj(x)
         return x
 
-
+# @flag machine_code
 class MultExecute(nn.Module):
 
     def __init__(self, config):
@@ -468,16 +468,15 @@ class MultExecute(nn.Module):
 
     def forward(self, program, attn):
         return self.mlp(program) * attn
+# @endflag machine_code
 
 
-# @flag machine_code
 class BenExecute(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.mlp = MLPConcat(config)
     def forward(self, program, attn):
         return self.mlp(program, attn)
-# @endflag machine_code
 
 
 class VanillaExecute(nn.Module):
@@ -511,7 +510,7 @@ class BenBlock(nn.Module):
         self.n_layer = config.n_layer
 # @flag machine_modules
         self.compiler = BenCompilerNoOp(config)
-        self.execute = BenExecute(config)
+        self.execute = MultExecute(config)
         self.throughput = nn.Parameter(torch.tensor(-2.0))
         torch.nn.init.normal_(self.throughput, mean=-2.0, std=0.02)
 # @endflag machine_modules
@@ -1541,7 +1540,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="18-throughputgate"
+test_name="18-axm"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.

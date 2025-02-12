@@ -154,11 +154,21 @@ What if we reward tokens that are equal to the next token in the previous layer?
 > [!NOTE]
 > *Retroactive Note*. I see no reason why intermediate computations should reflect the structure of "next token prediction."
 
-### Experimenting with Skip Connections
+### Experimenting with Signal Propagation
 
 ##### 8-experiments
 
-The probem with `res*attn2(x) + attn(x), x + mlp(LN(x))` seems to be that the residuals are blowing up the more we train it. Same with `res*attn2(x) + attn(x), x * mlp2(LN(x)) + mlp(LN(x))`.  (all layer loss)  We see residuals like
+> [!NOTE]
+> *Retroactive Note*. A few experiments are lost, and at some point I started experimenting with multiple copies of the attn and mlp layers. Throughout, `all layer loss' refers to evaluating the output of each layer against the target in addition to the usual loss; later, we will see that this is both slower and slightly counterproductive (but the results should still generalize to the usual notion of loss). Initially, I thought all layer loss would help with signal propagation and lessen the need for residuals (indeed it does).
+
+<!-- Note that here, x at first has already had a LayerNorm applied, whereas `res` refers to the actual skip (so `x = LayerNorm(res)`).  -->
+
+
+> [!NOTE]
+> *Retroactive Note*. At some point here, I realized by accident that doing `x = x + attn(LN(x)) * mlp(LN(x))` converges faster than the standard architecture, though the perplexity is a bit worse.
+
+
+The problem with `x = res*attn2(x) + attn(x), x = x + mlp(LN(x))` seems to be that the residuals are blowing up the more we train it. Same with `res*attn2(x) + attn(x), x * mlp2(LN(x)) + mlp(LN(x))`. (All Layer Loss). We see residuals like
 
 ```SIZE COMPARISON prev 2.5294246673583984 next 1.1539545059204102
 SIZE COMPARISON prev 2.8568525314331055 next 1.1331876516342163
