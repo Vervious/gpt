@@ -669,7 +669,7 @@ Try to do termination when it no longer updates / when it converges.
 
 
 > [!NOTE]
-> *Retroactive Note 2/25*. Everything below has not been retroactively reviewed yet!
+> *Retroactive Note 2/25*. Everything below has not been retroactively commented on yet!
 
 Note that the all_layer generally does seem slightly worse. For instance:
 
