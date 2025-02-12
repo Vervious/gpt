@@ -47,9 +47,11 @@ Lost to time. These included a lot of basic explorations of removing the residua
 
 ### Early fun: Computing different losses on a layer-by-layer basis
 
+> [!NOTE]
+> *Notes in retrospect*: This series of experiments probably makes more sense to do on a token-by-token basis, not a layer-by-layer basis. Here, I am conflating the language, and the computation. (Yes, this series of experiments fails. It is not very motivated.)
+
 *Hypothesis*: One of my early motivations was to somehow make the model "self-consistent". That is, putting on an RL hat, perhaps we can interpret subsequent layers as giving "feedback" to earlier layers (in retrospect, this turns out to be a bad way of reasoning about it). In any case, imagine a world where a block wants to output a signal such that the subsequent block minimizes its "surprise" (i.e. `-log(1 - Pr[max])`).
 
-*Notes in retrospect*: This probably makes more sense to do on a token-by-token basis, not a layer-by-layer basis. Here, I am conflating the language itself, and the computation. (Yes, this series of experiments fails. It is not very motivated.)
 
 We start off by computing an additional loss at every layer, and then later appending it to the final loss. Setting `block_loss = -log(1 - pr[max])` (the lower the confidence, the closer the block_loss is to 0; the higher the confidence, the more negative the block_loss (so when added to the loss, the loss gets lower, which is "good").). Special care is taken to compute the "evaluator" block under `torch.no_grad`.
 
