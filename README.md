@@ -165,7 +165,7 @@ What if we reward tokens that are equal to the next token in the previous layer?
 
 
 > [!NOTE]
-> *Retroactive Note*. At some point here, I realized by accident that doing `x = x + attn(LN(x)) * mlp(LN(x))` converges faster than the standard architecture, though the perplexity is a bit worse. For good measure, I retroactively ran the following comparison (the purple here is 8 layers instead of 12):
+> *Retroactive Note*. At some point here, I realized by accident that doing `x = x + attn(LN(x)) * mlp(LN(x))` converges faster than the standard architecture, though the perplexity is a bit worse. For good measure, I retroactively ran the following comparison since I cannot find the original comparison (the purple here is 8 layers instead of 12):
 > ```
 > Transformer, max LR 0.0006 n_layer 12
 > Setting:
