@@ -41,57 +41,70 @@ Setup:
 
 ## Notes
 
-#### Early Experiments
+### Early Experiments
 
-Lost to time.
+Lost to time. These included a lot of basic explorations of removing the residual, `mlp(x)*attn(x)`, etc.
 
-#### Computing different losses on a layer-by-layer basis
+### Early fun: Computing different losses on a layer-by-layer basis
 
 *Hypothesis*: One of my early motivations was to somehow make the model "self-consistent". That is, putting on an RL hat, perhaps we can interpret subsequent layers as giving "feedback" to earlier layers (in retrospect, this turns out to be a bad way of reasoning about it). In any case, imagine a world where a block wants to output a signal such that the subsequent block minimizes its "surprise" (i.e. `-log(1 - Pr[max])`).
 
-*Notes in retrospect*: This probably makes more sense to do on a token-by-token basis, not a layer-by-layer basis. Here, I am conflating the language itself, and the computation. (Yes, this experiment fails.)
+*Notes in retrospect*: This probably makes more sense to do on a token-by-token basis, not a layer-by-layer basis. Here, I am conflating the language itself, and the computation. (Yes, this series of experiments fails. It is not very motivated.)
 
 We start off by computing an additional loss at every layer, and then later appending it to the final loss. Setting `block_loss = -log(1 - pr[max])` (the lower the confidence, the closer the block_loss is to 0; the higher the confidence, the more negative the block_loss (so when added to the loss, the loss gets lower, which is "good").). Special care is taken to compute the "evaluator" block under `torch.no_grad`.
 
 It doesn't work very well at all! (*Notes in retrospect:* Graph lost to time.) One observed problem is that the confidence is being pushed very high on early layers, with no bearing on the final layer that outputs. Then, we could maybe investigate some early termination technique that samples from the embeddings as soon as the confidence is high enough.
 
 
-#### 1-noise
+##### 1-noise
 
-The issue is that the block_loss was only slightly normalized (i.e. for each layer, -1 * crossentropy / n_layers), but this is still very noisy, so learning is not very good.
+*Hypothesis*: I suspect one issue was that the was that the `block_loss` was too big relative to the real signal; let us normalize it (i.e. for each layer, `-1 * crossentropy / n_layers`), but it turns out that this loss signal is still very noisy, so learning is not very good.
 
-#### 2-test
+##### 2-test
 
-In this one, we set `losses += _block_loss / self.config.n_layer`, where `_block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))` and then `_block_loss = torch.log(1 - torch.exp(-1*_block_loss))`, namely it is positive feedback only. As we can see, it doesn't ever get to good training error, but better than noise.
+*Hypothesis*: 
+In this one, we set `losses += _block_loss / self.config.n_layer`, where `_block_loss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), _targets.view(-1))` and then `_block_loss = torch.log(1 - torch.exp(-1*_block_loss))`, namely it is positive feedback only. As we can see, it doesn't ever get to good training error, but it is better than noise.
+
+> [!NOTE]
+> *Retroactive Note*: I forgot what was going on here.
+
 
 ##### 3-test
 
-Somehow, we want to incentivize high confidence (else e.g. loss accumulates forever? Currently this won't successfuly do this incentivization) whilst penalizing wrong answers. When there is no environmental feedback, the loss should just be the self-confidence (i.e. high if high confidence?). Whenever confidence is high, there is some probability of terminating the line of thought (which is good), yet also a chance of accumulating loss in prior steps. Then model should learn to be confident early.
+*Hypothesis*: Continuing on this "self-reward using confidence as heuristic" idea,
+we want to incentivize high confidence (else loss accumulates forever?) whilst penalizing wrong answers. When there is no environmental feedback (i.e. when targets is None), the loss should just be the self-confidence. Whenever confidence is high, there is some probability of terminating the line of thought (which is good), yet also a chance of accumulating loss in prior steps. Then the model should learn to be confident early.
 
 `loss_ = (xe * _confidence * _mask_BT).mean()`
 
-If targets exist, for now we always multiply them in at every layer (even if it is not sampled). Consider not doing this (todo, is there a theoretical difference?).
+> [!NOTE]
+> *Retroactive Note*: I again don't remember what is going on, but we did try this early termination thing, and the conclusion is that it is relatively pointless. In retrospect, it reminds me of Universal Transformers (excluding the per-layer loss idea).
 
 ##### 4-test
 
-Now, we don't use the true loss against the true target until the network is actually ready to output the target:
+*Hypothesis*: Previously, we evaluated the output of each layer against the target. 
+Now, we don't evaluate the true loss against the target until the network is actually ready to output:
 
-```xe_factor = ((xe - 1) * _just_triggered + 1)
+```
+xe_factor = ((xe - 1) * _just_triggered + 1)
 loss_ = (xe_factor * _confidence * _mask_BT).mean()
 ```
 
-This certainly punishes confidence early on.
+This has the effect of punishing confidence early on. Unfortunately, the result is still subpar.
 
 
 ##### 5-test
 
-Definitely punish confidently wrong answers. But what if there is no target? Ask the next layer if wrong or not wrong. If next layer is very confident, punish (as before), else no change to error. (Is that reasonable?) Fix a bug about asking the next layer for confidence, not the current one (whoops). Or should we reward confidence. (By my simulateability theory, predictable actions are not interesting to me. So if the robot's action was predictable to me, that action is not interesting. But this seems to be different. Note, there is also a distinction between predictability and distinguishability. Also, "did I expect this" from a verifier's point of view, is different from "would I have done the same thing", because note that in self talk, the answer to the latter is always "yes". Maybe heuristically, if I am highly confident, then I did expect it -- I know how to act in return to maximize the true reward; if I am not at all highly confident, then I did not expect the answer at all (it doesn't look like giberish either), and have no clue and no confidence in how to act. Thus, we should reward low confidence, or punish high confidence.)
+> [!NOTE]
+> *Retroactive Note*: Another unmotivated experiment in retrospect, but it has the property of having the first graph that I saved. I remain curious how these ideas would play out at a token generation level (if not already used in these chain-of-thought settings or during post-training).
+
+*Hypothesis*: Let's rethink using confidence of subsequent layers to penalize / reward earlier computation:
+- Certainly, one should punish confidently wrong answers. But what if there is no target? Ask the next layer if wrong or not wrong. 
+
+- On confidence: should we reward confidence? (By my simulateability theory, predictable actions are not interesting to me. So if the robot's action was predictable to me, that action is not interesting. But this seems to be different. There is a distinction between predictability and distinguishability. Also, "did I expect this" from a verifier's point of view, is different from "would I have done the same thing", because note that in self talk, the answer to the latter is always "yes". Maybe heuristically, if I am highly confident, then I did expect it -- I know how to act in return to maximize the true reward; if I am not at all highly confident, then I did not expect the answer at all (it doesn't look like giberish either), and have no clue and no confidence in how to act. Thus, we should reward low confidence, or punish high confidence.)
 
 ```xe_factor_prev = ((_xe_prev - 1) * _just_triggered_prev + 1)
 loss_ = (xe_factor_prev * _confidence * _mask_BT_prev).mean()
 ```
-
-What incentivizes higher confidence? Earlier termination thus less loss. Maybe I should really penalize the last layer... Also, adding the additional cross_entropy calculition cost another .5 sec per step.
 
 Result: 
 
@@ -101,47 +114,45 @@ Result:
 
 ##### 6-test
 
-6-test-1: Rerun the "confidence of target" experiment with GPT learning rate.
+A few experiments:
 
-Note that "0-noearly" is the same as vanilla GPT (but reusing weights) without our early termination mechanism (it is equal to "0-base"? Or does "0-base" have early termination?). "0-original" does not re-use any weights, and needs a smaller learning rate to converge properly. (It's odd that the behavior depends so thoroughly on the learning rate.) "0-gpt-custom" is the same as GPT but with our own code.
+- `6-test-1`: Rerun the "confidence of target" experiment with GPT learning rate.
 
-Things to try: reduce learning rate for some of the earlier experiments...
+- `0-noearly`: the same as vanilla GPT (but reusing weights) without our early termination mechanism. 
 
-Does confidence reinforcement make sense? Recall what each layer does:
+- `0-original` does not re-use any weights, and needs a smaller learning rate to converge properly.
 
--- the attention module: each embedding is the weighted sum of multiple embeddings from the previous layer in its context window, computed according to some "attention matrix".
 
--- the MLP module is essentially a fact retrieval system; the 4A x A weight matrix + ReLU (or other non-linearity) can be (perhaps) thought of as evaluating a giant |4A|-number set of if statements on A-dimensional embeddings; the A x 4A projection matrix perhaps then "adds" facts to the original embedding (via the residual) depending on which "if statements" passed. (See 3Blue1Brown).
+Does confidence reinforcement even make sense at a high level? Recall what each layer does:
 
--- backprop "somehow" pushes the attention KVQ matrices, the if statements, and the facts, in the "correct" direction...
+- the attention module: each embedding is the weighted sum of multiple embeddings from the previous layer in its context window, computed according to some "attention matrix".
 
-Our general hypothesis is that good training data is only one part of learning; acts of "self-reflection" or "self-consistency" are also very important to learning. (Somehow, the model should make two predictions and check whether they are consistent, or be able to evaluate its own quality/consistency indpendently of generating predictions.)
+- the MLP module is essentially a fact retrieval system; the 4A x A weight matrix + ReLU (or other non-linearity) can be (perhaps) thought of as evaluating a giant |4A|-number set of if statements on A-dimensional embeddings; the A x 4A projection matrix perhaps then "adds" facts to the original embedding (via the residual) depending on which "if statements" passed.
 
-Note that the subsequent logit it generates is indeed such an assessment. Let us reward high confidence / penalize low confidence. (Is it an assessment? An embedding is a high-dimensional representation of a concept, or multiple concepts summed together, i.e. a thought; some may not be directly associated with single words, they may map to multiple words, and so forth... Confidence is just a measure of how they align with a specific english word.)
+Our general hypothesis in this section was that good training data is only one part of learning; acts of "self-reflection" or "self-consistency" are also very important to learning. (Somehow, the model should make two predictions and check whether they are consistent, or be able to evaluate its own quality/consistency independenty of generating predictions.)
 
-The problem is that...
+Note that the subsequent logit it generates is indeed such an assessment. 
+The problem with using confidence as part of the loss is that...
 
+```
 A stream of   text that is
-  
   of     text that is   next
-
   of     text that is   next
+```
 
+Well, we are in some sense in the wrong namespace; why are we using steps of the computation, to reward overall behavior? The computation hasn't even had time to finish.
+<!-- strangely, the third layer is guessing not the third layer, but continuing to guess the second layer... If i don't feed the residual back in after applying the attention layer, performance is hurt substantially. Why is the residual so important in that case? Is the (previous) embedding itself really a very deep short term memory? Why can't inclusion of the past be learned? -->
 
-strangely, the third layer is guessing not the third layer, but continuing to guess the second layer... If i don't feed the residual back in after applying the attention layer, performance is hurt substantially. Why is the residual so important in that case? Is the (previous) embedding itself really a very deep short term memory? Why can't inclusion of the past be learned?
-
-I guess because we add value matrices instead of the embedding itself, the past gets destroyed. (How necessary is the value matrix? Shouldn't the MLP setup deal with that already. Perhaps the value matrices should just be the embedding itself.)
+<!-- I guess because we add value matrices instead of the embedding itself, the past gets destroyed. (How necessary is the value matrix? Shouldn't the MLP setup deal with that already. Perhaps the value matrices should just be the embedding itself.) -->
 
 Note that the residual connection and c_proj are extremey important, and I do not know why. The value matrix does not seem so important. (perhaps we can get rid of c_proj?)
 
+What if we reward tokens that are equal to the next token in the previous layer? Does it still have the same namespace issue?
 
+> [!NOTE]
+> *Retroactive Note*. I see no reason why intermediate computations should reflect the structure of "next token prediction."
 
-A       stream of   text that is
-  
-stream  of     text that is   next
-of      text   that is   next .
-
-Alternatively, we can reward tokens that are equal to the next token in the previous layer.
+### Experimenting with Skip Connections
 
 ##### 8-experiments
 
