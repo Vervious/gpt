@@ -13,7 +13,7 @@
 > - The output of `attn` may not need to be put into the residual. As long as it (and `x`) is fed as input into the `mlp`, the network still performs as well (at least at this scale), albeit slightly slower to train.
 > - The structure of GPT reminds me almost of an advanced combinator calculus. If I had to prove the expressivity of the architecture, I would start there.
 > - The `mlp` component in particular is quite flexible; it can be replaced by many fun variants, described below.
-> - We can learn to "gate" between passing the entire residual, or a combination of the residual and block output, or exclusively the block output; however, this doesn't improve perplexity and also increases training time. Likewise, we can eschew skip connections entirely if we add an "identity loss", pushing our blocks to compute the identity function; it converges to the same place, but takes 4x longer to train, so I don't see the point. TLDR; skip connections are very nice and hard to interpret.
+> - We can learn to "gate" between passing the entire residual, or a combination of the residual and block output, or exclusively the block output; however, this doesn't improve perplexity and also increases training time. Likewise, we can eschew skip connections entirely if we add an "identity loss", pushing our blocks to compute the identity function; it converges to the same place, but takes 4x longer to train, so I don't see the point. TLDR; skip connections are very nice and also hard to interpret.
 
 
 > [!IMPORTANT] 
