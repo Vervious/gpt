@@ -201,7 +201,7 @@ What if we reward tokens that are equal to the next token in the previous layer?
 > ```
 > ![caption](img/18-axm.jpg)
 >
-> Also, note that the performance of `attn()*mlp()` is even more comparible to GPT if every block reuses weights, which is a regime that I was initially fascinated with (and forgot to turn off in my experiments).
+> Also, note that the performance of `attn()*mlp()` is even more comparible to GPT if every block reuses weights, which is a regime that I was initially fascinated with (and forgot to turn off in some early experiments).
 
 *Hypothesis*: On seeing the surprising efficacy of multiplying the attention signal into the mlp signal, let's try other combinations. [Experiments lost.] 
 
