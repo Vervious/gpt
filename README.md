@@ -3305,6 +3305,8 @@ This still begs the question: imagine a design where, in addition to learning pa
 
 Perhaps. the problem previously is that our "contextual language" is as hard to learn as the "target language", or, in other words, no one is actually teaching our system to speak in the easier "contextual language" (i.e. python code examples in this metaphor), and instead all of the training examples are in the target language (i.e. english completions). I am not sure this reason is perfect, thought: surely, it's possible to learn both a python interpreter, and python code for understanding english, when fed training examples of english? (Does the function itself truly already need to know how to speak the "contextual language", to learn context?)
 
+I thought about it for a long time, and frankly, I think it should work. I see no reason (at the current point) why learning a context would not also be a way to scale, and I think that series of experiments is worth probing at.
+
 ## Other Notes
 
 It would be nice to somehow emphasize "High Importance" datapoints; i.e. predicting the next "and" or "the" or "or" is far less important/impactful than predicting the next "Yes" or mathematical formula. Despite the difference in impact, the loss penalizes both of them the same way. Many errors in the former category come from fundamental entropy of the source text, whereas errors in the latter category are true errors.
