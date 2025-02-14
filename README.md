@@ -3312,3 +3312,6 @@ Some more thoughts. First, the gradient right now at those "learnable" context t
 ## Other Notes
 
 It would be nice to somehow emphasize "High Importance" datapoints; i.e. predicting the next "and" or "the" or "or" is far less important/impactful than predicting the next "Yes" or mathematical formula. Despite the difference in impact, the loss penalizes both of them the same way. Many errors in the former category come from fundamental entropy of the source text, whereas errors in the latter category are true errors.
+
+I am also curious what happens in an architecture that generates, say, a chunk (paragraph) of text all at the same time; i.e. say we tack on 128 extra columns with dummy inputs, and moreover say that these rows do not have the future zero'd out, and now their outputs are the output.
+
