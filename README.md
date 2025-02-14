@@ -3307,6 +3307,8 @@ Perhaps. the problem previously is that our "contextual language" is as hard to 
 
 I thought about it for a long time, and frankly, I think it should work. I see no reason (at the current point) why learning a context would not also be a way to scale, and I think that series of experiments is worth probing at.
 
+Some more thoughts. First, the gradient right now at those "learnable" context tokens may be very small. (Should check it experimentally.) That may be one reason it doesn't help much in the current form. Second, perhaps the effect is more prevalent if I reduce the embedding dimension `n_embd`, or vocab size. That is, perhaps contextual learning is not yet good enough that adding context would help. Third, perhaps the resoruce trade-offs are just too bad. This technique would require much wider and deeper networks; it's probably easier just to scale MLPs instead.
+
 ## Other Notes
 
 It would be nice to somehow emphasize "High Importance" datapoints; i.e. predicting the next "and" or "the" or "or" is far less important/impactful than predicting the next "Yes" or mathematical formula. Despite the difference in impact, the loss penalizes both of them the same way. Many errors in the former category come from fundamental entropy of the source text, whereas errors in the latter category are true errors.
