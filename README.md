@@ -19,7 +19,7 @@
 
 
 > [!IMPORTANT] 
-> I started this project without much background knowledge of the literature (as a cryptographer by training). The documentation for many experiments is also very loose, since it was not indended to be shared publicly. Many early experiments are not documented at all. Many of the observations may seem easy or, alternatively, surprising. On later perusal of the literature, most have been discovered already.
+> I started this project without much background knowledge of the literature (as a cryptographer by training). The documentation for many experiments is also very loose, since it was not indended to be shared publicly. Many early experiments are not documented at all. Most experiments are not rigorous and for intuition only. Many of the observations may seem easy or, alternatively, surprising. On later perusal of the literature, most have been discovered already.
 
 
 ### Useful commands
