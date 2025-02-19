@@ -3317,7 +3317,7 @@ Some more thoughts. First, the gradient right now at those "learnable" context t
 
 A couple of experiments to run here:
 - Reuse attention weights, do not reuse MLP weights
-- Choose K and Q smartly, and fix them.
+- Choose K and Q smartly (in particular taking into account the multiple heads, the component for each head should be different), and fix them. (Surely we should pick it in some structured way? With multihead attention it's not obvious to me.)
 
 ## Other Notes
 
