@@ -3311,6 +3311,14 @@ I thought about it for a long time, and frankly, I think it should work. I see n
 
 Some more thoughts. First, the gradient right now at those "learnable" context tokens may be very small. (Should check it experimentally.) That may be one reason it doesn't help much in the current form. Second, perhaps the effect is more prevalent if I reduce the embedding dimension `n_embd`, or vocab size. That is, perhaps contextual learning is not yet good enough that adding context would help. Third, perhaps the resoruce trade-offs are just too bad. This technique would require much wider and deeper networks; it's probably easier just to scale MLPs instead.
 
+### On attention
+
+*Hypothesis*: If I fix the Key and Query matrices (ignoring the value matrix / using an identity value matrix, and skipping the projectio step, for simplify), can the remainder of the network compensate and still learn effectively? I suspect that the answer is yes, based on my intuition that attention is simply a module that puts ``nearby tokens'' together. Fixing K and Q, perhaps the rest of the network will learn to put tokens directly in the correct space (conditioned on K and Q), instead of needing an extra learning step.
+
+A couple of experiments to run here:
+- Reuse attention weights, do not reuse MLP weights
+- Choose K and Q smartly, and fix them.
+
 ## Other Notes
 
 It would be nice to somehow emphasize "High Importance" datapoints; i.e. predicting the next "and" or "the" or "or" is far less important/impactful than predicting the next "Yes" or mathematical formula. Despite the difference in impact, the loss penalizes both of them the same way. Many errors in the former category come from fundamental entropy of the source text, whereas errors in the latter category are true errors.
