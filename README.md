@@ -3538,6 +3538,7 @@ TIE_MLP_WEIGHTS=False
 ```
 ![caption](img/19-vanilla.jpg)
 
+TODO I forgot to run, fix attention, reusing weights
 
 
 ## Other Notes
