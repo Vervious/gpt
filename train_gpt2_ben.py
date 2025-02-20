@@ -70,12 +70,12 @@ class CausalSelfAttention(DualModule):
     def __init__(self, config):
         super().__init__()
         assert config.n_embd % config.n_head == 0
-        # key, query, value batched for all heads
-        if VALUE_MATRIX:
-            self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd, bias=False)
-        else:
-            self.c_attn = nn.Linear(config.n_embd, 2 * config.n_embd, bias=False)
-        # self.c_attn.ATTN_SCALE_INIT = 1
+        # key, query batched for all heads
+        self.c_attn = nn.Linear(config.n_embd, 2*config.n_embd, bias=False)
+        # value (normally, we should batch) self.c_attn_value = nn.Linear(config.n_embd, 3*config.n_embd, bias=False)
+        self.c_attn_value = nn.Linear(config.n_embd, config.n_embd, bias=False)
+
+        # self.c_attn.ATTN_INIT = 1
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
         # regularization
@@ -132,8 +132,9 @@ class CausalSelfAttention(DualModule):
         # e.g. GPT2 (124M), n_head = 12, hs = 64, nh*hs=C=768 channels
         # each token emits three vectors query, key, value
         if VALUE_MATRIX or z is None:
-            qkv = self.c_attn(x)  # (B, T, C) -> (B, T, 3*C)
-            q,k,v = qkv.split(self.n_embd, dim=2)
+            kq = self.c_attn(x)  # (B, T, C) -> (B, T, 2*C)
+            v = self.c_attn_value(x)
+            k,q = kq.split(self.n_embd, dim=2)
             v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
             # NOTE: don't need the below because we are not calculating ResW
             if ATTENTION_SINK:
@@ -206,6 +207,7 @@ class CausalSelfAttention(DualModule):
                     
                 torch.set_printoptions(linewidth=300, sci_mode=False)
                 bprint(f"Attn {T} {yy[-1,-1,:,:]}") #TODO uncomment
+                # bprint(f"Tied Weights? {T} {self.c_attn.weight}")
 
                 rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
                 # bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
@@ -451,15 +453,17 @@ class MLPConcat(nn.Module):
         self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
         self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd, bias=False)
         self.c_proj.NANOGPT_SCALE_INIT = 1
-    
+        self.ln = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+
     def forward(self, x, attn):
+        x = self.ln(x)
         z = torch.cat((x, attn), dim=-1) # (B, T, 2C)
         x = self.c_fc(z)
         x = self.gelu(x)
         x = self.c_proj(x)
         return x
 
-# @flag machine_code
+# @flag machine_code [UNSET]
 class MultExecute(nn.Module):
 
     def __init__(self, config):
@@ -480,7 +484,6 @@ class BenExecute(nn.Module):
 
 
 class VanillaExecute(nn.Module):
-
     def __init__(self, config):
         super().__init__()
         self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
@@ -492,13 +495,27 @@ class VanillaExecute(nn.Module):
 
         self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
 
-    
     def forward(self, x, attn):
-        input = self.ln_2(x + attn)
-        y = self.c_fc(input)
+        inp = self.ln_2(x + attn)
+        y = self.c_fc(inp)
         y = self.gelu(y)
         mlp = self.c_proj(y)
         return mlp + attn
+
+class NoAttnExecute(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.c_fc = nn.Linear(config.n_embd, MLP_SCALE * config.n_embd)
+        self.gelu = nn.GELU(approximate='tanh')  # should just use 'none' if not trying to copy GPT2
+        self.c_proj = nn.Linear(MLP_SCALE * config.n_embd, config.n_embd, bias=False)
+        self.c_proj.NANOGPT_SCALE_INIT = 1
+        self.ln_2 = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE)
+    def forward(self, x, attn):
+        inp = self.ln_2(x)
+        y = self.c_fc(inp)
+        y = self.gelu(y)
+        mlp = self.c_proj(y)
+        return mlp
 
 class BenBlock(nn.Module):
 
@@ -510,7 +527,7 @@ class BenBlock(nn.Module):
         self.n_layer = config.n_layer
 # @flag machine_modules
         self.compiler = BenCompilerNoOp(config)
-        self.execute = MultExecute(config)
+        self.execute = VanillaExecute(config)
 # @endflag machine_modules
 
         # self.throughput = nn.Parameter(torch.tensor(-2.0))
@@ -536,7 +553,7 @@ class BenBlock(nn.Module):
 # @flag block_logic
         y = self.ln_1(x)
         attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
-        program = self.compiler(y)
+        program = self.compiler(x)
         machineOutput = self.execute(program, attn)
         newx = x + machineOutput
 # @endflag block_logic
@@ -761,6 +778,24 @@ class GPT(DualModule):
                     h = nn.ModuleList([BenBlock(config) for _ in range(config.n_layer)]),
                     ln_f = nn.LayerNorm(config.n_embd, elementwise_affine=ELEMENTWISEAFFINE),
                 ))
+
+# @flag attn_weights [TIE_ATTN_WEIGHTS]
+                if TIE_ATTN_WEIGHTS:
+                    # Tie model weights together
+                    firstBlock = self.transformer.h[0]
+                    for block in self.transformer.h:
+                        block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
+
+# @endflag attn_weights
+
+# @flag mlp_weights [TIE_MLP_WEIGHTS]
+                if TIE_MLP_WEIGHTS:
+                    # Only works with BenBlock, set module to be the same
+                    firstBlock = self.transformer.h[0]
+                    for block in self.transformer.h:
+                        block.execute = firstBlock.execute
+# @endflag mlp_weights
+             
         else:
 
             self.transformer = nn.ModuleDict(dict(
@@ -784,6 +819,12 @@ class GPT(DualModule):
 
         # param initialization
         self.apply(self._init_weights) # apply iterates all submodules
+
+# @flag fixed_attn [NO_GRAD_ATTN]
+        if NO_GRAD_ATTN:
+            for block in self.transformer.h:
+                block.attn.c_attn.weight.requires_grad = False
+# @endflag fixed_attn
     
     def _init_weights(self, module):
         # No need to change default initialization of LayerNorm
@@ -797,6 +838,10 @@ class GPT(DualModule):
                 with torch.no_grad():
                     module.weight[N:2*N,:] = -1 * module.weight[:N,:]
                 torch.nn.init.normal_(module.weight[2*N:,:], mean=0.0, std=stdConfig)
+            elif hasattr(module, 'ATTN_INIT'):
+                head_size = self.config.n_embd // self.config.n_head
+                STD_DIM = math.sqrt(1.0 / head_size)
+                torch.nn.init.normal_(module.weight, mean=0.0, std=STD_DIM) # init to random matrix (todo consider Rademacher matrix or something sparser)
             else:
                 if hasattr(module, 'NANOGPT_SCALE_INIT'):
                     # 2x because we have two linears per layer: block.attn and block.mlp
@@ -849,6 +894,11 @@ class GPT(DualModule):
                 block = self.transformer.sharedblock
             else:
                 block = self.transformer.h[i]
+                # if print_weights:
+                #     if block.attn.c_attn.weight is self.transformer.h[0].attn.c_attn.weight:
+                #         bprint(f"Weights are tied (same object) {i}")
+                #     else:
+                #         bprint(f"Weights are not tied (different object) {i}")
 # @flag loss_logic [IDENTITY_LOSS]
             if targets is not None and IDENTITY_LOSS:
                 x, metadata = block(x,print_weights=print_weights,step=i)
@@ -1540,7 +1590,7 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="18-axm"
+test_name="19-vanilla"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
@@ -1575,6 +1625,9 @@ ATTENTION_SINK = False
 ATTENTION_MASK = False
 IDENTITY_LOSS = False
 CODE_MODE = False
+TIE_ATTN_WEIGHTS = False
+TIE_MLP_WEIGHTS = False
+NO_GRAD_ATTN = False
 
 import observability
 flag_str = observability.extract_flagged_code()
@@ -1590,9 +1643,8 @@ VALUEMATRIX={VALUE_MATRIX}
 REUSE_WEIGHTS={REUSE_WEIGHTS}
 MLP_SCALE={MLP_SCALE}
 ATTENTION_SINK={ATTENTION_SINK}
-ATTENTION_MASK ={ATTENTION_MASK}
-IDENTITY_LOSS={IDENTITY_LOSS}
-CODE_MODE={CODE_MODE}
+TIE_ATTN_WEIGHTS={TIE_ATTN_WEIGHTS}
+TIE_MLP_WEIGHTS={TIE_MLP_WEIGHTS}
 ```
 ![caption](img/{test_name}.jpg)
 """

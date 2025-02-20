@@ -1,0 +1,93 @@
+0: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( sacrifices:0.0002 samples:0.0002terror:0.0002gram:0.0002fts:0.0002870:0.0001 Jong:0.0002 Played:0.0001)
+ Played
+------
+		( samples:0.0002terror:0.0002gram:0.0002fts:0.0002870:0.0001 Jong:0.0002 Played:0.0001 Played:0.0002)
+ Playedlamm piesicketicketcatentry538 Remotechemicalchemical stompauga approx approxtoken
+1: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		( sacrifices:0.0002 samples:0.0002terror:0.0002,:0.0002fts:0.0002870:0.0002 enforcement:0.0002bread:0.0001)
+bread
+------
+		( samples:0.0002terror:0.0002,:0.0002fts:0.0002870:0.0002 enforcement:0.0002bread:0.0001 Blazing:0.0002)
+ Blazing BlazingRex programmevertis suscept suscept ext ext..iliationiliation  Heidi
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.0713 a:0.0610.:0.0620 and:0.0913,:0.0645,:0.0659 a:0.0615
+:0.1167)
+
+
+------
+		( a:0.0610.:0.0620 and:0.0913,:0.0645,:0.0659 a:0.0615
+:0.1167The:0.0786)
+The the first.
+The
+The
+The
+The
+The first
+300: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1846 the:0.0361,:0.0620 and:0.1060ian:0.0654,:0.1729 the:0.0364
+:0.1484)
+
+
+------
+		( the:0.0361,:0.0620 and:0.1060ian:0.0654,:0.1729 the:0.0364
+:0.1484-:0.1157)
+- The most of the most of the most of the most of the most
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1709 the:0.0354ness:0.0850 and:0.0986assium:0.1250,:0.1484 the:0.0344
+:0.0398)
+
+
+------
+		( the:0.0354ness:0.0850 and:0.0986assium:0.1250,:0.1484 the:0.0344
+:0.0398-:0.1445)
+-19, and the same time, and the same time, and the
+800: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1699 the:0.0447,:0.0728 and:0.0728om:0.2021 are:0.1387 not:0.0435
+:0.2793)
+
+
+------
+		( the:0.0447,:0.0728 and:0.0728om:0.2021 are:0.1387 not:0.0435
+:0.2793-:0.1582)
+-based learning.
+-based learning.
+-based learning.
+
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1436 the:0.0381ness:0.0737 and:0.0791om:0.3516 are:0.1484 the:0.0374
+:0.1177)
+
+
+------
+		( the:0.0381ness:0.0737 and:0.0791om:0.3516 are:0.1484 the:0.0374
+:0.1177-:0.1748)
+- The first time, and the same time, and the same time,
+1300: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1719 the:0.0349 blood:0.0767 and:0.0918om:0.3418 are:0.1562 the:0.0359
+:0.0708)
+
+
+------
+		( the:0.0349 blood:0.0767 and:0.0918om:0.3418 are:0.1562 the:0.0359
+:0.0708-:0.1001)
+-based, and the world.
+-based, and the same time
+1550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(,:0.1650 not:0.0435,:0.0659 and:0.1299om:0.2266,:0.1602 not:0.0457
+:0.0903)
+
+
+------
+		( not:0.0435,:0.0659 and:0.1299om:0.2266,:0.1602 not:0.0457
+:0.0903-:0.1050)
+-term, and the first time, and the first time, and the

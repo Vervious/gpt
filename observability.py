@@ -2,6 +2,10 @@ import inspect
 import sys
 import re
 
+def get_val(varName):
+    current_mod = sys.modules['__main__']
+    return getattr(current_mod, varName, False)
+
 def extract_flagged_code():
     # Get the current script's source code
     # current_frame = inspect.currentframe()
@@ -29,7 +33,7 @@ def extract_flagged_code():
             res = re.findall(r"\[(.*?)\]", current_name)
             if len(res) > 0:
                 flag = res[0]
-                if globals().get(flag, False):
+                if get_val(flag):
                     pass # flag is true, should print
                 else:
                     continue

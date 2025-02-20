@@ -1,9 +1,3 @@
-YES DDP
-total desired batch size: 131072
-Mini-batch size: 8*1024
-=> calculated gradient accumulation steps: 16
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -36,18 +30,13 @@ TIE_MLP_WEIGHTS=False
 ![caption](img/19-vanilla.jpg)
 
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 12207 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 131072
+Mini-batch size: 8*1024
+=> calculated gradient accumulation steps: 16
+=> calculated gradient accumulation steps: 16
+Training max steps: 300001Num GPUs: 1{'block_size': 1024, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 62, with 124,354,560 parameters
 num non-decayed parameter tensors: 74, with 84,480 parameters
-using fused AdamW: True
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.6055, 0.3965, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.4023, 0.3262, 0.2715, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -125,7 +114,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 ------
 		( Proceedings:0.0003 LORD:0.0001 Snowden:0.0002 Proceedings:0.0002 Snowden:0.0002 Proceedings:0.0002 junior:0.0002 junior:0.0003)
  junior junior junior junior junior junior junior junior junior junior junior junior junior junior junior
-[rank0]:[W220 22:50:44.406229209 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 11.0359 , allloss: 11.0359, dt: 2140.55ms, fracRes: 1.0000, norm(attn): 0.0366, norm(output): 0.0830, norm(x): 0.1773, norm(y): 0.9999, norm:15.1534, tok/sec: 61232.80, flops:53.62, batch-reuse:1
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.6055, 0.3965, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -288,7 +276,6 @@ Attn 1024 tensor([[    1.0000,     0.0000,     0.0000,  ...,     0.0000,     0.0
 @ 47 train 7.2062 , allloss: 7.2062, dt: 550.19ms, fracRes: 1.0000, norm(attn): 0.0728, norm(output): 0.3418, norm(x): 1.4216, norm(y): 0.9996, norm:1.6056, tok/sec: 238230.65, flops:208.62, batch-reuse:1
 @ 48 train 7.1856 , allloss: 7.1856, dt: 559.79ms, fracRes: 1.0000, norm(attn): 0.0776, norm(output): 0.3516, norm(x): 1.4654, norm(y): 0.9996, norm:0.8713, tok/sec: 234145.49, flops:205.04, batch-reuse:1
 @ 49 train 7.1815 , allloss: 7.1815, dt: 559.52ms, fracRes: 1.0000, norm(attn): 0.0649, norm(output): 0.3340, norm(x): 1.4441, norm(y): 0.9996, norm:0.7165, tok/sec: 234256.83, flops:205.14, batch-reuse:1
-Clearing contents of superlog
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5625, 0.4375, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3574, 0.3691, 0.2734, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -946,7 +933,6 @@ The most common in the most common in the most common in the most common
 @ 547 train 5.0447 , allloss: 5.0447, dt: 545.92ms, fracRes: 1.0000, norm(attn): 0.3359, norm(output): 0.5664, norm(x): 1.7876, norm(y): 0.9893, norm:0.5018, tok/sec: 240094.67, flops:210.25, batch-reuse:1
 @ 548 train 5.0106 , allloss: 5.0106, dt: 552.01ms, fracRes: 1.0000, norm(attn): 0.3320, norm(output): 0.5625, norm(x): 1.7874, norm(y): 0.9893, norm:0.4942, tok/sec: 237444.33, flops:207.93, batch-reuse:1
 @ 549 train 4.9319 , allloss: 4.9319, dt: 552.84ms, fracRes: 1.0000, norm(attn): 0.3281, norm(output): 0.5625, norm(x): 1.7780, norm(y): 0.9892, norm:0.5649, tok/sec: 237089.62, flops:207.62, batch-reuse:1
-Clearing contents of superlog
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.7148, 0.2832, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5117, 0.2100, 0.2773, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -1603,7 +1589,6 @@ llium, and are the most common types of oil.
 @ 1047 train 4.2384 , allloss: 4.2384, dt: 562.78ms, fracRes: 1.0000, norm(attn): 0.3418, norm(output): 0.5781, norm(x): 1.4796, norm(y): 0.9821, norm:0.5118, tok/sec: 232900.90, flops:203.95, batch-reuse:1
 @ 1048 train 4.2881 , allloss: 4.2881, dt: 565.35ms, fracRes: 1.0000, norm(attn): 0.3438, norm(output): 0.5820, norm(x): 1.4840, norm(y): 0.9820, norm:0.4565, tok/sec: 231841.03, flops:203.02, batch-reuse:1
 @ 1049 train 4.2539 , allloss: 4.2539, dt: 564.97ms, fracRes: 1.0000, norm(attn): 0.3359, norm(output): 0.5703, norm(x): 1.4754, norm(y): 0.9820, norm:0.4881, tok/sec: 231997.47, flops:203.16, batch-reuse:1
-Clearing contents of superlog
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.2812, 0.7188, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3613, 0.2656, 0.3750, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -2260,7 +2245,6 @@ The name of the name of the name of the name
 @ 1547 train 4.1254 , allloss: 4.1254, dt: 556.28ms, fracRes: 1.0000, norm(attn): 0.3691, norm(output): 0.6250, norm(x): 1.5518, norm(y): 0.9683, norm:0.6080, tok/sec: 235624.31, flops:206.33, batch-reuse:1
 @ 1548 train 4.2120 , allloss: 4.2120, dt: 557.55ms, fracRes: 1.0000, norm(attn): 0.3691, norm(output): 0.6250, norm(x): 1.5546, norm(y): 0.9687, norm:0.5424, tok/sec: 235085.66, flops:205.86, batch-reuse:1
 @ 1549 train 4.2044 , allloss: 4.2044, dt: 553.33ms, fracRes: 1.0000, norm(attn): 0.3711, norm(output): 0.6289, norm(x): 1.5805, norm(y): 0.9685, norm:0.5302, tok/sec: 236879.58, flops:207.43, batch-reuse:1
-Clearing contents of superlog
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5898, 0.4102, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.4785, 0.2734, 0.2480, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -2867,9 +2851,7 @@ iced
 @ 1997 train 3.8681 , allloss: 3.8681, dt: 558.62ms, fracRes: 1.0000, norm(attn): 0.3906, norm(output): 0.6758, norm(x): 1.6712, norm(y): 0.9544, norm:0.3890, tok/sec: 234634.16, flops:205.47, batch-reuse:1
 @ 1998 train 3.8256 , allloss: 3.8256, dt: 557.77ms, fracRes: 1.0000, norm(attn): 0.3945, norm(output): 0.6797, norm(x): 1.6824, norm(y): 0.9537, norm:0.4465, tok/sec: 234992.41, flops:205.78, batch-reuse:1
 @ 1999 train 3.7511 , allloss: 3.7511, dt: 555.50ms, fracRes: 1.0000, norm(attn): 0.3945, norm(output): 0.6719, norm(x): 1.6849, norm(y): 0.9534, norm:0.3629, tok/sec: 235952.27, flops:206.62, batch-reuse:1
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 12207 mini-batches
-validation loss: 3.9177
+@ 2000 val 3.9177
 @ 2000 train 3.8369 , allloss: 3.8369, dt: 1017.96ms, fracRes: 1.0000, norm(attn): 0.3887, norm(output): 0.6680, norm(x): 1.6762, norm(y): 0.9537, norm:0.4364, tok/sec: 128759.89, flops:112.75, batch-reuse:1
 @ 2001 train 3.9009 , allloss: 3.9009, dt: 545.93ms, fracRes: 1.0000, norm(attn): 0.3984, norm(output): 0.6797, norm(x): 1.6742, norm(y): 0.9542, norm:0.4040, tok/sec: 240089.74, flops:210.24, batch-reuse:1
 @ 2002 train 3.8783 , allloss: 3.8783, dt: 548.24ms, fracRes: 1.0000, norm(attn): 0.4023, norm(output): 0.6836, norm(x): 1.6816, norm(y): 0.9540, norm:0.3695, tok/sec: 239079.05, flops:209.36, batch-reuse:1
@@ -2920,7 +2902,6 @@ validation loss: 3.9177
 @ 2047 train 3.9527 , allloss: 3.9527, dt: 555.91ms, fracRes: 1.0000, norm(attn): 0.4043, norm(output): 0.6875, norm(x): 1.6984, norm(y): 0.9528, norm:0.5488, tok/sec: 235777.10, flops:206.47, batch-reuse:1
 @ 2048 train 3.9278 , allloss: 3.9278, dt: 560.28ms, fracRes: 1.0000, norm(attn): 0.4023, norm(output): 0.6836, norm(x): 1.6952, norm(y): 0.9528, norm:0.4711, tok/sec: 233941.23, flops:204.86, batch-reuse:1
 @ 2049 train 4.0329 , allloss: 4.0329, dt: 561.35ms, fracRes: 1.0000, norm(attn): 0.4023, norm(output): 0.6875, norm(x): 1.6963, norm(y): 0.9525, norm:0.4381, tok/sec: 233493.62, flops:204.47, batch-reuse:1
-Clearing contents of superlog
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5391, 0.4590, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3379, 0.3223, 0.3398, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -3577,7 +3558,6 @@ s, and the flowers are purple.
 @ 2547 train 3.8640 , allloss: 3.8640, dt: 546.73ms, fracRes: 1.0000, norm(attn): 0.4258, norm(output): 0.7383, norm(x): 1.8357, norm(y): 0.9353, norm:0.4055, tok/sec: 239737.12, flops:209.93, batch-reuse:1
 @ 2548 train 3.9605 , allloss: 3.9605, dt: 546.23ms, fracRes: 1.0000, norm(attn): 0.4297, norm(output): 0.7383, norm(x): 1.8238, norm(y): 0.9360, norm:0.5414, tok/sec: 239958.65, flops:210.13, batch-reuse:1
 @ 2549 train 3.9624 , allloss: 3.9624, dt: 557.63ms, fracRes: 1.0000, norm(attn): 0.4395, norm(output): 0.7461, norm(x): 1.8352, norm(y): 0.9364, norm:0.5309, tok/sec: 235051.19, flops:205.83, batch-reuse:1
-Clearing contents of superlog
 Attn 14 tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.5156, 0.4844, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
         [0.3379, 0.3633, 0.2988, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
@@ -4127,66 +4107,3 @@ iced
 @ 2941 train 3.5618 , allloss: 3.5618, dt: 552.57ms, fracRes: 1.0000, norm(attn): 0.4414, norm(output): 0.7656, norm(x): 1.9335, norm(y): 0.9217, norm:0.3704, tok/sec: 237204.91, flops:207.72, batch-reuse:1
 @ 2942 train 3.7170 , allloss: 3.7170, dt: 557.42ms, fracRes: 1.0000, norm(attn): 0.4434, norm(output): 0.7656, norm(x): 1.9261, norm(y): 0.9216, norm:0.3958, tok/sec: 235141.27, flops:205.91, batch-reuse:1
 @ 2943 train 3.6550 , allloss: 3.6550, dt: 552.36ms, fracRes: 1.0000, norm(attn): 0.4453, norm(output): 0.7695, norm(x): 1.9268, norm(y): 0.9227, norm:0.3703, tok/sec: 237295.93, flops:207.80, batch-reuse:1
-W0220 23:18:32.149000 16893 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0220 23:18:32.149000 16893 torch/distributed/elastic/multiprocessing/api.py:898] Sending process 16975 closing signal SIGINT
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 1956, in <module>
-[rank0]:     _, loss, trueloss, confLoss, targetLoss, metadata, earlyStopLayerDict = model(x, y, print_weights=_print_weights_val) # NOTE: we don't actually use the logits
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1654, in forward
-[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1470, in _run_ddp_forward
-[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 979, in forward
-[rank0]:     vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets,print_weights=print_weights)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 948, in vanillaforward
-[rank0]:     x, metadata = block(x,print_weights=print_weights,step=i)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 555, in forward
-[rank0]:     attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/gpt/train_gpt2_ben.py", line 135, in forward
-[rank0]:     kq = self.c_attn(x)  # (B, T, C) -> (B, T, 2*C)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank0]:     return self._call_impl(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank0]:     return forward_call(*args, **kwargs)
-[rank0]:   File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 125, in forward
-[rank0]:     return F.linear(input, self.weight, self.bias)
-[rank0]: KeyboardInterrupt
-[rank0]:[W220 23:18:32.365393686 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/home/ubuntu/ben2/.venv/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 261, in launch_agent
-    result = agent.run()
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/home/ubuntu/ben2/.venv/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 16893 got signal: 2

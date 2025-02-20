@@ -16,6 +16,7 @@
 > - The structure of GPT reminds me almost of an advanced combinator calculus. If I had to prove the expressivity of the architecture, I would start there.
 > - The `mlp` component in particular is quite flexible; it can be replaced by many fun variants, described below.
 > - We can learn to "gate" between passing the entire residual, or a combination of the residual and block output, or exclusively the block output; however, this doesn't improve perplexity and also increases training time. Likewise, we can eschew skip connections entirely if we add an "identity loss", pushing our blocks to compute the identity function; it converges to the same place, but takes 4x longer to train, so I don't see the point. TLDR; skip connections are very nice and also hard to interpret.
+> - Throughout, I make an implicit assumption that the 'most natural' architecture is also the one best optimized by SGD. This is not obviously true, if even true.
 
 
 > [!IMPORTANT] 
@@ -2841,6 +2842,9 @@ IDENTITY_LOSS=False
 
 Compare to (somethign is off --- why is this worse than 13-baseline? Because we only use 8 layers instead of 12, lol.):
 
+> [!NOTE]
+> *Retroactive Note 2/25* . There's another bug where I fed in as input to mlp, `mlp(ln(ln(x) + attn))` instead of `mlp(ln(x + attn))`. Hopefully this does not make too much difference; in the most generic experiment, indeed it does not (see `19-vanilla`).
+
 ```
 Transformer, max LR 0.0006 n_layer 8
 Setting:
@@ -3318,6 +3322,223 @@ Some more thoughts. First, the gradient right now at those "learnable" context t
 A couple of experiments to run here:
 - Reuse attention weights, do not reuse MLP weights
 - Choose K and Q smartly (in particular taking into account the multiple heads, the component for each head should be different), and fix them. (Surely we should pick it in some structured way? With multihead attention it's not obvious to me.)
+
+Somewhat as expected, reusing attention weights does not fundamentally impact ther performance, although there is a noticeable penalty --- so, given the current MLP size, perhaps it is worth increasing the size of the attention component in a subsequent experiment. The current experiment, tying together attention weights (there's no bias):
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+ATTENTION_MASK =False
+IDENTITY_LOSS=False
+CODE_MODE=False
+TIE_ATTN_WEIGHTS=True
+```
+![caption](img/18-reuseattn.jpg)
+
+Compare that to a world where we tie MLP weights (but leave attention untouched). This one is surpisingly good to me: perhaps the attention setup is able to shoulder some of the MLP load:
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ mlp_weights [TIE_MLP_WEIGHTS]
+                if TIE_MLP_WEIGHTS:
+                    # Only works with BenBlock, set module to be the same
+                    firstBlock = self.transformer.h[0]
+                    for block in self.transformer.h:
+                        block.execute = firstBlock.execute
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=False
+TIE_MLP_WEIGHTS=True
+```
+![caption](img/18-reusemlp-only.jpg)
+
+Now, let's investigate what happens if we fix the attention matrices. Recall that I'm guessing that fixing them should not drastically impact model performance. So, let's set the K,Q,V matrices to be fixed and initialized according to a Gaussian with `sqrt(1/n_embd)` std. (I'm not sure if V should be fixed, but let's try this first because it requires less code modification.) Unfortunately, the outcome seems to be that we have neutered the network somewhat:
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ fixed_attn [NO_GRAD_ATTN]
+        if NO_GRAD_ATTN:
+            for block in self.transformer.h:
+                block.attn.c_attn.weight.requires_grad = False
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=False
+TIE_MLP_WEIGHTS=False
+```
+![caption](img/18-fixedattn.jpg)
+
+
+
+Now, we let V be free, and only fix K and Q:
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ fixed_attn [NO_GRAD_ATTN]
+        if NO_GRAD_ATTN:
+            for block in self.transformer.h:
+                block.attn.c_attn.weight.requires_grad = False
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=False
+TIE_MLP_WEIGHTS=False
+```
+![caption](img/18-fixedattn-kq-only.jpg)
+
+Maybe K and Q have to be chosen together, in some structured way. Fixing only K:
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(y)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ fixed_attn [NO_GRAD_ATTN]
+        if NO_GRAD_ATTN:
+            for block in self.transformer.h:
+                block.attn.c_attn.weight.requires_grad = False
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=False
+TIE_MLP_WEIGHTS=False
+```
+![caption](img/18-fixedattn-k-only.jpg)
+
+
+Compare with ommitting `attn` entirely.
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = NoAttnExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(x)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=False
+TIE_MLP_WEIGHTS=False
+```
+![caption](img/18-noattn.jpg)
+
+Note, in the previous experiment I also fixed a bug with VanillaExecute where I was passing in the layer norm of the residual into the mlp input (i.e. `ln(ln(x) + attn))` instead of `ln(x + attn)`). Hopefully it doesn't change too much (it should only affect the more recent experiments); let's check the vanilla experiment again. Surprisingly, it seems to have no affect at all.
+
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        program = self.compiler(x)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=False
+TIE_MLP_WEIGHTS=False
+```
+![caption](img/19-vanilla.jpg)
+
+
 
 ## Other Notes
 
