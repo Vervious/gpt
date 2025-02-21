@@ -3547,3 +3547,8 @@ It would be nice to somehow emphasize "High Importance" datapoints; i.e. predict
 
 I am also curious what happens in an architecture that generates, say, a chunk (paragraph) of text all at the same time; i.e. say we tack on 128 extra columns with dummy inputs, and moreover say that these rows do not have the future zero'd out, and now their outputs are the output.
 
+
+### On scaling
+
+What happens if I feed prior logits, as input into subsequent calls to the language model (instead of this autoregressive structure?)
+
