@@ -3550,5 +3550,5 @@ I am also curious what happens in an architecture that generates, say, a chunk (
 
 ### On scaling
 
-What happens if I feed prior logits, as input into subsequent calls to the language model (instead of this autoregressive structure?)
+What happens if I feed prior embeddings, as input into subsequent calls to the language model (instead of this autoregressive structure?)
 
