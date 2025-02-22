@@ -47,7 +47,7 @@ Setup:
 
 The original implementation / experimental setup is based on Kaparthy's series of tutorials on building GPT from scratch.
 
-## Notes
+# Notes
 
 ### Early Experiments
 
