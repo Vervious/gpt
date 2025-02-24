@@ -113,7 +113,7 @@ class CausalSelfAttention(DualModule):
         #     # ^ 0s on diagonal, 1 everywhere else
 
 
-    def forward(self, x, z=None,print_weights=False):
+    def forward(self, x, z=None,print_weights=False, kvCache=None):
         # x used to compute Q, K; z replaces v if VALUE_MATRIX = False
         # z must be same dim as x
         B, T, C = x.size()
@@ -130,12 +130,23 @@ class CausalSelfAttention(DualModule):
         # calculate query, key, value for all heads in batch and move head forward to be the batch
         # nh is "number of heads", hs is "head size", C is number of channels is nh * hs
         # e.g. GPT2 (124M), n_head = 12, hs = 64, nh*hs=C=768 channels
+
+        T_with_cache = T
         # each token emits three vectors query, key, value
         if VALUE_MATRIX or z is None:
             kq = self.c_attn(x)  # (B, T, C) -> (B, T, 2*C)
             v = self.c_attn_value(x)
             k,q = kq.split(self.n_embd, dim=2)
-            v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+
+
+            if kvCache is not None:
+                # note that in this case, we should not have fed in old x along the T dimension
+                kOld, vOld = kvCache
+                k = torch.cat((kOld, k), dim=1) # save along the T dimension
+                v = torch.cat((vOld, v), dim=1) # save along the T dimension
+                T_with_cache = k.size(1)
+
+            v = v.view(B, T_with_cache, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
             # NOTE: don't need the below because we are not calculating ResW
             if ATTENTION_SINK:
                 # NOTE: commandeer the last dimension to hold our data (the network
@@ -146,6 +157,7 @@ class CausalSelfAttention(DualModule):
                 v = v * extra_zeros # zero out the last dimension (broadcast)
                 v[:, :, 0, :] = 0 # zero out first token everywhere
                 v[:, :, 0, -1] = 1
+            
                 
                 
             if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
@@ -154,6 +166,7 @@ class CausalSelfAttention(DualModule):
                 # TODO a faster way to get the diagonal?
       
         else:
+            assert False, "not yet implemented"
             qk = self.c_attn(x)
             q,k = qk.split(self.n_embd, dim=2)
             v = torch.eye(T, device=x.device).view(1, 1, T, T) # (B, nh, T, T)
@@ -163,8 +176,8 @@ class CausalSelfAttention(DualModule):
         #     bprint(f"Kraw: {k[-1, -1, :10]}")
         #     bprint(f"Qraw: {q[-1, -1, :10]}")
         # treat heads as batches
-        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+        k = k.view(B, T_with_cache, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+        q = q.view(B, T_with_cache, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
 
 
         # TODO figure out what is wrong with the below code and why it breaks training if we use it instead of the pytorch version
@@ -194,75 +207,44 @@ class CausalSelfAttention(DualModule):
         if ATTENTION_MASK:
             y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
         else:
+            # k is (B, nh, cacheT, hs)
+            # q is (B, nh, T, hs) # maybe we should disable token-level self attention? unclear
+            # v is (B, nh, cacheT, hs)
+            # q @ k.transpose -> T x hs @ hs x cacheT -> T x cacheT; i.e. scores for each destination token T (usually just one) for each source token cacheT
+            # y = att @ v -> T x cacheT @ cacheT x hs -> T x hs, a linear combination
             y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
         if print_weights:
-            with torch.no_grad():
-                vv = torch.eye(T, device=x.device).view(1, 1, T, T)
+            pass # fix later
+            # with torch.no_grad():
+            #     vv = torch.eye(T, device=x.device).view(1, 1, T, T)
 
-                if ATTENTION_MASK:
-                    yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, attn_mask=self.mask[:,:,:T,:T])
-                else:
-                    yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
+            #     if ATTENTION_MASK:
+            #         yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, attn_mask=self.mask[:,:,:T,:T])
+            #     else:
+            #         yy = F.scaled_dot_product_attention(q.detach(), k.detach(), vv, is_causal=True)
                     
-                torch.set_printoptions(linewidth=300, sci_mode=False)
-                bprint(f"Attn {T} {yy[-1,-1,:,:]}") #TODO uncomment
-                # bprint(f"Tied Weights? {T} {self.c_attn.weight}")
+            #     torch.set_printoptions(linewidth=300, sci_mode=False)
+            #     bprint(f"Attn {T} {yy[-1,-1,:,:]}") #TODO uncomment
+            #     # bprint(f"Tied Weights? {T} {self.c_attn.weight}")
 
-                rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
-                # bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
-                # bprint(f"K: {k[-1, -1, -1, :]}")
-                # bprint(f"Qweights\n{self.c_attn.weight[self.n_embd:2*self.n_embd, :]}")
-                # bprint(f"Q: {q[-1, -1, -1, :]}")
-                # bprint(f"RAWVALUES (nomask)\n{rawATT[-1,-1,:,:]}")
-                if ATTENTION_MASK:
-                    bprint(f"RAWVALUES (withmask)\n{rawATT[-1,-1,:,:] + self.mask[:,:,:T,:T]}")
-                if self.cachedResW is not None:
-                    torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
-                    bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
-                # bprint(f"========")
-
-        # y = F.scaled_dot_product_attention(q, k, v, attn_mask=self.mask[:,:,:T,:T])
-        # ^ need to do the [:,:,:T,:T] because sometimes T is smaller than block_size (i.e. when doing inference on small prompts)
+            #     rawATT = q @ k.transpose(-2, -1) * (1.0 / math.sqrt(k.size(-1)))
+            #     # bprint(f"Kweights\n{self.c_attn.weight[:self.n_embd, :]}")
+            #     # bprint(f"K: {k[-1, -1, -1, :]}")
+            #     # bprint(f"Qweights\n{self.c_attn.weight[self.n_embd:2*self.n_embd, :]}")
+            #     # bprint(f"Q: {q[-1, -1, -1, :]}")
+            #     # bprint(f"RAWVALUES (nomask)\n{rawATT[-1,-1,:,:]}")
+            #     if ATTENTION_MASK:
+            #         bprint(f"RAWVALUES (withmask)\n{rawATT[-1,-1,:,:] + self.mask[:,:,:T,:T]}")
+            #     if self.cachedResW is not None:
+            #         torch.set_printoptions(linewidth=200, sci_mode=True, threshold=float('inf'))
+            #         bprint(f"GRAD\n{self.cachedResW.grad[-1, -8:, :]}")
+            #     # bprint(f"========")
 
         scores = None
 
         if VALUE_MATRIX or z is None:
-            
-            if MEASURE_SELF_CONTRIBUTION:
-                # y is currently attention matrix
-                scores = torch.diagonal(y, dim1=-2, dim2=-1).detach() # (B, nh, T)
-                scores = scores.sum(dim=1).unsqueeze(-1) # (B, T, 1)
-            
-            if EXTRACT_SELF_CONTRIBUTION:
-                # v2 is (B, nh, T, hs)
-                # diagonal ith location is how much ith column attends with itself
-                resx = torch.diagonal(y, dim1=-2, dim2=-1).unsqueeze(-1) * v2 # (B, nh, T, hs)
-                resx = resx.transpose(1, 2).contiguous().view(B, T, C)
-                resx = self.c_proj(resx) # (B, T, C) -> (B, T, C)
-
-            if DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
-                y = y*self.nodiagonal[:,:,:T,:T] # delete the self contribution
-
-            
-            if MEASURE_SELF_CONTRIBUTION or DELETE_SELF_CONTRIBUTION or EXTRACT_SELF_CONTRIBUTION:
-                y = y @ v2
-
-            if ATTENTION_SINK:
-                # y is (B, nh, T, hs + 1)
-                resw = y[:,:,:,-1].sum(dim=1).unsqueeze(-1) / self.n_head # (B, T, 1)
-                # print(f"RESWMean: {resw[:, 1:, :].mean()}")
-
-                if print_weights:
-                    torch.set_printoptions(linewidth=200, sci_mode=False)
-                    bprint(f"RESW: {resw[-1, :, :]}") # last batch
-                # resw = torch.ones(B, T, 1, device=x.device, dtype=x.dtype)
-                # self.cachedResW = resw
-                # self.cachedResW.requires_grad_(True)
-                # self.cachedResW.retain_grad()
-
-                y = y * extra_zeros # zero out the last dimension again
-
+            # recall y is (B, nh, T, hs)
             y = y.transpose(1, 2).contiguous().view(B, T, C) # reassemble all head outputs side by side
 
             # (B, T, n_embd)
@@ -270,6 +252,7 @@ class CausalSelfAttention(DualModule):
             y = self.c_proj(y) # NOTE: what is the point of this (to support dimension reduction from before, i don't think we actualy need to do dimension reduction)
 
         else:
+            assert False, "not yet implemented"
             if ATTENTION_SINK:
                 pass
 
@@ -288,12 +271,14 @@ class CausalSelfAttention(DualModule):
 
         # TODO deal with EXTRACT_SELF_CONTRIBUTION and delete, remove it if unused
         if ATTENTION_SINK:
+            assert False, "not yet implemented"
             if scores is not None:
                 scores = scores[:, 1:, :]
             # resw[:,1:,:]
             return y[:, 1:, :], resw[:,1:,:], scores # remove the first token (average token)
         else:
-            return y, torch.ones(B, T, 1, device=x.device, dtype=x.dtype), scores
+            # return the new kvCache
+            return y, (k, v)
 
 
 class Gate(DualModule):
@@ -552,7 +537,7 @@ class BenBlock(nn.Module):
 
 # @flag block_logic
         y = self.ln_1(x)
-        attn, xWeights, scores = self.attn(y, y, print_weights=print_weights)
+        attn, kvCache = self.attn(y, y, print_weights=print_weights)
         program = self.compiler(x)
         machineOutput = self.execute(program, attn)
         newx = x + machineOutput
@@ -858,18 +843,16 @@ class GPT(DualModule):
 
     def vanillaforward(self, idx, targets=None,print_weights=False):
         device = idx.device
+
+        # in sequential world, we want b parallel threads of thought, of length t,
+        # predicting up to t+1th token
+
+        # this design will really neuter the quick trainability of our model
         b, t = idx.size()
         assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
 
         # forward the GPT model itself
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
-
-# @flag code_logic [CODE_MODE]
-        # Now, concat our code (NOTE: shoudl we add positional embeddings)
-        if CODE_MODE:
-            code_expanded = self.code.unsqueeze(0).expand(b, -1, -1)
-            tok_emb = torch.cat((code_expanded, tok_emb), dim=1)
-# @endflag code_logic
 
 
         pos = torch.arange(0, t + self.T2, dtype=torch.long, device=device) # shape (t)
@@ -883,84 +866,27 @@ class GPT(DualModule):
 
         outerMetadata = {}
 
-        if CODE_MODE:
-            outerMetadata["code"] = self.code
 
-        _x_total = x
-        _xtraloss = torch.tensor(0.0, device=idx.device)
-
-        for i in range(self.config.n_layer):
-            if REUSE_WEIGHTS:
-                block = self.transformer.sharedblock
-            else:
-                block = self.transformer.h[i]
-                # if print_weights:
-                #     if block.attn.c_attn.weight is self.transformer.h[0].attn.c_attn.weight:
-                #         bprint(f"Weights are tied (same object) {i}")
-                #     else:
-                #         bprint(f"Weights are not tied (different object) {i}")
-# @flag loss_logic [IDENTITY_LOSS]
-            if targets is not None and IDENTITY_LOSS:
-                x, metadata = block(x,print_weights=print_weights,step=i)
-                _x_total = x
-                _in = x.detach()
-                _x, _ = block(_in,print_weights=False) # Do again... lol
-                _xtraloss = _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=float('inf')).mean()
-# @endflag loss_logic
-                # _xtraloss = _xtraloss + (1 - F.cosine_similarity(_x, _in, dim=-1).mean()) # float("inf") _xtraloss + torch.linalg.norm(_x - _in, dim=-1, ord=float('inf')).mean()
-
-            elif targets is not None and NEW_ALL_LAYER_LOSS:
-                # x = block(x.detach())
+        for i in range(T):
+            for i in range(self.config.n_layer):
+                if REUSE_WEIGHTS:
+                    block = self.transformer.sharedblock
+                else:
+                    block = self.transformer.h[i]
+                
                 x, metadata = block(x,print_weights=print_weights,step=i)
 
-                # NOTE: previously we computed the loss independently at each row.
-                # Now, just add in the residual. Note that the residual doesn't get passed into future layers.
-                _x_total = _x_total + x
-
-                # # NOTE: previous below
-                # y = self.transformer.ln_f(x)
-                # _logits = self.lm_head(y)
-
-                # layerloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
-                # trueloss = layerloss
-
-                # logits.append(_logits)
-
-                # loss = loss + layerloss
-            else:
-                # routes = F.softmax(self.router[i], dim=-1)
-                # routes.requires_grad_(True)
-                # routes.retain_grad()
-                # x.requires_grad_(True)
-                # x.retain_grad()
-                # # print(f"routes grad {routes.grad}")
-                # # print(f"x grad {x.grad}")
-                # _finx, metadata = block(x,print_weights=print_weights,step=i)
-                # _finx = routes[i] * _finx
-                # for j in range(self.config.n_layer):
-                #     if i == j:
-                #         continue
-                #     b = self.transformer.h[j]
-                #     _x, _metadata = b(x,print_weights=False,step=i)
-                #     _finx = _finx + routes[j] * _x
-                # x = _finx
-                # _x_total = x
-                x, metadata = block(x,print_weights=print_weights,step=i)
-                _x_total = x
-
-            for key, value in metadata.items():
-                outerMetadata[key] = outerMetadata.get(key, 0) + value
+                for key, value in metadata.items():
+                    outerMetadata[key] = outerMetadata.get(key, 0) + value
 
         if targets is not None and trueloss is None:
             # if we are given some desired targets also calculate the loss
-            _x_total = self.transformer.ln_f(_x_total)
-            if CODE_MODE:
-                _x_total = _x_total[:, self.T2:, :] # NOTE: remove line if no T2
-            _logits = self.lm_head(_x_total)
+            x = self.transformer.ln_f(x)
+            _logits = self.lm_head(x)
             logits.append(_logits)
 
             trueloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
-            loss = trueloss + _xtraloss
+            loss = trueloss
         elif targets is None:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
@@ -972,389 +898,17 @@ class GPT(DualModule):
         return logits, loss, trueloss, outerMetadata
 
     def forward(self, idx, targets=None, all_logits=False, print_weights=False, dump_val=False):
-        if self.VANILLA:
-            zero = torch.tensor(0.0, device=idx.device)
-            earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
-
-            vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets,print_weights=print_weights)
-
-            if all_logits:
-                return vanillalogits, vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
-            else:
-                return vanillalogits[-1], vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
-
-        # idx is token indices
-        # idx is of shape (B, T)
-        B,T = idx.size()
-        assert T <= self.config.block_size, f"cannott forward sequence of length {T}, block size is {self.config.block_size}"
-
-        # forward token and position embeddings
-        pos = torch.arange(0, T, dtype=torch.long, device=idx.device) # shape (T)
-        pos_emb = self.transformer.wpe(pos) # position embeddings shape (T, n_embd) # same for every row, then broadcast
-        tok_emb = self.transformer.wte(idx) # token embeddings shape (B, T, n_embd)
-        x = tok_emb + pos_emb # combine token and position embeddings
-
-        # now forward through transformer
-        losses = torch.tensor(0.0, device=idx.device)
-        confLoss = torch.tensor(0.0, device=idx.device)
-        targetLoss = torch.tensor(0.0, device=idx.device)
-        allLogits = []
-        # print(self.transformer.h)
-        res = x
-        x = self.transformer.ln_f(x) # apply the initial layer norm (this is backwards from the usual implementation, but same semantically)
-
-        _mask_BT = torch.ones(B,T,1, device=idx.device) # (B, T, 1) 
-        trueLoss = None
-
-        _true_logits = torch.zeros(B, T, self.config.vocab_size, device=idx.device)
-
-        savedConf = []
-        # savedXeFactor = []
-
-        # _xe_prev = None
-        # _just_triggered_prev = None
-        _mask_BT_prev = None
-
-        early_stop_num = 0.0
+        # this chunk of code is a remnant from past hackery
+        zero = torch.tensor(0.0, device=idx.device)
         earlyStopLayerDict = torch.zeros(self.config.n_layer, device=idx.device)
 
-        y = x
+        vanillalogits, vanillaloss, trueloss, metadata = self.vanillaforward(idx, targets,print_weights=print_weights)
 
-        for i in range(self.config.n_layer):
-            prev_x = x # (B, T, n_embd)
-
-            
-
-            
-            # block = self.transformer.h[i]
-            # x, res = block.requires_grad_(True)(x, res)
-            x, res, midx, y, attn_signal, mlp_signal, mlp2_signal = self.transformer.sharedblock.requires_grad_(True)(x, res, y) # TODO UNCOMMENT
-
-            # x = x +  pos_emb
-            
-
-            # # For now, try computing dot products in embedding space
-            # target_embedding = torch.roll(prev_x, shifts=-1, dims=1) # shift in T dimension
-
-            # # NOTE: ignore the far right-most one
-            # dp = -1* (target_embedding[:,:-1,:] * x[:,:-1,:]).sum(dim=-1) / self.config.n_embd # dot product
-            # dp = dp.mean()
-            # losses += dp
-            # confLoss += dp
-
-
-            with torch.no_grad():
-                if all_logits or print_weights:
-                    _logits = self.lm_head(x)
-                    # _logits_target_ = self.lm_head(x[:,:-1,:])
-                    # _target_embd = self.lm_head(target_embedding[:,:-1,:])
-                if all_logits:
-                    allLogits.append(_logits)
-                if print_weights:
-                    prevsize = res.std(dim=-1).mean()
-                    nextsize = x.std(dim=-1).mean()
-                    midsize = midx.std(dim=-1).mean()
-                    bprint(f"INFO nextres {prevsize} attn*mlp {midsize} layernormed {nextsize}")
-                    # attn_signal and mlp_signal are B, T, C
-                    attn_signal = attn_signal.detach().cpu()
-                    mlp_signal = mlp_signal.detach().cpu()
-                    as_ = attn_signal[0,0,:]
-                    ml_ = mlp_signal[0,0,:]
-                    x_ = x.detach().cpu()[0,0,:]
-                    res_ = res.detach().cpu()[0,0,:]
-                    ml2_ = mlp2_signal.detach().cpu()[0,0,:]
-
-                    as_min = as_.min().item()
-                    as_max = as_.max().item()
-                    ml_min = ml_.min().item()
-                    ml_max = ml_.max().item()
-                    x_min = x_.min().item()
-                    x_max = x_.max().item()
-                    attn_hist = torch.histc(as_, bins=10, min=-100, max=100)
-                    mlp_hist = torch.histc(ml_, bins=10, min=-50, max=50)
-                    x_hist = torch.histc(x_, bins=10, min=-50, max=50)
-
-                    bprint(f"\t\t\tattn_hist {as_min}<{attn_hist}>{as_max}\n\t\t\tmlp_hist {ml_min}<{mlp_hist}>{ml_max}\n\t\t\tx_hist {x_min}<{x_hist}>{x_max}")
-                    if dump_val:
-                        cprint(f"\t@ {i}")
-                        cprint(f"\t\t# {as_.tolist()}")
-                        cprint(f"\t\t$ {ml_.tolist()}")
-                        cprint(f"\t\t% {(ml_*as_).tolist()}")
-                        cprint(f"\t\t^ {x_.tolist()}")
-                        cprint(f"\t\t& {res_.tolist()}")
-                        cprint(f"\t\t* {ml2_.tolist()}")
-                # if print_weights:
-                #     _batch_0_target = _target_embd[:,-7:,:] #(B, 7, vocab_size?)
-                #     _probs = F.softmax(_batch_0_target, dim=-1) #(B, 7, vocab_size?)
-                #     vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 7, 1)
-                #     v = idxs[0,:,0].tolist()
-
-                #     _logits_target_ = _logits_target_[:,-7:,:] #(B, 7, vocab_size?)
-                #     _probs = F.softmax(_logits_target_, dim=-1) #(B, 7, vocab_size?)
-                #     vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 7, 1)
-                #     cur = idxs[0,:,0].tolist()
-
-                #     a = "\t".join(enc.decode(v))
-                #     b = "\t".join(enc.decode(cur))
-
-                #     bprint(f"Layer {i} prev-targets\npre\t\t{a}\ncur\t\t{b}")
-
-                    # if (i == 0 or i == self.config.n_layer - 2 or i == self.config.n_layer - 1 or i == self.config.n_layer) and master_process:
-                    #     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                    #     probs = F.softmax(_logits, dim=-1) # (B, T, vocab_size?)
-                    #     # print top k of the last T
-                    #     # do top-k sampling of 50 (huggingface pipeline default)
-                    #     # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                    #     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                    #     fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
-                    #     bprint(f"Layer {i}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
-
-            if targets is not None and (i == self.config.n_layer - 1 or ALL_LAYER_LOSS):
-
-                # NOTE: keep this because... can't return some dummy thing instead
-                _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-
-                tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
-                trueLoss = tl
-                losses = losses + tl
-                allLogits.append(_logits)
-                
-
-            if ENABLE_LAYER_LOSS:
-
-                x_False, _, _, _, _, _, _ = self.transformer.sharedblock.requires_grad_(False)(x, res, y)
-                # _logits is after application of the current layer
-                _logits_incl_curr_layer = self.lm_head.requires_grad_(True)(x)
-                _logits_skipping_curr_layer = self.lm_head.requires_grad_(False)(x_False) # (B, T, vocab_size)
-                # TODO: seems not to work if I dont' call requires_grad(False) on lm_head (maybe for obvious reasons), now check if I do call it.
-                if all_logits or i == self.config.n_layer - 1:
-                    allLogits.append(_logits_skipping_curr_layer)
-
-                
-                _, _targets = _logits_skipping_curr_layer.detach().max(dim=-1) #(B, T) # NOTE: the [1] is to get the indices
-
-                # _logprobs = F.log_softmax(_logits, dim=-1) # self.softmax(_logits).clamp(min=1e-9, max=1-1e-9) # (B, T, vocab_size)
-                # (_logprobs.exp() * _logprobs).sum(dim=-1)
-                # _block_loss = -1 * _logprobs.min(dim=-1)[0].mean()
-                # Cross entropy returns a positive loss (i.e. - log (pr))
-                _nll_max = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), _targets.view(-1), reduction='none') # (B*T)
-
-
-                _nll_max = _nll_max.view(B,T, 1) # (B, T) = -log(pr[target])
-
-                # print("NLLMAXSHAPE ", _nll_max.shape)
-
-                _sample_rand = torch.rand(B, T, 1, device=idx.device).log() * -1
-                # NOTE: we want to perform the usual computations perhaps, but just stop propagating the gradient? on masked values / short circuited batches / Ts.
-                # I.e. for B,T where softmax(_logits).max() < _sample_rand, do an early stopping, and stop accumulating loss (where loss = -log(pr[target]) * confidence) thereafter
-                # Final loss (for each B,T) is -logli under those final logits
-
-                # mask loss where _sample_rand > _nll_max, i.e. confidence is high and a sample "hit"
-                # TODO: tbd shoudl just max the loss
-                mask = _sample_rand < _nll_max # True/1 if subsequent loss should be counted, False/0 otherwise # (B, T, 1)
-
-
-                # if previously 0, stay 0
-                # set _mask_BT: 1 if loss this layer should count, 0 otherwise (i.e. early termination)
-                _new_mask_BT = mask * _mask_BT
-
-                if i == self.config.n_layer - 1:
-                    _new_mask_BT = torch.zeros_like(_mask_BT) # NOTE: always penalize last layer since we have finite number of layers
-
-                # 1 if switched from 1 to 0 in this iteration, else 0
-                _just_triggered = (_mask_BT - _new_mask_BT).detach()  #(B, T, 1)
-                _mask_BT = _new_mask_BT # (B, T, 1)
-
-                earlyStopLayerDict[i] = _just_triggered.sum().item()
-
-                _true_logits = _true_logits + _just_triggered * _logits_incl_curr_layer # later we will backprop this against targets loss
-
-                # _masked_logits = torch.where(mask.unsqueeze(-1), torch.zeros_like(_logits), _logits) # (B, T, vocab_size)   
-                
-
-                # _confidence = 1 - torch.exp(-1*_nll_max) # Just make it 0 to 1 linear, instead of something that grows exponentially
-                _confidence = -1 * log1mexp(-_nll_max) # NOTE were we running into numerical stability problems? # (B, T, 1)
-                # _confidence = -1 * torch.log1p(-1*torch.exp(-1*_nll_max))
-                # _confidence = -1 * torch.log(1 - torch.exp(-1*_nll_max)) # NOTE: confidence calculation, makes loss better, see readme
-                # The higher the max, the higher the confidence (to inf)
-                # max = low, low confidence (to 0)
-                # TODO no grad the most recent application of attention
-                # Times -1 to reward low confidence.
-
-                if _mask_BT[0,-1,0] == 0:
-                    if master_process and print_weights:
-                        bprint(f"\tB=0 T=-1 skipped layer {i}")
-
-                if print_weights:
-                    early_end = self.config.n_layer # can change to smaller number to "short circuit"
-                    if (i == 0 or i == early_end - 2 or i == early_end - 1 or i == self.config.n_layer) and master_process:
-                        # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                        with torch.no_grad():
-                            probs = F.softmax(_logits_skipping_curr_layer, dim=-1) # (B, T, vocab_size?)
-                            # print top k of the last T
-                            # do top-k sampling of 50 (huggingface pipeline default)
-                            # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-                            topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-                            fstring = ["{:.5f}".format(value) for value in topk_probs.tolist()]
-                            bprint(f"Layer {i} B=0,T=-1 Confidence={_confidence[0,-1].item():.5f}\n\t\t\t {fstring, enc.decode(topk_indices.tolist())}")
-                        # if i > 5:
-                        #     break
-                        # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-                    # if i == early_end - 1:
-                    #     break
-
-            
-            
-            
-            # losses += _block_loss / self.config.n_layer # NOTE: just try this for now # TODO before or after real loss computation?
-            # NOTE: naive attempt at normalizing
-            # ln(0.9) = -0.1, about 90% confidence
-            # so we add -0.1. if block is 50% confident, we add -0.69, reducing the loss.
-
-            if targets is not None:
-                # We want _block_loss to be high when confidence is high, and low when confidence is low... but then won't the network just output low confidence?
-                # print("XE SHAPE ", xe.shape)
-                # print("MASK SHAPE ", _mask_BT.shape)
-                # print("CONFIDENCE SHAPE ", _confidence.shape)
-
-
-                if ENABLE_LAYER_LOSS and i > 0:
-
-                    # _target_conf = F.cross_entropy(_logits_skipping_curr_layer.view(-1, _logits_skipping_curr_layer.size(-1)), targets.view(-1), reduction='none').view(B,T, 1) # (B*T)
-                    # _target_conf = -1 * log1mexp(-_target_conf)
-
-                    # TODO make sure to scale things properly... extreme confidence gives extreme loss, maybe we should take an e^-(x)
-
-                    # NOTE: if _just_triggered = 1, then xe is multiplied in and _confidence is ignored; else, if _just_triggered = 0, then factor = 1
-                    # xe_factor = torch.pow(xe, _just_triggered)
-                    # xe_factor_prev = ((_xe_prev / _confidence - 1) * _just_triggered_prev + 1)
-
-                    # _mask_BT_prev = 0 if previous layer has triggered (inclusive)
-
-                    # TODO UNCOMMENT THIS BLOCK
-                    # NOTE: detach _mask_BT for now, I don' tthink we really need it
-                    confLoss_contrib = (_confidence * _mask_BT_prev.detach()).mean() # _confidence
-                    confLoss -= confLoss_contrib
-
-                    # loss_ = (xe * _confidence * _mask_BT).mean()
-                    savedConf.append(_confidence.mean())
-                    # savedXeFactor.append((xe_factor_prev * _confidence).mean())
-                    losses = losses - confLoss_contrib #TODO UNCMOMENT
-
-
-                    # If mask is 0, then it has already "triggered", so no loss
-                    # Loss is confidence unless at point of triggering
-                
-                # print("LOSS SHAPE", losses.shape)
-
-                
-                if ENABLE_LAYER_LOSS:
-                    # _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-                    xe = F.cross_entropy(_logits_incl_curr_layer.view(-1, _logits_incl_curr_layer.size(-1)), targets.view(-1), reduction='none') #(B*T)
-                    xe = xe.view(B, T, 1)
-                    targetLoss_contrib = (xe * _just_triggered).mean()
-                    losses = losses + targetLoss_contrib
-                    targetLoss += targetLoss_contrib # IN PLACE
-                    trueLoss = targetLoss
-
-
-                if i == self.config.n_layer - 1:
-
-                    # NOTE: keep this because... can't return some dummy thing instead
-
-                    if not ENABLE_LAYER_LOSS:
-                        pass
-                        # _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-                        # tl = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1)) # (1)
-                        # trueLoss = tl
-                        # print("lalala")
-                        # losses = losses + tl
-                        # allLogits.append(_logits)
-                    else:
-                        # # NOTE: uncomment for true trueLoss computation
-                        # xe_staggered_loss = F.cross_entropy(_true_logits.view(-1, _true_logits.size(-1)), targets.view(-1))
-                        # trueLoss = xe_staggered_loss 
-
-                        # trueLoss = xe.mean().detach() #TODO compare with the prev
-                        allLogits.append(_true_logits) # NOTE: later we sample from allLogits[-1]
-                        # NOTE: trueLoss slightly different than targetLoss, not sure why...
-
-                        # trueLoss = xe.mean().detach()
-                        # if not ENABLE_LAYER_LOSS:
-                        # _mask_BT_prev because if _mask_BT, it is always 0 at last layer
-
-                        # BELOW COMMENTED
-                        # confLoss = losses # 
-                        # targetLoss = (xe * _mask_BT_prev).mean()
-                        # losses = losses + targetLoss
-
-
-                        # print("MASK SUM ", _mask_BT_prev.sum().item(), B*T)
-                        # losses += xe.mean()
-                        #NOTE for now, always penalize last layer since we have finite number of layers
-
-                        early_stop_num = B*T - _mask_BT_prev.sum().item()
-
-
-                # Used when adding loss when computing confidence of subsequent layer
-                # _xe_prev = xe
-                # _just_triggered_prev = _just_triggered
-                _mask_BT_prev = _mask_BT
-
-            else:
-                # NOTE this code path should be unused except during inference
-                if i == self.config.n_layer - 1 and all_logits:
-                    if ENABLE_LAYER_LOSS:
-                        allLogits.append(_true_logits)
-                    else:
-                        _logits = self.lm_head.requires_grad_(True)(x) # (B,T,Vocab_size)
-                        allLogits.append(_logits)
-                # losses += _confidence / self.config.n_layer
-        
-        
-        # print("total loss ", losses)
-        if targets is not None and (losses.item() < 0.05 or losses.isnan().any()):
-            # print("oh no")
-            pass
-            # print("SAVED CONF ", savedConf)
-            # # print("SAVED XE FACTOR ", savedXeFactor)
-            # print("NLL MAX ", _nll_max)
         if all_logits:
-            return allLogits, losses, trueLoss, confLoss, targetLoss, early_stop_num, earlyStopLayerDict
+            return vanillalogits, vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
         else:
-            return _logits, losses, trueLoss, confLoss, targetLoss, early_stop_num, earlyStopLayerDict
-            # if _block_loss.item() < THRESHOLD and ENABLE_LAYER_LOSS: # this is average across entire T and B
-            #     if master_process and print_weights:
-            #         bprint(f"\tShort circuit at layer {i} with block_loss {_block_loss.item()}")
-            #     break
-        # print(len(self.transformer.h))
+            return vanillalogits[-1], vanillaloss, trueloss, zero, zero, metadata, earlyStopLayerDict
 
-        # forward final layer norm and classifier
-        # x = self.transformer.ln_f(x) # also share the final layer norm
-        # logits = self.lm_head(x) # (B, T, vocab_size)
-        # if all_logits:
-        #     allLogits.append(logits)
-        
-        # if print_weights:
-        #     # print(self.transformer.sharedblock.attn.c_attn.weight.view(-1)[-6:].data)
-        #     probs = F.softmax(logits, dim=-1) # (B, T, vocab_size?)
-        #     # do top-k sampling of 50 (huggingface pipeline default)
-        #     # topk_probs here becomes (5, 50), topk_indices is (5, 50)
-        #     topk_probs, topk_indices = torch.topk(probs[0,-1,:], 5, dim=-1)
-        #     print(f"Layer 6\t\t\t {topk_probs.tolist(), enc.decode(topk_indices.tolist())}")
-
-        # trueLoss = None
-        # if targets is not None:
-        #     _logits = self.lm_head.requires_grad_(True)(x) # (B, T, vocab_size) # NOTE: this is with gradient
-        #     # shape of input to x-entropy is B*T x V, B*T x 1
-        #     # recall: logits are basically log counts
-        #     # softmax = logits.exp (counts) / logits.exp (counts).sum(dim=-1, keepdim=True), i.e. normalized counts
-        #     # cross entropy loss is just -log(pr[target])
-        #     # F.cross_entropy takes average over B*T
-        #     xe = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1))
-        #     # print("LOSS", xe.item())
-        #     losses += xe
-        #     trueLoss = xe.detach()
 
     @classmethod
     def from_pretrained(cls, model_type):

@@ -41,6 +41,8 @@
 
 ```screen -dm bash -c 'torchrun --standalone --nproc_per_node=1 train_gpt2_ben.py > screen.txt 2>&1'```
 
+```screen -dm bash -c 'torchrun --standalone --nproc_per_node=1 train_sequential_ben.py > screen.txt 2>&1'```
+
 Setup:
 
 `pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu126`
