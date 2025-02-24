@@ -886,12 +886,12 @@ class GPT(DualModule):
         for j in range(T):
             # print(j)
             xj = x[:,j:j+1,:] # (B, 1, n_embd)
-            if kvCache:
-                # we do not want to backprop too deep...
-                # for embeddings belonging to previous j, they should only
-                # be influenced in so far as predicting j+1.
-                k, v = kvCache
-                kvCache = (k.detach(), v.detach())
+            # if kvCache:
+            #     # we do not want to backprop too deep...
+            #     # for embeddings belonging to previous j, they should only
+            #     # be influenced in so far as predicting j+1.
+            #     k, v = kvCache
+            #     kvCache = (k.detach(), v.detach())
 
             for i in range(self.config.n_layer):
                 if REUSE_WEIGHTS:
@@ -1181,8 +1181,8 @@ test_name="19-funexperiment"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 192 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 32 # sequence length # 16 # 1024
+B = 384 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 16 # sequence length # 16 # 1024
 config_ = GPTConfig(vocab_size=50304, block_size=T, n_layer=12)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
 

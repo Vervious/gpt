@@ -1,14 +1,70 @@
 0: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(sweet:0.0002 jo:0.0002 asleep:0.0002wu:0.0001uties:0.0001 Deck:0.0001 Nex:0.0001)
-sweet
+		(BY:0.0002engu:0.0002 therapists:0.0002 MDMA:0.0001 2021:0.0001 acceptable:0.0001 neurons:0.0001)
+BY
 ------
-		(sweet:0.0004 jo:0.0002 Deck:0.0001232:0.0001 ready:0.0001 asleep:0.0001 markedly:0.0001)
-sweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweet
+		(BY:0.0005 therapists:0.0002engu:0.0002 acceptable:0.0002 tied:0.0001 2021:0.0001peace:0.0001)
+BYBY Knotcampoby proofswikipedia acceptable acceptable acceptable Fen Fen Fen Fen acceptable
 1: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		(sweet:0.0002 jo:0.0002 asleep:0.0001 paraph:0.0001wu:0.0001 Deck:0.0001232:0.0001)
-sweet
+		( therapists:0.0002BY:0.0002 MDMA:0.0002engu:0.0002 Venezuel:0.0001 2021:0.0001Vol:0.0001)
+ therapists
 ------
-		(sweet:0.0005 jo:0.0002 the:0.0002 Deck:0.0001 retri:0.0001232:0.0001AH:0.0001)
-sweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweet
+		( therapists:0.0004BY:0.0002engu:0.0002Vol:0.0002 economy:0.0001 acceptable:0.0001 boy:0.0001)
+ therapists therapists Fen follows follows pertinent the therontrontrontrontadhront acceptable
+50: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0334,:0.0276 the:0.0267
+:0.0244 and:0.0215 to:0.0209 of:0.0203)
+.
+------
+		(
+:0.0356.:0.0322 the:0.0260,:0.0251 to:0.0203 and:0.0203 of:0.0190)
+
+.
+.
+
+
+.
+..
+.
+.
+300: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.0291 The:0.0206�:0.0142�:0.01253:0.0104 In:0.00891:0.0076)
+
+
+------
+		(The:0.0537A:0.01793:0.0154In:0.0113C:0.0093This:0.0093�:0.0093)
+The U.
+The “The same of the first of the first
+550: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.1138 The:0.0306S:0.0254 (:0.0192|:0.0145�:0.0135�:0.0128)
+
+
+------
+		(-:0.2236The:0.0820This:0.0284In:0.0236|:0.0208(:0.0152�:0.0118)
+- The most of the most important to the most of the most of the
+800: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(.:0.0342
+:0.0221 (:0.01772:0.01433:0.0095�:0.0079,:0.0072)
+.
+------
+		(
+:0.3203 The:0.0557<|endoftext|>:0.0198 In:0.0154 It:0.0136 A:0.0106�:0.0093)
+
+- The first of the same time, and the same time, and
+1050: sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(
+:0.1885S:0.0219 (:0.0181<|endoftext|>:0.0150|:0.0097C:0.00970:0.0094)
+
+
+------
+		(-:0.1387The:0.0894|:0.0309In:0.0212This:0.0137A:0.0100•:0.0089)
+- The first- The first time.
+- The first time, and
