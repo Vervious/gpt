@@ -1,9 +1,3 @@
-YES DDP
-total desired batch size: 163840
-Mini-batch size: 1280*128
-=> calculated gradient accumulation steps: 1
-Training max steps: 300001
-Num GPUs: 1
 Threshold: 0.1
 Enable layer loss: False
 MAX LEARNING RATE: 0.0006
@@ -44,18 +38,13 @@ LOW_RANK_ATTN=True
 ![caption](img/19-funexperiment.jpg)
 
 Warmup steps: 100
-I am GPU 0  of  1
-found 99 shards for split train
-train: loaded 100000000 tokens (first shard)
-train: 1 epoch (1 shard) = 610 mini-batches
-found 1 shards for split val
-val: loaded 100000000 tokens (first shard)
-val: 1 epoch (1 shard) = 610 mini-batches
-{'block_size': 128, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-compilation is off
+total desired batch size: 163840
+Mini-batch size: 1280*128
+=> calculated gradient accumulation steps: 1
+=> calculated gradient accumulation steps: 1
+Training max steps: 300001Num GPUs: 1{'block_size': 128, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
 num decayed parameter tensors: 51, with 110,690,304 parameters
 num non-decayed parameter tensors: 74, with 84,480 parameters
-using fused AdamW: True
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		( remotely:0.0002 paint:0.0001down:0.0001 dances:0.0001irmed:0.0001odynamic:0.0001 Todd:0.0001)
@@ -63,7 +52,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 ------
 		( differe:0.0002msg:0.0002igl:0.0002enh:0.0002 procedure:0.0002 Duo:0.0001olly:0.0001)
  differe decidesνwell remediesvelt Sax Roll rangingholdersintestinal tinAv PAL papers
-[rank0]:[W224 04:34:59.775290291 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 @ 0 train 11.0342 , allloss: 11.0342, dt: 12768.03ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 27.1687, norm(y): 128.0004, norm:17.9651, tok/sec: 12832.05, flops:1.11, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
@@ -121,7 +109,6 @@ rank 0 sample 0: A Poem for you! Roses are red, Potatoes are
 @ 47 train 7.5928 , allloss: 7.5928, dt: 1949.75ms, norm(attn): 8.0000, norm(output): 28.5000, norm(x): 249.3680, norm(y): 128.0107, norm:1.5622, tok/sec: 84031.43, flops:7.29, batch-reuse:1
 @ 48 train 7.6076 , allloss: 7.6076, dt: 1810.65ms, norm(attn): 8.0000, norm(output): 25.1250, norm(x): 254.5288, norm(y): 128.0088, norm:1.5828, tok/sec: 90486.78, flops:7.86, batch-reuse:1
 @ 49 train 7.6153 , allloss: 7.6153, dt: 1822.86ms, norm(attn): 8.0000, norm(output): 16.6250, norm(x): 258.5132, norm(y): 128.0069, norm:1.2868, tok/sec: 89880.70, flops:7.80, batch-reuse:1
-Clearing contents of superlog
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
 		(.:0.0664,:0.0586-:0.0286 of:0.0229 and:0.0190s:0.0127�:0.0119)

@@ -75,10 +75,10 @@ class CausalSelfAttention(DualModule):
         # value (normally, we should batch) self.c_attn_value = nn.Linear(config.n_embd, 3*config.n_embd, bias=False)
         self.c_attn_value = nn.Linear(config.n_embd, config.n_embd, bias=False)
 
-        if LOW_RANK_ATTN:
-            # Deepseek style low-rank compression of kv cache, see deepseek v2 tech report
-            self.d_proj = nn.Linear(config.n_embd, 4*config.n_embd / config.n_head)
-            # TODO finish implementing
+        # if LOW_RANK_ATTN:
+        #     # Deepseek style low-rank compression of kv cache, see deepseek v2 tech report
+        #     self.d_proj = nn.Linear(config.n_embd, 4*config.n_embd / config.n_head)
+        #     # TODO finish implementing
 
         # self.c_attn.ATTN_INIT = 1
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
@@ -137,6 +137,7 @@ class CausalSelfAttention(DualModule):
         # e.g. GPT2 (124M), n_head = 12, hs = 64, nh*hs=C=768 channels
 
         T_with_cache = T
+        newKvCache = None
         # each token emits three vectors query, key, value
         if VALUE_MATRIX or z is None:
             kq = self.c_attn(x)  # (B, T, C) -> (B, T, 2*C)
@@ -147,9 +148,12 @@ class CausalSelfAttention(DualModule):
             if kvCache is not None:
                 # note that in this case, we should not have fed in old x along the T dimension
                 kOld, vOld = kvCache
+                
                 k = torch.cat((kOld, k), dim=1) # save along the T dimension
                 v = torch.cat((vOld, v), dim=1) # save along the T dimension
                 T_with_cache = k.size(1)
+
+                newKvCache = (k, v)
 
             v = v.view(B, T_with_cache, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
             # NOTE: don't need the below because we are not calculating ResW
@@ -283,7 +287,7 @@ class CausalSelfAttention(DualModule):
             return y[:, 1:, :], scores # remove the first token (average token)
         else:
             # return the new kvCache
-            return y, (k, v)
+            return y, newKvCache
 
 
 class Gate(DualModule):
@@ -776,8 +780,8 @@ class GPT(DualModule):
                     # Tie model weights together
                     firstBlock = self.transformer.h[0]
                     for block in self.transformer.h:
-                        # block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
-                        block.attn = firstBlock.attn
+                        block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
+                        # block.attn = firstBlock.attn
 # @endflag attn_weights
 
 # @flag mlp_weights [TIE_MLP_WEIGHTS]
@@ -877,14 +881,14 @@ class GPT(DualModule):
         # we want to iterate through it one at a time, (B, 1, n_embd)
 
         kvCache = None
+        xj = None
         for j in range(T):
-
             xj = x[:,j:j+1,:] # (B, 1, n_embd)
-            if kvCache:
-                # we do not want to backprop too deep...
-                # for embeddings belonging to previous j, they should only
-                # be influenced in so far as predicting j+1.
-                kvCache = kvCache.detach()
+            # if kvCache:
+            #     # we do not want to backprop too deep...
+            #     # for embeddings belonging to previous j, they should only
+            #     # be influenced in so far as predicting j+1.
+            #     kvCache = kvCache.detach()
 
             for i in range(self.config.n_layer):
                 if REUSE_WEIGHTS:
@@ -905,7 +909,7 @@ class GPT(DualModule):
                 logits.append(_logits)
 
                 # We want to compare with a (B, 1, vocab_size) target
-                targetj = targets[:,j,:]
+                targetj = targets[:,j] # Note that targets contains indices, so is actually shape (B, T)
                 trueloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targetj.view(-1), ignore_index=-1)
                 loss = trueloss
             else:
@@ -916,7 +920,8 @@ class GPT(DualModule):
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
             # NOTE: during inference, instead of inferring from the total, infer only from the last layer
-            _logits = self.lm_head(self.transformer.ln_f(x))
+            # _logits used to be (B, T, vocab_size). Now, it is (B, 1, vocab_size)
+            _logits = self.lm_head(self.transformer.ln_f(xj))
             logits.append(_logits)
             loss = None
         
@@ -1169,16 +1174,16 @@ else:
 # ===================
 # HYPERPARAMETERS
 # ===================
-test_name="19-vanilla"
+test_name="19-funexperiment"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 8 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 1024 # sequence length # 16 # 1024
+B = 1280 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 128 # sequence length # 16 # 1024
 config_ = GPTConfig(vocab_size=50304, block_size=T, n_layer=12)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
 
-total_batch_size = 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
+total_batch_size = B * T # 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
@@ -1473,12 +1478,13 @@ for step in range(max_steps):
                     for l in logits:
                         # take the last token logits
                         printgen.extend(leftParens)
-                        for j in range(7, -1, -1): # 0 to 7
-                            _logit = l[:,-(j+1),:] #(B, vocab_size?)
-                            _probs = F.softmax(_logit, dim=-1) #(B, vocab_size?)
-                            vals, idxs = _probs.max(dim=-1, keepdim=True) #(B, 1)
-                            printgen.append(idxs[0,0].item())
-                            printgen.extend(enc.encode(f":{vals[0,0].item():.4f}"))
+                        _logit = l #l should already be (B, 1, vocab_size?)
+                        _probs = F.softmax(_logit, dim=-1) #(B, 1, vocab_size?)
+                        vals, idxs = _probs.topk(7, dim=-1) #(B, 1, 7)
+                        for j in range(0, 7):
+                            # print top j
+                            printgen.append(idxs[0,0,j].item())
+                            printgen.extend(enc.encode(f":{vals[0,0,j].item():.4f}"))
                         printgen.extend(rightParens)
 
                 logits = logits[-1] # (1, 8, 50304)
@@ -1589,11 +1595,10 @@ for step in range(max_steps):
         normO = _outer_metadata["_norm_output"]
         normX = _outer_metadata["_norm_x"]
         normY = _outer_metadata["_norm_y"]
-        fracNoop = _outer_metadata["_frac_noop"]
         # r_0 = _outer_metadata["routes_0"]
         # r_7 = _outer_metadata["routes_7"]
 
-        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, fracRes: {fracNoop:.4f}, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
+        bprint(f"@ {step} train {loss_accum.item():.4f} , allloss: {loss_accum_all.item():.4f}, dt: {dt*1000:.2f}ms, norm(attn): {normA:.4f}, norm(output): {normO:.4f}, norm(x): {normX:.4f}, norm(y): {normY:.4f}, norm:{norm:.4f}, tok/sec: {tokens_per_sec:.2f}, flops:{flops / 1e12:.2f}, batch-reuse:{timesBatchUsed}") 
 
 
 if ddp:
