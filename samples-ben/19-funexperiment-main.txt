@@ -1,23 +1,14 @@
 0: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( remotely:0.0002 paint:0.0001down:0.0001 dances:0.0001irmed:0.0001odynamic:0.0001 Todd:0.0001)
- remotely
+		( depart:0.0002968:0.0002 plutonium:0.0001 elabor:0.0001COM:0.0001 institution:0.0001 wedge:0.0001)
+ depart
 ------
-		( differe:0.0002msg:0.0002igl:0.0002enh:0.0002 procedure:0.0002 Duo:0.0001olly:0.0001)
- differe decidesνwell remediesvelt Sax Roll rangingholdersintestinal tinAv PAL papers
+		( depart:0.0004 plutonium:0.0002 surging:0.0001COM:0.0001 elabor:0.0001 Subjects:0.0001 machines:0.0001)
+ depart depart depart depart depart depart depart depart depart depart depart depart depart depart depart
 1: sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( remotely:0.0002 paint:0.0001 dances:0.0001down:0.0001 Todd:0.0001odynamic:0.0001irmed:0.0001)
- remotely
+		( depart:0.0002968:0.0002 Ves:0.0001 elabor:0.0001';:0.0001COM:0.0001 Info:0.0001)
+ depart
 ------
-		( differe:0.0002msg:0.0002enh:0.0002 procedure:0.0002olly:0.0001igl:0.0001 Duo:0.0001)
- differe differe pair batting cartoons Feelalth unfocused Vegasatche wirelessCompared605ishable arose
-50: sample 0: A Poem for you! Roses are red, Potatoes are 
-------
-		(.:0.0664,:0.0586-:0.0286 of:0.0229 and:0.0190s:0.0127�:0.0119)
-.
-------
-		(
-:0.1787 The:0.0283 It:0.0200 In:0.0151 This:0.0067 They:0.0027 A:0.0025)
-
-TheThe be the “TheTheTheTheTheThe be the
+		( depart:0.0004 plutonium:0.0001 Obama:0.0001 Sugar:0.0001iPhone:0.0001COM:0.0001 machines:0.0001)
+ depart depart depart depart depart depart depart depart depart depart depart depart depart depart depart

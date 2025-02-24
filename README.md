@@ -3557,3 +3557,76 @@ I am also curious what happens in an architecture that generates, say, a chunk (
 
 What happens if I feed prior embeddings, as input into subsequent calls to the language model (instead of this autoregressive structure?)
 
+
+## Sequential GPT
+
+(TODO: write up properly)
+
+The initial experiment, where it is backpropagated through the entire network:
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, newKvCache = self.attn(y, y, print_weights=print_weights, kvCache=kvCache)
+        program = self.compiler(x)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ attn_weights [TIE_ATTN_WEIGHTS]
+                if TIE_ATTN_WEIGHTS:
+                    # Tie model weights together
+                    firstBlock = self.transformer.h[0]
+                    for block in self.transformer.h:
+                        block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
+                        # block.attn = firstBlock.attn
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=True
+LOW_RANK_ATTN=True
+```
+![caption](img/19-funexperiment.jpg)
+
+
+The experiment where it is detached, it is the same. Should check for bugs:
+```
+Transformer, max LR 0.0006 n_layer 12
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, newKvCache = self.attn(y, y, print_weights=print_weights, kvCache=kvCache)
+        program = self.compiler(x)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ attn_weights [TIE_ATTN_WEIGHTS]
+                if TIE_ATTN_WEIGHTS:
+                    # Tie model weights together
+                    firstBlock = self.transformer.h[0]
+                    for block in self.transformer.h:
+                        block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
+                        # block.attn = firstBlock.attn
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=True
+LOW_RANK_ATTN=True
+```
+![caption](img/19-funexperiment-detach.jpg)
