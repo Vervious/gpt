@@ -1,0 +1,84 @@
+YES DDP
+total desired batch size: 73728
+Mini-batch size: 192*32
+=> calculated gradient accumulation steps: 12
+Training max steps: 300001
+Num GPUs: 1
+Threshold: 0.1
+Enable layer loss: False
+MAX LEARNING RATE: 0.0006
+Experiment name: 19-funexperiment
+MLPSCALE: 4
+Experiment description: 
+```
+Transformer, max LR 0.0006 n_layer 12
+Batch=192 T=32
+Setting:
+==details======
+ machine_modules
+        self.compiler = BenCompilerNoOp(config)
+        self.execute = VanillaExecute(config)
+----------------
+ block_logic
+        y = self.ln_1(x)
+        attn, newKvCache = self.attn(y, y, print_weights=print_weights, kvCache=kvCache)
+        program = self.compiler(x)
+        machineOutput = self.execute(program, attn)
+        newx = x + machineOutput
+----------------
+ attn_weights [TIE_ATTN_WEIGHTS]
+                if TIE_ATTN_WEIGHTS:
+                    # Tie model weights together
+                    firstBlock = self.transformer.h[0]
+                    for block in self.transformer.h:
+                        block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
+                        # block.attn = firstBlock.attn
+----------------
+========
+VALUEMATRIX=True
+REUSE_WEIGHTS=False
+MLP_SCALE=4
+ATTENTION_SINK=False
+TIE_ATTN_WEIGHTS=True
+LOW_RANK_ATTN=True
+```
+![caption](img/19-funexperiment.jpg)
+
+Warmup steps: 100
+I am GPU 0  of  1
+found 99 shards for split train
+train: loaded 100000000 tokens (first shard)
+train: 1 epoch (1 shard) = 16276 mini-batches
+found 1 shards for split val
+val: loaded 100000000 tokens (first shard)
+val: 1 epoch (1 shard) = 16276 mini-batches
+{'block_size': 32, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
+compilation is off
+num decayed parameter tensors: 51, with 110,616,576 parameters
+num non-decayed parameter tensors: 74, with 84,480 parameters
+using fused AdamW: True
+rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(sweet:0.0002 jo:0.0002 asleep:0.0002wu:0.0001uties:0.0001 Deck:0.0001 Nex:0.0001)
+sweet
+------
+		(sweet:0.0004 jo:0.0002 Deck:0.0001232:0.0001 ready:0.0001 asleep:0.0001 markedly:0.0001)
+sweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweet
+[rank0]:[W224 06:00:31.589224051 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+@ 0 train 10.9590 , allloss: 10.9590, dt: 13459.51ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 6.6838, norm(y): 31.9999, norm:11.9700, tok/sec: 5477.76, flops:0.12, batch-reuse:1
+rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
+------
+		(sweet:0.0002 jo:0.0002 asleep:0.0001 paraph:0.0001wu:0.0001 Deck:0.0001232:0.0001)
+sweet
+------
+		(sweet:0.0005 jo:0.0002 the:0.0002 Deck:0.0001 retri:0.0001232:0.0001AH:0.0001)
+sweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweet
+@ 1 train 10.7325 , allloss: 10.7325, dt: 7838.47ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 6.7537, norm(y): 31.9999, norm:11.1810, tok/sec: 9405.92, flops:0.20, batch-reuse:1
+@ 2 train 10.4062 , allloss: 10.4062, dt: 5319.96ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 7.1504, norm(y): 32.0002, norm:8.6555, tok/sec: 13858.76, flops:0.30, batch-reuse:1
+@ 3 train 10.1710 , allloss: 10.1710, dt: 5484.70ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 8.0169, norm(y): 32.0006, norm:5.5839, tok/sec: 13442.49, flops:0.29, batch-reuse:1
+@ 4 train 9.9823 , allloss: 9.9823, dt: 5407.06ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 9.2773, norm(y): 32.0012, norm:4.1925, tok/sec: 13635.51, flops:0.29, batch-reuse:1
+@ 5 train 9.7643 , allloss: 9.7643, dt: 5415.12ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 10.8137, norm(y): 32.0017, norm:3.4045, tok/sec: 13615.21, flops:0.29, batch-reuse:1
+@ 6 train 9.7429 , allloss: 9.7429, dt: 5624.81ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 12.5142, norm(y): 32.0022, norm:3.0301, tok/sec: 13107.64, flops:0.28, batch-reuse:1
+@ 7 train 9.7781 , allloss: 9.7781, dt: 5480.11ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 14.4280, norm(y): 32.0025, norm:2.5914, tok/sec: 13453.74, flops:0.29, batch-reuse:1
+@ 8 train 9.6701 , allloss: 9.6701, dt: 5537.69ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 16.5629, norm(y): 32.0028, norm:2.5626, tok/sec: 13313.84, flops:0.28, batch-reuse:1
+@ 9 train 9.7166 , allloss: 9.7166, dt: 5576.72ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 18.9096, norm(y): 32.0030, norm:2.3019, tok/sec: 13220.68, flops:0.28, batch-reuse:1

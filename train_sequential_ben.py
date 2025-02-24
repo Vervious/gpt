@@ -152,6 +152,7 @@ class CausalSelfAttention(DualModule):
                 k = torch.cat((kOld, k), dim=1) # save along the T dimension
                 v = torch.cat((vOld, v), dim=1) # save along the T dimension
                 T_with_cache = k.size(1)
+            # print(T_with_cache, "Hello")
 
             newKvCache = (k, v)
 
@@ -1180,12 +1181,12 @@ test_name="19-funexperiment"
 
 # We want a larger batch size to follow GPT-3 Small, roughly B*T = 0.5M; but setting B = 488 will blow up the GPU.
 # Since we only have small GPUs, we'll just simulate large batches using accumulation.
-B = 64 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
-T = 64 # sequence length # 16 # 1024
+B = 192 # micro batch size, will do forward backward but not do an update yet # previously 16 # A100 can do 64?
+T = 32 # sequence length # 16 # 1024
 config_ = GPTConfig(vocab_size=50304, block_size=T, n_layer=12)#, n_embd=1296) #, n_layer=24, n_head=16, n_embd=1024)
 
 
-total_batch_size = B * T # 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
+total_batch_size = B * T * 12 # 8 * 16 * T # 524288 # B*T # TODO change to 524288 # 2**19 ~0.5M in number of tokens #32 
 max_steps = 300000 + 1 # How many steps do we train for
 # Implement cosine lr decay in the style of GPT-3
 max_lr = 6e-4 # from GPT 3 paper # double it because it seems to work # quadruple it
@@ -1222,6 +1223,7 @@ flag_str = observability.extract_flagged_code()
 # Reusing blocks, max LR 6e-4, alllayerloss={ALL_LAYER_LOSS}, 
 test_description=f"""```
 Transformer, max LR {max_lr} n_layer {config_.n_layer}
+Batch={B} T={T}
 Setting:
 ==details======
 {flag_str}

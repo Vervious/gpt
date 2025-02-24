@@ -6,6 +6,7 @@ MLPSCALE: 4
 Experiment description: 
 ```
 Transformer, max LR 0.0006 n_layer 12
+Batch=192 T=32
 Setting:
 ==details======
  machine_modules
@@ -38,42 +39,34 @@ LOW_RANK_ATTN=True
 ![caption](img/19-funexperiment.jpg)
 
 Warmup steps: 100
-total desired batch size: 4096
-Mini-batch size: 64*64
-=> calculated gradient accumulation steps: 1
-=> calculated gradient accumulation steps: 1
-Training max steps: 300001Num GPUs: 1{'block_size': 64, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
-num decayed parameter tensors: 51, with 110,641,152 parameters
+total desired batch size: 73728
+Mini-batch size: 192*32
+=> calculated gradient accumulation steps: 12
+=> calculated gradient accumulation steps: 12
+Training max steps: 300001Num GPUs: 1{'block_size': 32, 'vocab_size': 50304, 'n_layer': 12, 'n_head': 12, 'n_embd': 768}
+num decayed parameter tensors: 51, with 110,616,576 parameters
 num non-decayed parameter tensors: 74, with 84,480 parameters
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( depart:0.0002968:0.0002 plutonium:0.0001 elabor:0.0001COM:0.0001 institution:0.0001 wedge:0.0001)
- depart
+		(sweet:0.0002 jo:0.0002 asleep:0.0002wu:0.0001uties:0.0001 Deck:0.0001 Nex:0.0001)
+sweet
 ------
-		( depart:0.0004 plutonium:0.0002 surging:0.0001COM:0.0001 elabor:0.0001 Subjects:0.0001 machines:0.0001)
- depart depart depart depart depart depart depart depart depart depart depart depart depart depart depart
-@ 0 train 11.0537 , allloss: 11.0537, dt: 11122.77ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 13.7710, norm(y): 64.0004, norm:26.3933, tok/sec: 368.25, flops:0.02, batch-reuse:1
+		(sweet:0.0004 jo:0.0002 Deck:0.0001232:0.0001 ready:0.0001 asleep:0.0001 markedly:0.0001)
+sweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweet
+@ 0 train 10.9590 , allloss: 10.9590, dt: 13459.51ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 6.6838, norm(y): 31.9999, norm:11.9700, tok/sec: 5477.76, flops:0.12, batch-reuse:1
 rank 0 sample 0: A Poem for you! Roses are red, Potatoes are 
 ------
-		( depart:0.0002968:0.0002 Ves:0.0001 elabor:0.0001';:0.0001COM:0.0001 Info:0.0001)
- depart
+		(sweet:0.0002 jo:0.0002 asleep:0.0001 paraph:0.0001wu:0.0001 Deck:0.0001232:0.0001)
+sweet
 ------
-		( depart:0.0004 plutonium:0.0001 Obama:0.0001 Sugar:0.0001iPhone:0.0001COM:0.0001 machines:0.0001)
- depart depart depart depart depart depart depart depart depart depart depart depart depart depart depart
-@ 1 train 10.9531 , allloss: 10.9531, dt: 3914.20ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 13.7479, norm(y): 64.0003, norm:27.2006, tok/sec: 1046.45, flops:0.04, batch-reuse:1
-@ 2 train 10.6650 , allloss: 10.6650, dt: 899.34ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 14.1239, norm(y): 64.0006, norm:24.9843, tok/sec: 4554.45, flops:0.20, batch-reuse:1
-@ 3 train 10.7061 , allloss: 10.7061, dt: 1006.01ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 15.0392, norm(y): 64.0011, norm:21.7507, tok/sec: 4071.53, flops:0.17, batch-reuse:1
-@ 4 train 10.2344 , allloss: 10.2344, dt: 910.34ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 16.5788, norm(y): 64.0017, norm:17.3805, tok/sec: 4499.42, flops:0.19, batch-reuse:1
-@ 5 train 10.0747 , allloss: 10.0747, dt: 914.69ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 18.5868, norm(y): 64.0026, norm:14.5075, tok/sec: 4478.04, flops:0.19, batch-reuse:1
-@ 6 train 10.0386 , allloss: 10.0386, dt: 926.69ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 20.9188, norm(y): 64.0032, norm:12.3893, tok/sec: 4420.05, flops:0.19, batch-reuse:1
-@ 7 train 9.4941 , allloss: 9.4941, dt: 934.88ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 23.4421, norm(y): 64.0039, norm:12.4718, tok/sec: 4381.32, flops:0.19, batch-reuse:1
-@ 8 train 9.8271 , allloss: 9.8271, dt: 926.52ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 26.1500, norm(y): 64.0046, norm:10.3442, tok/sec: 4420.82, flops:0.19, batch-reuse:1
-@ 9 train 10.2368 , allloss: 10.2368, dt: 932.45ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 28.8145, norm(y): 64.0049, norm:8.1482, tok/sec: 4392.74, flops:0.19, batch-reuse:1
-@ 10 train 9.8726 , allloss: 9.8726, dt: 931.27ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 31.8898, norm(y): 64.0052, norm:8.2742, tok/sec: 4398.32, flops:0.19, batch-reuse:1
-@ 11 train 9.8921 , allloss: 9.8921, dt: 939.45ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 35.1990, norm(y): 64.0058, norm:6.5071, tok/sec: 4359.99, flops:0.19, batch-reuse:1
-@ 12 train 9.8550 , allloss: 9.8550, dt: 956.51ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 38.4426, norm(y): 64.0059, norm:7.1276, tok/sec: 4282.25, flops:0.18, batch-reuse:1
-@ 13 train 9.8276 , allloss: 9.8276, dt: 923.12ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 42.1966, norm(y): 64.0063, norm:6.0169, tok/sec: 4437.11, flops:0.19, batch-reuse:1
-@ 14 train 9.9517 , allloss: 9.9517, dt: 1076.49ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 46.1576, norm(y): 64.0065, norm:5.4625, tok/sec: 3804.94, flops:0.16, batch-reuse:1
-@ 15 train 9.1687 , allloss: 9.1687, dt: 916.13ms, norm(attn): 2.0000, norm(output): 6.1875, norm(x): 50.4646, norm(y): 64.0069, norm:5.8530, tok/sec: 4471.00, flops:0.19, batch-reuse:1
-@ 16 train 9.6621 , allloss: 9.6621, dt: 933.63ms, norm(attn): 2.0000, norm(output): 8.0000, norm(x): 54.8548, norm(y): 64.0070, norm:5.8694, tok/sec: 4387.20, flops:0.19, batch-reuse:1
-@ 17 train 9.4126 , allloss: 9.4126, dt: 923.43ms, norm(attn): 2.0000, norm(output): 8.0000, norm(x): 59.5964, norm(y): 64.0073, norm:5.2629, tok/sec: 4435.63, flops:0.19, batch-reuse:1
+		(sweet:0.0005 jo:0.0002 the:0.0002 Deck:0.0001 retri:0.0001232:0.0001AH:0.0001)
+sweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweetsweet
+@ 1 train 10.7325 , allloss: 10.7325, dt: 7838.47ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 6.7537, norm(y): 31.9999, norm:11.1810, tok/sec: 9405.92, flops:0.20, batch-reuse:1
+@ 2 train 10.4062 , allloss: 10.4062, dt: 5319.96ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 7.1504, norm(y): 32.0002, norm:8.6555, tok/sec: 13858.76, flops:0.30, batch-reuse:1
+@ 3 train 10.1710 , allloss: 10.1710, dt: 5484.70ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 8.0169, norm(y): 32.0006, norm:5.5839, tok/sec: 13442.49, flops:0.29, batch-reuse:1
+@ 4 train 9.9823 , allloss: 9.9823, dt: 5407.06ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 9.2773, norm(y): 32.0012, norm:4.1925, tok/sec: 13635.51, flops:0.29, batch-reuse:1
+@ 5 train 9.7643 , allloss: 9.7643, dt: 5415.12ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 10.8137, norm(y): 32.0017, norm:3.4045, tok/sec: 13615.21, flops:0.29, batch-reuse:1
+@ 6 train 9.7429 , allloss: 9.7429, dt: 5624.81ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 12.5142, norm(y): 32.0022, norm:3.0301, tok/sec: 13107.64, flops:0.28, batch-reuse:1
+@ 7 train 9.7781 , allloss: 9.7781, dt: 5480.11ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 14.4280, norm(y): 32.0025, norm:2.5914, tok/sec: 13453.74, flops:0.29, batch-reuse:1
+@ 8 train 9.6701 , allloss: 9.6701, dt: 5537.69ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 16.5629, norm(y): 32.0028, norm:2.5626, tok/sec: 13313.84, flops:0.28, batch-reuse:1
+@ 9 train 9.7166 , allloss: 9.7166, dt: 5576.72ms, norm(attn): 2.0000, norm(output): 4.0000, norm(x): 18.9096, norm(y): 32.0030, norm:2.3019, tok/sec: 13220.68, flops:0.28, batch-reuse:1
