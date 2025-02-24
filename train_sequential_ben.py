@@ -75,6 +75,11 @@ class CausalSelfAttention(DualModule):
         # value (normally, we should batch) self.c_attn_value = nn.Linear(config.n_embd, 3*config.n_embd, bias=False)
         self.c_attn_value = nn.Linear(config.n_embd, config.n_embd, bias=False)
 
+        if LOW_RANK_ATTN:
+            # Deepseek style low-rank compression of kv cache, see deepseek v2 tech report
+            self.d_proj = nn.Linear(config.n_embd, 4*config.n_embd / config.n_head)
+            # TODO finish implementing
+
         # self.c_attn.ATTN_INIT = 1
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
         self.c_proj.NANOGPT_SCALE_INIT = 1 # a flag for scaling initialization to compensate for increase in variance due to residual connections (variance grows if I keep summing)
@@ -275,7 +280,7 @@ class CausalSelfAttention(DualModule):
             if scores is not None:
                 scores = scores[:, 1:, :]
             # resw[:,1:,:]
-            return y[:, 1:, :], resw[:,1:,:], scores # remove the first token (average token)
+            return y[:, 1:, :], scores # remove the first token (average token)
         else:
             # return the new kvCache
             return y, (k, v)
@@ -522,7 +527,9 @@ class BenBlock(nn.Module):
 
         # self.mlp = MLP(config)
 
-    def forward(self, x, print_weights=False,step=0):
+    def forward(self, x, kvCache, print_weights=False,step=0):
+        # x should be of size (B, 1, n_embd)
+        # kvCache should be of size (B, T, C), (B, T, C); here C is also n_embd as attention is configured
         metadata = {}
 
         if step > 2 and step < self.n_layer - 2:
@@ -537,7 +544,7 @@ class BenBlock(nn.Module):
 
 # @flag block_logic
         y = self.ln_1(x)
-        attn, kvCache = self.attn(y, y, print_weights=print_weights)
+        attn, newKvCache = self.attn(y, y, print_weights=print_weights, kvCache=kvCache)
         program = self.compiler(x)
         machineOutput = self.execute(program, attn)
         newx = x + machineOutput
@@ -548,7 +555,7 @@ class BenBlock(nn.Module):
         metadata["_norm_y"] = y.std(dim=-1).mean() / self.n_layer # should be 1 / 12
         metadata["_norm_x"] = x.std(dim=-1).mean() / self.n_layer
         metadata["_norm_output"] = machineOutput.std(dim=-1).mean() / self.n_layer
-        metadata["_frac_noop"] = xWeights.mean() / self.n_layer
+        # metadata["_frac_noop"] = xWeights.mean() / self.n_layer
 
         x = newx
 
@@ -558,7 +565,7 @@ class BenBlock(nn.Module):
         #     metadata["neg"] = (a < 0.5).sum().item()
         #     metadata["pos"] = (a > 5).sum().item()
 
-        return x, metadata    
+        return x, metadata, newKvCache  
 
 class ApplyMatrixFromFewParams(nn.Module):
 
@@ -769,8 +776,8 @@ class GPT(DualModule):
                     # Tie model weights together
                     firstBlock = self.transformer.h[0]
                     for block in self.transformer.h:
-                        block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
-
+                        # block.attn.c_attn.weight = firstBlock.attn.c_attn.weight
+                        block.attn = firstBlock.attn
 # @endflag attn_weights
 
 # @flag mlp_weights [TIE_MLP_WEIGHTS]
@@ -846,16 +853,16 @@ class GPT(DualModule):
 
         # in sequential world, we want b parallel threads of thought, of length t,
         # predicting up to t+1th token
+        # this design will really neuter the parallel trainability of our model
 
-        # this design will really neuter the quick trainability of our model
-        b, t = idx.size()
-        assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
+        B, T = idx.size()
+        assert T <= self.config.block_size, f"Cannot forward sequence of length {T}, block size is only {self.config.block_size}"
 
         # forward the GPT model itself
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
 
 
-        pos = torch.arange(0, t + self.T2, dtype=torch.long, device=device) # shape (t)
+        pos = torch.arange(0, T, dtype=torch.long, device=device) # shape (t)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
         x = tok_emb + pos_emb
 
@@ -866,28 +873,46 @@ class GPT(DualModule):
 
         outerMetadata = {}
 
+        # here, x is (B, T, n_embd)
+        # we want to iterate through it one at a time, (B, 1, n_embd)
 
-        for i in range(T):
+        kvCache = None
+        for j in range(T):
+
+            xj = x[:,j:j+1,:] # (B, 1, n_embd)
+            if kvCache:
+                # we do not want to backprop too deep...
+                # for embeddings belonging to previous j, they should only
+                # be influenced in so far as predicting j+1.
+                kvCache = kvCache.detach()
+
             for i in range(self.config.n_layer):
                 if REUSE_WEIGHTS:
                     block = self.transformer.sharedblock
                 else:
                     block = self.transformer.h[i]
                 
-                x, metadata = block(x,print_weights=print_weights,step=i)
+                # kvCache is size (B, j*n_layer + i, C), where C is currently set to n_embd
+                xj, metadata, newKvCache = block(xj, kvCache, print_weights=print_weights,step=i)
+                kvCache = newKvCache
 
                 for key, value in metadata.items():
                     outerMetadata[key] = outerMetadata.get(key, 0) + value
+            
+            if targets is not None:
+                xj = self.transformer.ln_f(xj)
+                _logits = self.lm_head(xj)
+                logits.append(_logits)
 
-        if targets is not None and trueloss is None:
-            # if we are given some desired targets also calculate the loss
-            x = self.transformer.ln_f(x)
-            _logits = self.lm_head(x)
-            logits.append(_logits)
+                # We want to compare with a (B, 1, vocab_size) target
+                targetj = targets[:,j,:]
+                trueloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targetj.view(-1), ignore_index=-1)
+                loss = trueloss
+            else:
+                # compute a loss using the next token anyways during inference? TODO
+                pass
 
-            trueloss = F.cross_entropy(_logits.view(-1, _logits.size(-1)), targets.view(-1), ignore_index=-1)
-            loss = trueloss
-        elif targets is None:
+        if targets is None:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             # logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
             # NOTE: during inference, instead of inferring from the total, infer only from the last layer
@@ -1179,9 +1204,10 @@ ATTENTION_SINK = False
 ATTENTION_MASK = False
 IDENTITY_LOSS = False
 CODE_MODE = False
-TIE_ATTN_WEIGHTS = False
+TIE_ATTN_WEIGHTS = True
 TIE_MLP_WEIGHTS = False
 NO_GRAD_ATTN = False
+LOW_RANK_ATTN = True
 
 import observability
 flag_str = observability.extract_flagged_code()
@@ -1198,7 +1224,7 @@ REUSE_WEIGHTS={REUSE_WEIGHTS}
 MLP_SCALE={MLP_SCALE}
 ATTENTION_SINK={ATTENTION_SINK}
 TIE_ATTN_WEIGHTS={TIE_ATTN_WEIGHTS}
-TIE_MLP_WEIGHTS={TIE_MLP_WEIGHTS}
+LOW_RANK_ATTN={LOW_RANK_ATTN}
 ```
 ![caption](img/{test_name}.jpg)
 """
